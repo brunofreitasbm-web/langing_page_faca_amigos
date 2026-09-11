@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://playground.institutofacaamigos.com.br/sitemap.xml
