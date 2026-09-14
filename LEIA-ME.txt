@@ -32,23 +32,32 @@ O QUE MUDOU EM RELAÇÃO À VERSÃO ANTERIOR
 - CNPJ, localização exata dentro do shopping e logo oficial (fundo
   transparente) adicionados.
 
-COMO PUBLICAR
---------------
-1. Faça upload de TODOS os arquivos e pastas deste pacote para a mesma pasta
-   do servidor/host que corresponde a "institutofacaamigos.com.br/playground/".
-   - Mantenha a estrutura de pastas exatamente como está (as pastas "img/"
-     e "video/" têm que ficar dentro da mesma pasta do index.html).
-2. Confirme que os seguintes arquivos ficam acessíveis publicamente
-   (abra cada URL no navegador para testar):
-   - https://institutofacaamigos.com.br/playground/
-   - https://institutofacaamigos.com.br/playground/politica-privacidade.html
-   - https://institutofacaamigos.com.br/playground/robots.txt
-   - https://institutofacaamigos.com.br/playground/sitemap.xml
-   - https://institutofacaamigos.com.br/playground/google877c2b37d3c979fb.html
+COMO PUBLICAR (ATUALIZADO — deploy via Vercel, não mais FTP/cPanel)
+---------------------------------------------------------------------
+Este repositório é importado como projeto na Vercel e publicado a cada
+push na branch principal — não existe mais upload manual de arquivo nem
+cache de CDN externo para limpar.
+
+1. `git push` na branch principal deste repositório dispara o deploy
+   automático na Vercel.
+2. O projeto Vercel tem três domínios apontando para ele:
+   - institutofacaamigos.com.br (+ www) → serve hub.html (ver rewrite por
+     host em vercel.json)
+   - playground.institutofacaamigos.com.br → serve index.html (comportamento
+     padrão, sem regra)
+3. Confirme que os seguintes endereços ficam acessíveis publicamente após o
+   deploy:
+   - https://institutofacaamigos.com.br/
+   - https://playground.institutofacaamigos.com.br/
+   - https://playground.institutofacaamigos.com.br/politica-privacidade.html
+   - https://playground.institutofacaamigos.com.br/robots.txt
+   - https://playground.institutofacaamigos.com.br/sitemap.xml
+   - https://playground.institutofacaamigos.com.br/google877c2b37d3c979fb.html
      (esse arquivo é de verificação do Google Search Console — não mexer no
      conteúdo dele, ele precisa ficar exatamente como está)
-3. Se o host tiver algum cache/CDN (Cloudflare, cache do cPanel, etc.),
-   limpe o cache depois do upload para garantir que a versão nova entre no ar.
+4. Não é preciso limpar cache manualmente: cada deploy da Vercel já invalida
+   a CDN. Ver runbook completo em faca_amigos/docs/INFRA_DOMINIO_EMAIL.md
+   para o mapa de domínios e o histórico da migração do Netlify.
 
 PENDÊNCIAS ANTES DE PUBLICAR (revisar com atenção)
 -----------------------------------------------------
