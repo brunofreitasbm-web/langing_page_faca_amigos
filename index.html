@@ -425,6 +425,19 @@
       box-shadow: 0 0 0 4px rgba(46, 207, 181, 0.18);
     }
 
+    .form-control optgroup {
+      font-weight: 800;
+      color: var(--teal-dark, #1f917f);
+      background: #f4f8f7;
+      font-style: normal;
+    }
+
+    .form-control option {
+      font-weight: 600;
+      color: var(--dark, #1a3f35);
+      background: #ffffff;
+    }
+
     .form-label {
       display: block;
       font-size: 0.85rem;
@@ -715,29 +728,55 @@
             required></div>
         <div class="form-group">
           <input type="text" id="job-curso" class="form-control" list="job-curso-sugestoes"
-            placeholder="Curso (ex: Psicologia, Terapia Ocupacional...)">
+            placeholder="Curso / Formação (ex: Psicologia, Terapia Ocupacional...)">
           <datalist id="job-curso-sugestoes">
             <option value="Psicologia">
             <option value="Terapia Ocupacional">
-            <option value="Educação Física">
-            <option value="Pedagogia">
-            <option value="Fonoaudiologia">
             <option value="Fisioterapia">
+            <option value="Nutrição">
+            <option value="Fonoaudiologia">
+            <option value="Psicopedagogia">
+            <option value="Pedagogia">
+            <option value="Musicoterapia">
+            <option value="Neuropsicologia">
+            <option value="Educação Física">
             <option value="Enfermagem">
+            <option value="Técnico(a) de Enfermagem">
             <option value="Administração">
             <option value="Recursos Humanos">
-            <option value="Marketing">
+            <option value="Marketing / Comunicação">
+            <option value="Serviço Social">
+            <option value="Medicina / Psiquiatria">
           </datalist>
         </div>
         <div class="form-group">
           <select id="job-area" class="form-control" required>
-            <option value="" disabled selected>Área pretendida</option>
-            <option value="RECEPCAO">Recepção</option>
-            <option value="VENDEDOR">Vendedor(a)</option>
-            <option value="CAIXA">Caixa</option>
-            <option value="MONITOR">Monitor(a) de Brincadeira</option>
-            <option value="LIDERANCA">Liderança / Supervisão</option>
-            <option value="OUTRA">Outra</option>
+            <option value="" disabled selected>Área pretendida / Função</option>
+            <optgroup label="Saúde & Terapias (Clínica)">
+              <option value="PSICOLOGIA">Psicologia / Aplicador(a) ABA</option>
+              <option value="TERAPIA_OCUPACIONAL">Terapia Ocupacional</option>
+              <option value="FONOAUDIOLOGIA">Fonoaudiologia</option>
+              <option value="FISIOTERAPIA">Fisioterapia</option>
+              <option value="NUTRICAO">Nutrição</option>
+              <option value="PSICOPEDAGOGIA">Psicopedagogia / Pedagogia</option>
+              <option value="MUSICOTERAPIA">Musicoterapia</option>
+              <option value="ENFERMAGEM">Enfermagem / Técnico(a)</option>
+              <option value="SUPERVISAO_CLINICA">Coordenação / Supervisão Clínica</option>
+            </optgroup>
+            <optgroup label="Operacional (Playground / Circuito / Recepção)">
+              <option value="RECEPCAO">Recepção / Atendimento ao Cliente</option>
+              <option value="MONITOR">Monitor(a) de Brincadeiras / Recreação</option>
+              <option value="VENDEDOR">Vendedor(a) / Comercial</option>
+              <option value="CAIXA">Operador(a) de Caixa</option>
+              <option value="SERVICOS_GERAIS">Serviços Gerais / Limpeza</option>
+              <option value="LIDERANCA">Liderança / Supervisão Operacional</option>
+            </optgroup>
+            <optgroup label="Corporativo & Administrativo">
+              <option value="RH">Recursos Humanos</option>
+              <option value="ADMINISTRATIVO">Administração / Financeiro</option>
+              <option value="MARKETING">Marketing / Design</option>
+            </optgroup>
+            <option value="OUTRA">Outra Área / Função</option>
           </select>
         </div>
         <div class="form-group">
@@ -752,9 +791,10 @@
         <div class="form-group">
           <select id="job-tipo" class="form-control" required>
             <option value="" disabled selected>Tipo de oportunidade</option>
-            <option value="ESTAGIO">Estágio</option>
             <option value="REMUNERADO">Vaga remunerada (CLT)</option>
-            <option value="BOLSA">Bolsa</option>
+            <option value="PJ">Prestador de Serviço (PJ)</option>
+            <option value="ESTAGIO">Estágio</option>
+            <option value="BOLSA">Bolsa / Trainee</option>
           </select>
         </div>
         <div class="form-group">
