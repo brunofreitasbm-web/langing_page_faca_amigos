@@ -64,8 +64,9 @@
   },
   "subOrganization": [
     { "@type": "MedicalBusiness", "name": "FaçaAmigos Clínica" },
-    { "@type": "LocalBusiness", "name": "FaçaAmigos Playground Inclusivo" },
-    { "@type": "LocalBusiness", "name": "FaçaAmigos Circuito" }
+    { "@type": "LocalBusiness", "name": "FaçaAmigos Playground Inclusivo (Parque Shopping Belém)" },
+    { "@type": "LocalBusiness", "name": "FaçaAmigos Playground Inclusivo (Shopping Bosque Grão-Pará - Em Breve)" },
+    { "@type": "LocalBusiness", "name": "FaçaAmigos Circuito (Parque Shopping Belém)" }
   ]
 }
 </script>
@@ -486,7 +487,7 @@
   <!-- HERO — âncora de marca, não escolhe lado nenhum -->
   <header class="hero">
     <div class="wrap fx on">
-      <span class="eyebrow">Instituto &amp; espaços FaçaAmigos · Parque Shopping Belém</span>
+      <span class="eyebrow">Instituto &amp; espaços FaçaAmigos · Parque Shopping Belém &amp; Shopping Bosque Grão-Pará</span>
       <h1>Um lugar pra cada criança ser <span class="hl">exatamente quem ela é</span>.</h1>
       <p class="sub">Terapia, brincadeira e diversão sob o mesmo teto — feito pra incluir, nunca pra separar.</p>
     </div>
@@ -508,10 +509,10 @@
 
     <a href="playground.html" class="card-unit card-playground fx on">
       <img src="img/hero-piscina-bolinhas.jpg" alt="" loading="lazy" decoding="async">
-      <span class="unit-tag">Playground</span>
+      <span class="unit-tag">Playground (2 Unidades)</span>
       <h3>Um playground onde toda criança é bem-vinda</h3>
-      <p class="micro">Todos os dias · 10h às 22h · sem agendamento</p>
-      <span class="cta">Ver o Playground
+      <p class="micro">Parque Shopping Belém &amp; 🚀 Em Breve no Shopping Bosque Grão-Pará</p>
+      <span class="cta">Ver Unidades do Playground
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd"
             d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 10H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 010-1.414z"
             clip-rule="evenodd" /></svg>
@@ -552,7 +553,7 @@
     <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
         <path
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
-      </svg> Parque Shopping Belém</span>
+      </svg> Parque Shopping Belém &amp; Shopping Bosque Grão-Pará</span>
   </div>
 
   <!-- CLÍNICA — registro sóbrio -->
@@ -635,10 +636,13 @@
   <!-- LOCALIZAÇÃO -->
   <section class="local-block" id="local">
     <div class="wrap fx">
-      <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.2vw, 2.2rem);">Tudo no mesmo endereço</h2>
-      <p class="sec-sub">Parque Shopping Belém — Av. Augusto Montenegro, 4300, Térreo, próximo às Lojas Americanas.</p>
-      <a class="btn btn-ghost" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank"
-        rel="noopener">Traçar rota até aqui</a>
+      <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.2vw, 2.2rem);">Nossas Localizações em Belém</h2>
+      <p class="sec-sub"><b>Parque Shopping Belém:</b> Av. Augusto Montenegro, 4300 · Térreo (próximo às Lojas Americanas)</p>
+      <p class="sec-sub" style="margin-top: 4px;"><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans 🚀 <i>(Em Breve)</i></p>
+      <div style="margin-top: 20px;">
+        <a class="btn btn-ghost" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank"
+          rel="noopener">Traçar rota Parque Shopping</a>
+      </div>
     </div>
   </section>
 
@@ -646,7 +650,8 @@
     <img src="img/logo-simbolo.png" width="460" height="416" alt=""
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
     <span class="logo">Faça<span class="amigos">Amigos</span></span>
-    <p>Parque Shopping Belém — Av. Augusto Montenegro, 4300 · Térreo, próximo às Lojas Americanas</p>
+    <p><b>Unidade Parque Shopping Belém:</b> Av. Augusto Montenegro, 4300 · Térreo, próximo às Lojas Americanas</p>
+    <p><b>Unidade Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Em Breve)</p>
     <p>Todos os dias, das 10h às 22h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank"
         rel="noopener">@facaamigos.belem</a></p>
     <p style="margin-top: 18px;"><a
@@ -722,6 +727,14 @@
           </select>
         </div>
         <div class="form-group">
+          <select id="job-unidade" class="form-control" required>
+            <option value="" disabled selected>Unidade de preferência</option>
+            <option value="PARQUE_SHOPPING">Parque Shopping Belém</option>
+            <option value="BOSQUE_GRAO_PARA">Shopping Bosque Grão-Pará (Inauguração)</option>
+            <option value="AMBAS">Ambas / Sem preferência</option>
+          </select>
+        </div>
+        <div class="form-group">
           <select id="job-tipo" class="form-control" required>
             <option value="" disabled selected>Tipo de oportunidade</option>
             <option value="ESTAGIO">Estágio</option>
@@ -774,6 +787,7 @@
         formData.append('email', document.getElementById('job-email').value);
         formData.append('phone', document.getElementById('job-telefone').value);
         formData.append('course', document.getElementById('job-curso').value);
+        formData.append('preferred_unit', document.getElementById('job-unidade') ? document.getElementById('job-unidade').value : '');
         formData.append('desired_area', document.getElementById('job-area').value);
         formData.append('opportunity_type', document.getElementById('job-tipo').value);
         formData.append('resume', resumeFile);

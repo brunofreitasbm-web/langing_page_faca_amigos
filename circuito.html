@@ -1428,6 +1428,14 @@
           </select>
         </div>
         <div class="form-group">
+          <select id="job-unidade" class="form-control" required>
+            <option value="" disabled selected>Unidade de preferência</option>
+            <option value="PARQUE_SHOPPING">Parque Shopping Belém</option>
+            <option value="BOSQUE_GRAO_PARA">Shopping Bosque Grão-Pará (Inauguração)</option>
+            <option value="AMBAS">Ambas / Sem preferência</option>
+          </select>
+        </div>
+        <div class="form-group">
           <select id="job-tipo" class="form-control" required>
             <option value="" disabled selected>Tipo de oportunidade</option>
             <option value="ESTAGIO">Estágio</option>
@@ -1480,6 +1488,7 @@
         formData.append('email', document.getElementById('job-email').value);
         formData.append('phone', document.getElementById('job-telefone').value);
         formData.append('course', document.getElementById('job-curso').value);
+        formData.append('preferred_unit', document.getElementById('job-unidade') ? document.getElementById('job-unidade').value : '');
         formData.append('desired_area', document.getElementById('job-area').value);
         formData.append('opportunity_type', document.getElementById('job-tipo').value);
         formData.append('resume', resumeFile);
