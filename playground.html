@@ -38,11 +38,16 @@
     content="O playground inclusivo de Belém. Espaço seguro, equipe especializada e acolhimento para todas as crianças, dentro do Parque Shopping.">
   <meta name="twitter:image" content="https://playground.institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg">
 
+  <!-- Google Fonts Preconnect & Optimization -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
   <!-- Dados estruturados (Schema.org) -->
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": ["LocalBusiness", "EntertainmentBusiness"],
   "name": "FaçaAmigos — Playground Inclusivo",
   "image": "https://playground.institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg",
   "url": "https://playground.institutofacaamigos.com.br/",
@@ -54,6 +59,11 @@
     "addressLocality": "Belém",
     "addressRegion": "PA",
     "addressCountry": "BR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -1.3653,
+    "longitude": -48.4552
   },
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",
@@ -89,8 +99,6 @@
   <script src="https://t.contentsquare.net/uxa/c3b9c7ee91c87.js" defer></script>
 
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap');
-
     :root {
       --pink: #F0196B;
       --pink-dark: #C81158;
