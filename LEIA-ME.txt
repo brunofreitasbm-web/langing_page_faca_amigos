@@ -41,10 +41,16 @@ cache de CDN externo para limpar.
 1. `git push` na branch principal deste repositório dispara o deploy
    automático na Vercel.
 2. O projeto Vercel tem três domínios apontando para ele:
-   - institutofacaamigos.com.br (+ www) → serve hub.html (ver rewrite por
-     host em vercel.json)
-   - playground.institutofacaamigos.com.br → serve index.html (comportamento
-     padrão, sem regra)
+   - institutofacaamigos.com.br (+ www) → serve index.html, que é o hub
+     (comportamento padrão da Vercel, sem lógica nenhuma — decisão
+     deliberada: o domínio mais importante não deve depender de nenhuma
+     regra condicional para funcionar).
+   - playground.institutofacaamigos.com.br → serve playground.html via
+     Routing Middleware (middleware.js), que reescreve "/" para
+     "/playground" só quando o Host é esse subdomínio. `has: [{type:
+     "host", ...}]` em rewrites do vercel.json NÃO é uma condição válida
+     na API da Vercel (só existe `header` e `cookie`) — não usar essa
+     abordagem de novo.
 3. Confirme que os seguintes endereços ficam acessíveis publicamente após o
    deploy:
    - https://institutofacaamigos.com.br/
