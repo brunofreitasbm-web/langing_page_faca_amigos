@@ -2,28 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
-  "rewrites": [
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "institutofacaamigos.com.br"
-        }
-      ],
-      "destination": "/hub"
-    },
-    {
-      "source": "/",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.institutofacaamigos.com.br"
-        }
-      ],
-      "destination": "/hub"
-    }
-  ],
   "headers": [
     {
       "source": "/",
