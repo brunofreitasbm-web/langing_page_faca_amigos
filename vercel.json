@@ -11,7 +11,7 @@
           "value": "institutofacaamigos.com.br"
         }
       ],
-      "destination": "/hub.html"
+      "destination": "/hub"
     },
     {
       "source": "/",
@@ -21,7 +21,7 @@
           "value": "www.institutofacaamigos.com.br"
         }
       ],
-      "destination": "/hub.html"
+      "destination": "/hub"
     }
   ],
   "headers": [
