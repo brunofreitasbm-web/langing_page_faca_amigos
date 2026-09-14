@@ -119,6 +119,94 @@ Dúvidas técnicas: falar com Bruno (brunofreitasbm@gmail.com).
 
 
 ====================================================================
+TESTE DE COMPORTAMENTO + PAINEL DA IDEALIZADORA (14/09/2026)
+====================================================================
+
+O QUE É
+--------
+`/teste` é um quiz de captação de leads: pais respondem sobre o
+comportamento do filho, veem um retrato inicial na tela e a
+idealizadora recebe o lead por e-mail (Brevo) para prospectar a
+Clínica. `/admin` é o painel privado dela para ver todos os leads,
+gerar um resumo com IA (Google Gemini) sobre cada resultado e
+reenviar esse resumo ao responsável por e-mail.
+
+ARQUIVOS NOVOS
+----------------
+- teste.html            → landing + quiz (público)
+- teste-perguntas.json  → perguntas/faixas do quiz (editável sem deploy
+                           de função; ver abaixo)
+- admin.html            → painel da idealizadora (login + lista de leads)
+- supabase/functions/behavior-test-webhook/  → recebe as respostas do quiz
+- supabase/functions/behavior-test-admin/    → login, listagem, insight IA
+- supabase/migrations/20260914*.sql          → tabelas no Supabase
+
+BANCO (projeto Supabase ivjvpdzsfjdpyabbzzuj)
+-------------------------------------------------
+- fa_leads_teste_comportamento → um registro por família (RLS ligado,
+  sem policy pra anon — só as Edge Functions, via service role, leem
+  e escrevem).
+- fa_teste_admin_users / fa_teste_admin_sessions → login do painel.
+
+TROCAR O CONTEÚDO DO TESTE (perguntas/faixas reais)
+--------------------------------------------------------
+1. Editar teste-perguntas.json (perguntas, escala de respostas, faixas
+   de resultado). Trocar "version" para uma data nova quando o
+   conteúdo mudar de verdade.
+2. Copiar a MESMA lista de perguntas (QUESTION_IDS) e faixas (BANDS) e
+   o mesmo "version" (TEST_VERSION) para dentro de
+   supabase/functions/behavior-test-webhook/index.ts — o score é
+   sempre recalculado no servidor, nunca confia no que vem do
+   navegador. Se as versões não baterem, o site pede pra recarregar.
+3. Reimplantar a função (`deploy_edge_function` via MCP, ou
+   `supabase functions deploy behavior-test-webhook` pela CLI).
+
+SECRETS QUE PRECISAM SER CONFIGURADOS NO SUPABASE
+-------------------------------------------------------
+Painel do projeto → Edge Functions → Secrets (ou `supabase secrets set`):
+- BREVO_API_KEY          → mesma chave usada nos outros apps FaçaAmigos
+- BREVO_FROM             → "Instituto Faça Amigos <instituto@institutofacaamigos.com.br>"
+- BREVO_REPLY_TO         → e-mail que deve receber respostas dos pais
+- LEAD_NOTIFY_EMAIL      → e-mail da idealizadora, que recebe cada lead
+- GEMINI_API_KEY         → chave da Google Gemini API (mesma família de
+                           chave usada em Clínica FaçaAmigos/lib/gemini.ts
+                           e no Kiosk) — sem ela, o botão "Gerar insight
+                           com IA" do painel retorna erro, mas o resto do
+                           fluxo continua funcionando normalmente.
+- ADMIN_BOOTSTRAP_SECRET → segredo inventado por você, só serve para
+                           criar/resetar a senha do painel (ver abaixo).
+
+Sem BREVO_API_KEY/LEAD_NOTIFY_EMAIL configurados, o lead continua
+sendo salvo no banco normalmente — só o e-mail de aviso falha
+(fica registrado em email_error na tabela).
+
+CRIAR/RESETAR O LOGIN DA IDEALIZADORA NO PAINEL (/admin)
+--------------------------------------------------------------
+1. Defina ADMIN_BOOTSTRAP_SECRET nos secrets da função
+   behavior-test-admin (qualquer texto forte, só você e quem for
+   configurar precisa saber).
+2. Rode (troque SEGREDO, EMAIL e SENHA):
+
+   curl -X POST https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/behavior-test-admin \
+     -H "Content-Type: application/json" \
+     -d '{"action":"bootstrap","bootstrap_secret":"SEGREDO","email":"EMAIL@institutofacaamigos.com.br","password":"SENHA_COM_8_OU_MAIS_CARACTERES"}'
+
+3. Esse mesmo comando também RESETA a senha se rodar de novo com o
+   mesmo e-mail — é assim que ela troca a senha se esquecer.
+4. Login em https://institutofacaamigos.com.br/admin com esse e-mail
+   e senha (sessão dura 12h).
+
+PENDENTE — conteúdo real do teste
+-------------------------------------
+O quiz está no ar com 8 perguntas PLACEHOLDER (marcadas
+"placeholder": true em teste-perguntas.json), só para o fluxo
+funcionar de ponta a ponta enquanto a idealizadora não manda o
+conteúdo definitivo (perguntas, pesos, textos de cada faixa de
+resultado, e o texto do e-mail que o responsável recebe). Trocar
+assim que ela enviar — ver passo a passo acima.
+
+
+====================================================================
 ATUALIZAÇÃO — 09/09/2026 (revisão pré-publicação)
 ====================================================================
 Esta seção substitui o que estiver em conflito acima.

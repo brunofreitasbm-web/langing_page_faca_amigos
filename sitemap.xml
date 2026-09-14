@@ -21,6 +21,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- Teste de Comportamento (Instituto FaçaAmigos) -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/teste</loc>
+    <lastmod>2026-09-14</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- Política de Privacidade -->
   <url>
     <loc>https://playground.institutofacaamigos.com.br/politica-privacidade</loc>

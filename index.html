@@ -456,6 +456,69 @@
       font-weight: 700;
       margin-bottom: 14px;
     }
+
+    /* Teste de Comportamento (Instituto) */
+    .teste-banner {
+      background: var(--white);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow-lg);
+      padding: 44px 48px;
+      display: grid;
+      grid-template-columns: 1.4fr 0.6fr;
+      gap: 36px;
+      align-items: center;
+      border: 3px solid var(--teal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .teste-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+      font-weight: 800;
+      color: var(--ink-soft);
+      font-size: 0.85rem;
+    }
+
+    .teste-photo {
+      width: 148px;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 6px solid var(--cream);
+      box-shadow: var(--shadow-lg);
+      position: relative;
+    }
+
+    .teste-photo::before {
+      content: '';
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: var(--ring);
+      z-index: -1;
+    }
+
+    .teste-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 960px) {
+      .teste-banner {
+        grid-template-columns: 1fr;
+        text-align: center;
+        padding: 36px 26px;
+      }
+
+      .teste-banner .btn {
+        margin-inline: auto;
+      }
+    }
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7LHH3C9P8"></script>
@@ -653,6 +716,34 @@
               <a href="circuito.html" class="btn btn-pink btn-sm">Andar de carrinho</a>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTE DE COMPORTAMENTO — Instituto FaçaAmigos -->
+  <section class="sec" id="teste" style="padding-bottom: 30px;">
+    <div class="wrap fx">
+      <div class="teste-banner">
+        <div>
+          <span class="eyebrow" style="background: var(--cream);">Instituto FaçaAmigos</span>
+          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">Entenda melhor o comportamento do seu
+            filho</h2>
+          <p
+            style="color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; margin-bottom: 24px; max-width: 34rem;">
+            Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu pequeno. Em poucos minutos, você tem um
+            retrato inicial de como ele está se desenvolvendo — e pode decidir com mais segurança os próximos passos.
+          </p>
+          <a href="/teste?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink">Fazer o
+            teste agora</a>
+          <p style="font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px;">Desenvolvido pela
+            idealizadora do FaçaAmigos · não substitui avaliação profissional</p>
+        </div>
+        <div class="teste-visual">
+          <div class="teste-photo"><img src="img/idealizadora.jpg" width="700" height="936"
+              alt="Idealizadora do FaçaAmigos, criadora do Teste de Comportamento" loading="lazy" decoding="async">
+          </div>
+          <span>criado pela idealizadora<br>do FaçaAmigos</span>
         </div>
       </div>
     </div>

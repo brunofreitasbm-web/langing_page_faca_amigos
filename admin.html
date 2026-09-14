@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel Instituto FaçaAmigos — Teste de Comportamento</title>
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+  <link rel="apple-touch-icon" href="img/logo-simbolo.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pink: #F0196B;
+      --pink-dark: #C81158;
+      --teal: #2ECFB5;
+      --teal-dark: #1FA893;
+      --yellow: #FFE234;
+      --dark: #1A3F35;
+      --ink-soft: #4C6B62;
+      --cream: #FFF9F1;
+      --white: #FFFFFF;
+      --blue: #2D7FF9;
+      --blue-dark: #1E63C9;
+      --gray: #8B9A94;
+      --gray-bg: #EDF1EF;
+      --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
+      --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
+      --r-card: 24px;
+      --t-fast: 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      color: var(--dark);
+      background: var(--cream);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    h1, h2, h3 {
+      font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-weight: 400;
+      line-height: 1.15;
+    }
+
+    a { color: inherit; }
+
+    img { max-width: 100%; display: block; }
+
+    [hidden] { display: none !important; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      padding: 13px 26px;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast);
+    }
+
+    .btn:hover { transform: scale(1.02); filter: brightness(1.05); }
+    .btn:active { transform: scale(0.96); filter: brightness(0.95); }
+    .btn:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; filter: none; }
+
+    .btn-pink {
+      background: var(--pink);
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(240, 25, 107, 0.28);
+    }
+
+    .btn-teal {
+      background: var(--teal);
+      color: var(--dark);
+      box-shadow: 0 10px 26px rgba(46, 207, 181, 0.28);
+    }
+
+    .btn-ghost {
+      background: var(--white);
+      color: var(--dark);
+      border: 2.5px solid var(--dark);
+    }
+
+    .btn-ghost:hover { background: var(--yellow); border-color: var(--dark); }
+
+    .btn-sm { padding: 9px 18px; font-size: 0.88rem; }
+
+    /* ---------- Login ---------- */
+    .login-screen {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .login-card {
+      background: var(--white);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow-lg);
+      padding: 40px 34px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .login-card .logo-simbolo {
+      height: 56px;
+      width: auto;
+      margin: 0 auto 14px;
+    }
+
+    .login-card h1 {
+      font-size: 1.5rem;
+      margin-bottom: 6px;
+    }
+
+    .login-card .sub {
+      color: var(--ink-soft);
+      font-weight: 700;
+      font-size: 0.92rem;
+      margin-bottom: 26px;
+    }
+
+    .login-form { text-align: left; }
+
+    .login-footer {
+      margin-top: 22px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .login-footer a {
+      color: var(--teal-dark);
+      text-decoration: underline;
+    }
+
+    /* ---------- Form controls (shared) ---------- */
+    .form-group { margin-bottom: 14px; }
+
+    .form-control {
+      width: 100%;
+      padding: 13px 16px;
+      border: 2.5px solid rgba(26, 63, 53, 0.12);
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      font-size: 0.96rem;
+      color: var(--dark);
+      background: var(--white);
+    }
+
+    textarea.form-control { resize: vertical; min-height: 84px; font-weight: 600; }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--teal);
+      box-shadow: 0 0 0 4px rgba(46, 207, 181, 0.18);
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+    }
+
+    .form-error {
+      display: none;
+      color: var(--pink-dark);
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: rgba(240, 25, 107, 0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+
+    .form-error.active { display: block; }
+
+    .form-notice {
+      display: none;
+      color: var(--teal-dark);
+      font-size: 0.88rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      background: rgba(46, 207, 181, 0.12);
+      border-radius: 12px;
+      padding: 10px 14px;
+    }
+
+    .form-notice.active { display: block; }
+
+    /* ---------- Dashboard shell ---------- */
+    .dash-header {
+      background: var(--dark);
+      color: #fff;
+      padding: 18px 22px;
+      position: sticky;
+      top: 0;
+      z-index: 80;
+    }
+
+    .dash-header .wrap {
+      max-width: 1240px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .dash-header h1 {
+      font-size: 1.15rem;
+      color: #fff;
+    }
+
+    .dash-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dash-header .brand img { height: 34px; width: auto; }
+
+    .dash-header .who {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      flex-wrap: wrap;
+    }
+
+    .dash-main {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 26px 22px 60px;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 20px;
+      background: var(--white);
+      border-radius: var(--r-card);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .toolbar .search-group { flex: 1 1 260px; min-width: 220px; }
+    .toolbar .status-group { flex: 0 0 200px; min-width: 160px; }
+    .toolbar .form-group { margin-bottom: 0; }
+
+    .toolbar .count {
+      font-weight: 800;
+      color: var(--ink-soft);
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    /* ---------- Badges ---------- */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 9999px;
+      padding: 5px 13px;
+      font-weight: 800;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .badge-gray { background: var(--gray-bg); color: var(--ink-soft); }
+    .badge-teal { background: rgba(46, 207, 181, 0.18); color: var(--teal-dark); }
+    .badge-blue { background: rgba(45, 127, 249, 0.15); color: var(--blue-dark); }
+    .badge-yellow { background: rgba(255, 226, 52, 0.35); color: #7A6A00; }
+    .badge-pink { background: rgba(240, 25, 107, 0.13); color: var(--pink-dark); }
+
+    /* ---------- Table / cards ---------- */
+    .leads-wrap {
+      background: var(--white);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    table.leads-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .leads-table th, .leads-table td {
+      text-align: left;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(26, 63, 53, 0.08);
+      vertical-align: top;
+    }
+
+    .leads-table th {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--ink-soft);
+      font-weight: 800;
+      background: var(--cream);
+    }
+
+    .leads-table tbody tr:hover { background: rgba(46, 207, 181, 0.05); }
+
+    .leads-table .child-name { font-weight: 800; }
+    .leads-table .guardian-name { font-weight: 800; }
+    .leads-table .guardian-meta { color: var(--ink-soft); font-size: 0.82rem; }
+    .leads-table .wa-link { color: var(--teal-dark); font-weight: 700; text-decoration: underline; }
+
+    .state-msg {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+
+    /* Card list for narrow screens */
+    .leads-cards { display: none; }
+
+    .lead-card {
+      background: var(--white);
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+    }
+
+    .lead-card .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      align-items: flex-start;
+    }
+
+    .lead-card .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .lead-card .child-name { font-size: 1.05rem; font-weight: 800; }
+    .lead-card .badges-row { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+    .lead-card .actions { margin-top: 10px; }
+
+    @media (max-width: 760px) {
+      .leads-table { display: none; }
+      .leads-cards { display: block; padding: 12px; }
+    }
+
+    /* ---------- Modal ---------- */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 63, 53, 0.6);
+      z-index: 200;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 16px;
+      overflow-y: auto;
+    }
+
+    .modal-overlay.active { display: flex; }
+
+    .modal {
+      background: var(--white);
+      border-radius: var(--r-card);
+      padding: 32px;
+      max-width: 640px;
+      width: 100%;
+      position: relative;
+      box-shadow: var(--shadow-lg);
+      margin: auto 0;
+    }
+
+    .modal h3 {
+      font-size: 1.3rem;
+      margin-bottom: 4px;
+      padding-right: 36px;
+    }
+
+    .modal .sub {
+      color: var(--ink-soft);
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 50%;
+      background: var(--cream);
+      color: var(--dark);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background var(--t-fast);
+    }
+
+    .modal-close:hover { background: var(--yellow); }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 20px;
+      margin-bottom: 18px;
+    }
+
+    .detail-grid .field .label {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--gray);
+      font-weight: 800;
+      margin-bottom: 2px;
+    }
+
+    .detail-grid .field .value { font-weight: 700; font-size: 0.94rem; }
+
+    .modal-section {
+      margin-bottom: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(26, 63, 53, 0.08);
+    }
+
+    .modal-section h4 {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--ink-soft);
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .answers-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .answers-list .a-chip {
+      background: var(--gray-bg);
+      border-radius: 9999px;
+      padding: 5px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .insight-box {
+      background: var(--cream);
+      border-left: 5px solid var(--teal);
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      white-space: pre-line;
+      margin-bottom: 12px;
+    }
+
+    .insight-empty {
+      color: var(--gray);
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .insight-meta {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= LOGIN ================= -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-card">
+      <img src="img/logo-simbolo.png" alt="" class="logo-simbolo" loading="lazy" decoding="async">
+      <h1>Painel Instituto FaçaAmigos</h1>
+      <p class="sub">Leads do Teste de Comportamento</p>
+      <form class="login-form" id="loginForm" novalidate>
+        <div id="loginNotice" class="form-notice"></div>
+        <div id="loginError" class="form-error" role="alert"></div>
+        <div class="form-group">
+          <label for="login-email" class="form-label">E-mail</label>
+          <input type="email" id="login-email" class="form-control" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password" class="form-label">Senha</label>
+          <input type="password" id="login-password" class="form-control" autocomplete="current-password" required>
+        </div>
+        <button type="submit" id="loginSubmit" class="btn btn-pink" style="width:100%;">Entrar</button>
+      </form>
+      <p class="login-footer"><a href="https://institutofacaamigos.com.br/">← Voltar para o site</a></p>
+    </div>
+  </div>
+
+  <!-- ================= DASHBOARD ================= -->
+  <div id="dashScreen" hidden>
+    <header class="dash-header">
+      <div class="wrap">
+        <div class="brand">
+          <img src="img/logo-simbolo.png" alt="" loading="lazy" decoding="async">
+          <h1>Leads — Teste de Comportamento</h1>
+        </div>
+        <div class="who">
+          <span id="adminEmailLabel"></span>
+          <button type="button" class="btn btn-ghost btn-sm" id="logoutBtn"
+            style="background:transparent;color:#fff;border-color:rgba(255,255,255,0.5);">Sair</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dash-main">
+      <div class="toolbar">
+        <div class="form-group search-group">
+          <label for="searchInput" class="form-label">Buscar</label>
+          <input type="search" id="searchInput" class="form-control"
+            placeholder="Nome do responsável, e-mail ou nome da criança">
+        </div>
+        <div class="form-group status-group">
+          <label for="statusFilter" class="form-label">Status</label>
+          <select id="statusFilter" class="form-control">
+            <option value="">Todos</option>
+            <option value="started">Iniciado</option>
+            <option value="completed">Concluído</option>
+            <option value="contacted">Contatado</option>
+          </select>
+        </div>
+        <span class="count" id="resultCount"></span>
+      </div>
+
+      <div class="leads-wrap">
+        <div id="leadsState" class="state-msg">Carregando leads…</div>
+
+        <div style="overflow-x:auto;">
+          <table class="leads-table" id="leadsTable" hidden>
+            <thead>
+              <tr>
+                <th>Criança</th>
+                <th>Responsável</th>
+                <th>Unidade</th>
+                <th>Resultado</th>
+                <th>Status</th>
+                <th>Data</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTbody"></tbody>
+          </table>
+        </div>
+
+        <div class="leads-cards" id="leadsCards" hidden></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ================= MODAL: DETALHE DO LEAD ================= -->
+  <div class="modal-overlay" id="leadModalOverlay" onclick="if(event.target===this) closeLeadModal()">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="leadModalTitle" id="leadModal">
+      <button type="button" class="modal-close" onclick="closeLeadModal()" aria-label="Fechar">✕</button>
+      <h3 id="leadModalTitle">Detalhe do lead</h3>
+      <p class="sub" id="leadModalSub"></p>
+
+      <div id="leadModalBody">
+        <div class="detail-grid" id="leadDetailGrid"></div>
+
+        <div class="modal-section">
+          <h4>Respostas do teste</h4>
+          <div class="answers-list" id="leadAnswers"></div>
+        </div>
+
+        <div class="modal-section">
+          <h4>Retrato comportamental (IA)</h4>
+          <div id="insightError" class="form-error"></div>
+          <div id="insightMeta" class="insight-meta" hidden></div>
+          <div id="insightContent"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn btn-teal btn-sm" id="generateInsightBtn">Gerar insight com IA</button>
+            <button type="button" class="btn btn-pink btn-sm" id="sendInsightBtn" disabled>Enviar retrato por e-mail ao
+              responsável</button>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <h4>Marcar como contatado</h4>
+          <div id="contactError" class="form-error"></div>
+          <div id="contactNotice" class="form-notice"></div>
+          <div class="form-group">
+            <label for="notesInput" class="form-label">Observações internas</label>
+            <textarea id="notesInput" class="form-control" placeholder="Anotações sobre o contato com a família..."></textarea>
+          </div>
+          <button type="button" class="btn btn-ghost btn-sm" id="markContactedBtn">Marcar como contatado</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var API_URL = 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/behavior-test-admin';
+      var TOKEN_KEY = 'fa_admin_token';
+      var EXPIRES_KEY = 'fa_admin_token_expires';
+      var EMAIL_KEY = 'fa_admin_email';
+
+      var loginScreen = document.getElementById('loginScreen');
+      var dashScreen = document.getElementById('dashScreen');
+      var loginForm = document.getElementById('loginForm');
+      var loginError = document.getElementById('loginError');
+      var loginNotice = document.getElementById('loginNotice');
+      var loginSubmit = document.getElementById('loginSubmit');
+      var adminEmailLabel = document.getElementById('adminEmailLabel');
+      var logoutBtn = document.getElementById('logoutBtn');
+
+      var searchInput = document.getElementById('searchInput');
+      var statusFilter = document.getElementById('statusFilter');
+      var resultCount = document.getElementById('resultCount');
+      var leadsState = document.getElementById('leadsState');
+      var leadsTable = document.getElementById('leadsTable');
+      var leadsTbody = document.getElementById('leadsTbody');
+      var leadsCards = document.getElementById('leadsCards');
+
+      var leadModalOverlay = document.getElementById('leadModalOverlay');
+      var leadModal = document.getElementById('leadModal');
+      var leadModalSub = document.getElementById('leadModalSub');
+      var leadDetailGrid = document.getElementById('leadDetailGrid');
+      var leadAnswers = document.getElementById('leadAnswers');
+      var insightError = document.getElementById('insightError');
+      var insightMeta = document.getElementById('insightMeta');
+      var insightContent = document.getElementById('insightContent');
+      var generateInsightBtn = document.getElementById('generateInsightBtn');
+      var sendInsightBtn = document.getElementById('sendInsightBtn');
+      var contactError = document.getElementById('contactError');
+      var contactNotice = document.getElementById('contactNotice');
+      var notesInput = document.getElementById('notesInput');
+      var markContactedBtn = document.getElementById('markContactedBtn');
+
+      var currentLead = null;
+      var searchDebounce = null;
+      var lastFocusedEl = null;
+
+      // ---------- Session helpers ----------
+      function getToken() { return localStorage.getItem(TOKEN_KEY); }
+
+      function getExpires() { return localStorage.getItem(EXPIRES_KEY); }
+
+      function getEmail() { return localStorage.getItem(EMAIL_KEY) || ''; }
+
+      function saveSession(token, expiresAt, email) {
+        try {
+          localStorage.setItem(TOKEN_KEY, token);
+          localStorage.setItem(EXPIRES_KEY, expiresAt || '');
+          localStorage.setItem(EMAIL_KEY, email || '');
+        } catch (e) { /* localStorage indisponível (modo privado etc.) — segue sem persistir */ }
+      }
+
+      function clearSession() {
+        try {
+          localStorage.removeItem(TOKEN_KEY);
+          localStorage.removeItem(EXPIRES_KEY);
+          localStorage.removeItem(EMAIL_KEY);
+        } catch (e) { /* ignora */ }
+      }
+
+      function isSessionValid() {
+        var token = getToken();
+        if (!token) return false;
+        var expires = getExpires();
+        if (expires) {
+          var expiresTime = new Date(expires).getTime();
+          if (!isNaN(expiresTime) && expiresTime <= Date.now()) return false;
+        }
+        return true;
+      }
+
+      function showLogin(message) {
+        dashScreen.hidden = true;
+        loginScreen.style.display = 'flex';
+        if (message) {
+          loginNotice.textContent = message;
+          loginNotice.classList.add('active');
+        } else {
+          loginNotice.classList.remove('active');
+          loginNotice.textContent = '';
+        }
+        loginError.classList.remove('active');
+        loginError.textContent = '';
+      }
+
+      function showDashboard() {
+        loginScreen.style.display = 'none';
+        dashScreen.hidden = false;
+        adminEmailLabel.textContent = getEmail();
+        loadLeads();
+      }
+
+      function sessionExpired(msg) {
+        clearSession();
+        closeLeadModal();
+        showLogin(msg || 'Sua sessão expirou, faça login novamente.');
+      }
+
+      // ---------- API ----------
+      function callApi(payload, opts) {
+        opts = opts || {};
+        var headers = { 'Content-Type': 'application/json' };
+        if (!opts.skipAuth) {
+          var token = getToken();
+          if (token) headers['Authorization'] = 'Bearer ' + token;
+        }
+
+        return fetch(API_URL, {
+          method: 'POST',
+          headers: headers,
+          body: JSON.stringify(payload)
+        }).then(function (res) {
+          return res.json().catch(function () { return {}; }).then(function (data) {
+            return { ok: res.ok, status: res.status, data: data };
+          });
+        }, function () {
+          return { ok: false, status: 0, data: {}, networkError: true };
+        });
+      }
+
+      function apiRequest(payload) {
+        return callApi(payload).then(function (result) {
+          if (result.networkError) {
+            var err = new Error('Não foi possível conectar. Verifique sua internet e tente novamente.');
+            err.networkError = true;
+            throw err;
+          }
+          if (result.status === 401) {
+            sessionExpired();
+            var authErr = new Error('sessão expirada');
+            authErr.handled = true;
+            throw authErr;
+          }
+          if (!result.ok) {
+            var msg = (result.data && result.data.error) ? result.data.error : 'Ocorreu um erro inesperado.';
+            var e2 = new Error(msg);
+            e2.status = result.status;
+            throw e2;
+          }
+          return result.data;
+        });
+      }
+
+      // ---------- Login ----------
+      loginForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        loginError.classList.remove('active');
+        loginError.textContent = '';
+
+        var email = document.getElementById('login-email').value.trim();
+        var password = document.getElementById('login-password').value;
+        if (!email || !password) return;
+
+        loginSubmit.disabled = true;
+        loginSubmit.textContent = 'Entrando...';
+
+        callApi({ action: 'login', email: email, password: password }, { skipAuth: true })
+          .then(function (result) {
+            loginSubmit.disabled = false;
+            loginSubmit.textContent = 'Entrar';
+
+            if (result.networkError) {
+              loginError.textContent = 'Não foi possível conectar. Verifique sua internet e tente novamente.';
+              loginError.classList.add('active');
+              return;
+            }
+            if (!result.ok) {
+              var msg = (result.data && result.data.error) ? result.data.error : 'Credenciais inválidas.';
+              loginError.textContent = msg;
+              loginError.classList.add('active');
+              return;
+            }
+            var data = result.data;
+            saveSession(data.token, data.expires_at, data.email || email);
+            loginForm.reset();
+            showDashboard();
+          });
+      });
+
+      logoutBtn.addEventListener('click', function () {
+        apiRequest({ action: 'logout' }).catch(function () { /* mesmo se falhar, limpa local */ })
+          .then(function () {
+            clearSession();
+            showLogin();
+          });
+      });
+
+      // ---------- Leads list ----------
+      function badgeForStatus(status) {
+        if (status === 'completed') return '<span class="badge badge-teal">Concluído</span>';
+        if (status === 'contacted') return '<span class="badge badge-blue">Contatado</span>';
+        return '<span class="badge badge-gray">Iniciado, não concluiu</span>';
+      }
+
+      function badgeForResult(band) {
+        if (band === 'esperado') return '<span class="badge badge-teal">Esperado</span>';
+        if (band === 'observar') return '<span class="badge badge-yellow">Observar</span>';
+        if (band === 'recomendado') return '<span class="badge badge-pink">Recomendado</span>';
+        return '<span class="badge badge-gray">—</span>';
+      }
+
+      function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#39;');
+      }
+
+      function waLink(phone) {
+        if (!phone) return '';
+        var digits = String(phone).replace(/\D/g, '');
+        if (!digits) return '';
+        return 'https://wa.me/' + digits;
+      }
+
+      function formatDate(iso) {
+        if (!iso) return '—';
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        return d.toLocaleString('pt-BR');
+      }
+
+      function loadLeads() {
+        leadsState.hidden = false;
+        leadsState.textContent = 'Carregando leads…';
+        leadsTable.hidden = true;
+        leadsCards.hidden = true;
+
+        var payload = { action: 'list_leads', limit: 100 };
+        var status = statusFilter.value;
+        var q = searchInput.value.trim();
+        if (status) payload.status = status;
+        if (q) payload.q = q;
+
+        apiRequest(payload).then(function (data) {
+          var leads = (data && data.leads) || [];
+          renderLeads(leads);
+        }).catch(function (err) {
+          if (err.handled) return;
+          leadsState.hidden = false;
+          leadsState.textContent = err.message || 'Não foi possível carregar os leads.';
+        });
+      }
+
+      function renderLeads(leads) {
+        resultCount.textContent = leads.length + (leads.length === 1 ? ' lead' : ' leads');
+
+        if (!leads.length) {
+          leadsState.hidden = false;
+          leadsState.textContent = 'Nenhum lead encontrado.';
+          leadsTable.hidden = true;
+          leadsCards.hidden = true;
+          return;
+        }
+
+        leadsState.hidden = true;
+        leadsTable.hidden = false;
+        leadsCards.hidden = false;
+
+        var rowsHtml = '';
+        var cardsHtml = '';
+
+        leads.forEach(function (lead) {
+          var childName = lead.child_first_name || '—';
+          var ageRange = lead.child_age_range || '—';
+          var guardianName = lead.guardian_name || '—';
+          var guardianEmail = lead.guardian_email || '';
+          var guardianPhone = lead.guardian_phone || '';
+          var wa = waLink(guardianPhone);
+          var unit = lead.preferred_unit || '—';
+          var resultBadge = badgeForResult(lead.result_band);
+          var statusBadge = badgeForStatus(lead.status);
+          var dateStr = formatDate(lead.created_at);
+
+          var phoneHtml = guardianPhone
+            ? (wa ? '<a class="wa-link" href="' + escapeHtml(wa) + '" target="_blank" rel="noopener">' + escapeHtml(guardianPhone) + '</a>' : escapeHtml(guardianPhone))
+            : '';
+
+          rowsHtml += '<tr>' +
+            '<td><div class="child-name">' + escapeHtml(childName) + '</div><div class="guardian-meta">' + escapeHtml(ageRange) + '</div></td>' +
+            '<td><div class="guardian-name">' + escapeHtml(guardianName) + '</div>' +
+              (guardianEmail ? '<div class="guardian-meta">' + escapeHtml(guardianEmail) + '</div>' : '') +
+              (phoneHtml ? '<div class="guardian-meta">' + phoneHtml + '</div>' : '') +
+            '</td>' +
+            '<td>' + escapeHtml(unit) + '</td>' +
+            '<td>' + resultBadge + '</td>' +
+            '<td>' + statusBadge + '</td>' +
+            '<td>' + escapeHtml(dateStr) + '</td>' +
+            '<td><button type="button" class="btn btn-ghost btn-sm" data-lead-id="' + escapeHtml(lead.id) + '">Ver detalhes</button></td>' +
+            '</tr>';
+
+          cardsHtml += '<div class="lead-card">' +
+            '<div class="row"><div><div class="child-name">' + escapeHtml(childName) + '</div><div class="guardian-meta">' + escapeHtml(ageRange) + '</div></div>' + statusBadge + '</div>' +
+            '<div class="row"><div>' +
+              '<div class="label">Responsável</div>' +
+              '<div class="guardian-name">' + escapeHtml(guardianName) + '</div>' +
+              (guardianEmail ? '<div class="guardian-meta">' + escapeHtml(guardianEmail) + '</div>' : '') +
+              (phoneHtml ? '<div class="guardian-meta">' + phoneHtml + '</div>' : '') +
+            '</div></div>' +
+            '<div class="row"><div><div class="label">Unidade</div><div>' + escapeHtml(unit) + '</div></div></div>' +
+            '<div class="badges-row">' + resultBadge + '</div>' +
+            '<div class="guardian-meta">' + escapeHtml(dateStr) + '</div>' +
+            '<div class="actions"><button type="button" class="btn btn-ghost btn-sm" data-lead-id="' + escapeHtml(lead.id) + '" style="width:100%;">Ver detalhes</button></div>' +
+            '</div>';
+        });
+
+        leadsTbody.innerHTML = rowsHtml;
+        leadsCards.innerHTML = cardsHtml;
+
+        Array.prototype.forEach.call(document.querySelectorAll('[data-lead-id]'), function (btn) {
+          btn.addEventListener('click', function () {
+            openLeadModal(btn.getAttribute('data-lead-id'));
+          });
+        });
+      }
+
+      searchInput.addEventListener('input', function () {
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(loadLeads, 400);
+      });
+
+      statusFilter.addEventListener('change', loadLeads);
+
+      // ---------- Lead detail modal ----------
+      function resetModalState() {
+        insightError.classList.remove('active');
+        insightError.textContent = '';
+        contactError.classList.remove('active');
+        contactError.textContent = '';
+        contactNotice.classList.remove('active');
+        contactNotice.textContent = '';
+        notesInput.value = '';
+        generateInsightBtn.disabled = false;
+        sendInsightBtn.disabled = true;
+      }
+
+      function renderLeadDetail(lead) {
+        currentLead = lead;
+        leadModalSub.textContent = (lead.guardian_name || 'Responsável não identificado') +
+          (lead.child_first_name ? ' · ' + lead.child_first_name : '');
+
+        var fields = [
+          ['Criança', lead.child_first_name || '—'],
+          ['Faixa etária', lead.child_age_range || '—'],
+          ['Responsável', lead.guardian_name || '—'],
+          ['E-mail', lead.guardian_email || '—'],
+          ['Telefone', lead.guardian_phone || '—'],
+          ['Unidade de interesse', lead.preferred_unit || '—'],
+          ['Status', lead.status === 'completed' ? 'Concluído' : (lead.status === 'contacted' ? 'Contatado' : 'Iniciado, não concluiu')],
+          ['Resultado', lead.result_band || '—'],
+          ['Pontuação', (lead.score === null || lead.score === undefined) ? '—' : lead.score],
+          ['Criado em', formatDate(lead.created_at)]
+        ];
+
+        leadDetailGrid.innerHTML = fields.map(function (f) {
+          return '<div class="field"><div class="label">' + escapeHtml(f[0]) + '</div><div class="value">' + escapeHtml(f[1]) + '</div></div>';
+        }).join('');
+
+        var answers = lead.answers || [];
+        if (answers.length) {
+          leadAnswers.innerHTML = answers.map(function (a) {
+            return '<span class="a-chip">' + escapeHtml(a.id) + ': ' + escapeHtml(a.v) + '</span>';
+          }).join('');
+        } else {
+          leadAnswers.innerHTML = '<span class="a-chip">Sem respostas registradas</span>';
+        }
+
+        renderInsight(lead);
+
+        if (lead.admin_notes) notesInput.value = lead.admin_notes;
+      }
+
+      function renderInsight(lead) {
+        if (lead.ai_insight) {
+          insightContent.innerHTML = '<div class="insight-box">' + escapeHtml(lead.ai_insight) + '</div>';
+          var metaParts = [];
+          if (lead.ai_insight_generated_at) metaParts.push('Gerado em ' + formatDate(lead.ai_insight_generated_at));
+          if (lead.ai_insight_sent_at) metaParts.push('Enviado em ' + formatDate(lead.ai_insight_sent_at));
+          if (metaParts.length) {
+            insightMeta.hidden = false;
+            insightMeta.textContent = metaParts.join(' · ');
+          } else {
+            insightMeta.hidden = true;
+          }
+          generateInsightBtn.textContent = 'Regerar insight com IA';
+          sendInsightBtn.disabled = !lead.guardian_email;
+        } else {
+          insightContent.innerHTML = '<p class="insight-empty">Nenhum insight gerado ainda.</p>';
+          insightMeta.hidden = true;
+          generateInsightBtn.textContent = 'Gerar insight com IA';
+          sendInsightBtn.disabled = true;
+        }
+      }
+
+      function openLeadModal(leadId) {
+        resetModalState();
+        lastFocusedEl = document.activeElement;
+        leadModalOverlay.classList.add('active');
+        document.addEventListener('keydown', onModalKeydown);
+        leadDetailGrid.innerHTML = '';
+        leadAnswers.innerHTML = '';
+        insightContent.innerHTML = '<p class="insight-empty">Carregando…</p>';
+        leadModalSub.textContent = 'Carregando dados do lead…';
+
+        apiRequest({ action: 'get_lead', lead_id: leadId }).then(function (data) {
+          if (!data || !data.lead) throw new Error('Lead não encontrado.');
+          renderLeadDetail(data.lead);
+          focusModal();
+        }).catch(function (err) {
+          if (err.handled) return;
+          leadModalSub.textContent = '';
+          insightContent.innerHTML = '';
+          contactError.textContent = err.message || 'Não foi possível carregar o lead.';
+          contactError.classList.add('active');
+        });
+      }
+
+      function closeLeadModal() {
+        leadModalOverlay.classList.remove('active');
+        document.removeEventListener('keydown', onModalKeydown);
+        currentLead = null;
+        if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
+          lastFocusedEl.focus();
+        }
+      }
+
+      function focusModal() {
+        var closeBtn = leadModal.querySelector('.modal-close');
+        if (closeBtn) closeBtn.focus();
+      }
+
+      function onModalKeydown(e) {
+        if (e.key === 'Escape') {
+          closeLeadModal();
+          return;
+        }
+        if (e.key === 'Tab') {
+          var focusable = leadModal.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])');
+          if (!focusable.length) return;
+          var first = focusable[0];
+          var last = focusable[focusable.length - 1];
+          if (e.shiftKey && document.activeElement === first) {
+            e.preventDefault();
+            last.focus();
+          } else if (!e.shiftKey && document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
+
+      document.getElementById('leadModal').addEventListener('click', function (e) {
+        e.stopPropagation();
+      });
+
+      // ---------- Generate insight ----------
+      generateInsightBtn.addEventListener('click', function () {
+        if (!currentLead) return;
+        insightError.classList.remove('active');
+        insightError.textContent = '';
+        generateInsightBtn.disabled = true;
+        var originalText = generateInsightBtn.textContent;
+        generateInsightBtn.innerHTML = '<span class="spinner"></span> Gerando...';
+
+        apiRequest({ action: 'generate_insight', lead_id: currentLead.id }).then(function (data) {
+          currentLead.ai_insight = data.insight;
+          currentLead.ai_insight_generated_at = new Date().toISOString();
+          renderInsight(currentLead);
+        }).catch(function (err) {
+          if (err.handled) return;
+          insightError.textContent = err.message || 'Não foi possível gerar o insight.';
+          insightError.classList.add('active');
+        }).then(function () {
+          generateInsightBtn.disabled = false;
+          generateInsightBtn.textContent = originalText;
+        });
+      });
+
+      // ---------- Send insight email ----------
+      sendInsightBtn.addEventListener('click', function () {
+        if (!currentLead) return;
+        insightError.classList.remove('active');
+        insightError.textContent = '';
+        sendInsightBtn.disabled = true;
+        var originalText = sendInsightBtn.textContent;
+        sendInsightBtn.innerHTML = '<span class="spinner"></span> Enviando...';
+
+        apiRequest({ action: 'send_insight_email', lead_id: currentLead.id }).then(function () {
+          return apiRequest({ action: 'get_lead', lead_id: currentLead.id });
+        }).then(function (data) {
+          if (data && data.lead) {
+            currentLead = data.lead;
+            renderInsight(currentLead);
+          }
+        }).catch(function (err) {
+          if (err.handled) return;
+          insightError.textContent = err.message || 'Não foi possível enviar o e-mail.';
+          insightError.classList.add('active');
+        }).then(function () {
+          sendInsightBtn.disabled = !(currentLead && currentLead.guardian_email);
+          sendInsightBtn.textContent = originalText;
+        });
+      });
+
+      // ---------- Mark contacted ----------
+      markContactedBtn.addEventListener('click', function () {
+        if (!currentLead) return;
+        contactError.classList.remove('active');
+        contactError.textContent = '';
+        contactNotice.classList.remove('active');
+        contactNotice.textContent = '';
+        markContactedBtn.disabled = true;
+        var originalText = markContactedBtn.textContent;
+        markContactedBtn.innerHTML = '<span class="spinner"></span> Salvando...';
+
+        apiRequest({ action: 'mark_contacted', lead_id: currentLead.id, notes: notesInput.value.trim() })
+          .then(function () {
+            closeLeadModal();
+            loadLeads();
+          }).catch(function (err) {
+            if (err.handled) return;
+            contactError.textContent = err.message || 'Não foi possível salvar.';
+            contactError.classList.add('active');
+          }).then(function () {
+            markContactedBtn.disabled = false;
+            markContactedBtn.textContent = originalText;
+          });
+      });
+
+      // ---------- Boot ----------
+      if (isSessionValid()) {
+        showDashboard();
+      } else {
+        clearSession();
+        showLogin();
+      }
+    })();
+  </script>
+
+</body>
+
+</html>

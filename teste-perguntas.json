@@ -1,0 +1,79 @@
+{
+  "version": "2026-09-placeholder",
+  "placeholder": true,
+  "intro": {
+    "duration": "~4 minutos",
+    "disclaimer": "Desenvolvido pela idealizadora do FaçaAmigos · não substitui avaliação profissional"
+  },
+  "scale": [
+    { "v": 0, "label": "Nunca" },
+    { "v": 1, "label": "Às vezes" },
+    { "v": 2, "label": "Frequentemente" },
+    { "v": 3, "label": "Quase sempre" }
+  ],
+  "questions": [
+    {
+      "id": "q01",
+      "group": "comunicacao",
+      "text": "{{crianca}} costuma olhar nos olhos quando é chamado(a) pelo nome?"
+    },
+    {
+      "id": "q02",
+      "group": "comunicacao",
+      "text": "{{crianca}} usa palavras ou gestos para pedir o que quer?"
+    },
+    {
+      "id": "q03",
+      "group": "social",
+      "text": "{{crianca}} demonstra interesse em brincar perto ou junto de outras crianças?"
+    },
+    {
+      "id": "q04",
+      "group": "social",
+      "text": "{{crianca}} imita gestos, sons ou brincadeiras de adultos e outras crianças?"
+    },
+    {
+      "id": "q05",
+      "group": "comportamento",
+      "text": "{{crianca}} se adapta bem a pequenas mudanças na rotina?"
+    },
+    {
+      "id": "q06",
+      "group": "comportamento",
+      "text": "{{crianca}} consegue se acalmar sozinho(a) ou com apoio quando fica frustrado(a)?"
+    },
+    {
+      "id": "q07",
+      "group": "sensorial",
+      "text": "{{crianca}} reage de forma tranquila a sons, luzes ou texturas do dia a dia?"
+    },
+    {
+      "id": "q08",
+      "group": "autonomia",
+      "text": "{{crianca}} consegue seguir instruções simples de 1 ou 2 passos?"
+    }
+  ],
+  "bands": [
+    {
+      "key": "esperado",
+      "min": 0,
+      "max": 8,
+      "title": "Dentro do esperado para a idade",
+      "text": "Pelo que você compartilhou, {{crianca}} vem se desenvolvendo dentro do que é esperado para a faixa etária. Continue observando o dia a dia com carinho — pequenos estímulos e brincadeiras fazem toda diferença."
+    },
+    {
+      "key": "observar",
+      "min": 9,
+      "max": 16,
+      "title": "Vale a pena observar de perto",
+      "text": "Alguns pontos que você respondeu merecem atenção. Isso não é um diagnóstico, mas pode ser um bom momento para conversar com uma profissional especializada e entender melhor o que está acontecendo."
+    },
+    {
+      "key": "recomendado",
+      "min": 17,
+      "max": 24,
+      "title": "Recomendamos uma avaliação profissional",
+      "text": "As respostas indicam sinais que merecem uma avaliação mais próxima. Isso não define nada sozinho, mas quanto antes conversar com uma especialista, mais cedo você tem clareza e, se for o caso, apoio adequado."
+    }
+  ]
+}
