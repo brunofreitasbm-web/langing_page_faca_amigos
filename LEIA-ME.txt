@@ -161,40 +161,53 @@ TROCAR O CONTEÚDO DO TESTE (perguntas/faixas reais)
 3. Reimplantar a função (`deploy_edge_function` via MCP, ou
    `supabase functions deploy behavior-test-webhook` pela CLI).
 
+MCP DO SUPABASE NÃO CONFIGURA SECRETS — isso é um limite real da
+ferramenta usada nesta conversa: ela aplica migração e faz deploy de
+função, mas não tem uma chamada para gravar Edge Function Secrets.
+Os itens abaixo precisam ser feitos manualmente por você, uma vez só,
+pelo painel do Supabase (https://supabase.com/dashboard/project/ivjvpdzsfjdpyabbzzuj/functions/secrets)
+ou pela CLI (`supabase secrets set NOME=valor --project-ref ivjvpdzsfjdpyabbzzuj`).
+
 SECRETS QUE PRECISAM SER CONFIGURADOS NO SUPABASE
 -------------------------------------------------------
-Painel do projeto → Edge Functions → Secrets (ou `supabase secrets set`):
-- BREVO_API_KEY          → mesma chave usada nos outros apps FaçaAmigos
-- BREVO_FROM             → "Instituto Faça Amigos <instituto@institutofacaamigos.com.br>"
-- BREVO_REPLY_TO         → e-mail que deve receber respostas dos pais
-- LEAD_NOTIFY_EMAIL      → e-mail da idealizadora, que recebe cada lead
-- GEMINI_API_KEY         → chave da Google Gemini API (mesma família de
-                           chave usada em Clínica FaçaAmigos/lib/gemini.ts
-                           e no Kiosk) — sem ela, o botão "Gerar insight
-                           com IA" do painel retorna erro, mas o resto do
-                           fluxo continua funcionando normalmente.
-- ADMIN_BOOTSTRAP_SECRET → segredo inventado por você, só serve para
-                           criar/resetar a senha do painel (ver abaixo).
+- BREVO_API_KEY            → mesma chave usada nos outros apps FaçaAmigos
+- BREVO_FROM               → "Instituto Faça Amigos <instituto@institutofacaamigos.com.br>"
+- BREVO_REPLY_TO           → e-mail que deve receber respostas dos pais
+- LEAD_NOTIFY_EMAIL        → isabella.goncalves@gmail.com,institutofacaamigos@gmail.com
+                             (aceita vários e-mails separados por vírgula,
+                             sem espaço — todos recebem o aviso de cada lead)
+- GEMINI_API_KEY           → chave da Google Gemini API (mesma família de
+                             chave usada em Clínica FaçaAmigos/lib/gemini.ts
+                             e no Kiosk) — sem ela, o botão "Gerar insight
+                             com IA" do painel retorna erro, mas o resto do
+                             fluxo continua funcionando normalmente.
+- CLINICA_SUPABASE_URL     → https://vththexblpxwocbowhsv.supabase.co
+- CLINICA_SUPABASE_ANON_KEY → a chave "anon" pública do Sistema da Clínica
+                             (está em Clinica Faça Amigos/.env.local, variável
+                             NEXT_PUBLIC_SUPABASE_ANON_KEY — é uma chave
+                             pública, já exposta no navegador de quem usa
+                             o sistema da Clínica, não é segredo sensível).
 
 Sem BREVO_API_KEY/LEAD_NOTIFY_EMAIL configurados, o lead continua
 sendo salvo no banco normalmente — só o e-mail de aviso falha
 (fica registrado em email_error na tabela).
 
-CRIAR/RESETAR O LOGIN DA IDEALIZADORA NO PAINEL (/admin)
---------------------------------------------------------------
-1. Defina ADMIN_BOOTSTRAP_SECRET nos secrets da função
-   behavior-test-admin (qualquer texto forte, só você e quem for
-   configurar precisa saber).
-2. Rode (troque SEGREDO, EMAIL e SENHA):
+LOGIN DA IDEALIZADORA NO PAINEL (/admin)
+--------------------------------------------
+Não existe usuário/senha próprios deste painel: o login é o MESMO
+e-mail e senha que ela já usa para entrar como Gestor no Sistema da
+Clínica (o app Next.js separado, "Clinica Faça Amigos"). A função
+behavior-test-admin autentica contra o Supabase Auth daquele sistema
+(usando CLINICA_SUPABASE_URL/CLINICA_SUPABASE_ANON_KEY acima) e só
+libera quem tiver profiles.role = 'gestor' por lá — qualquer outro
+papel (terapeuta, recepção etc.) é recusado mesmo com a senha certa.
 
-   curl -X POST https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/behavior-test-admin \
-     -H "Content-Type: application/json" \
-     -d '{"action":"bootstrap","bootstrap_secret":"SEGREDO","email":"EMAIL@institutofacaamigos.com.br","password":"SENHA_COM_8_OU_MAIS_CARACTERES"}'
-
-3. Esse mesmo comando também RESETA a senha se rodar de novo com o
-   mesmo e-mail — é assim que ela troca a senha se esquecer.
-4. Login em https://institutofacaamigos.com.br/admin com esse e-mail
-   e senha (sessão dura 12h).
+Ou seja: assim que os dois secrets CLINICA_* estiverem configurados,
+ela já consegue entrar em https://institutofacaamigos.com.br/admin
+com o login que já usa no dia a dia — nada para criar ou lembrar de
+novo. Se ela trocar a senha no Sistema da Clínica, o login do painel
+muda junto automaticamente (sessão local dura 12h, depois pede login
+de novo).
 
 PENDENTE — conteúdo real do teste
 -------------------------------------

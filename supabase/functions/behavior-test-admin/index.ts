@@ -5,12 +5,22 @@
 // inline das demais funções deste projeto (import relativo de ../_shared
 // quebra no deploy via MCP).
 //
-// Autenticação é própria (não reaproveita login-pin/sessions, que são do
-// sistema de colaboradores do kiosk): senha com PBKDF2-SHA256 (Web Crypto,
-// sem dependência npm) + token de sessão opaco em fa_teste_admin_sessions,
-// validade de 12h. `action: "bootstrap"` cria ou reseta a senha de um admin
-// e é protegida por um segredo de servidor (ADMIN_BOOTSTRAP_SECRET) — é
-// assim que Bruno cria/reseta a conta da idealizadora sem precisar de SQL.
+// Autenticação NÃO guarda senha própria: o login é o mesmo e-mail/senha
+// do Sistema da Clínica FaçaAmigos (Next.js, projeto Supabase separado
+// "vththexblpxwocbowhsv"), papel `gestor`. O fluxo é:
+//   1. POST no /auth/v1/token do projeto da Clínica com email+senha
+//      (mesma API que o próprio app da Clínica usa) — se autenticar,
+//      devolve um access_token do usuário.
+//   2. Com esse access_token (não com service role), GET em
+//      /rest/v1/profiles?id=eq.<uid> do MESMO projeto — a RLS de lá
+//      (`profiles_read_same_clinic`) deixa qualquer usuário ler o próprio
+//      perfil, então isso funciona sem precisar da service role da
+//      Clínica aqui.
+//   3. Só role === "gestor" pode entrar; qualquer outro papel (terapeuta,
+//      recepção etc.) é recusado, mesmo com senha correta.
+// Continua havendo um token de sessão opaco próprio em
+// fa_teste_admin_sessions (validade 12h) — só para não repetir o login
+// contra a Clínica a cada clique no painel.
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
@@ -44,43 +54,68 @@ function str(v: unknown): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
-// ---------------------------------------------------------------------
-// Senha (PBKDF2-SHA256, Web Crypto — sem dependência externa)
-// ---------------------------------------------------------------------
-
-const PBKDF2_ITERATIONS = 100_000;
-
 function toHex(buf: ArrayBuffer): string {
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-function randomHex(bytes: number): string {
-  const arr = new Uint8Array(bytes);
-  crypto.getRandomValues(arr);
-  return toHex(arr.buffer);
-}
+// ---------------------------------------------------------------------
+// Login delegado ao Sistema da Clínica (Supabase Auth de outro projeto)
+// ---------------------------------------------------------------------
 
-async function hashPassword(password: string, saltHex: string): Promise<string> {
-  const enc = new TextEncoder();
-  const keyMaterial = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveBits"]);
-  const saltBytes = new Uint8Array((saltHex.match(/.{2}/g) ?? []).map((b) => parseInt(b, 16)));
-  const bits = await crypto.subtle.deriveBits(
-    { name: "PBKDF2", salt: saltBytes, iterations: PBKDF2_ITERATIONS, hash: "SHA-256" },
-    keyMaterial,
-    256,
+async function verifyClinicaGestorLogin(
+  email: string,
+  password: string,
+): Promise<{ ok: true; userId: string; email: string } | { ok: false; error: string; status: number }> {
+  const clinicaUrl = Deno.env.get("CLINICA_SUPABASE_URL");
+  const clinicaAnonKey = Deno.env.get("CLINICA_SUPABASE_ANON_KEY");
+  if (!clinicaUrl || !clinicaAnonKey) {
+    return { ok: false, error: "integração com o Sistema da Clínica não configurada", status: 500 };
+  }
+
+  // 1) Autentica contra o Supabase Auth da Clínica — mesma chamada que o
+  // próprio app dela faz (auth.signInWithPassword usa este endpoint por
+  // baixo dos panos).
+  const tokenRes = await fetch(`${clinicaUrl}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: { apikey: clinicaAnonKey, "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  if (!tokenRes.ok) {
+    return { ok: false, error: "credenciais inválidas", status: 401 };
+  }
+
+  const tokenData = await tokenRes.json().catch(() => null);
+  const accessToken = tokenData?.access_token as string | undefined;
+  const userId = tokenData?.user?.id as string | undefined;
+  if (!accessToken || !userId) {
+    return { ok: false, error: "credenciais inválidas", status: 401 };
+  }
+
+  // 2) Com o access_token do próprio usuário (não a service role), lê o
+  // perfil dele — a RLS de lá (`profiles_read_same_clinic`) deixa
+  // qualquer usuário autenticado ler o próprio registro.
+  const profileRes = await fetch(
+    `${clinicaUrl}/rest/v1/profiles?select=role,email&id=eq.${userId}`,
+    { headers: { apikey: clinicaAnonKey, Authorization: `Bearer ${accessToken}` } },
   );
-  return toHex(bits);
-}
 
-function timingSafeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return diff === 0;
+  if (!profileRes.ok) {
+    return { ok: false, error: "não foi possível verificar seu perfil na Clínica", status: 502 };
+  }
+
+  const profiles = await profileRes.json().catch(() => []);
+  const profile = Array.isArray(profiles) ? profiles[0] : undefined;
+
+  if (!profile || String(profile.role).toLowerCase() !== "gestor") {
+    return { ok: false, error: "apenas o Gestor da Clínica pode acessar este painel", status: 403 };
+  }
+
+  return { ok: true, userId, email: profile.email ?? email };
 }
 
 // ---------------------------------------------------------------------
-// Sessão
+// Sessão (própria deste painel — só evita repetir o login acima a cada clique)
 // ---------------------------------------------------------------------
 
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12h
@@ -98,7 +133,7 @@ async function requireSession(admin: ReturnType<typeof createClient>, req: Reque
 
   const { data, error } = await admin
     .from("fa_teste_admin_sessions")
-    .select("token, user_id, expires_at, fa_teste_admin_users(id, email)")
+    .select("token, clinica_user_id, admin_email, expires_at")
     .eq("token", token)
     .maybeSingle();
 
@@ -107,7 +142,7 @@ async function requireSession(admin: ReturnType<typeof createClient>, req: Reque
     await admin.from("fa_teste_admin_sessions").delete().eq("token", token);
     return null;
   }
-  return { token, userId: data.user_id, email: (data as any).fa_teste_admin_users?.email as string | undefined };
+  return { token, userId: data.clinica_user_id as string, email: data.admin_email as string };
 }
 
 // ---------------------------------------------------------------------
@@ -206,7 +241,7 @@ async function sendInsightEmailToGuardian(params: {
   insight: string;
 }): Promise<{ sent: boolean; error?: string }> {
   const apiKey = Deno.env.get("BREVO_API_KEY");
-  const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <instituto@institutofacaamigos.com.br>";
+  const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <nao-responder@institutofacaamigos.com.br>";
   const replyTo = Deno.env.get("BREVO_REPLY_TO");
   if (!apiKey) return { sent: false, error: "BREVO_API_KEY não configurada" };
 
@@ -216,6 +251,7 @@ async function sendInsightEmailToGuardian(params: {
 
   const html = `
 <div style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1a3f35;">
+  <div style="font-size:11px;color:#9ca3af;text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">🤖 E-mail automático — Favor não responder a esta mensagem</div>
   <div style="background:linear-gradient(135deg,#f0196b 0%,#c8155a 100%);padding:28px 24px;border-radius:24px 24px 0 0;text-align:center;">
     <h1 style="margin:0;font-family:'Fredoka One',cursive,sans-serif;font-weight:400;font-size:22px;color:#fff;">O retrato do(a) ${escapeHtml(params.childFirstName)} está pronto</h1>
   </div>
@@ -227,6 +263,9 @@ async function sendInsightEmailToGuardian(params: {
     <div style="text-align:center;margin:20px 0 4px;">
       <a href="${waLink}" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;text-decoration:none;padding:14px 28px;border-radius:9999px;font-size:15px;">Falar com a equipe no WhatsApp</a>
     </div>
+    <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;text-align:center;font-size:12px;color:#9ca3af;">
+      Mensagem automática enviada pelo sistema FaçaAmigos • Favor não responder a este e-mail.
+    </div>
   </div>
 </div>`.trim();
 
@@ -237,7 +276,7 @@ async function sendInsightEmailToGuardian(params: {
       body: JSON.stringify({
         sender: parseSenderAddress(fromRaw),
         to: [{ email: params.guardianEmail, name: params.guardianName }],
-        subject: `O retrato do(a) ${params.childFirstName} está pronto — FaçaAmigos`,
+        subject: `O retrato do(a) ${params.childFirstName} está pronto — Instituto Faça Amigos`,
         htmlContent: html,
         ...(replyTo ? { replyTo: parseSenderAddress(replyTo) } : {}),
       }),
@@ -272,60 +311,28 @@ Deno.serve(async (req) => {
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
   const admin = createClient(supabaseUrl, serviceRoleKey);
 
-  // --- bootstrap: cria/reseta a senha de um admin (protegido por secret) ---
-  if (action === "bootstrap") {
-    const secret = str(body.bootstrap_secret);
-    const expected = Deno.env.get("ADMIN_BOOTSTRAP_SECRET");
-    if (!expected || secret !== expected) {
-      return jsonResponse(req, { error: "não autorizado" }, 401);
-    }
-    const email = str(body.email).toLowerCase();
-    const password = str(body.password);
-    if (!email || password.length < 8) {
-      return jsonResponse(req, { error: "e-mail e senha (mín. 8 caracteres) são obrigatórios" }, 400);
-    }
-    const salt = randomHex(16);
-    const hash = await hashPassword(password, salt);
-    const { error } = await admin
-      .from("fa_teste_admin_users")
-      .upsert({ email, password_hash: hash, password_salt: salt }, { onConflict: "email" });
-    if (error) {
-      console.error("Erro no bootstrap:", error);
-      return jsonResponse(req, { error: "falha ao criar/atualizar admin" }, 500);
-    }
-    return jsonResponse(req, { success: true, email });
-  }
-
-  // --- login ---
+  // --- login: mesmo e-mail/senha do Gestor no Sistema da Clínica ---
   if (action === "login") {
     const email = str(body.email).toLowerCase();
     const password = str(body.password);
     if (!email || !password) return jsonResponse(req, { error: "e-mail e senha são obrigatórios" }, 400);
 
-    const { data: user } = await admin
-      .from("fa_teste_admin_users")
-      .select("id, email, password_hash, password_salt")
-      .eq("email", email)
-      .maybeSingle();
-
-    if (!user) return jsonResponse(req, { error: "credenciais inválidas" }, 401);
-
-    const computed = await hashPassword(password, user.password_salt);
-    if (!timingSafeEqual(computed, user.password_hash)) {
-      return jsonResponse(req, { error: "credenciais inválidas" }, 401);
+    const check = await verifyClinicaGestorLogin(email, password);
+    if (!check.ok) {
+      return jsonResponse(req, { error: check.error }, check.status);
     }
 
     const token = newSessionToken();
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
     const { error: sessionError } = await admin
       .from("fa_teste_admin_sessions")
-      .insert({ token, user_id: user.id, expires_at: expiresAt });
+      .insert({ token, clinica_user_id: check.userId, admin_email: check.email, expires_at: expiresAt });
     if (sessionError) {
       console.error("Erro ao criar sessão:", sessionError);
       return jsonResponse(req, { error: "falha ao autenticar" }, 500);
     }
 
-    return jsonResponse(req, { token, expires_at: expiresAt, email: user.email });
+    return jsonResponse(req, { token, expires_at: expiresAt, email: check.email });
   }
 
   // --- todas as ações abaixo exigem sessão válida ---

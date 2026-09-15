@@ -129,11 +129,17 @@ async function sendLeadEmailToIdealizadora(params: {
   landingPage: string;
 }): Promise<{ sent: boolean; error?: string }> {
   const apiKey = Deno.env.get("BREVO_API_KEY");
-  const notifyTo = Deno.env.get("LEAD_NOTIFY_EMAIL");
-  const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <instituto@institutofacaamigos.com.br>";
+  // LEAD_NOTIFY_EMAIL aceita um ou mais e-mails separados por vírgula
+  // (ex.: "isabella.goncalves@gmail.com,institutofacaamigos@gmail.com") —
+  // todos recebem o mesmo aviso de lead.
+  const notifyToList = (Deno.env.get("LEAD_NOTIFY_EMAIL") ?? "")
+    .split(",")
+    .map((e) => e.trim())
+    .filter(Boolean);
+  const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <nao-responder@institutofacaamigos.com.br>";
   const replyTo = Deno.env.get("BREVO_REPLY_TO");
 
-  if (!apiKey || !notifyTo) {
+  if (!apiKey || notifyToList.length === 0) {
     return { sent: false, error: "BREVO_API_KEY/LEAD_NOTIFY_EMAIL não configurados" };
   }
 
@@ -154,6 +160,7 @@ async function sendLeadEmailToIdealizadora(params: {
 
   const html = `
 <div style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1a3f35;">
+  <div style="font-size:11px;color:#9ca3af;text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">🤖 E-mail automático — Favor não responder a esta mensagem</div>
   <div style="background:linear-gradient(135deg,#f0196b 0%,#c8155a 100%);padding:28px 24px;border-radius:24px 24px 0 0;text-align:center;">
     <h1 style="margin:0;font-family:'Fredoka One',cursive,sans-serif;font-weight:400;font-size:24px;color:#fff;">Novo lead do Teste de Comportamento</h1>
   </div>
@@ -171,6 +178,9 @@ async function sendLeadEmailToIdealizadora(params: {
     <table style="border-collapse:collapse;font-size:13px;">${answersRows}</table>
     <p style="margin:18px 0 6px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:#9ca3af;font-weight:700;">Origem</p>
     <div style="font-size:13px;color:#4C6B62;">${utmRows || "direto"}<div>página: ${escapeHtml(params.landingPage)}</div></div>
+    <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;text-align:center;font-size:12px;color:#9ca3af;">
+      Mensagem automática emitida pelo sistema FaçaAmigos • Não responda a este e-mail.
+    </div>
   </div>
 </div>`.trim();
 
@@ -182,8 +192,8 @@ async function sendLeadEmailToIdealizadora(params: {
       headers: { "api-key": apiKey, "Content-Type": "application/json", Accept: "application/json" },
       body: JSON.stringify({
         sender,
-        to: [{ email: notifyTo }],
-        subject: `Novo lead do Teste de Comportamento — ${params.childFirstName}`,
+        to: notifyToList.map((email) => ({ email })),
+        subject: `Novo lead do Teste de Comportamento — ${params.childFirstName} | Instituto Faça Amigos`,
         htmlContent: html,
         ...(replyTo ? { replyTo: parseSenderAddress(replyTo) } : {}),
       }),
