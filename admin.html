@@ -595,6 +595,7 @@
           <select id="statusFilter" class="form-control">
             <option value="">Todos</option>
             <option value="started">Iniciado</option>
+            <option value="abandoned">Substituído (refez o teste)</option>
             <option value="completed">Concluído</option>
             <option value="contacted">Contatado</option>
           </select>
@@ -867,6 +868,7 @@
       function badgeForStatus(status) {
         if (status === 'completed') return '<span class="badge badge-teal">Concluído</span>';
         if (status === 'contacted') return '<span class="badge badge-blue">Contatado</span>';
+        if (status === 'abandoned') return '<span class="badge badge-gray">Substituído (refez o teste)</span>';
         return '<span class="badge badge-gray">Iniciado, não concluiu</span>';
       }
 
@@ -1027,7 +1029,9 @@
           ['E-mail', lead.guardian_email || '—'],
           ['Telefone', lead.guardian_phone || '—'],
           ['Unidade de interesse', lead.preferred_unit || '—'],
-          ['Status', lead.status === 'completed' ? 'Concluído' : (lead.status === 'contacted' ? 'Contatado' : 'Iniciado, não concluiu')],
+          ['Quer receber conteúdos (opt-in)', lead.marketing_opt_in ? 'Sim' : 'Não'],
+          ['Status', lead.status === 'completed' ? 'Concluído' : (lead.status === 'contacted' ? 'Contatado' : (lead.status === 'abandoned' ? 'Substituído (refez o teste)' : 'Iniciado, não concluiu'))],
+          ['E-mail de resultado', lead.result_email_sent_at ? ('Enviado em ' + new Date(lead.result_email_sent_at).toLocaleString('pt-BR')) : (lead.result_email_error ? ('Falhou: ' + lead.result_email_error) : 'Não enviado')],
           ['Resultado', lead.result_band || '—'],
           ['Pontuação', (lead.score === null || lead.score === undefined) ? '—' : lead.score],
           ['Criado em', formatDate(lead.created_at)]

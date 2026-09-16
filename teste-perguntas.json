@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-placeholder",
+  "version": "2026-09-16",
   "placeholder": true,
   "intro": {
     "duration": "~4 minutos",
@@ -53,27 +53,31 @@
       "text": "{{crianca}} consegue seguir instruções simples de 1 ou 2 passos?"
     }
   ],
+  "_bands_nota": "Todas as perguntas são positivas (quanto mais 'Quase sempre', melhor). Por isso a faixa mais ALTA de pontos é 'esperado' e a mais BAIXA é 'recomendado'. As faixas abaixo precisam estar idênticas a BANDS em supabase/functions/behavior-test-webhook/index.ts.",
   "bands": [
     {
-      "key": "esperado",
+      "key": "recomendado",
       "min": 0,
       "max": 8,
-      "title": "Dentro do esperado para a idade",
-      "text": "Pelo que você compartilhou, {{crianca}} vem se desenvolvendo dentro do que é esperado para a faixa etária. Continue observando o dia a dia com carinho — pequenos estímulos e brincadeiras fazem toda diferença."
+      "emoji": "🤝",
+      "title": "Recomendamos uma avaliação profissional",
+      "text": "As respostas sobre {{crianca}} indicam sinais que merecem uma avaliação mais próxima. Isso não define nada sozinho, mas quanto antes conversar com uma especialista, mais cedo você tem clareza e, se for o caso, o apoio adequado."
     },
     {
       "key": "observar",
       "min": 9,
       "max": 16,
+      "emoji": "🔍",
       "title": "Vale a pena observar de perto",
-      "text": "Alguns pontos que você respondeu merecem atenção. Isso não é um diagnóstico, mas pode ser um bom momento para conversar com uma profissional especializada e entender melhor o que está acontecendo."
+      "text": "Alguns pontos que você respondeu sobre {{crianca}} merecem atenção. Isso não é um diagnóstico, mas pode ser um bom momento para conversar com uma profissional especializada e entender melhor o que está acontecendo."
     },
     {
-      "key": "recomendado",
+      "key": "esperado",
       "min": 17,
       "max": 24,
-      "title": "Recomendamos uma avaliação profissional",
-      "text": "As respostas indicam sinais que merecem uma avaliação mais próxima. Isso não define nada sozinho, mas quanto antes conversar com uma especialista, mais cedo você tem clareza e, se for o caso, apoio adequado."
+      "emoji": "🌱",
+      "title": "Dentro do esperado para a idade",
+      "text": "Pelo que você compartilhou, {{crianca}} vem se desenvolvendo dentro do que é esperado para a faixa etária. Continue observando o dia a dia com carinho — pequenos estímulos e brincadeiras fazem toda diferença."
     }
   ]
 }

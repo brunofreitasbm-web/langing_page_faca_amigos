@@ -209,6 +209,55 @@ novo. Se ela trocar a senha no Sistema da Clínica, o login do painel
 muda junto automaticamente (sessão local dura 12h, depois pede login
 de novo).
 
+ATUALIZAÇÃO 16/09/2026 (2) — WhatsApp da Clínica corrigido + opt-in de conteúdo
+------------------------------------------------------------------------------
+- O WhatsApp da Clínica no hub estava com um dígito faltando. Corrigido
+  para 5591991782027 (confirmado pelo Bruno) em index.html e em TODOS
+  os links de WhatsApp de teste.html — o Teste de Comportamento existe
+  para prospectar a Clínica, então seus CTAs (nav, resultado, footer,
+  botão flutuante, e-mail automático) agora abrem o WhatsApp da Clínica,
+  não o do Playground. Playground e Circuito continuam com o próprio
+  número, 5591992347673 — não mexer nesses.
+- Secret LEAD_WHATSAPP (se configurado) também deve usar o número da
+  Clínica agora; o padrão no código já foi atualizado para
+  5591991782027.
+- Novo checkbox opcional no formulário de contato do /teste: "Quero
+  receber, por e-mail, conteúdos gratuitos da idealizadora sobre
+  desenvolvimento infantil, autismo e neurodivergência." Separado do
+  consentimento obrigatório (que é só para receber o resultado do
+  teste). Gravado em marketing_opt_in (nova coluna, ver migration) e
+  visível no painel /admin, no detalhe de cada lead ("Quer receber
+  conteúdos (opt-in)"). É a base da futura lista de nutrição para
+  pais e mães de crianças autistas/neurodivergentes, público definido
+  para os produtos futuros da idealizadora (curso/e-book/mentoria).
+  Ainda não há integração com listas do Brevo — hoje só fica marcado
+  no banco; quando o produto existir, criar a lista no Brevo e migrar
+  os leads com marketing_opt_in = true.
+
+ATUALIZAÇÃO 16/09/2026 (1) — correções do teste (versão "2026-09-16")
+--------------------------------------------------------------------
+- BUG CORRIGIDO: a escala estava invertida. Todas as perguntas são
+  positivas ("olha nos olhos?"), então pontuação ALTA = "esperado" e
+  BAIXA = "recomendado". Antes era o contrário (100% dos resultados
+  errados). Faixas agora: recomendado 0–8, observar 9–16, esperado 17–24.
+- E-MAIL AUTOMÁTICO AO RESPONSÁVEL: o webhook agora envia o resultado
+  por e-mail (Brevo) no "complete", cumprindo a promessa do formulário.
+  Colunas novas: result_email_sent_at / result_email_error.
+- Secret opcional LEAD_WHATSAPP (só dígitos, ex.: 5591992347673): número
+  usado nos e-mails ao responsável. Sem ele, usa 5591992347673.
+- Honeypot (campo "website") + rate limit no "complete"; buscas do
+  painel e anti-duplicidade sem interpolação crua no filtro.
+- Anti-duplicidade só reaproveita o lead antigo se for a MESMA criança;
+  o "started" substituído vira status "abandoned".
+- Migration nova: supabase/migrations/20260916120000_*.sql (colunas do
+  painel que não estavam versionadas + sessões + status "abandoned").
+  APLICAR no projeto ivjvpdzsfjdpyabbzzuj e REIMPLANTAR as duas funções
+  (behavior-test-webhook e behavior-test-admin) junto com o deploy do
+  site — se o site subir antes das funções, o teste responde 409 até
+  a função ser atualizada.
+- robots.txt agora bloqueia /admin e /teste-perguntas.json; vercel.json
+  ganhou headers de segurança e no-store no JSON do teste e no /admin.
+
 PENDENTE — conteúdo real do teste
 -------------------------------------
 O quiz está no ar com 8 perguntas PLACEHOLDER (marcadas

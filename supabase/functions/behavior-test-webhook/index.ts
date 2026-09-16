@@ -43,15 +43,32 @@ function jsonResponse(req: Request, body: unknown, status = 200): Response {
 // Motor do teste — mantido em sincronia com teste-perguntas.json
 // ---------------------------------------------------------------------
 
-const TEST_VERSION = "2026-09-placeholder";
+const TEST_VERSION = "2026-09-16";
 
 const QUESTION_IDS = ["q01", "q02", "q03", "q04", "q05", "q06", "q07", "q08"];
 
+// Todas as perguntas são redigidas no sentido POSITIVO (ex.: "olha nos
+// olhos?", "se adapta bem?"), então quanto MAIOR a soma, melhor o quadro.
+// Por isso a faixa de pontuação mais alta é "esperado" e a mais baixa é
+// "recomendado". Manter idêntico a "bands" em teste-perguntas.json.
 const BANDS = [
-  { key: "esperado", min: 0, max: 8, title: "Dentro do esperado para a idade" },
+  { key: "recomendado", min: 0, max: 8, title: "Recomendamos uma avaliação profissional" },
   { key: "observar", min: 9, max: 16, title: "Vale a pena observar de perto" },
-  { key: "recomendado", min: 17, max: 24, title: "Recomendamos uma avaliação profissional" },
+  { key: "esperado", min: 17, max: 24, title: "Dentro do esperado para a idade" },
 ] as const;
+
+const BAND_TEXT: Record<string, string> = {
+  recomendado:
+    "As respostas sobre {{crianca}} indicam sinais que merecem uma avaliação mais próxima. Isso não define nada sozinho, mas quanto antes conversar com uma especialista, mais cedo você tem clareza e, se for o caso, o apoio adequado.",
+  observar:
+    "Alguns pontos que você respondeu sobre {{crianca}} merecem atenção. Isso não é um diagnóstico, mas pode ser um bom momento para conversar com uma profissional especializada e entender melhor o que está acontecendo.",
+  esperado:
+    "Pelo que você compartilhou, {{crianca}} vem se desenvolvendo dentro do que é esperado para a faixa etária. Continue observando o dia a dia com carinho — pequenos estímulos e brincadeiras fazem toda diferença.",
+};
+
+// WhatsApp usado no e-mail enviado ao responsável. Configurável por secret
+// para não precisar redeploy quando o número mudar.
+const LEAD_WHATSAPP = (Deno.env.get("LEAD_WHATSAPP") ?? "5591991782027").replace(/\D/g, "");
 
 function computeScore(answers: Array<{ id: string; v: number }>): number {
   const byId = new Map(answers.map((a) => [a.id, a.v]));
@@ -90,6 +107,13 @@ function isValidPhone(digits: string): boolean {
 
 function str(v: unknown): string {
   return typeof v === "string" ? v.trim() : "";
+}
+
+// Valor seguro para usar dentro de .or() do PostgREST: entre aspas duplas,
+// com aspas e barras escapadas — evita que vírgula/parêntese no e-mail
+// vire operador de filtro.
+function quoteFilterValue(v: string): string {
+  return `"${v.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 }
 
 // ---------------------------------------------------------------------
@@ -208,6 +232,72 @@ async function sendLeadEmailToIdealizadora(params: {
   }
 }
 
+// E-mail automático para o responsável, disparado no "complete". Cumpre a
+// promessa do gate ("Para onde enviamos seu resultado?") sem depender de
+// ninguém abrir o painel. O insight de IA (painel) continua sendo um
+// segundo e-mail, opcional.
+async function sendResultEmailToGuardian(params: {
+  guardianName: string;
+  guardianEmail: string;
+  childFirstName: string;
+  band: { key: string; title: string };
+}): Promise<{ sent: boolean; error?: string }> {
+  const apiKey = Deno.env.get("BREVO_API_KEY");
+  const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <nao-responder@institutofacaamigos.com.br>";
+  const replyTo = Deno.env.get("BREVO_REPLY_TO");
+  if (!apiKey) return { sent: false, error: "BREVO_API_KEY não configurada" };
+
+  const bandText = (BAND_TEXT[params.band.key] ?? "").split("{{crianca}}").join(params.childFirstName);
+  const waText = encodeURIComponent(
+    `Oi! Acabei de fazer o Teste de Comportamento do(a) ${params.childFirstName} e o resultado foi: ${params.band.title}. Gostaria de conversar.`,
+  );
+  const waLink = `https://wa.me/${LEAD_WHATSAPP}?text=${waText}`;
+  const clinicaLink = "https://institutofacaamigos.com.br/#clinica";
+
+  const html = `
+<div style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1a3f35;">
+  <div style="background:linear-gradient(135deg,#f0196b 0%,#c8155a 100%);padding:28px 24px;border-radius:24px 24px 0 0;text-align:center;">
+    <h1 style="margin:0;font-family:'Fredoka One',cursive,sans-serif;font-weight:400;font-size:22px;color:#fff;">O retrato do(a) ${escapeHtml(params.childFirstName)}</h1>
+  </div>
+  <div style="background:#fff;padding:28px 24px;border-radius:0 0 24px 24px;">
+    <p style="margin:0 0 12px;font-size:15px;">Olá, ${escapeHtml(params.guardianName)}! Obrigado por responder ao Teste de Comportamento do Instituto FaçaAmigos.</p>
+    <p style="margin:0 0 14px;font-size:16px;font-weight:800;color:#1f917f;">${escapeHtml(params.band.title)}</p>
+    <div style="background:#FFF9F1;border-radius:16px;padding:18px;font-size:14px;line-height:1.6;">${escapeHtml(bandText)}</div>
+    <p style="margin:18px 0;font-size:12px;color:#9ca3af;">Este teste é um retrato inicial e não substitui uma avaliação profissional. Cada criança tem seu próprio ritmo.</p>
+    <div style="text-align:center;margin:20px 0 4px;">
+      <a href="${waLink}" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;text-decoration:none;padding:14px 28px;border-radius:9999px;font-size:15px;">Conversar com a equipe no WhatsApp</a>
+    </div>
+    <div style="text-align:center;margin:12px 0 4px;font-size:14px;">
+      <a href="${clinicaLink}" style="color:#1f917f;font-weight:700;">Conhecer o Centro de Terapia Comportamental FaçaAmigos</a>
+    </div>
+    <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;text-align:center;font-size:12px;color:#9ca3af;">
+      Você recebeu este e-mail porque pediu o resultado do teste em institutofacaamigos.com.br/teste. Mensagem automática — para falar com a gente, use o WhatsApp acima.
+    </div>
+  </div>
+</div>`.trim();
+
+  try {
+    const resp = await fetch("https://api.brevo.com/v3/smtp/email", {
+      method: "POST",
+      headers: { "api-key": apiKey, "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        sender: parseSenderAddress(fromRaw),
+        to: [{ email: params.guardianEmail, name: params.guardianName }],
+        subject: `O retrato do(a) ${params.childFirstName} — Teste de Comportamento | Instituto Faça Amigos`,
+        htmlContent: html,
+        ...(replyTo ? { replyTo: parseSenderAddress(replyTo) } : {}),
+      }),
+    });
+    if (!resp.ok) {
+      const data = await resp.json().catch(() => null);
+      return { sent: false, error: data?.message || `Erro HTTP ${resp.status}` };
+    }
+    return { sent: true };
+  } catch (err) {
+    return { sent: false, error: err instanceof Error ? err.message : "erro desconhecido" };
+  }
+}
+
 // ---------------------------------------------------------------------
 // Handler
 // ---------------------------------------------------------------------
@@ -224,12 +314,33 @@ Deno.serve(async (req) => {
   }
 
   const event = str(body.event);
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceRoleKey) {
+    console.error("SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY ausentes");
+    return jsonResponse(req, { error: "serviço indisponível" }, 500);
+  }
   const admin = createClient(supabaseUrl, serviceRoleKey);
+
+  // Honeypot: campo invisível no formulário. Humano nunca preenche; bot
+  // preenche. Respondemos 200 "de mentira" para não dar pista.
+  if (str(body.website)) {
+    return jsonResponse(req, { ok: true });
+  }
 
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "";
   const userAgent = req.headers.get("user-agent") || "";
+
+  async function tooManyFromIp(column: "created_at" | "consent_at", max: number): Promise<boolean> {
+    if (!ip) return false;
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const { count } = await admin
+      .from("fa_leads_teste_comportamento")
+      .select("id", { count: "exact", head: true })
+      .eq("ip", ip)
+      .gte(column, oneHourAgo);
+    return (count ?? 0) >= max;
+  }
 
   if (event === "start") {
     const childFirstName = str(body.child_first_name);
@@ -244,16 +355,8 @@ Deno.serve(async (req) => {
     }
 
     // Rate limit simples: máx. 10 starts por IP na última hora.
-    if (ip) {
-      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
-      const { count } = await admin
-        .from("fa_leads_teste_comportamento")
-        .select("id", { count: "exact", head: true })
-        .eq("ip", ip)
-        .gte("created_at", oneHourAgo);
-      if ((count ?? 0) >= 10) {
-        return jsonResponse(req, { error: "muitas tentativas, tente novamente mais tarde" }, 429);
-      }
+    if (await tooManyFromIp("created_at", 10)) {
+      return jsonResponse(req, { error: "muitas tentativas, tente novamente mais tarde" }, 429);
     }
 
     const { data, error } = await admin
@@ -292,6 +395,7 @@ Deno.serve(async (req) => {
     const guardianPhoneRaw = str(body.guardian_phone);
     const preferredUnit = str(body.preferred_unit);
     const consent = body.consent === true;
+    const marketingOptIn = body.marketing_opt_in === true;
     const rawAnswers = Array.isArray(body.answers) ? body.answers : [];
 
     if (!leadId) return jsonResponse(req, { error: "lead_id ausente" }, 400);
@@ -322,6 +426,12 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "respostas incompletas" }, 400);
     }
 
+    // Rate limit no complete também (o start já limita, mas o complete é o
+    // que dispara e-mails).
+    if (await tooManyFromIp("consent_at", 10)) {
+      return jsonResponse(req, { error: "muitas tentativas, tente novamente mais tarde" }, 429);
+    }
+
     const score = computeScore(answers);
     const band = bandFor(score);
 
@@ -336,21 +446,33 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "teste não encontrado, recomece" }, 404);
     }
 
-    // Anti-duplicidade: mesmo e-mail OU telefone já completou nas últimas
-    // 24h → atualiza esse registro em vez de manter dois leads da mesma
-    // família na lista da idealizadora.
+    // Anti-duplicidade: a MESMA família refez o teste da MESMA criança nas
+    // últimas 24h → atualiza o registro anterior em vez de duplicar na
+    // lista. Se for outra criança (dois filhos), mantém registros
+    // separados. Quando reaproveita o antigo, o "started" recém-criado é
+    // marcado como "abandoned" para não inflar a taxa de abandono.
     const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
     const { data: dupe } = await admin
       .from("fa_leads_teste_comportamento")
       .select("id")
-      .eq("status", "completed")
-      .or(`guardian_email.eq.${guardianEmail},guardian_phone.eq.${guardianPhone}`)
+      .in("status", ["completed", "contacted"])
+      .or(
+        `guardian_email.eq.${quoteFilterValue(guardianEmail)},guardian_phone.eq.${quoteFilterValue(guardianPhone)}`,
+      )
+      .ilike("child_first_name", existingLead.child_first_name)
       .gte("created_at", oneDayAgo)
       .neq("id", leadId)
       .limit(1)
       .maybeSingle();
 
     const targetId = dupe?.id ?? leadId;
+    if (dupe?.id) {
+      await admin
+        .from("fa_leads_teste_comportamento")
+        .update({ status: "abandoned" })
+        .eq("id", leadId)
+        .eq("status", "started");
+    }
 
     const { error: updateError } = await admin
       .from("fa_leads_teste_comportamento")
@@ -364,6 +486,10 @@ Deno.serve(async (req) => {
         score,
         result_band: band.key,
         consent_at: new Date().toISOString(),
+        // Opt-in separado do consentimento de resultado — para a futura
+        // lista de nutrição de conteúdo (pais/mães de crianças autistas e
+        // neurodivergentes), não confundir com o consentimento obrigatório.
+        marketing_opt_in: marketingOptIn,
       })
       .eq("id", targetId);
 
@@ -392,19 +518,30 @@ Deno.serve(async (req) => {
       landingPage: existingLead.landing_page ?? "",
     });
 
+    const guardianEmailResult = await sendResultEmailToGuardian({
+      guardianName,
+      guardianEmail,
+      childFirstName: existingLead.child_first_name,
+      band,
+    });
+
     await admin
       .from("fa_leads_teste_comportamento")
-      .update(
-        emailResult.sent
+      .update({
+        ...(emailResult.sent
           ? { email_sent_at: new Date().toISOString() }
-          : { email_error: emailResult.error ?? "falha desconhecida" },
-      )
+          : { email_error: emailResult.error ?? "falha desconhecida" }),
+        ...(guardianEmailResult.sent
+          ? { result_email_sent_at: new Date().toISOString() }
+          : { result_email_error: guardianEmailResult.error ?? "falha desconhecida" }),
+      })
       .eq("id", targetId);
 
     return jsonResponse(req, {
       score,
       result_band: band.key,
       band_title: band.title,
+      result_email_sent: guardianEmailResult.sent,
     });
   }
 

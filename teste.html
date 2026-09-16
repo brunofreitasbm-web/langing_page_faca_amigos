@@ -630,7 +630,7 @@
       <a class="logo" href="https://institutofacaamigos.com.br/"><img class="simbolo" src="img/logo-simbolo.png"
           width="460" height="416" alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span class="txt">Faça<span
             class="amigos">Amigos</span><span class="sub">Instituto</span></span></a>
-      <a href="https://wa.me/5591992347673?text=Oi!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Teste%20de%20Comportamento."
+      <a href="https://wa.me/5591991782027?text=Oi!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Teste%20de%20Comportamento."
         target="_blank" rel="noopener" class="btn btn-wa btn-sm">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path
@@ -650,8 +650,8 @@
         <div class="teste-photo"><img src="img/idealizadora.jpg" width="700" height="936"
             alt="Idealizadora do FaçaAmigos, criadora do Teste de Comportamento" loading="eager" decoding="async"></div>
         <h1 id="landing-heading" tabindex="-1">Entenda melhor o comportamento do seu filho</h1>
-        <p class="sub" id="intro-disclaimer">Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu pequeno.
-          Em poucos minutos, você tem um retrato inicial de como ele está se desenvolvendo.</p>
+        <p class="sub" id="intro-promise">Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu pequeno.
+          Em poucos minutos, você tem um retrato inicial de como ele está se desenvolvendo — na tela e no seu e-mail.</p>
         <div class="teste-meta">
           <span class="chip" id="intro-duration"><svg fill="currentColor" viewBox="0 0 20 20">
               <path fill-rule="evenodd"
@@ -665,13 +665,13 @@
         </div>
         <div id="landing-error" class="form-error" aria-live="polite"></div>
         <button type="button" id="btn-start" class="btn btn-pink btn-block" disabled>Carregando teste...</button>
-        <p class="note-small">100% gratuito · não substitui avaliação profissional</p>
+        <p class="note-small" id="intro-disclaimer">Desenvolvido pela idealizadora do FaçaAmigos · não substitui avaliação profissional</p>
       </section>
 
       <!-- PASSO 1 — SOBRE A CRIANÇA -->
       <section id="step-child" class="quiz-card" hidden>
         <h2 id="child-heading" tabindex="-1">Conte um pouco sobre a criança</h2>
-        <p class="sub" style="margin-bottom:24px;">Isso ajuda a personalizar as perguntas do teste.</p>
+        <p class="sub" style="margin-bottom:24px;">Assim as perguntas e o resultado falam do seu filho pelo nome.</p>
         <form id="child-form" novalidate>
           <div class="form-group">
             <label class="form-label" for="child-name">Primeiro nome da criança</label>
@@ -766,10 +766,18 @@
               <option value="CLINICA_FATIMA">Centro de Terapia Comportamental</option>
             </select>
           </div>
+          <div class="form-group visually-hidden" aria-hidden="true">
+            <label for="website-hp">Não preencha este campo</label>
+            <input type="text" id="website-hp" name="website" tabindex="-1" autocomplete="off">
+          </div>
           <label class="consent-row" for="consent-check">
             <input type="checkbox" id="consent-check" required>
             <span>Concordo com o uso dos meus dados para receber o resultado do teste, conforme a <a
                 href="/politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+          </label>
+          <label class="consent-row" for="marketing-opt-in">
+            <input type="checkbox" id="marketing-opt-in">
+            <span>Quero receber, por e-mail, conteúdos gratuitos da idealizadora sobre desenvolvimento infantil, autismo e neurodivergência.</span>
           </label>
           <div id="contact-form-error" class="form-error" aria-live="polite"></div>
           <button type="submit" id="contact-form-submit" class="btn btn-pink btn-block">Ver meu retrato</button>
@@ -779,10 +787,11 @@
       <!-- PASSO 4 — RESULTADO -->
       <section id="step-result" class="quiz-card" hidden>
         <div class="result-badge">
-          <div>🌱</div>
+          <div id="result-emoji">🌱</div>
         </div>
         <h2 class="result-title" id="result-title" tabindex="-1"></h2>
         <p class="result-text" id="result-text"></p>
+        <p class="note-small" id="result-email-note" hidden>Enviamos este retrato também para o seu e-mail.</p>
         <div class="result-disclaimer">Este teste é um retrato inicial e não substitui avaliação profissional. Cada
           criança tem seu próprio ritmo.</div>
         <div class="result-actions">
@@ -814,14 +823,14 @@
     <p>Todos os dias, das 10h às 22h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank"
         rel="noopener">@facaamigos.belem</a></p>
     <p style="margin-top: 18px;"><a
-        href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida."
+        href="https://wa.me/5591991782027?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida."
         target="_blank" rel="noopener">Fale conosco</a> · <a href="https://institutofacaamigos.com.br/">Voltar ao
         início</a> · <a href="/politica-privacidade">Política de privacidade</a></p>
     <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 · Belém/PA</p>
   </footer>
 
   <a class="wa-float"
-    href="https://wa.me/5591992347673?text=Oi!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Teste%20de%20Comportamento."
+    href="https://wa.me/5591991782027?text=Oi!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Teste%20de%20Comportamento."
     target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor">
       <path
@@ -960,6 +969,8 @@
             QUIZ = data;
             var durationEl = $('intro-duration-text');
             if (durationEl) durationEl.textContent = (QUIZ.intro && QUIZ.intro.duration) ? QUIZ.intro.duration : '~4 minutos';
+            var disclaimerEl = $('intro-disclaimer');
+            if (disclaimerEl && QUIZ.intro && QUIZ.intro.disclaimer) disclaimerEl.textContent = QUIZ.intro.disclaimer;
             var startBtn = $('btn-start');
             startBtn.disabled = false;
             startBtn.textContent = 'Começar agora';
@@ -1080,7 +1091,7 @@
 
         $('question-heading').textContent = replaceChild(q.text);
 
-        var percentAnswered = Math.round((index / total) * 100);
+        var percentAnswered = Math.round(((index + 1) / total) * 100);
         $('progress-fill').style.width = percentAnswered + '%';
         $('progress-fill').setAttribute('aria-valuenow', String(percentAnswered));
         $('progress-label').textContent = 'Pergunta ' + (index + 1) + ' de ' + total;
@@ -1115,6 +1126,7 @@
                 var heading = $('question-heading');
                 requestAnimationFrame(function () { heading.focus(); });
               } else {
+                pushEvent({ event: 'teste_complete' });
                 showStep('step-contact', 'contact-heading');
               }
             }, 180);
@@ -1209,6 +1221,8 @@
             guardian_phone: phone,
             preferred_unit: unit,
             consent: true,
+            marketing_opt_in: !!($('marketing-opt-in') && $('marketing-opt-in').checked),
+            website: ($('website-hp') && $('website-hp').value) || '',
             answers: answersArr
           })
         })
@@ -1229,6 +1243,7 @@
             state.result = r.data;
             saveState();
             pushEvent({ event: 'teste_lead', result_band: r.data.result_band });
+            pushEvent({ event: 'generate_lead', lead_source: 'teste_comportamento', result_band: r.data.result_band });
             renderResult();
             showStep('step-result', 'result-title');
           })
@@ -1280,10 +1295,14 @@
 
         $('result-title').textContent = title;
         $('result-text').textContent = text;
+        var emojiEl = $('result-emoji');
+        if (emojiEl) emojiEl.textContent = (band && band.emoji) ? band.emoji : '🌱';
+        var emailNote = $('result-email-note');
+        if (emailNote) emailNote.hidden = !result.result_email_sent;
 
         var waMsg = 'Oi! Acabei de fazer o Teste de Comportamento do(a) ' + (state.childName || 'meu filho') +
           ' e o resultado foi: ' + title + '. Gostaria de conversar.';
-        $('result-wa').href = 'https://wa.me/5591992347673?text=' + encodeURIComponent(waMsg);
+        $('result-wa').href = 'https://wa.me/5591991782027?text=' + encodeURIComponent(waMsg);
       }
 
       $('result-wa').addEventListener('click', function () {

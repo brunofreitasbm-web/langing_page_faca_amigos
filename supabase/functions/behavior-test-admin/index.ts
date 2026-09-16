@@ -54,6 +54,22 @@ function str(v: unknown): string {
   return typeof v === "string" ? v.trim() : "";
 }
 
+// Valor seguro dentro de .or() do PostgREST (aspas duplas + escape), para a
+// busca do painel não virar operador de filtro se alguém digitar vírgula
+// ou parêntese.
+function quoteFilterValue(v: string): string {
+  return `"${v.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}
+
+// Mesmos títulos de faixa do webhook / teste-perguntas.json (versão 2026-09-16).
+const BAND_TITLES: Record<string, string> = {
+  recomendado: "Recomendamos uma avaliação profissional",
+  observar: "Vale a pena observar de perto",
+  esperado: "Dentro do esperado para a idade",
+};
+
+const LEAD_STATUSES = ["started", "abandoned", "completed", "contacted"];
+
 function toHex(buf: ArrayBuffer): string {
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -245,7 +261,8 @@ async function sendInsightEmailToGuardian(params: {
   const replyTo = Deno.env.get("BREVO_REPLY_TO");
   if (!apiKey) return { sent: false, error: "BREVO_API_KEY não configurada" };
 
-  const waLink = "https://wa.me/5591992347673?text=" + encodeURIComponent(
+  const waNumber = (Deno.env.get("LEAD_WHATSAPP") ?? "5591991782027").replace(/\D/g, "");
+  const waLink = `https://wa.me/${waNumber}?text=` + encodeURIComponent(
     `Oi! Acabei de receber o retrato do teste de comportamento do(a) ${params.childFirstName} e gostaria de conversar.`,
   );
 
@@ -307,8 +324,12 @@ Deno.serve(async (req) => {
   }
 
   const action = str(body.action);
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!supabaseUrl || !serviceRoleKey) {
+    console.error("SUPABASE_URL/SUPABASE_SERVICE_ROLE_KEY ausentes");
+    return jsonResponse(req, { error: "serviço indisponível" }, 500);
+  }
   const admin = createClient(supabaseUrl, serviceRoleKey);
 
   // --- login: mesmo e-mail/senha do Gestor no Sistema da Clínica ---
@@ -352,13 +373,18 @@ Deno.serve(async (req) => {
     let query = admin
       .from("fa_leads_teste_comportamento")
       .select(
-        "id, status, child_first_name, child_age_range, guardian_name, guardian_email, guardian_phone, preferred_unit, score, result_band, ai_insight_generated_at, ai_insight_sent_at, contacted_at, created_at",
+        "id, status, child_first_name, child_age_range, guardian_name, guardian_email, guardian_phone, preferred_unit, score, result_band, ai_insight_generated_at, ai_insight_sent_at, contacted_at, marketing_opt_in, created_at",
       )
       .order("created_at", { ascending: false })
       .limit(limit);
 
-    if (status) query = query.eq("status", status);
-    if (q) query = query.or(`guardian_name.ilike.%${q}%,guardian_email.ilike.%${q}%,child_first_name.ilike.%${q}%`);
+    if (status && LEAD_STATUSES.includes(status)) query = query.eq("status", status);
+    if (q) {
+      const pattern = quoteFilterValue(`%${q.replace(/[%_]/g, "")}%`);
+      query = query.or(
+        `guardian_name.ilike.${pattern},guardian_email.ilike.${pattern},child_first_name.ilike.${pattern}`,
+      );
+    }
 
     const { data, error } = await query;
     if (error) return jsonResponse(req, { error: "falha ao listar leads" }, 500);
@@ -384,18 +410,12 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "lead ainda não concluiu o teste" }, 400);
     }
 
-    const bandTitles: Record<string, string> = {
-      esperado: "Dentro do esperado para a idade",
-      observar: "Vale a pena observar de perto",
-      recomendado: "Recomendamos uma avaliação profissional",
-    };
-
     const result = await generateInsight({
       childFirstName: lead.child_first_name,
       childAgeRange: lead.child_age_range,
       score: lead.score ?? 0,
       resultBand: lead.result_band ?? "",
-      bandTitle: bandTitles[lead.result_band ?? ""] ?? lead.result_band ?? "",
+      bandTitle: BAND_TITLES[lead.result_band ?? ""] ?? lead.result_band ?? "",
       answers: (lead.answers ?? []) as Array<{ id: string; v: number }>,
       questions: QUESTION_LABELS,
     });
@@ -424,17 +444,11 @@ Deno.serve(async (req) => {
     if (!lead.ai_insight) return jsonResponse(req, { error: "gere o insight antes de enviar" }, 400);
     if (!lead.guardian_email) return jsonResponse(req, { error: "lead sem e-mail" }, 400);
 
-    const bandTitles: Record<string, string> = {
-      esperado: "Dentro do esperado para a idade",
-      observar: "Vale a pena observar de perto",
-      recomendado: "Recomendamos uma avaliação profissional",
-    };
-
     const result = await sendInsightEmailToGuardian({
       guardianName: lead.guardian_name ?? "",
       guardianEmail: lead.guardian_email,
       childFirstName: lead.child_first_name,
-      bandTitle: bandTitles[lead.result_band ?? ""] ?? lead.result_band ?? "",
+      bandTitle: BAND_TITLES[lead.result_band ?? ""] ?? lead.result_band ?? "",
       insight: lead.ai_insight,
     });
 
