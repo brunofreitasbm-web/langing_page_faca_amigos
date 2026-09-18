@@ -1,3 +1,10 @@
 .vercel
 .netlify
 supabase/.temp
+
+# Protótipo Emergent (FastAPI+Mongo+React) do questionário original — não é
+# parte do site publicado; conteúdo já portado para teste-perguntas.json e
+# supabase/functions/behavior-test-webhook. Contém credenciais de teste
+# vazadas em memory/PRD.md e backend/tests/backend_test.py — não versionar,
+# e apagar a pasta local depois de validar a migração.
+Teste de Comportamento/

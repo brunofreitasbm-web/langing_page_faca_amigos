@@ -61,14 +61,139 @@ function quoteFilterValue(v: string): string {
   return `"${v.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
 }
 
-// Mesmos títulos de faixa do webhook / teste-perguntas.json (versão 2026-09-16).
-const BAND_TITLES: Record<string, string> = {
+// Títulos de resultado por versão do teste. "2026-09-16" é o placeholder
+// antigo (8 perguntas, banda única); "2026-09-18" é o questionário
+// definitivo (25 perguntas, pior faixa entre 5 áreas) — ver
+// supabase/functions/behavior-test-webhook/index.ts (fonte de verdade).
+const RESULT_TITLES: Record<string, string> = {
   recomendado: "Recomendamos uma avaliação profissional",
   observar: "Vale a pena observar de perto",
   esperado: "Dentro do esperado para a idade",
+  tier1: "Está fluindo bem",
+  tier2: "Merece um olhar mais de perto",
+  tier3: "Merece atenção especial",
 };
 
+function resultTitleFor(lead: { result_band?: string | null; results?: unknown }): string {
+  const band = lead.result_band ?? "";
+  const base = RESULT_TITLES[band] ?? band ?? "—";
+  if (Array.isArray(lead.results)) {
+    const tier3Count = (lead.results as AreaResult[]).filter((r) => r?.tier === "tier3").length;
+    if (tier3Count > 0) return `${base} (${tier3Count} área${tier3Count > 1 ? "s" : ""})`;
+  }
+  return base;
+}
+
+interface AreaResult {
+  key: string;
+  name: string;
+  score: number;
+  max: number;
+  tier: "tier1" | "tier2" | "tier3";
+  tier_label: string;
+}
+
 const LEAD_STATUSES = ["started", "abandoned", "completed", "contacted"];
+
+// 5 áreas do questionário definitivo (versão 2026-09-18) e seus defaults —
+// devem ficar em sincronia com AREAS/DEFAULT_TIER_LABELS/DEFAULT_FEEDBACK em
+// supabase/functions/behavior-test-webhook/index.ts (o deploy via MCP não
+// resolve import relativo de um módulo compartilhado, daí a duplicação).
+const CONFIG_AREA_KEYS = ["emotional", "conduct", "hyperactivity", "peer", "prosocial"] as const;
+type ConfigAreaKey = (typeof CONFIG_AREA_KEYS)[number];
+
+const CONFIG_DEFAULTS: Record<ConfigAreaKey, {
+  name: string;
+  tier_labels: Record<"tier1" | "tier2" | "tier3", string>;
+  feedback: Record<"tier1" | "tier2" | "tier3", string>;
+}> = {
+  emotional: {
+    name: "Emoções e segurança",
+    tier_labels: { tier1: "Está fluindo bem", tier2: "Merece um olhar mais de perto", tier3: "Merece atenção especial" },
+    feedback: {
+      tier1: "Seu filho(a) parece lidar bem com as próprias emoções no dia a dia. Momentos de tristeza ou medo aparecem, mas de forma leve e passageira — sinal de que ele(a) está encontrando formas saudáveis de se expressar.",
+      tier2: "Alguns sinais de insegurança apareceram nas suas respostas — talvez um choro mais frequente, medos específicos ou queixas físicas em certos momentos (como antes de sair de casa). Vale observar com carinho quando esses momentos acontecem, sem pressa para \"resolver\" — muitas vezes é só uma forma de pedir colo.",
+      tier3: "Suas respostas indicam que as emoções do seu filho(a) parecem estar mais pesadas ultimamente — choro frequente, medos mais intensos ou queixas físicas recorrentes (como dor de barriga antes da escola). Isso costuma ser uma forma de comunicar algo que ainda não sabe nomear, e merece um acolhimento mais próximo.",
+    },
+  },
+  conduct: {
+    name: "Rotina e limites",
+    tier_labels: { tier1: "Está fluindo bem", tier2: "Merece um olhar mais de perto", tier3: "Merece atenção especial" },
+    feedback: {
+      tier1: "A rotina em casa parece estar em um bom momento — birras e desafios de comportamento aparecem pouco, dentro do que se espera para a idade.",
+      tier2: "Birras, desobediências ou momentos de raiva têm aparecido com alguma frequência. Vale lembrar: isso raramente é uma afronta pessoal — é uma forma de comunicação não-verbal. Observar o que acontece um pouco antes desses momentos pode ajudar a entender os gatilhos.",
+      tier3: "Birras intensas, desobediências ou explosões de raiva parecem estar desafiando bastante a paz da rotina em casa. Vale mapear com calma o que costuma vir antes e depois desses momentos — isso ajuda a entender os gatilhos e, aos poucos, devolver equilíbrio ao dia a dia.",
+    },
+  },
+  hyperactivity: {
+    name: "Foco e energia",
+    tier_labels: { tier1: "Está fluindo bem", tier2: "Merece um olhar mais de perto", tier3: "Merece atenção especial" },
+    feedback: {
+      tier1: "Seu filho(a) parece conseguir manter o foco em atividades por um tempo adequado para a idade, sem sinais relevantes de agitação excessiva.",
+      tier2: "Você notou alguma agitação ou dificuldade de manter o foco em atividades mais longas. Isso é comum em fases de muita energia — pequenas pausas estruturadas e ordens em passos curtos costumam ajudar bastante.",
+      tier3: "Agitação constante, pressa e dificuldade de manter o foco parecem estar comandando boa parte do dia a dia. Para mentes tão aceleradas, uma rotina previsível costuma ser um grande aliado — junto com metas pequenas e reforço positivo para os momentos de concentração.",
+    },
+  },
+  peer: {
+    name: "Amizades e convivência",
+    tier_labels: { tier1: "Está fluindo bem", tier2: "Merece um olhar mais de perto", tier3: "Merece atenção especial" },
+    feedback: {
+      tier1: "A socialização parece estar florescendo — seu filho(a) demonstra abertura para interagir, compartilhar momentos e se conectar com outras crianças de forma natural.",
+      tier2: "Você notou alguma dificuldade nos momentos de convivência com outras crianças — talvez mais timidez ou algum retraimento em grupos. Isso costuma variar bastante conforme o contexto e o momento, e vale observar com leveza.",
+      tier3: "Parece haver uma dificuldade mais consistente nos momentos de convivência com outras crianças — seja se aproximar, ser aceito no grupo ou manter uma brincadeira em conjunto. Esse é um ponto que vale um olhar mais próximo.",
+    },
+  },
+  prosocial: {
+    name: "Empatia e gentileza",
+    tier_labels: { tier1: "Está fluindo bem", tier2: "Em desenvolvimento", tier3: "Merece incentivo especial" },
+    feedback: {
+      tier1: "Empatia e gentileza parecem estar no coração do seu filho(a) — vontade de ajudar, compartilhar e acolher quem está por perto. Essa sensibilidade é linda e merece ser bastante celebrada.",
+      tier2: "Seu filho(a) demonstra gestos de gentileza e cuidado com os outros, ainda em construção. Isso é parte natural do desenvolvimento social e costuma se fortalecer com o exemplo e o incentivo do dia a dia.",
+      tier3: "Os gestos de empatia e cuidado com o outro ainda aparecem pouco nas suas respostas. Isso não é motivo de preocupação — é uma habilidade que se desenvolve com modelagem e prática, e pequenas oportunidades de exercitar gentileza no dia a dia costumam fazer diferença.",
+    },
+  },
+};
+
+interface ConfigOverride {
+  areas?: Partial<Record<ConfigAreaKey, {
+    name?: string;
+    tier_labels?: Partial<Record<"tier1" | "tier2" | "tier3", string>>;
+    feedback?: Partial<Record<"tier1" | "tier2" | "tier3", string>>;
+  }>>;
+}
+
+function sanitizeConfig(raw: unknown): ConfigOverride {
+  const out: ConfigOverride = { areas: {} };
+  if (!raw || typeof raw !== "object") return out;
+  const areasIn = (raw as any).areas;
+  if (!areasIn || typeof areasIn !== "object") return out;
+  for (const key of CONFIG_AREA_KEYS) {
+    const areaIn = areasIn[key];
+    if (!areaIn || typeof areaIn !== "object") continue;
+    const areaOut: NonNullable<ConfigOverride["areas"]>[ConfigAreaKey] = {};
+    if (typeof areaIn.name === "string" && areaIn.name.trim()) {
+      areaOut.name = areaIn.name.trim().slice(0, 200);
+    }
+    if (areaIn.tier_labels && typeof areaIn.tier_labels === "object") {
+      const labels: Partial<Record<"tier1" | "tier2" | "tier3", string>> = {};
+      for (const t of ["tier1", "tier2", "tier3"] as const) {
+        const v = areaIn.tier_labels[t];
+        if (typeof v === "string" && v.trim()) labels[t] = v.trim().slice(0, 200);
+      }
+      if (Object.keys(labels).length) areaOut.tier_labels = labels;
+    }
+    if (areaIn.feedback && typeof areaIn.feedback === "object") {
+      const fb: Partial<Record<"tier1" | "tier2" | "tier3", string>> = {};
+      for (const t of ["tier1", "tier2", "tier3"] as const) {
+        const v = areaIn.feedback[t];
+        if (typeof v === "string" && v.trim()) fb[t] = v.trim().slice(0, 1200);
+      }
+      if (Object.keys(fb).length) areaOut.feedback = fb;
+    }
+    if (Object.keys(areaOut).length) out.areas![key] = areaOut;
+  }
+  return out;
+}
 
 function toHex(buf: ArrayBuffer): string {
   return Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, "0")).join("");
@@ -170,31 +295,39 @@ const GEMINI_MODEL = "gemini-3.5-flash-lite";
 async function generateInsight(params: {
   childFirstName: string;
   childAgeRange: string;
+  testVersion: string;
   score: number;
-  resultBand: string;
   bandTitle: string;
+  results?: AreaResult[];
   answers: Array<{ id: string; v: number }>;
   questions: Record<string, string>;
+  maxScale: number;
 }): Promise<{ text?: string; error?: string }> {
   const apiKey = Deno.env.get("GEMINI_API_KEY");
   if (!apiKey) return { error: "GEMINI_API_KEY não configurada" };
 
   const answersDescription = params.answers
-    .map((a) => `- ${params.questions[a.id] ?? a.id}: nível ${a.v} de 3`)
+    .map((a) => `- ${params.questions[a.id] ?? a.id}: nível ${a.v} de ${params.maxScale}`)
+    .join("\n");
+
+  const areaLines = (params.results ?? [])
+    .map((r) => `- ${r.name}: ${r.score}/${r.max} — ${r.tier_label}`)
     .join("\n");
 
   const systemInstruction =
     "Você é uma assistente de apoio para a idealizadora de uma clínica de terapia comportamental infantil (FaçaAmigos), em Belém-PA. " +
     "Sua tarefa é ler o resultado de um teste de triagem inicial (não diagnóstico) respondido por um responsável sobre uma criança, e escrever um " +
-    "resumo curto e acolhedor (até 120 palavras) com: (1) uma leitura geral do padrão de respostas, em linguagem simples, sem termos técnicos " +
-    "nem citar transtornos específicos; (2) 2-3 sugestões práticas de observação ou brincadeira para os pais aplicarem em casa; (3) sempre reforçar " +
-    "que isso não é um diagnóstico e que uma avaliação profissional é o próximo passo recomendado. Nunca alarme os pais. Escreva em português do Brasil, " +
-    "em tom caloroso e profissional, como se fosse parte do retorno que a clínica dará à família.";
+    "resumo curto e acolhedor (até 120 palavras) com: (1) uma leitura geral do padrão de respostas, em linguagem simples, sem termos técnicos, " +
+    "sem citar transtornos específicos e sem citar o nome de nenhum instrumento ou questionário; (2) 2-3 sugestões práticas de observação ou " +
+    "brincadeira para os pais aplicarem em casa; (3) sempre reforçar que isso não é um diagnóstico e que uma avaliação profissional é o próximo " +
+    "passo recomendado. Nunca alarme os pais. Escreva em português do Brasil, em tom caloroso e profissional, como se fosse parte do retorno que " +
+    "a clínica dará à família.";
 
   const prompt =
     `Criança: ${params.childFirstName}, faixa etária ${params.childAgeRange}.\n` +
-    `Resultado da triagem: "${params.bandTitle}" (score ${params.score}).\n\n` +
-    `Respostas do responsável:\n${answersDescription}\n\n` +
+    `Resultado: "${params.bandTitle}".\n` +
+    (areaLines ? `\nPanorama por área:\n${areaLines}\n` : "") +
+    `\nRespostas do responsável:\n${answersDescription}\n\n` +
     "Escreva o resumo acolhedor para os pais.";
 
   try {
@@ -221,15 +354,52 @@ async function generateInsight(params: {
   }
 }
 
-const QUESTION_LABELS: Record<string, string> = {
-  q01: "Olha nos olhos quando é chamado(a) pelo nome",
-  q02: "Usa palavras ou gestos para pedir o que quer",
-  q03: "Demonstra interesse em brincar perto/junto de outras crianças",
-  q04: "Imita gestos, sons ou brincadeiras",
-  q05: "Se adapta bem a pequenas mudanças na rotina",
-  q06: "Consegue se acalmar sozinho(a) ou com apoio",
-  q07: "Reage de forma tranquila a sons, luzes ou texturas",
-  q08: "Segue instruções simples de 1 ou 2 passos",
+// Rótulos curtos das perguntas para o painel/Gemini, por versão do teste.
+// "2026-09-16" = placeholder antigo (8 perguntas). "2026-09-18" = definitivo
+// (25 perguntas) — devem ficar em sincronia com QUESTION_IDS/teste-perguntas.json.
+const QUESTION_LABELS_BY_VERSION: Record<string, Record<string, string>> = {
+  "2026-09-16": {
+    q01: "Olha nos olhos quando é chamado(a) pelo nome",
+    q02: "Usa palavras ou gestos para pedir o que quer",
+    q03: "Demonstra interesse em brincar perto/junto de outras crianças",
+    q04: "Imita gestos, sons ou brincadeiras",
+    q05: "Se adapta bem a pequenas mudanças na rotina",
+    q06: "Consegue se acalmar sozinho(a) ou com apoio",
+    q07: "Reage de forma tranquila a sons, luzes ou texturas",
+    q08: "Segue instruções simples de 1 ou 2 passos",
+  },
+  "2026-09-18": {
+    q01: "Respeita os sentimentos das outras pessoas",
+    q02: "É irrequieto(a), muito agitado(a)",
+    q03: "Queixa-se de dor de cabeça, dor de barriga ou enjoo",
+    q04: "Reparte facilmente com outras crianças",
+    q05: "Tem acessos de raiva ou birra",
+    q06: "É solitário(a), prefere brincar sozinho(a)",
+    q07: "Em geral é obediente",
+    q08: "Anda muito preocupado(a)",
+    q09: "É prestativo(a) se alguém está magoado ou mal",
+    q10: "Está sempre se mexendo, se contorcendo",
+    q11: "Tem pelo menos um bom amigo ou boa amiga",
+    q12: "Briga com outras crianças ou as intimida",
+    q13: "É infeliz, desanimado(a) ou choroso(a)",
+    q14: "É benquisto(a) por outras crianças",
+    q15: "É facilmente distraído(a)",
+    q16: "É nervoso(a) ou grudento(a) em situações novas",
+    q17: "É gentil com crianças mais novas",
+    q18: "Frequentemente mente ou engana",
+    q19: "É atormentado(a) ou intimidado(a) por outras crianças",
+    q20: "Se oferece para ajudar os outros",
+    q21: "Pensa antes de agir",
+    q22: "Rouba coisas de casa, da escola ou de outros lugares",
+    q23: "Se dá melhor com adultos do que com outras crianças",
+    q24: "Tem muitos medos, assusta-se facilmente",
+    q25: "Termina o que começa, tem boa concentração",
+  },
+};
+
+const MAX_SCALE_BY_VERSION: Record<string, number> = {
+  "2026-09-16": 3,
+  "2026-09-18": 2,
 };
 
 // ---------------------------------------------------------------------
@@ -373,7 +543,7 @@ Deno.serve(async (req) => {
     let query = admin
       .from("fa_leads_teste_comportamento")
       .select(
-        "id, status, child_first_name, child_age_range, guardian_name, guardian_email, guardian_phone, preferred_unit, score, result_band, ai_insight_generated_at, ai_insight_sent_at, contacted_at, marketing_opt_in, created_at",
+        "id, status, child_first_name, child_age_range, guardian_name, guardian_email, guardian_phone, preferred_unit, score, result_band, results, test_version, ai_insight_generated_at, ai_insight_sent_at, contacted_at, marketing_opt_in, created_at",
       )
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -402,7 +572,7 @@ Deno.serve(async (req) => {
     const leadId = str(body.lead_id);
     const { data: lead, error } = await admin
       .from("fa_leads_teste_comportamento")
-      .select("id, child_first_name, child_age_range, score, result_band, answers, status")
+      .select("id, child_first_name, child_age_range, score, result_band, results, test_version, answers, status")
       .eq("id", leadId)
       .maybeSingle();
     if (error || !lead) return jsonResponse(req, { error: "lead não encontrado" }, 404);
@@ -410,14 +580,17 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "lead ainda não concluiu o teste" }, 400);
     }
 
+    const version = lead.test_version ?? "2026-09-16";
     const result = await generateInsight({
       childFirstName: lead.child_first_name,
       childAgeRange: lead.child_age_range,
+      testVersion: version,
       score: lead.score ?? 0,
-      resultBand: lead.result_band ?? "",
-      bandTitle: BAND_TITLES[lead.result_band ?? ""] ?? lead.result_band ?? "",
+      bandTitle: resultTitleFor(lead),
+      results: Array.isArray(lead.results) ? (lead.results as AreaResult[]) : undefined,
       answers: (lead.answers ?? []) as Array<{ id: string; v: number }>,
-      questions: QUESTION_LABELS,
+      questions: QUESTION_LABELS_BY_VERSION[version] ?? QUESTION_LABELS_BY_VERSION["2026-09-18"],
+      maxScale: MAX_SCALE_BY_VERSION[version] ?? 2,
     });
 
     if (result.error) {
@@ -437,7 +610,7 @@ Deno.serve(async (req) => {
     const leadId = str(body.lead_id);
     const { data: lead, error } = await admin
       .from("fa_leads_teste_comportamento")
-      .select("id, child_first_name, guardian_name, guardian_email, ai_insight, result_band")
+      .select("id, child_first_name, guardian_name, guardian_email, ai_insight, result_band, results")
       .eq("id", leadId)
       .maybeSingle();
     if (error || !lead) return jsonResponse(req, { error: "lead não encontrado" }, 404);
@@ -448,7 +621,7 @@ Deno.serve(async (req) => {
       guardianName: lead.guardian_name ?? "",
       guardianEmail: lead.guardian_email,
       childFirstName: lead.child_first_name,
-      bandTitle: BAND_TITLES[lead.result_band ?? ""] ?? lead.result_band ?? "",
+      bandTitle: resultTitleFor(lead),
       insight: lead.ai_insight,
     });
 
@@ -460,6 +633,33 @@ Deno.serve(async (req) => {
       .eq("id", leadId);
 
     return jsonResponse(req, { success: true });
+  }
+
+  if (action === "get_config") {
+    const { data, error } = await admin
+      .from("fa_teste_config")
+      .select("value")
+      .eq("key", "resultado_v2")
+      .maybeSingle();
+    if (error) return jsonResponse(req, { error: "falha ao carregar configuração" }, 500);
+    return jsonResponse(req, { defaults: CONFIG_DEFAULTS, overrides: sanitizeConfig(data?.value ?? {}) });
+  }
+
+  if (action === "update_config") {
+    const config = sanitizeConfig(body.config);
+    const { error } = await admin
+      .from("fa_teste_config")
+      .upsert({
+        key: "resultado_v2",
+        value: config,
+        updated_at: new Date().toISOString(),
+        updated_by: session.email,
+      });
+    if (error) {
+      console.error("Erro ao salvar configuração:", error);
+      return jsonResponse(req, { error: "falha ao salvar configuração" }, 500);
+    }
+    return jsonResponse(req, { overrides: config });
   }
 
   if (action === "mark_contacted") {

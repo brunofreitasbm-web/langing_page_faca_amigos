@@ -539,6 +539,54 @@
       clip: rect(0 0 0 0);
       white-space: nowrap;
     }
+
+    /* ---------- Tabs ---------- */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      background: var(--white);
+      border-radius: 9999px;
+      padding: 6px;
+      box-shadow: var(--shadow-sm);
+      width: fit-content;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--ink-soft);
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800;
+      font-size: 0.88rem;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      cursor: pointer;
+      transition: background var(--t-fast), color var(--t-fast);
+    }
+
+    .tab-btn.active { background: var(--dark); color: #fff; }
+
+    /* ---------- Config (Textos do resultado) ---------- */
+    .config-area {
+      background: var(--white);
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow-sm);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+    }
+
+    .config-area h3 { font-size: 1.05rem; margin-bottom: 14px; }
+
+    .config-tier-label { font-size: 0.8rem; font-weight: 800; color: var(--ink-soft); margin: 12px 0 4px; }
+
+    .config-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 8px;
+    }
   </style>
 </head>
 
@@ -584,46 +632,64 @@
     </header>
 
     <main class="dash-main">
-      <div class="toolbar">
-        <div class="form-group search-group">
-          <label for="searchInput" class="form-label">Buscar</label>
-          <input type="search" id="searchInput" class="form-control"
-            placeholder="Nome do responsável, e-mail ou nome da criança">
-        </div>
-        <div class="form-group status-group">
-          <label for="statusFilter" class="form-label">Status</label>
-          <select id="statusFilter" class="form-control">
-            <option value="">Todos</option>
-            <option value="started">Iniciado</option>
-            <option value="abandoned">Substituído (refez o teste)</option>
-            <option value="completed">Concluído</option>
-            <option value="contacted">Contatado</option>
-          </select>
-        </div>
-        <span class="count" id="resultCount"></span>
+      <div class="tab-bar">
+        <button type="button" class="tab-btn active" id="tabLeadsBtn">Leads</button>
+        <button type="button" class="tab-btn" id="tabConfigBtn">Textos do resultado</button>
       </div>
 
-      <div class="leads-wrap">
-        <div id="leadsState" class="state-msg">Carregando leads…</div>
-
-        <div style="overflow-x:auto;">
-          <table class="leads-table" id="leadsTable" hidden>
-            <thead>
-              <tr>
-                <th>Criança</th>
-                <th>Responsável</th>
-                <th>Unidade</th>
-                <th>Resultado</th>
-                <th>Status</th>
-                <th>Data</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="leadsTbody"></tbody>
-          </table>
+      <div id="leadsView">
+        <div class="toolbar">
+          <div class="form-group search-group">
+            <label for="searchInput" class="form-label">Buscar</label>
+            <input type="search" id="searchInput" class="form-control"
+              placeholder="Nome do responsável, e-mail ou nome da criança">
+          </div>
+          <div class="form-group status-group">
+            <label for="statusFilter" class="form-label">Status</label>
+            <select id="statusFilter" class="form-control">
+              <option value="">Todos</option>
+              <option value="started">Iniciado</option>
+              <option value="abandoned">Substituído (refez o teste)</option>
+              <option value="completed">Concluído</option>
+              <option value="contacted">Contatado</option>
+            </select>
+          </div>
+          <span class="count" id="resultCount"></span>
         </div>
 
-        <div class="leads-cards" id="leadsCards" hidden></div>
+        <div class="leads-wrap">
+          <div id="leadsState" class="state-msg">Carregando leads…</div>
+
+          <div style="overflow-x:auto;">
+            <table class="leads-table" id="leadsTable" hidden>
+              <thead>
+                <tr>
+                  <th>Criança</th>
+                  <th>Responsável</th>
+                  <th>Unidade</th>
+                  <th>Resultado</th>
+                  <th>Status</th>
+                  <th>Data</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="leadsTbody"></tbody>
+            </table>
+          </div>
+
+          <div class="leads-cards" id="leadsCards" hidden></div>
+        </div>
+      </div>
+
+      <div id="configView" hidden>
+        <div id="configState" class="state-msg">Carregando textos…</div>
+        <div id="configError" class="form-error"></div>
+        <div id="configNotice" class="form-notice"></div>
+        <form id="configForm" hidden></form>
+        <div class="config-actions" id="configActions" hidden>
+          <button type="button" class="btn btn-pink btn-sm" id="saveConfigBtn">Salvar</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="resetConfigBtn">Restaurar padrões</button>
+        </div>
       </div>
     </main>
   </div>
@@ -872,12 +938,42 @@
         return '<span class="badge badge-gray">Iniciado, não concluiu</span>';
       }
 
-      function badgeForResult(band) {
+      function badgeForResult(lead) {
+        var band = lead.result_band;
+        // Versão definitiva (2026-09-18): pior faixa entre 5 áreas.
+        if (band === 'tier1') return '<span class="badge badge-teal">Fluindo bem</span>';
+        if (band === 'tier2') return '<span class="badge badge-yellow">Olhar mais de perto</span>';
+        if (band === 'tier3') {
+          var n = Array.isArray(lead.results) ? lead.results.filter(function (r) { return r && r.tier === 'tier3'; }).length : 0;
+          return '<span class="badge badge-pink">Atenção especial' + (n ? ' (' + n + ')' : '') + '</span>';
+        }
+        // Versão antiga (2026-09-16): banda única.
         if (band === 'esperado') return '<span class="badge badge-teal">Esperado</span>';
         if (band === 'observar') return '<span class="badge badge-yellow">Observar</span>';
         if (band === 'recomendado') return '<span class="badge badge-pink">Recomendado</span>';
         return '<span class="badge badge-gray">—</span>';
       }
+
+      // Rótulos curtos das perguntas por versão do teste, para os chips de
+      // resposta no modal — sincronizado com QUESTION_LABELS_BY_VERSION em
+      // supabase/functions/behavior-test-admin/index.ts.
+      var QUESTION_LABELS_BY_VERSION = {
+        '2026-09-16': {
+          q01: 'Olha nos olhos', q02: 'Usa palavras/gestos para pedir', q03: 'Interesse em brincar com outros',
+          q04: 'Imita gestos/sons', q05: 'Se adapta a mudanças', q06: 'Se acalma sozinho(a)',
+          q07: 'Reage bem a estímulos sensoriais', q08: 'Segue instruções simples'
+        },
+        '2026-09-18': {
+          q01: 'Respeita sentimentos', q02: 'Irrequieto(a)/agitado(a)', q03: 'Dor de cabeça/barriga',
+          q04: 'Reparte com outras crianças', q05: 'Acessos de raiva/birra', q06: 'Solitário(a)',
+          q07: 'Obediente', q08: 'Preocupado(a)', q09: 'Prestativo(a)', q10: 'Sempre se mexendo',
+          q11: 'Tem bom(a) amigo(a)', q12: 'Briga/intimida', q13: 'Infeliz/choroso(a)',
+          q14: 'Benquisto(a)', q15: 'Facilmente distraído(a)', q16: 'Nervoso(a) em situações novas',
+          q17: 'Gentil com menores', q18: 'Mente ou engana', q19: 'Atormentado(a) por outros',
+          q20: 'Se oferece para ajudar', q21: 'Pensa antes de agir', q22: 'Rouba coisas',
+          q23: 'Se dá melhor com adultos', q24: 'Muitos medos', q25: 'Termina o que começa'
+        }
+      };
 
       function escapeHtml(str) {
         if (str === null || str === undefined) return '';
@@ -951,7 +1047,7 @@
           var guardianPhone = lead.guardian_phone || '';
           var wa = waLink(guardianPhone);
           var unit = lead.preferred_unit || '—';
-          var resultBadge = badgeForResult(lead.result_band);
+          var resultBadge = badgeForResult(lead);
           var statusBadge = badgeForStatus(lead.status);
           var dateStr = formatDate(lead.created_at);
 
@@ -1022,6 +1118,9 @@
         leadModalSub.textContent = (lead.guardian_name || 'Responsável não identificado') +
           (lead.child_first_name ? ' · ' + lead.child_first_name : '');
 
+        var isV2 = Array.isArray(lead.results);
+        var scoreLabel = (lead.score === null || lead.score === undefined) ? '—' : (isV2 ? lead.score + '/40 (dificuldades)' : lead.score + '/24');
+
         var fields = [
           ['Criança', lead.child_first_name || '—'],
           ['Faixa etária', lead.child_age_range || '—'],
@@ -1032,8 +1131,9 @@
           ['Quer receber conteúdos (opt-in)', lead.marketing_opt_in ? 'Sim' : 'Não'],
           ['Status', lead.status === 'completed' ? 'Concluído' : (lead.status === 'contacted' ? 'Contatado' : (lead.status === 'abandoned' ? 'Substituído (refez o teste)' : 'Iniciado, não concluiu'))],
           ['E-mail de resultado', lead.result_email_sent_at ? ('Enviado em ' + new Date(lead.result_email_sent_at).toLocaleString('pt-BR')) : (lead.result_email_error ? ('Falhou: ' + lead.result_email_error) : 'Não enviado')],
-          ['Resultado', lead.result_band || '—'],
-          ['Pontuação', (lead.score === null || lead.score === undefined) ? '—' : lead.score],
+          ['Resultado', badgeForResult(lead).replace(/<[^>]+>/g, '')],
+          ['Pontuação', scoreLabel],
+          ['Versão do teste', lead.test_version || '—'],
           ['Criado em', formatDate(lead.created_at)]
         ];
 
@@ -1041,14 +1141,20 @@
           return '<div class="field"><div class="label">' + escapeHtml(f[0]) + '</div><div class="value">' + escapeHtml(f[1]) + '</div></div>';
         }).join('');
 
+        var resultsHtml = isV2
+          ? lead.results.map(function (r) {
+              return '<span class="a-chip" style="background:var(--gray-bg);font-weight:800;">' + escapeHtml(r.name) + ': ' + escapeHtml(r.score) + '/' + escapeHtml(r.max) + ' — ' + escapeHtml(r.tier_label) + '</span>';
+            }).join('')
+          : '';
+
+        var labels = QUESTION_LABELS_BY_VERSION[lead.test_version] || QUESTION_LABELS_BY_VERSION['2026-09-18'];
         var answers = lead.answers || [];
-        if (answers.length) {
-          leadAnswers.innerHTML = answers.map(function (a) {
-            return '<span class="a-chip">' + escapeHtml(a.id) + ': ' + escapeHtml(a.v) + '</span>';
-          }).join('');
-        } else {
-          leadAnswers.innerHTML = '<span class="a-chip">Sem respostas registradas</span>';
-        }
+        var answersHtml = answers.length
+          ? answers.map(function (a) {
+              return '<span class="a-chip">' + escapeHtml(labels[a.id] || a.id) + ': ' + escapeHtml(a.v) + '</span>';
+            }).join('')
+          : '<span class="a-chip">Sem respostas registradas</span>';
+        leadAnswers.innerHTML = resultsHtml + answersHtml;
 
         renderInsight(lead);
 
@@ -1210,6 +1316,152 @@
             markContactedBtn.disabled = false;
             markContactedBtn.textContent = originalText;
           });
+      });
+
+      // ---------- Tabs ----------
+      var tabLeadsBtn = document.getElementById('tabLeadsBtn');
+      var tabConfigBtn = document.getElementById('tabConfigBtn');
+      var leadsView = document.getElementById('leadsView');
+      var configView = document.getElementById('configView');
+      var configLoaded = false;
+
+      tabLeadsBtn.addEventListener('click', function () {
+        tabLeadsBtn.classList.add('active');
+        tabConfigBtn.classList.remove('active');
+        leadsView.hidden = false;
+        configView.hidden = true;
+      });
+
+      tabConfigBtn.addEventListener('click', function () {
+        tabConfigBtn.classList.add('active');
+        tabLeadsBtn.classList.remove('active');
+        leadsView.hidden = true;
+        configView.hidden = false;
+        if (!configLoaded) loadConfig();
+      });
+
+      // ---------- Config (Textos do resultado) ----------
+      var CONFIG_AREA_KEYS = ['emotional', 'conduct', 'hyperactivity', 'peer', 'prosocial'];
+      var CONFIG_TIERS = ['tier1', 'tier2', 'tier3'];
+      var configState = document.getElementById('configState');
+      var configError = document.getElementById('configError');
+      var configNotice = document.getElementById('configNotice');
+      var configForm = document.getElementById('configForm');
+      var configActions = document.getElementById('configActions');
+      var saveConfigBtn = document.getElementById('saveConfigBtn');
+      var resetConfigBtn = document.getElementById('resetConfigBtn');
+      var configDefaults = null;
+
+      function buildConfigForm(defaults, overrides) {
+        overrides = overrides || {};
+        var areas = overrides.areas || {};
+        var html = '';
+        CONFIG_AREA_KEYS.forEach(function (key) {
+          var def = defaults[key];
+          var override = areas[key] || {};
+          html += '<div class="config-area" data-area="' + key + '">' +
+            '<h3>' + escapeHtml(def.name) + '</h3>' +
+            '<div class="form-group">' +
+              '<label class="form-label">Nome da área</label>' +
+              '<input type="text" class="form-control cfg-name" placeholder="' + escapeHtml(def.name) + '" value="' + escapeHtml(override.name || '') + '">' +
+            '</div>';
+          CONFIG_TIERS.forEach(function (t) {
+            html += '<div class="config-tier-label">Rótulo — ' + t + '</div>' +
+              '<div class="form-group">' +
+                '<input type="text" class="form-control cfg-label" data-tier="' + t + '" placeholder="' + escapeHtml(def.tier_labels[t]) + '" value="' + escapeHtml((override.tier_labels && override.tier_labels[t]) || '') + '">' +
+              '</div>' +
+              '<div class="config-tier-label">Texto de orientação — ' + t + '</div>' +
+              '<div class="form-group">' +
+                '<textarea class="form-control cfg-feedback" data-tier="' + t + '" placeholder="' + escapeHtml(def.feedback[t]) + '">' + escapeHtml((override.feedback && override.feedback[t]) || '') + '</textarea>' +
+              '</div>';
+          });
+          html += '</div>';
+        });
+        configForm.innerHTML = html;
+      }
+
+      function readConfigForm() {
+        var config = { areas: {} };
+        Array.prototype.forEach.call(configForm.querySelectorAll('.config-area'), function (areaEl) {
+          var key = areaEl.getAttribute('data-area');
+          var areaOut = {};
+          var nameInput = areaEl.querySelector('.cfg-name');
+          if (nameInput && nameInput.value.trim()) areaOut.name = nameInput.value.trim();
+          var tierLabels = {};
+          Array.prototype.forEach.call(areaEl.querySelectorAll('.cfg-label'), function (el) {
+            if (el.value.trim()) tierLabels[el.getAttribute('data-tier')] = el.value.trim();
+          });
+          if (Object.keys(tierLabels).length) areaOut.tier_labels = tierLabels;
+          var feedback = {};
+          Array.prototype.forEach.call(areaEl.querySelectorAll('.cfg-feedback'), function (el) {
+            if (el.value.trim()) feedback[el.getAttribute('data-tier')] = el.value.trim();
+          });
+          if (Object.keys(feedback).length) areaOut.feedback = feedback;
+          if (Object.keys(areaOut).length) config.areas[key] = areaOut;
+        });
+        return config;
+      }
+
+      function loadConfig() {
+        configState.hidden = false;
+        configState.textContent = 'Carregando textos…';
+        configForm.hidden = true;
+        configActions.hidden = true;
+        configError.classList.remove('active');
+        configNotice.classList.remove('active');
+
+        apiRequest({ action: 'get_config' }).then(function (data) {
+          configDefaults = data.defaults;
+          buildConfigForm(data.defaults, data.overrides);
+          configState.hidden = true;
+          configForm.hidden = false;
+          configActions.hidden = false;
+          configLoaded = true;
+        }).catch(function (err) {
+          if (err.handled) return;
+          configState.textContent = err.message || 'Não foi possível carregar os textos.';
+        });
+      }
+
+      saveConfigBtn.addEventListener('click', function () {
+        configError.classList.remove('active');
+        configNotice.classList.remove('active');
+        saveConfigBtn.disabled = true;
+        var originalText = saveConfigBtn.textContent;
+        saveConfigBtn.innerHTML = '<span class="spinner"></span> Salvando...';
+
+        apiRequest({ action: 'update_config', config: readConfigForm() }).then(function (data) {
+          buildConfigForm(configDefaults, data.overrides);
+          configNotice.textContent = 'Textos salvos com sucesso.';
+          configNotice.classList.add('active');
+        }).catch(function (err) {
+          if (err.handled) return;
+          configError.textContent = err.message || 'Não foi possível salvar.';
+          configError.classList.add('active');
+        }).then(function () {
+          saveConfigBtn.disabled = false;
+          saveConfigBtn.textContent = originalText;
+        });
+      });
+
+      resetConfigBtn.addEventListener('click', function () {
+        if (!configDefaults) return;
+        if (!window.confirm('Restaurar todos os textos para o padrão? Isso apaga suas edições.')) return;
+        configError.classList.remove('active');
+        configNotice.classList.remove('active');
+        resetConfigBtn.disabled = true;
+
+        apiRequest({ action: 'update_config', config: {} }).then(function (data) {
+          buildConfigForm(configDefaults, data.overrides);
+          configNotice.textContent = 'Textos restaurados para o padrão.';
+          configNotice.classList.add('active');
+        }).catch(function (err) {
+          if (err.handled) return;
+          configError.textContent = err.message || 'Não foi possível restaurar.';
+          configError.classList.add('active');
+        }).then(function () {
+          resetConfigBtn.disabled = false;
+        });
       });
 
       // ---------- Boot ----------

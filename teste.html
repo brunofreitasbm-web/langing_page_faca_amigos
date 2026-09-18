@@ -16,7 +16,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teste de Comportamento Infantil Gratuito | Instituto FaçaAmigos</title>
   <meta name="description"
-    content="Faça gratuitamente o Teste de Comportamento do Instituto FaçaAmigos e receba, em poucos minutos, um retrato inicial de como seu filho está se desenvolvendo. Não substitui avaliação profissional.">
+    content="Faça gratuitamente o Teste de Comportamento do Instituto FaçaAmigos e receba, em poucos minutos, um retrato inicial de como seu filho está se desenvolvendo. Não substitui avaliação profissional. Para crianças de 4 a 17 anos.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/teste">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
   <link rel="apple-touch-icon" href="img/logo-simbolo.png">
@@ -35,7 +35,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Teste de Comportamento Infantil Gratuito | Instituto FaçaAmigos">
   <meta name="twitter:description"
-    content="Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu filho. Gratuito e leva cerca de 4 minutos.">
+    content="Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu filho. Gratuito e leva cerca de 5 minutos.">
   <meta name="twitter:image" content="https://institutofacaamigos.com.br/img/idealizadora.jpg">
 
   <!-- Google Fonts Preconnect & Optimization -->
@@ -616,6 +616,179 @@
 
     .consent-row input { width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0; }
     .consent-row a { color: var(--teal-dark); text-decoration: underline; }
+
+    /* Aviso "menos de 4 anos" */
+    .under4-notice {
+      background: var(--cream);
+      border-radius: var(--r-card);
+      padding: 22px 20px;
+      text-align: center;
+    }
+
+    .under4-notice p { color: var(--ink-soft); font-weight: 600; margin-bottom: 18px; }
+
+    .under4-notice .result-actions { margin-top: 4px; }
+
+    /* Eyebrow acima da pergunta */
+    .q-eyebrow {
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+      margin-bottom: 10px;
+    }
+
+    /* Resultado — cores de faixa */
+    :root {
+      --t1-bar: var(--teal);
+      --t1-bg: rgba(46, 207, 181, 0.14);
+      --t1-text: #167A6B;
+      --t2-bar: #E9A200;
+      --t2-bg: rgba(255, 226, 52, 0.28);
+      --t2-text: #7A6A00;
+      --t3-bar: #D64545;
+      --t3-bg: rgba(214, 69, 69, 0.10);
+      --t3-text: #8F2B2B;
+    }
+
+    .result-eyebrow {
+      display: block;
+      text-align: center;
+      font-size: 0.8rem;
+      font-weight: 900;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--teal-dark);
+      margin-bottom: 10px;
+    }
+
+    .result-intro {
+      color: var(--ink-soft);
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 18px;
+    }
+
+    .chart-card { margin-bottom: 26px; }
+
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: end;
+      height: 190px;
+      margin-bottom: 14px;
+    }
+
+    .bar-col { display: flex; flex-direction: column; align-items: center; height: 100%; }
+
+    .bar-track {
+      flex: 1;
+      width: 100%;
+      max-width: 46px;
+      background: var(--cream);
+      border-radius: 10px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      width: 100%;
+      border-radius: 10px 10px 0 0;
+      transition: height 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .bar-fill.tier1 { background: var(--t1-bar); }
+    .bar-fill.tier2 { background: var(--t2-bar); }
+    .bar-fill.tier3 { background: var(--t3-bar); }
+
+    .bar-value { font-size: 0.78rem; font-weight: 800; color: var(--dark); margin-top: 6px; }
+
+    .bar-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+      text-align: center;
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
+
+    .legend .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .legend .dot.tier1 { background: var(--t1-bar); }
+    .legend .dot.tier2 { background: var(--t2-bar); }
+    .legend .dot.tier3 { background: var(--t3-bar); }
+
+    .area-card {
+      background: var(--white);
+      border-radius: 18px;
+      border: 2px solid rgba(26, 63, 53, 0.1);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .area-card.tier1 { border-color: var(--t1-bar); }
+    .area-card.tier2 { border-color: var(--t2-bar); }
+    .area-card.tier3 { border-color: var(--t3-bar); }
+
+    .area-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .area-card-name { font-weight: 900; font-size: 1.02rem; }
+
+    .area-badge {
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.78rem;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 9999px;
+    }
+
+    .area-badge.tier1 { background: var(--t1-bg); color: var(--t1-text); }
+    .area-badge.tier2 { background: var(--t2-bg); color: var(--t2-text); }
+    .area-badge.tier3 { background: var(--t3-bg); color: var(--t3-text); }
+
+    .area-card-text { color: var(--ink-soft); font-weight: 600; font-size: 0.94rem; }
+
+    .human-block {
+      background: var(--t2-bg);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      border-radius: var(--r-card);
+      padding: 20px;
+      margin-bottom: 22px;
+      text-align: center;
+    }
+
+    .human-block p { color: var(--dark); font-weight: 600; margin-bottom: 14px; }
+
+    .result-bottom-disclaimer {
+      font-size: 0.8rem;
+      color: var(--ink-soft);
+      font-style: italic;
+      text-align: center;
+      margin-top: 20px;
+    }
   </style>
 </head>
 
@@ -657,7 +830,12 @@
               <path fill-rule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
                 clip-rule="evenodd" />
-            </svg> <span id="intro-duration-text">~4 minutos</span></span>
+            </svg> <span id="intro-duration-text">~5 minutos</span></span>
+          <span class="chip" id="intro-questions"><svg fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 10-2 0c0 .55.15.99.435 1.336.276.336.664.573 1.008.760.395.214.567.404.567.904a1 1 0 102 0c0-1.08-.616-1.686-1.12-1.958-.257-.14-.407-.246-.49-.35A.545.545 0 0111 6zm1 7a1 1 0 11-2 0 1 1 0 012 0z"
+                clip-rule="evenodd" />
+            </svg> <span id="intro-questions-text">25 perguntas rápidas</span></span>
           <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
               <path
                 d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -668,11 +846,12 @@
         <p class="note-small" id="intro-disclaimer">Desenvolvido pela idealizadora do FaçaAmigos · não substitui avaliação profissional</p>
       </section>
 
-      <!-- PASSO 1 — SOBRE A CRIANÇA -->
-      <section id="step-child" class="quiz-card" hidden>
-        <h2 id="child-heading" tabindex="-1">Conte um pouco sobre a criança</h2>
-        <p class="sub" style="margin-bottom:24px;">Assim as perguntas e o resultado falam do seu filho pelo nome.</p>
-        <form id="child-form" novalidate>
+      <!-- PASSO 1 — CONTATO E DADOS DA CRIANÇA -->
+      <section id="step-contact" class="quiz-card" hidden>
+        <h2 id="contact-heading" tabindex="-1">Vamos nos conhecer</h2>
+        <p class="sub" style="margin-bottom:24px;">Preencha para personalizarmos o retrato de observação. Seus dados
+          ficam seguros e são usados só para te enviar o resultado e, se quiser, conversar com nossa equipe.</p>
+        <form id="lead-form" novalidate>
           <div class="form-group">
             <label class="form-label" for="child-name">Primeiro nome da criança</label>
             <input type="text" id="child-name" class="form-control" placeholder="Ex: Pedro" autocomplete="given-name"
@@ -682,20 +861,34 @@
           <fieldset>
             <legend>Faixa etária</legend>
             <div class="opt-grid" id="age-options" role="radiogroup" aria-label="Faixa etária">
-              <input class="visually-hidden" type="radio" name="age-range" id="age-0-1" value="0-1">
-              <label class="opt-chip" for="age-0-1">0–1 ano</label>
-              <input class="visually-hidden" type="radio" name="age-range" id="age-2-3" value="2-3">
-              <label class="opt-chip" for="age-2-3">2–3 anos</label>
+              <input class="visually-hidden" type="radio" name="age-range" id="age-under-4" value="under-4">
+              <label class="opt-chip" for="age-under-4">Menos de 4 anos</label>
               <input class="visually-hidden" type="radio" name="age-range" id="age-4-5" value="4-5">
               <label class="opt-chip" for="age-4-5">4–5 anos</label>
               <input class="visually-hidden" type="radio" name="age-range" id="age-6-8" value="6-8">
               <label class="opt-chip" for="age-6-8">6–8 anos</label>
               <input class="visually-hidden" type="radio" name="age-range" id="age-9-12" value="9-12">
               <label class="opt-chip" for="age-9-12">9–12 anos</label>
-              <input class="visually-hidden" type="radio" name="age-range" id="age-13" value="13+">
-              <label class="opt-chip" for="age-13">13+ anos</label>
+              <input class="visually-hidden" type="radio" name="age-range" id="age-13-17" value="13-17">
+              <label class="opt-chip" for="age-13-17">13–17 anos</label>
             </div>
           </fieldset>
+
+          <div id="under4-notice" class="under4-notice" hidden>
+            <p>Este questionário foi pensado para crianças de 4 a 17 anos. Para crianças menores, o ideal é conversar
+              direto com a nossa equipe — vamos adorar te ouvir.</p>
+            <div class="result-actions">
+              <a id="under4-wa" class="btn btn-wa btn-block" href="#" target="_blank" rel="noopener">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path
+                    d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" />
+                </svg>
+                Conversar no WhatsApp
+              </a>
+              <a class="btn btn-ghost btn-block" href="https://institutofacaamigos.com.br/#clinica">Conhecer a
+                Clínica</a>
+            </div>
+          </div>
 
           <fieldset>
             <legend>Quem está respondendo</legend>
@@ -711,37 +904,6 @@
             </div>
           </fieldset>
 
-          <div id="child-form-error" class="form-error" aria-live="polite"></div>
-          <button type="submit" id="child-form-submit" class="btn btn-pink btn-block">Continuar</button>
-        </form>
-      </section>
-
-      <!-- PASSO 2 — PERGUNTAS -->
-      <section id="step-question" class="quiz-card" hidden>
-        <div class="progress-wrap">
-          <div class="progress-label" id="progress-label" aria-live="polite">Pergunta 1 de 8</div>
-          <div class="progress-track">
-            <div class="progress-fill" id="progress-fill" role="progressbar" aria-valuemin="0" aria-valuemax="100"
-              aria-valuenow="0"></div>
-          </div>
-        </div>
-        <h2 class="question-text" id="question-heading" tabindex="-1"></h2>
-        <fieldset>
-          <legend class="visually-hidden">Resposta</legend>
-          <div class="scale-list" id="scale-options" role="radiogroup" aria-label="Escala de resposta"></div>
-        </fieldset>
-        <div class="step-nav">
-          <button type="button" id="btn-back" class="btn btn-ghost btn-sm">Voltar</button>
-          <span></span>
-        </div>
-      </section>
-
-      <!-- PASSO 3 — CONTATO (GATE) -->
-      <section id="step-contact" class="quiz-card" hidden>
-        <h2 id="contact-heading" tabindex="-1">Falta pouco! Para onde enviamos seu resultado?</h2>
-        <p class="sub" style="margin-bottom:24px;">Seus dados ficam seguros e são usados só para te enviar o retrato do
-          seu filho e, se quiser, conversar com nossa equipe.</p>
-        <form id="contact-form" novalidate>
           <div class="form-group">
             <label class="form-label" for="guardian-name">Seu nome</label>
             <input type="text" id="guardian-name" class="form-control" placeholder="Nome completo"
@@ -780,20 +942,57 @@
             <span>Quero receber, por e-mail, conteúdos gratuitos da idealizadora sobre desenvolvimento infantil, autismo e neurodivergência.</span>
           </label>
           <div id="contact-form-error" class="form-error" aria-live="polite"></div>
-          <button type="submit" id="contact-form-submit" class="btn btn-pink btn-block">Ver meu retrato</button>
+          <button type="submit" id="contact-form-submit" class="btn btn-pink btn-block">Começar as perguntas</button>
         </form>
       </section>
 
-      <!-- PASSO 4 — RESULTADO -->
-      <section id="step-result" class="quiz-card" hidden>
-        <div class="result-badge">
-          <div id="result-emoji">🌱</div>
+      <!-- PASSO 2 — PERGUNTAS -->
+      <section id="step-question" class="quiz-card" hidden>
+        <div class="progress-wrap">
+          <div class="progress-label" id="progress-label" aria-live="polite">Pergunta 1 de 25</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="progress-fill" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+              aria-valuenow="0"></div>
+          </div>
         </div>
-        <h2 class="result-title" id="result-title" tabindex="-1"></h2>
-        <p class="result-text" id="result-text"></p>
-        <p class="note-small" id="result-email-note" hidden>Enviamos este retrato também para o seu e-mail.</p>
-        <div class="result-disclaimer">Este teste é um retrato inicial e não substitui avaliação profissional. Cada
-          criança tem seu próprio ritmo.</div>
+        <p class="q-eyebrow" id="question-eyebrow"></p>
+        <h2 class="question-text" id="question-heading" tabindex="-1"></h2>
+        <fieldset>
+          <legend class="visually-hidden">Resposta</legend>
+          <div class="scale-list" id="scale-options" role="radiogroup" aria-label="Escala de resposta"></div>
+        </fieldset>
+        <div id="question-loading" class="center" style="padding: 20px 0;" hidden>
+          <p class="note-small" id="question-loading-text">Montando o retrato...</p>
+        </div>
+        <div id="question-error" class="form-error" aria-live="polite"></div>
+        <div class="step-nav">
+          <button type="button" id="btn-back" class="btn btn-ghost btn-sm">Voltar</button>
+          <span></span>
+        </div>
+      </section>
+
+      <!-- PASSO 3 — RESULTADO -->
+      <section id="step-result" class="quiz-card" hidden>
+        <span class="result-eyebrow" id="result-eyebrow">O retrato de seu filho(a)</span>
+        <h2 class="result-title" id="result-title" tabindex="-1">Seu retrato de observação</h2>
+        <p class="result-intro" id="result-intro"></p>
+        <p class="note-small center" id="result-email-note" hidden style="margin: 0 0 18px;">Enviamos este retrato
+          também para o seu e-mail.</p>
+        <div class="result-disclaimer">Este material é educativo e não constitui diagnóstico psicológico. Ele não
+          substitui uma avaliação profissional completa.</div>
+
+        <div class="chart-card">
+          <div class="chart" id="result-chart"></div>
+          <div class="legend" id="result-legend"></div>
+        </div>
+
+        <div id="result-areas"></div>
+
+        <div id="result-human" class="human-block" hidden>
+          <p>Podemos conversar antes de qualquer coisa? Se você sentir que algum desses pontos está pesando bastante
+            na rotina da família, terei prazer em conversar com você antes de qualquer outra coisa.</p>
+        </div>
+
         <div class="result-actions">
           <a id="result-wa" class="btn btn-wa btn-block" href="#" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -805,8 +1004,13 @@
           <a id="result-clinica" class="btn btn-ghost btn-block"
             href="https://institutofacaamigos.com.br/#clinica">Conhecer a Clínica</a>
         </div>
+
+        <p class="result-bottom-disclaimer">Este material é um retrato educativo e informativo, não um diagnóstico.
+          Para uma leitura completa e individualizada, uma avaliação psicológica presencial é sempre o caminho mais
+          seguro.</p>
+
         <div class="center">
-          <button type="button" id="btn-restart" class="result-restart">Refazer o teste</button>
+          <button type="button" id="btn-restart" class="result-restart">Fazer novo questionário</button>
         </div>
       </section>
 
@@ -859,6 +1063,7 @@
     (function () {
       var API_BASE = 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/behavior-test-webhook';
       var STORAGE_KEY = 'fa_teste_state';
+      var WHATSAPP_NUMBER = '5591991782027';
 
       var QUIZ = null;
 
@@ -866,6 +1071,11 @@
         childName: '',
         ageRange: '',
         relation: '',
+        guardianName: '',
+        guardianEmail: '',
+        guardianPhone: '',
+        unit: '',
+        marketingOptIn: false,
         leadId: null,
         testVersion: null,
         answers: {},
@@ -877,7 +1087,7 @@
         landingPage: ''
       };
 
-      var steps = ['step-landing', 'step-child', 'step-question', 'step-contact', 'step-result'];
+      var steps = ['step-landing', 'step-contact', 'step-question', 'step-result'];
 
       function $(id) { return document.getElementById(id); }
 
@@ -968,7 +1178,9 @@
           .then(function (data) {
             QUIZ = data;
             var durationEl = $('intro-duration-text');
-            if (durationEl) durationEl.textContent = (QUIZ.intro && QUIZ.intro.duration) ? QUIZ.intro.duration : '~4 minutos';
+            if (durationEl) durationEl.textContent = (QUIZ.intro && QUIZ.intro.duration) ? QUIZ.intro.duration : '~5 minutos';
+            var questionsEl = $('intro-questions-text');
+            if (questionsEl) questionsEl.textContent = (QUIZ.intro && QUIZ.intro.questions_label) ? QUIZ.intro.questions_label : '25 perguntas rápidas';
             var disclaimerEl = $('intro-disclaimer');
             if (disclaimerEl && QUIZ.intro && QUIZ.intro.disclaimer) disclaimerEl.textContent = QUIZ.intro.disclaimer;
             var startBtn = $('btn-start');
@@ -996,21 +1208,51 @@
           return;
         }
         pushEvent({ event: 'teste_start' });
-        showStep('step-child', 'child-heading');
+        showStep('step-contact', 'contact-heading');
       });
 
-      // ---- Passo 1: Sobre a criança ----
-      var childForm = $('child-form');
-      childForm.addEventListener('submit', function (e) {
+      // ---- Passo 1: Contato e dados da criança ----
+      document.querySelectorAll('input[name="age-range"]').forEach(function (input) {
+        input.addEventListener('change', function () {
+          var notice = $('under4-notice');
+          var submitBtn = $('contact-form-submit');
+          if (input.value === 'under-4' && input.checked) {
+            notice.hidden = false;
+            if (submitBtn) submitBtn.disabled = true;
+            pushEvent({ event: 'teste_under4' });
+          } else if (input.checked) {
+            notice.hidden = true;
+            if (submitBtn) submitBtn.disabled = false;
+          }
+        });
+      });
+
+      var phoneInput = $('guardian-phone');
+      phoneInput.addEventListener('input', function () {
+        var pos = phoneInput.selectionStart;
+        var before = phoneInput.value.length;
+        phoneInput.value = maskPhone(phoneInput.value);
+        var after = phoneInput.value.length;
+        try { phoneInput.selectionEnd = pos + (after - before); } catch (e) { /* ignore */ }
+      });
+
+      var leadForm = $('lead-form');
+      leadForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        var errBox = $('child-form-error');
+        var errBox = $('contact-form-error');
         errBox.style.display = 'none';
 
-        var name = $('child-name').value.trim().split(' ')[0];
+        var childName = $('child-name').value.trim().split(' ')[0];
         var ageEl = document.querySelector('input[name="age-range"]:checked');
         var relEl = document.querySelector('input[name="relation"]:checked');
+        var guardianName = $('guardian-name').value.trim();
+        var guardianPhone = $('guardian-phone').value.trim();
+        var guardianEmail = $('guardian-email').value.trim();
+        var unit = $('preferred-unit').value;
+        var consent = $('consent-check').checked;
+        var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-        if (!name) {
+        if (!childName) {
           errBox.textContent = 'Digite o primeiro nome da criança.';
           errBox.style.display = 'block';
           $('child-name').focus();
@@ -1021,18 +1263,48 @@
           errBox.style.display = 'block';
           return;
         }
+        if (ageEl.value === 'under-4') {
+          errBox.textContent = 'Este questionário é para crianças de 4 a 17 anos. Fale com a gente pelo WhatsApp acima.';
+          errBox.style.display = 'block';
+          return;
+        }
         if (!relEl) {
           errBox.textContent = 'Selecione quem está respondendo.';
           errBox.style.display = 'block';
           return;
         }
+        if (!guardianName) {
+          errBox.textContent = 'Digite seu nome.';
+          errBox.style.display = 'block';
+          return;
+        }
+        if (!phoneDigitsValid(guardianPhone)) {
+          errBox.textContent = 'Digite um WhatsApp válido, com DDD.';
+          errBox.style.display = 'block';
+          return;
+        }
+        if (!emailRe.test(guardianEmail)) {
+          errBox.textContent = 'Digite um e-mail válido.';
+          errBox.style.display = 'block';
+          return;
+        }
+        if (!consent) {
+          errBox.textContent = 'É preciso aceitar a Política de Privacidade para continuar.';
+          errBox.style.display = 'block';
+          return;
+        }
 
-        state.childName = name;
+        state.childName = childName;
         state.ageRange = ageEl.value;
         state.relation = relEl.value;
+        state.guardianName = guardianName;
+        state.guardianEmail = guardianEmail;
+        state.guardianPhone = guardianPhone;
+        state.unit = unit;
+        state.marketingOptIn = !!($('marketing-opt-in') && $('marketing-opt-in').checked);
         saveState();
 
-        var submitBtn = $('child-form-submit');
+        var submitBtn = $('contact-form-submit');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Enviando...';
 
@@ -1044,6 +1316,13 @@
             child_first_name: state.childName,
             child_age_range: state.ageRange,
             guardian_relation: state.relation,
+            guardian_name: state.guardianName,
+            guardian_email: state.guardianEmail,
+            guardian_phone: state.guardianPhone,
+            preferred_unit: state.unit,
+            consent: true,
+            marketing_opt_in: state.marketingOptIn,
+            website: ($('website-hp') && $('website-hp').value) || '',
             utm: state.utm || {},
             referrer: state.referrer || '',
             landing_page: state.landingPage || window.location.href
@@ -1061,7 +1340,11 @@
             state.testVersion = r.data.test_version;
             state.currentQ = 0;
             state.answers = {};
+            state.completed = false;
+            state.result = null;
             saveState();
+            pushEvent({ event: 'teste_lead' });
+            pushEvent({ event: 'generate_lead', lead_source: 'teste_comportamento' });
             renderQuestion(0);
             showStep('step-question', 'question-heading');
           })
@@ -1075,7 +1358,7 @@
           })
           .then(function () {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Continuar';
+            submitBtn.textContent = 'Começar as perguntas';
           });
       });
 
@@ -1089,7 +1372,8 @@
         state.currentQ = index;
         saveState();
 
-        $('question-heading').textContent = replaceChild(q.text);
+        $('question-eyebrow').textContent = replaceChild('Sobre {{crianca}}');
+        $('question-heading').textContent = q.text;
 
         var percentAnswered = Math.round(((index + 1) / total) * 100);
         $('progress-fill').style.width = percentAnswered + '%';
@@ -1127,7 +1411,7 @@
                 requestAnimationFrame(function () { heading.focus(); });
               } else {
                 pushEvent({ event: 'teste_complete' });
-                showStep('step-contact', 'contact-heading');
+                submitAnswers();
               }
             }, 180);
           });
@@ -1137,6 +1421,8 @@
         });
 
         $('btn-back').hidden = (index === 0);
+        $('question-error').style.display = 'none';
+        $('question-loading').hidden = true;
       }
 
       $('btn-back').addEventListener('click', function () {
@@ -1145,55 +1431,9 @@
         }
       });
 
-      // ---- Passo 3: Contato ----
-      var phoneInput = $('guardian-phone');
-      phoneInput.addEventListener('input', function () {
-        var pos = phoneInput.selectionStart;
-        var before = phoneInput.value.length;
-        phoneInput.value = maskPhone(phoneInput.value);
-        var after = phoneInput.value.length;
-        try { phoneInput.selectionEnd = pos + (after - before); } catch (e) { /* ignore */ }
-      });
-
-      var contactForm = $('contact-form');
-      contactForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var errBox = $('contact-form-error');
+      function submitAnswers() {
+        var errBox = $('question-error');
         errBox.style.display = 'none';
-
-        var name = $('guardian-name').value.trim();
-        var phone = $('guardian-phone').value.trim();
-        var email = $('guardian-email').value.trim();
-        var unit = $('preferred-unit').value;
-        var consent = $('consent-check').checked;
-
-        if (!name) {
-          errBox.textContent = 'Digite seu nome.';
-          errBox.style.display = 'block';
-          return;
-        }
-        if (!phoneDigitsValid(phone)) {
-          errBox.textContent = 'Digite um WhatsApp válido, com DDD.';
-          errBox.style.display = 'block';
-          return;
-        }
-        var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRe.test(email)) {
-          errBox.textContent = 'Digite um e-mail válido.';
-          errBox.style.display = 'block';
-          return;
-        }
-        if (!consent) {
-          errBox.textContent = 'É preciso aceitar a Política de Privacidade para continuar.';
-          errBox.style.display = 'block';
-          return;
-        }
-        if (!state.leadId) {
-          errBox.textContent = 'Sua sessão expirou. Vamos recomeçar o teste.';
-          errBox.style.display = 'block';
-          window.setTimeout(resetAll, 1800);
-          return;
-        }
 
         var answersArr = (QUIZ.questions || []).map(function (q) {
           return { id: q.id, v: state.answers[q.id] };
@@ -1204,10 +1444,19 @@
           window.setTimeout(resetAll, 1800);
           return;
         }
+        if (!state.leadId) {
+          errBox.textContent = 'Sua sessão expirou. Vamos recomeçar o teste.';
+          errBox.style.display = 'block';
+          window.setTimeout(resetAll, 1800);
+          return;
+        }
 
-        var submitBtn = $('contact-form-submit');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
+        $('scale-options').style.display = 'none';
+        $('btn-back').hidden = true;
+        var loadingBox = $('question-loading');
+        var loadingText = $('question-loading-text');
+        if (loadingText) loadingText.textContent = 'Montando o retrato de ' + (state.childName || 'seu filho') + '...';
+        loadingBox.hidden = false;
 
         fetch(API_BASE, {
           method: 'POST',
@@ -1216,12 +1465,6 @@
             event: 'complete',
             lead_id: state.leadId,
             test_version: state.testVersion,
-            guardian_name: name,
-            guardian_email: email,
-            guardian_phone: phone,
-            preferred_unit: unit,
-            consent: true,
-            marketing_opt_in: !!($('marketing-opt-in') && $('marketing-opt-in').checked),
             website: ($('website-hp') && $('website-hp').value) || '',
             answers: answersArr
           })
@@ -1242,13 +1485,13 @@
             state.completed = true;
             state.result = r.data;
             saveState();
-            pushEvent({ event: 'teste_lead', result_band: r.data.result_band });
-            pushEvent({ event: 'generate_lead', lead_source: 'teste_comportamento', result_band: r.data.result_band });
+            pushEvent({ event: 'teste_result', result_band: r.data.result_band, tier3_count: r.data.tier3_count });
             renderResult();
             showStep('step-result', 'result-title');
           })
           .catch(function (err) {
             var msg = err.message || '';
+            loadingBox.hidden = true;
             if (msg.indexOf('__RESTART__') === 0) {
               errBox.textContent = msg.replace('__RESTART__', '');
               errBox.style.display = 'block';
@@ -1272,37 +1515,120 @@
             if (msg.toLowerCase().indexOf('failed to fetch') !== -1) {
               msg = 'Não foi possível enviar seus dados agora. Verifique sua conexão e tente novamente.';
             }
-            errBox.textContent = msg || 'Não foi possível enviar seus dados. Tente novamente.';
+            errBox.innerHTML = '';
+            errBox.appendChild(document.createTextNode((msg || 'Não foi possível enviar seus dados. Tente novamente.') + ' '));
+            var retryBtn = document.createElement('button');
+            retryBtn.type = 'button';
+            retryBtn.className = 'btn btn-ghost btn-sm';
+            retryBtn.style.marginTop = '8px';
+            retryBtn.textContent = 'Tentar novamente';
+            retryBtn.addEventListener('click', function () { submitAnswers(); });
+            errBox.appendChild(document.createElement('br'));
+            errBox.appendChild(retryBtn);
             errBox.style.display = 'block';
-          })
-          .then(function () {
-            if (!state.completed) {
-              submitBtn.disabled = false;
-              submitBtn.textContent = 'Ver meu retrato';
-            }
+            $('scale-options').style.display = '';
           });
-      });
+      }
 
-      // ---- Passo 4: Resultado ----
+      // ---- Passo 3: Resultado ----
+      var TIER_ORDER = ['emotional', 'conduct', 'hyperactivity', 'peer', 'prosocial'];
+
       function renderResult() {
         var result = state.result || {};
-        var band = null;
-        if (QUIZ && QUIZ.bands) {
-          band = QUIZ.bands.filter(function (b) { return b.key === result.result_band; })[0];
-        }
-        var title = result.band_title || (band ? band.title : 'Resultado do teste');
-        var text = band ? replaceChild(band.text) : '';
+        var results = result.results || [];
+        var tier3Count = result.tier3_count || 0;
+        var hasTier3 = tier3Count > 0;
 
-        $('result-title').textContent = title;
-        $('result-text').textContent = text;
-        var emojiEl = $('result-emoji');
-        if (emojiEl) emojiEl.textContent = (band && band.emoji) ? band.emoji : '🌱';
+        $('result-eyebrow').textContent = 'O retrato de ' + (state.childName || 'seu filho(a)');
+        $('result-title').textContent = 'Seu retrato de observação';
+        $('result-intro').textContent = hasTier3
+          ? 'Identificamos ' + tier3Count + (tier3Count === 1 ? ' área' : ' áreas') + ' que merecem atenção especial. Respire fundo — isto é um retrato inicial e um ponto de partida, não um veredito.'
+          : 'Aqui está o retrato de observação que você preencheu, com carinho e base científica. Veja abaixo o panorama de cada área observada.';
+
         var emailNote = $('result-email-note');
         if (emailNote) emailNote.hidden = !result.result_email_sent;
 
-        var waMsg = 'Oi! Acabei de fazer o Teste de Comportamento do(a) ' + (state.childName || 'meu filho') +
-          ' e o resultado foi: ' + title + '. Gostaria de conversar.';
-        $('result-wa').href = 'https://wa.me/5591991782027?text=' + encodeURIComponent(waMsg);
+        // Gráfico de barras
+        var chart = $('result-chart');
+        chart.innerHTML = '';
+        results.forEach(function (r) {
+          var col = document.createElement('div');
+          col.className = 'bar-col';
+
+          var track = document.createElement('div');
+          track.className = 'bar-track';
+
+          var fill = document.createElement('div');
+          fill.className = 'bar-fill ' + r.tier;
+          fill.style.height = Math.max(0, Math.min(100, (r.score / r.max) * 100)) + '%';
+          track.appendChild(fill);
+
+          var value = document.createElement('div');
+          value.className = 'bar-value';
+          value.textContent = r.score + '/' + r.max;
+
+          var label = document.createElement('div');
+          label.className = 'bar-label';
+          label.textContent = r.name;
+
+          col.appendChild(track);
+          col.appendChild(value);
+          col.appendChild(label);
+          chart.appendChild(col);
+        });
+
+        var legend = $('result-legend');
+        var legendLabels = (result.tier_legend) || {
+          tier1: 'Está fluindo bem',
+          tier2: 'Merece um olhar mais de perto',
+          tier3: 'Merece atenção especial'
+        };
+        legend.innerHTML = '';
+        ['tier1', 'tier2', 'tier3'].forEach(function (t) {
+          var span = document.createElement('span');
+          var dot = document.createElement('span');
+          dot.className = 'dot ' + t;
+          span.appendChild(dot);
+          span.appendChild(document.createTextNode(legendLabels[t]));
+          legend.appendChild(span);
+        });
+
+        // Cards por área
+        var areasBox = $('result-areas');
+        areasBox.innerHTML = '';
+        results.forEach(function (r) {
+          var card = document.createElement('div');
+          card.className = 'area-card ' + r.tier;
+
+          var head = document.createElement('div');
+          head.className = 'area-card-head';
+
+          var name = document.createElement('span');
+          name.className = 'area-card-name';
+          name.textContent = r.name;
+
+          var badge = document.createElement('span');
+          badge.className = 'area-badge ' + r.tier;
+          badge.textContent = r.tier_label;
+
+          head.appendChild(name);
+          head.appendChild(badge);
+
+          var text = document.createElement('p');
+          text.className = 'area-card-text';
+          text.textContent = r.feedback;
+
+          card.appendChild(head);
+          card.appendChild(text);
+          areasBox.appendChild(card);
+        });
+
+        // Bloco de contato humano
+        $('result-human').hidden = !hasTier3;
+
+        var childLabel = state.childName || 'meu filho';
+        var waResultMsg = 'Acabei de fazer o Teste de Comportamento do(a) ' + childLabel + '. Gostaria de conversar.';
+        $('result-wa').href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waResultMsg);
       }
 
       $('result-wa').addEventListener('click', function () {
@@ -1313,6 +1639,15 @@
         pushEvent({ event: 'teste_clinica_click' });
       });
 
+      var under4Wa = $('under4-wa');
+      if (under4Wa) {
+        under4Wa.addEventListener('click', function () {
+          var childLabel = ($('child-name') && $('child-name').value.trim()) || 'meu filho';
+          var msg = 'Oi! Minha criança (' + childLabel + ') tem menos de 4 anos e eu gostaria de conversar sobre o desenvolvimento dela.';
+          under4Wa.href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg);
+        });
+      }
+
       $('btn-restart').addEventListener('click', function () {
         resetAll();
       });
@@ -1320,12 +1655,16 @@
       function resetAll() {
         try { sessionStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
         state = {
-          childName: '', ageRange: '', relation: '', leadId: null, testVersion: null,
+          childName: '', ageRange: '', relation: '',
+          guardianName: '', guardianEmail: '', guardianPhone: '', unit: '', marketingOptIn: false,
+          leadId: null, testVersion: null,
           answers: {}, currentQ: 0, completed: false, result: null,
           utm: state.utm, referrer: state.referrer, landingPage: state.landingPage
         };
-        childForm.reset();
-        contactForm.reset();
+        leadForm.reset();
+        $('under4-notice').hidden = true;
+        $('scale-options').style.display = '';
+        $('question-loading').hidden = true;
         showStep('step-landing', 'landing-heading');
       }
 
@@ -1336,14 +1675,15 @@
       loadQuiz().then(function () {
         if (!QUIZ) return;
 
-        if (state.completed && state.result) {
-          renderResult();
-          showStep('step-result', 'result-title');
+        // Sessão de uma versão antiga do teste — nunca reaproveitar estado.
+        if (state.testVersion && state.testVersion !== QUIZ.version) {
+          resetAll();
           return;
         }
 
-        if (state.leadId && Object.keys(state.answers || {}).length >= totalQuestions() && totalQuestions() > 0) {
-          showStep('step-contact', 'contact-heading');
+        if (state.completed && state.result) {
+          renderResult();
+          showStep('step-result', 'result-title');
           return;
         }
 
@@ -1356,7 +1696,7 @@
           return;
         }
 
-        // sem lead_id: fica na landing (pré-preenche o passo "sobre a criança" se já tinha algo digitado)
+        // sem lead_id: fica na landing (pré-preenche o formulário de contato se já tinha algo digitado)
         if (state.childName) $('child-name').value = state.childName;
         if (state.ageRange) {
           var ageInput = document.querySelector('input[name="age-range"][value="' + state.ageRange + '"]');
@@ -1366,6 +1706,10 @@
           var relInput = document.querySelector('input[name="relation"][value="' + state.relation + '"]');
           if (relInput) relInput.checked = true;
         }
+        if (state.guardianName) $('guardian-name').value = state.guardianName;
+        if (state.guardianPhone) $('guardian-phone').value = state.guardianPhone;
+        if (state.guardianEmail) $('guardian-email').value = state.guardianEmail;
+        if (state.unit) $('preferred-unit').value = state.unit;
         showStep('step-landing');
       });
     })();

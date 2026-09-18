@@ -1,3 +1,57 @@
+ATUALIZAÇÃO 18/09/2026 — questionário definitivo do Teste de Comportamento
+(versão "2026-09-18")
+---------------------------------------------------------------------------
+O placeholder de 8 perguntas ("2026-09-16", marcado `"placeholder": true`)
+foi substituído pelo questionário definitivo e validado: 25 perguntas, 5
+áreas (Emoções e segurança, Rotina e limites, Foco e energia, Amizades e
+convivência, Empatia e gentileza), cada uma com 3 faixas (tier1/tier2/tier3).
+Conteúdo portado de um protótipo separado (pasta local "Teste de
+Comportamento/", gitignored — não faz parte do site).
+
+O QUE MUDOU
+- Funil: o gate de contato (nome, e-mail, WhatsApp do responsável) agora vem
+  ANTES das perguntas, não depois. O evento "start" já grava tudo.
+- Idade: restrita a 4-17 anos (faixas 4-5, 6-8, 9-12, 13-17). Quem marca
+  "menos de 4 anos" vê um aviso e um link de WhatsApp, sem fazer o teste.
+- Resultado: não existe mais uma banda única — cada área tem sua própria
+  faixa. O `result_band` salvo no lead passou a ser a PIOR faixa entre as 5
+  áreas (tier1|tier2|tier3), só para badge/GTM; o detalhe fica na nova
+  coluna `results` (jsonb, uma entrada por área).
+- Os 15 textos de orientação (5 áreas × 3 faixas) e os nomes/rótulos de área
+  agora são editáveis pelo Gestor na aba "Textos do resultado" do painel
+  /admin. Ficam guardados em `fa_teste_config` (só overrides; os padrões
+  continuam hardcoded nas duas Edge Functions — repita qualquer mudança de
+  texto default nos dois arquivos, pois o deploy via MCP não resolve um
+  módulo `_shared`).
+- Leads antigos (test_version "2026-09-16") continuam intactos e visíveis no
+  painel, com a lógica antiga de banda única.
+- Regra permanente: o nome do instrumento em que o questionário se baseia
+  NUNCA aparece em texto público (site, e-mails, painel) — só linguagem de
+  orientação, nunca de diagnóstico.
+
+PONTOS QUE PRECISAM FICAR EM SINCRONIA (se for editar o questionário de novo)
+1. `TEST_VERSION` em supabase/functions/behavior-test-webhook/index.ts
+   == `version` em teste-perguntas.json.
+2. Ids e quantidade das perguntas: teste-perguntas.json (`q01..q25`) ==
+   `QUESTION_IDS`/`AREAS` no webhook == `QUESTION_LABELS_BY_VERSION` no
+   painel admin.
+3. Escala 0-2: teste-perguntas.json == validação no webhook == "nível de 2"
+   no prompt do Gemini (painel admin).
+4. Faixas etárias: `AGE_RANGES` no webhook == chips em teste.html.
+5. Nomes de área / rótulos de faixa / textos padrão: `AREAS` +
+   `DEFAULT_TIER_LABELS` + `DEFAULT_FEEDBACK` no webhook ==
+   `CONFIG_DEFAULTS` no painel admin (mesmos valores, duplicados).
+6. Valores de `result_band`: sempre `tier1|tier2|tier3` para leads novos —
+   não reintroduzir os nomes antigos (`recomendado/observar/esperado`) exceto
+   para exibir leads antigos.
+
+ORDEM DE DEPLOY (obrigatória)
+1. Aplicar a migração `20260918120000_fa_teste_v2_25_perguntas.sql`.
+2. Deploy de `behavior-test-webhook`, depois `behavior-test-admin`.
+3. Só então publicar o site (push/deploy do Vercel). Se o site for ao ar
+   antes das functions, todo "complete" recebe 409 até o deploy terminar —
+   mesma regra de sempre.
+
 FaçaAmigos — Pacote de publicação da Landing Page v2 (/playground)
 ====================================================================
 

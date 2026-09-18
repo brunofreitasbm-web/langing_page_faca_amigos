@@ -1,83 +1,42 @@
 {
-  "version": "2026-09-16",
-  "placeholder": true,
+  "version": "2026-09-18",
   "intro": {
-    "duration": "~4 minutos",
+    "duration": "~5 minutos",
+    "questions_label": "25 perguntas rápidas",
     "disclaimer": "Desenvolvido pela idealizadora do FaçaAmigos · não substitui avaliação profissional"
   },
+  "min_age": 4,
+  "max_age": 17,
   "scale": [
-    { "v": 0, "label": "Nunca" },
-    { "v": 1, "label": "Às vezes" },
-    { "v": 2, "label": "Frequentemente" },
-    { "v": 3, "label": "Quase sempre" }
+    { "v": 0, "label": "Não é verdade" },
+    { "v": 1, "label": "Mais ou menos verdade" },
+    { "v": 2, "label": "É verdade" }
   ],
   "questions": [
-    {
-      "id": "q01",
-      "group": "comunicacao",
-      "text": "{{crianca}} costuma olhar nos olhos quando é chamado(a) pelo nome?"
-    },
-    {
-      "id": "q02",
-      "group": "comunicacao",
-      "text": "{{crianca}} usa palavras ou gestos para pedir o que quer?"
-    },
-    {
-      "id": "q03",
-      "group": "social",
-      "text": "{{crianca}} demonstra interesse em brincar perto ou junto de outras crianças?"
-    },
-    {
-      "id": "q04",
-      "group": "social",
-      "text": "{{crianca}} imita gestos, sons ou brincadeiras de adultos e outras crianças?"
-    },
-    {
-      "id": "q05",
-      "group": "comportamento",
-      "text": "{{crianca}} se adapta bem a pequenas mudanças na rotina?"
-    },
-    {
-      "id": "q06",
-      "group": "comportamento",
-      "text": "{{crianca}} consegue se acalmar sozinho(a) ou com apoio quando fica frustrado(a)?"
-    },
-    {
-      "id": "q07",
-      "group": "sensorial",
-      "text": "{{crianca}} reage de forma tranquila a sons, luzes ou texturas do dia a dia?"
-    },
-    {
-      "id": "q08",
-      "group": "autonomia",
-      "text": "{{crianca}} consegue seguir instruções simples de 1 ou 2 passos?"
-    }
-  ],
-  "_bands_nota": "Todas as perguntas são positivas (quanto mais 'Quase sempre', melhor). Por isso a faixa mais ALTA de pontos é 'esperado' e a mais BAIXA é 'recomendado'. As faixas abaixo precisam estar idênticas a BANDS em supabase/functions/behavior-test-webhook/index.ts.",
-  "bands": [
-    {
-      "key": "recomendado",
-      "min": 0,
-      "max": 8,
-      "emoji": "🤝",
-      "title": "Recomendamos uma avaliação profissional",
-      "text": "As respostas sobre {{crianca}} indicam sinais que merecem uma avaliação mais próxima. Isso não define nada sozinho, mas quanto antes conversar com uma especialista, mais cedo você tem clareza e, se for o caso, o apoio adequado."
-    },
-    {
-      "key": "observar",
-      "min": 9,
-      "max": 16,
-      "emoji": "🔍",
-      "title": "Vale a pena observar de perto",
-      "text": "Alguns pontos que você respondeu sobre {{crianca}} merecem atenção. Isso não é um diagnóstico, mas pode ser um bom momento para conversar com uma profissional especializada e entender melhor o que está acontecendo."
-    },
-    {
-      "key": "esperado",
-      "min": 17,
-      "max": 24,
-      "emoji": "🌱",
-      "title": "Dentro do esperado para a idade",
-      "text": "Pelo que você compartilhou, {{crianca}} vem se desenvolvendo dentro do que é esperado para a faixa etária. Continue observando o dia a dia com carinho — pequenos estímulos e brincadeiras fazem toda diferença."
-    }
+    { "id": "q01", "text": "Respeita os sentimentos das outras pessoas." },
+    { "id": "q02", "text": "É irrequieto(a), muito agitado(a), não consegue permanecer parado(a) por muito tempo." },
+    { "id": "q03", "text": "Queixa-se com frequência de dor de cabeça, dor de barriga ou enjoo." },
+    { "id": "q04", "text": "Reparte facilmente com outras crianças (doces, brinquedos, lápis, etc.)." },
+    { "id": "q05", "text": "Frequentemente tem acessos de raiva ou crises de birra (mau humor)." },
+    { "id": "q06", "text": "É solitário(a), prefere brincar sozinho(a)." },
+    { "id": "q07", "text": "Em geral é obediente, geralmente faz o que os adultos pedem." },
+    { "id": "q08", "text": "Anda muito preocupado(a), muitas vezes parece preocupado(a) com tudo." },
+    { "id": "q09", "text": "É prestativo(a) se alguém está magoado, aborrecido ou se sentindo mal." },
+    { "id": "q10", "text": "Está sempre se mexendo, se contorcendo (não consegue ficar quieto)." },
+    { "id": "q11", "text": "Tem pelo menos um bom amigo ou uma boa amiga." },
+    { "id": "q12", "text": "Frequentemente briga com outras crianças ou as intimida." },
+    { "id": "q13", "text": "Muitas vezes é infeliz, desanimado(a) ou choroso(a)." },
+    { "id": "q14", "text": "Em geral é benquisto(a) por outras crianças (as outras crianças gostam dele/dela)." },
+    { "id": "q15", "text": "É facilmente distraído(a), sua concentração se dispersa." },
+    { "id": "q16", "text": "É nervoso(a) ou grudento(a) em situações novas, facilmente perde a confiança em si mesmo(a)." },
+    { "id": "q17", "text": "É gentil com crianças mais novas." },
+    { "id": "q18", "text": "Frequentemente mente ou engana." },
+    { "id": "q19", "text": "É atormentado(a), ridicularizado(a), intimidado(a) ou amedrontado(a) por outras crianças." },
+    { "id": "q20", "text": "Muitas vezes se oferece para ajudar os outros (pais, professores, outras crianças)." },
+    { "id": "q21", "text": "Pensa antes de agir (reflete antes de fazer alguma coisa)." },
+    { "id": "q22", "text": "Rouba coisas de casa, da escola ou de outros lugares." },
+    { "id": "q23", "text": "Se dá melhor com adultos do que com outras crianças." },
+    { "id": "q24", "text": "Tem muitos medos, assusta-se facilmente." },
+    { "id": "q25", "text": "Termina o que começa, tem boa concentração." }
   ]
 }
