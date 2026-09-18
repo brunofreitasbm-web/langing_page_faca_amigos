@@ -21,7 +21,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
-  <!-- Teste de Comportamento (Instituto FaçaAmigos) -->
+  <!-- Mapeamento Comportamental (Instituto FaçaAmigos) -->
   <url>
     <loc>https://institutofacaamigos.com.br/teste</loc>
     <lastmod>2026-09-14</lastmod>

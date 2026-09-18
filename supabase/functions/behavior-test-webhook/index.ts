@@ -349,7 +349,7 @@ async function sendLeadEmailToIdealizadora(params: {
 
   const waDigits = params.guardianPhone;
   const waText = encodeURIComponent(
-    `Olá ${params.guardianName}! Vi que você fez o Teste de Comportamento do ${params.childFirstName} pelo site do FaçaAmigos. Posso te ajudar com os próximos passos?`,
+    `Olá ${params.guardianName}! Vi que você fez o Mapeamento Comportamental do ${params.childFirstName} pelo site do FaçaAmigos. Posso te ajudar com os próximos passos?`,
   );
   const waLink = `https://wa.me/${waDigits}?text=${waText}`;
 
@@ -370,7 +370,7 @@ async function sendLeadEmailToIdealizadora(params: {
 <div style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1a3f35;">
   <div style="font-size:11px;color:#9ca3af;text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">🤖 E-mail automático — Favor não responder a esta mensagem</div>
   <div style="background:linear-gradient(135deg,#f0196b 0%,#c8155a 100%);padding:28px 24px;border-radius:24px 24px 0 0;text-align:center;">
-    <h1 style="margin:0;font-family:'Fredoka One',cursive,sans-serif;font-weight:400;font-size:24px;color:#fff;">Novo lead do Teste de Comportamento</h1>
+    <h1 style="margin:0;font-family:'Fredoka One',cursive,sans-serif;font-weight:400;font-size:24px;color:#fff;">Novo lead do Mapeamento Comportamental</h1>
   </div>
   <div style="background:#fff;padding:28px 24px;border-radius:0 0 24px 24px;">
     <p style="margin:0 0 6px;font-size:15px;"><strong>Responsável:</strong> ${escapeHtml(params.guardianName)} (${escapeHtml(params.guardianRelation)})</p>
@@ -403,7 +403,7 @@ async function sendLeadEmailToIdealizadora(params: {
       body: JSON.stringify({
         sender,
         to: notifyToList.map((email) => ({ email })),
-        subject: `Novo lead do Teste de Comportamento — ${params.childFirstName} | Instituto Faça Amigos`,
+        subject: `Novo lead do Mapeamento Comportamental — ${params.childFirstName} | Instituto Faça Amigos`,
         htmlContent: html,
         ...(replyTo ? { replyTo: parseSenderAddress(replyTo) } : {}),
       }),
@@ -517,7 +517,7 @@ async function sendResultEmailToGuardian(params: {
           <p style="font-family:Arial,sans-serif;font-size:11px;color:#8791A6;margin:0;line-height:1.5;">
             Este material é um retrato educativo e informativo, não um diagnóstico. Para uma leitura completa e individualizada, uma avaliação psicológica presencial é sempre o caminho mais seguro.
           </p>
-          <p style="margin:16px 0 0;font-size:11px;color:#9ca3af;">Você recebeu este e-mail porque pediu o resultado do teste em institutofacaamigos.com.br/teste.</p>
+          <p style="margin:16px 0 0;font-size:11px;color:#9ca3af;">Você recebeu este e-mail porque pediu o resultado do mapeamento em institutofacaamigos.com.br/teste.</p>
         </td></tr>
       </table>
     </td></tr>
@@ -660,7 +660,7 @@ Deno.serve(async (req) => {
         .eq("id", resumable.id);
       if (updateError) {
         console.error("Erro ao retomar lead:", updateError);
-        return jsonResponse(req, { error: "falha ao iniciar teste" }, 500);
+        return jsonResponse(req, { error: "falha ao iniciar mapeamento" }, 500);
       }
       return jsonResponse(req, { lead_id: resumable.id, test_version: TEST_VERSION, resumed: true });
     }
@@ -694,7 +694,7 @@ Deno.serve(async (req) => {
 
     if (error || !data) {
       console.error("Erro ao iniciar lead:", error);
-      return jsonResponse(req, { error: "falha ao iniciar teste" }, 500);
+      return jsonResponse(req, { error: "falha ao iniciar mapeamento" }, 500);
     }
 
     return jsonResponse(req, { lead_id: data.id, test_version: TEST_VERSION, resumed: false });
@@ -707,7 +707,7 @@ Deno.serve(async (req) => {
 
     if (!leadId) return jsonResponse(req, { error: "lead_id ausente" }, 400);
     if (testVersion !== TEST_VERSION) {
-      return jsonResponse(req, { error: "versão do teste desatualizada, recarregue a página" }, 409);
+      return jsonResponse(req, { error: "versão do mapeamento desatualizada, recarregue a página" }, 409);
     }
 
     const seen = new Set<string>();
@@ -742,13 +742,13 @@ Deno.serve(async (req) => {
       .single();
 
     if (fetchError || !existingLead) {
-      return jsonResponse(req, { error: "teste não encontrado, recomece" }, 404);
+      return jsonResponse(req, { error: "mapeamento não encontrado, recomece" }, 404);
     }
     if (!existingLead.guardian_email) {
       // Lead "started" de formato antigo (sem contato prévio) — o fluxo
       // atual sempre coleta contato no "start", então isso não deveria
       // acontecer para leads novos.
-      return jsonResponse(req, { error: "sessão incompleta, recomece o teste" }, 400);
+      return jsonResponse(req, { error: "sessão incompleta, recomece o mapeamento" }, 400);
     }
 
     const cfg = await loadConfig(admin);
