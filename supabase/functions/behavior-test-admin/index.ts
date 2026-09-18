@@ -24,6 +24,8 @@
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
+const LOGO_URL = "https://institutofacaamigos.com.br/img/logo-simbolo.png";
+
 const ALLOWED_ORIGINS = [
   "https://institutofacaamigos.com.br",
   "https://www.institutofacaamigos.com.br",
@@ -204,7 +206,7 @@ function toHex(buf: ArrayBuffer): string {
 // ---------------------------------------------------------------------
 
 async function verifyClinicaGestorLogin(
-  email: string,
+  identifier: string,
   password: string,
 ): Promise<{ ok: true; userId: string; email: string } | { ok: false; error: string; status: number }> {
   const clinicaUrl = Deno.env.get("CLINICA_SUPABASE_URL");
@@ -213,13 +215,40 @@ async function verifyClinicaGestorLogin(
     return { ok: false, error: "integração com o Sistema da Clínica não configurada", status: 500 };
   }
 
+  let emailToUse = identifier.trim();
+
+  // Se não contém '@', assume que pode ser CPF e tenta buscar o e-mail correspondente na Clínica
+  if (!emailToUse.includes("@")) {
+    const cleanDigits = emailToUse.replace(/\D/g, "");
+    const filters: string[] = [];
+    if (emailToUse) filters.push(`cpf.eq.${quoteFilterValue(emailToUse)}`);
+    if (cleanDigits && cleanDigits !== emailToUse) {
+      filters.push(`cpf.eq.${quoteFilterValue(cleanDigits)}`);
+      filters.push(`cpf_clean.eq.${quoteFilterValue(cleanDigits)}`);
+    }
+
+    if (filters.length > 0) {
+      const lookupRes = await fetch(
+        `${clinicaUrl}/rest/v1/profiles?select=email&or=(${filters.join(",")})&limit=1`,
+        { headers: { apikey: clinicaAnonKey } },
+      ).catch(() => null);
+
+      if (lookupRes && lookupRes.ok) {
+        const found = await lookupRes.json().catch(() => []);
+        if (Array.isArray(found) && found[0]?.email) {
+          emailToUse = found[0].email;
+        }
+      }
+    }
+  }
+
   // 1) Autentica contra o Supabase Auth da Clínica — mesma chamada que o
   // próprio app dela faz (auth.signInWithPassword usa este endpoint por
   // baixo dos panos).
   const tokenRes = await fetch(`${clinicaUrl}/auth/v1/token?grant_type=password`, {
     method: "POST",
     headers: { apikey: clinicaAnonKey, "Content-Type": "application/json" },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify({ email: emailToUse, password }),
   });
 
   if (!tokenRes.ok) {
@@ -252,7 +281,7 @@ async function verifyClinicaGestorLogin(
     return { ok: false, error: "apenas o Gestor da Clínica pode acessar este painel", status: 403 };
   }
 
-  return { ok: true, userId, email: profile.email ?? email };
+  return { ok: true, userId, email: profile.email ?? emailToUse };
 }
 
 // ---------------------------------------------------------------------
@@ -439,6 +468,10 @@ async function sendInsightEmailToGuardian(params: {
   const html = `
 <div style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;max-width:560px;margin:0 auto;padding:24px;color:#1a3f35;">
   <div style="font-size:11px;color:#9ca3af;text-align:center;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;font-weight:700;">🤖 E-mail automático — Favor não responder a esta mensagem</div>
+  <div style="text-align:center;padding:10px 0 4px;">
+    <img src="${LOGO_URL}" alt="Instituto Faça Amigos" width="32" height="32" style="display:inline-block;vertical-align:middle;margin-right:8px;">
+    <span style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;font-weight:800;color:#1a3f35;vertical-align:middle;">Faça<span style="color:#f0196b;">Amigos</span></span>
+  </div>
   <div style="background:linear-gradient(135deg,#f0196b 0%,#c8155a 100%);padding:28px 24px;border-radius:24px 24px 0 0;text-align:center;">
     <h1 style="margin:0;font-family:'Fredoka One',cursive,sans-serif;font-weight:400;font-size:22px;color:#fff;">O retrato do(a) ${escapeHtml(params.childFirstName)} está pronto</h1>
   </div>
@@ -504,11 +537,12 @@ Deno.serve(async (req) => {
 
   // --- login: mesmo e-mail/senha do Gestor no Sistema da Clínica ---
   if (action === "login") {
-    const email = str(body.email).toLowerCase();
+    const inputStr = str(body.email || body.identifier || body.cpf).trim();
+    const loginInput = inputStr.includes("@") ? inputStr.toLowerCase() : inputStr;
     const password = str(body.password);
-    if (!email || !password) return jsonResponse(req, { error: "e-mail e senha são obrigatórios" }, 400);
+    if (!loginInput || !password) return jsonResponse(req, { error: "e-mail/CPF e senha são obrigatórios" }, 400);
 
-    const check = await verifyClinicaGestorLogin(email, password);
+    const check = await verifyClinicaGestorLogin(loginInput, password);
     if (!check.ok) {
       return jsonResponse(req, { error: check.error }, check.status);
     }

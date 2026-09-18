@@ -19,6 +19,8 @@
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
+const LOGO_URL = "https://institutofacaamigos.com.br/img/logo-simbolo.png";
+
 const ALLOWED_ORIGINS = [
   "https://institutofacaamigos.com.br",
   "https://www.institutofacaamigos.com.br",
@@ -493,7 +495,11 @@ async function sendResultEmailToGuardian(params: {
   <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFF9F1;padding:24px 0;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" role="presentation" style="max-width:600px;width:100%;background:#FFFFFF;border-radius:16px;overflow:hidden;border:1px solid #E7DFC9;">
-        <tr><td style="background:linear-gradient(135deg,#f0196b 0%,#c8155a 100%);padding:28px 32px;text-align:center;">
+        <tr><td style="background:#FFFFFF;padding:18px 32px 10px 32px;text-align:center;">
+          <img src="${LOGO_URL}" alt="Instituto Faça Amigos" width="36" height="36" style="display:inline-block;vertical-align:middle;margin-right:8px;">
+          <span style="font-family:Arial,sans-serif;font-size:15px;font-weight:800;color:#1A3F35;vertical-align:middle;">Faça<span style="color:#f0196b;">Amigos</span></span>
+        </td></tr>
+        <tr><td style="background:linear-gradient(135deg,#f0196b 0%,#c8155a 100%);padding:22px 32px;text-align:center;">
           <h1 style="margin:0;font-family:Arial,sans-serif;font-size:22px;color:#fff;">O retrato de ${escapeHtml(params.childFirstName)}</h1>
         </td></tr>
         <tr><td style="padding:28px 32px 8px 32px;">
