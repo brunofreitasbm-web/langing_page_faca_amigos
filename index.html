@@ -547,7 +547,11 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
-  <div class="topbar">Um ecossistema, três jeitos de fazer amigos — <b>Clínica · Playground · Circuito</b></div>
+  <div class="topbar">
+    Um ecossistema, três jeitos de fazer amigos — <b>Clínica · Playground · Circuito</b>
+    <span style="opacity: 0.4; margin: 0 8px;">|</span>
+    🚀 <b>Estamos contratando!</b> <a href="#" onclick="openJobModal(); return false;" style="color: var(--yellow); text-decoration: underline; margin-left: 4px;">Trabalhe Conosco</a>
+  </div>
 
   <nav class="navbar">
     <div class="wrap">
@@ -557,8 +561,10 @@
         <a href="#clinica">Clínica</a>
         <a href="#playground">Playground</a>
         <a href="#circuito">Circuito</a>
+        <a href="#carreiras">Trabalhe Conosco</a>
       </div>
       <div class="nav-actions">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="openJobModal()">Trabalhe Conosco</button>
         <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." target="_blank"
           rel="noopener" class="btn btn-wa btn-sm">
           <svg viewBox="0 0 24 24" fill="currentColor">
@@ -752,6 +758,33 @@
     </div>
   </section>
 
+  <!-- SEÇÃO TRABALHE CONOSCO / CARREIRAS -->
+  <section class="sec" id="carreiras" style="padding: 40px 0 60px;">
+    <div class="wrap fx">
+      <div style="background: linear-gradient(135deg, var(--dark) 0%, #265548 100%); border-radius: 36px; padding: 48px 36px; color: var(--white); box-shadow: var(--shadow-lg); text-align: center; position: relative; overflow: hidden;">
+        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: var(--teal); opacity: 0.15; border-radius: 50%;"></div>
+        <div style="position: absolute; bottom: -50px; left: -50px; width: 180px; height: 180px; background: var(--yellow); opacity: 0.1; border-radius: 50%;"></div>
+        
+        <span class="eyebrow" style="background: rgba(255,255,255,0.15); color: var(--yellow); margin-bottom: 16px;">🚀 Oportunidades &amp; Carreiras</span>
+        <h2 class="sec-title" style="color: var(--white); font-size: clamp(1.8rem, 3.6vw, 2.5rem); margin-bottom: 14px;">Venha fazer parte do nosso time!</h2>
+        <p style="font-size: 1.05rem; font-weight: 600; opacity: 0.92; max-width: 42rem; margin: 0 auto 28px; line-height: 1.6;">
+          Com a inauguração da nossa Clínica e a expansão dos nossos espaços, estamos em busca de profissionais da Saúde, Educação e Operação apaixonados por transformar vidas com afeto e ciência.
+        </p>
+        
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 28px;">
+          <span class="chip" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2);"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--yellow);"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Psicologia ABA, TO, Fono &amp; Fisioterapia</span>
+          <span class="chip" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2);"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--teal);"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Recepção, Monitores &amp; Operacional</span>
+          <span class="chip" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2);"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--pink);"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Vagas CLT, PJ e Estágio</span>
+        </div>
+
+        <button type="button" onclick="openJobModal()" class="btn btn-pink" style="font-size: 1.08rem; padding: 16px 36px;">
+          Enviar meu currículo agora
+          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 10H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- LOCALIZAÇÃO -->
   <section class="local-block" id="local">
     <div class="wrap fx">
@@ -777,7 +810,7 @@
         rel="noopener">@facaamigos.belem</a></p>
     <p style="margin-top: 18px;"><a
         href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental."
-        target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;">Venha fazer parte do nosso time</a> · <a href="politica-privacidade.html">Política de
+        target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;" style="color: var(--yellow); font-weight: 800; text-decoration: underline;">Venha fazer parte do nosso time</a> · <a href="politica-privacidade.html">Política de
         privacidade</a></p>
     <p class="legal">FaçaAmigos · CNPJ 66.318.630/0001-17 · Belém/PA</p>
   </footer>
