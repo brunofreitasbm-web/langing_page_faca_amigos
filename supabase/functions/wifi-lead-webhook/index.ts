@@ -1,5 +1,5 @@
 // Recebe o cadastro do portal Wi-Fi do hotspot MikroTik hEX S instalado na
-// clínica (Rua Boaventura da Silva, 1573 · Fátima). Chamado por
+// clínica (Rua Boaventura da Silva, 1573 · Umarizal). Chamado por
 // hotspot/login.html no instante em que a família libera a internet.
 // Segue o mesmo padrão de behavior-test-webhook: Deno.serve simples,
 // verify_jwt desligado (chamada vem do roteador, sem chave pública),

@@ -47,7 +47,8 @@ CHECKLIST DE LANÇAMENTO DA /guia (o que ainda depende de decisão/dados)
 [ ] Na Hotmart: garantia de 7 dias ativa e, se quiser, "O Código do Desenvolvimento Infantil"
     como order bump. Não há segundo produto na página.
 [ ] Depoimentos: seção 11 fica de fora até haver depoimentos reais e autorizados.
-[ ] index.html diz que a Clínica fica no bairro "Fátima"; o cadastro da Receita diz "Umarizal".
+[x] Bairro da Clínica: Umarizal (corrigido em index, circuito, playground, teste, wifi; os códigos internos
+    CLINICA_FATIMA e utm_campaign=clinica_fatima foram mantidos de propósito, para não quebrar banco e relatórios).
 
 ATIVAR O BANNER NO RESULTADO E NO E-MAIL (só depois de /guia estar no ar)
 1. Reimplantar behavior-test-webhook e publicar o site (ordem de sempre: função, depois site).
