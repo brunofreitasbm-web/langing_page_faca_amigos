@@ -101,8 +101,9 @@ O Brevo NÃO tem API para criar workflows (só pela interface), então o agendam
   e tabela fa_teste_ebook_seq).
 - Testado em produção com um lead de teste (apagado depois): os 3 e-mails chegaram (Brevo "delivered"),
   não reenviam, a sequência para no passo 3 e o descadastro funciona (opt-in desmarcado, saiu da lista 3).
-- LIMITAÇÃO: a sequência não sabe quem já COMPROU. Falta o postback (webhook) da Hotmart para marcar
-  compradores e parar os e-mails. Até lá, o D+3 e o D+6 podem chegar a quem já comprou.
+- Compradores saem da sequência automaticamente (hotmart-sync; ver "COMPRADORES FORA DA SEQUÊNCIA" abaixo).
+  Códigos do produto na Hotmart: M107692257Y (código do checkout, usado em pay.hotmart.com/M107692257Y) e
+  8560642 (id numérico da API, usado em HOTMART_PRODUCT_ID). Não trocar um pelo outro.
 - Editar o texto dos e-mails: supabase/email-templates/*.html -> colar no template correspondente no Brevo
   (ou PUT /v3/smtp/templates/{id}). O remetente é instituto@institutofacaamigos.com.br.
 - Ver o que foi enviado: select * from fa_teste_ebook_seq order by sent_at desc;
