@@ -544,7 +544,15 @@
     .guia-banner h2 { color: #fff; }
     .guia-banner p.guia-text { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 1.05rem; margin-bottom: 22px; max-width: 36rem; }
     .guia-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-    .guia-actions .btn-sample { background: #07C5C8; color: #065264; box-shadow: none; }
+    .guia-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; max-width: 36rem; }
+    .guia-list li { position: relative; padding-left: 30px; font-weight: 700; font-size: 1rem; color: #fff; }
+    .guia-list li::before { content: '\2713'; position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; background: #07C5C8; color: #065264; font-size: 0.8rem; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+    .guia-price { margin-bottom: 18px; color: rgba(255, 255, 255, 0.92); font-weight: 700; font-size: 0.95rem; }
+    .guia-price strong { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 2rem; line-height: 1; color: #fff; margin-right: 6px; }
+    .guia-sample { color: #fff; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; padding: 10px 6px; }
+    .guia-sample:hover { text-decoration-thickness: 3px; }
+    .nav-units a.nav-guia { background: #065264; color: #fff; }
+    .nav-units a.nav-guia:hover { background: #07C5C8; color: #065264; }
     .guia-note { font-size: 0.82rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); margin-top: 14px; }
     .guia-cover { display: flex; justify-content: center; }
     .guia-cover img { width: 190px; height: auto; border-radius: 4px 10px 10px 4px; box-shadow: 10px 14px 30px rgba(0, 0, 0, 0.35); transform: rotate(-3deg); }
@@ -552,7 +560,8 @@
     @media (max-width: 960px) {
       .guia-banner { grid-template-columns: 1fr; text-align: center; padding: 36px 26px 78px; }
       .guia-banner::before { width: 150px; height: 150px; right: -50px; bottom: -84px; }
-      .guia-banner p.guia-text { margin-inline: auto; }
+      .guia-banner p.guia-text, .guia-list { margin-inline: auto; text-align: left; }
+      .guia-banner p.guia-text { text-align: center; }
       .guia-actions { justify-content: center; }
       .guia-cover { order: -1; }
       .guia-cover img { width: 150px; }
@@ -601,7 +610,7 @@
         <a href="#clinica">Clínica</a>
         <a href="#playground">Playground</a>
         <a href="#circuito">Circuito</a>
-        <a href="#guia">Guia</a>
+        <a href="#guia" class="nav-guia">E-book: Guia para pais</a>
         <a href="#carreiras">Trabalhe Conosco</a>
       </div>
       <div class="nav-actions">
@@ -804,14 +813,20 @@
     <div class="wrap fx">
       <div class="guia-banner">
         <div>
-          <span class="eyebrow">Guia digital · Instituto FaçaAmigos</span>
-          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">O Brincar com Propósito: um guia para o dia a dia da sua casa</h2>
-          <p class="guia-text">Guia prático e afetivo de Análise do Comportamento para mães, pais e cuidadores. 11 capítulos com exercícios simples, Plano de 30 dias e 7 materiais para imprimir. Em PDF, com acesso imediato.</p>
+          <span class="eyebrow">E-book em PDF · para mães, pais e cuidadores</span>
+          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.3rem);">Birras, rotina puxada e aquela culpa? Aprenda a entender o que seu filho está tentando dizer.</h2>
+          <p class="guia-text"><strong>O Brincar com Propósito</strong> é um guia prático, sem jargão, que traduz a Análise do Comportamento para o dia a dia da sua casa. Você lê no celular e aplica com exercícios curtos.</p>
+          <ul class="guia-list">
+            <li>11 capítulos com cenas do cotidiano e uma tarefa simples em cada um</li>
+            <li>Plano de 30 dias para colocar em prática, um passo de cada vez</li>
+            <li>7 materiais para imprimir: rotina visual, quadro de fichas, diário de bordo e mais</li>
+          </ul>
+          <div class="guia-price"><strong>R$ 149</strong> <span>ou 10x de R$ 17,91 · acesso imediato · 7 dias de garantia</span></div>
           <div class="guia-actions">
-            <a href="/guia?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'conhecer'})">Conhecer o guia</a>
-            <a href="downloads/o-brincar-com-proposito-capitulo-1.pdf" download class="btn btn-sample" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'capitulo_gratis'})">Ler o capítulo 1 grátis</a>
+            <a href="/guia?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'quero_o_guia'})">Quero o guia</a>
+            <a href="downloads/o-brincar-com-proposito-capitulo-1.pdf" download class="guia-sample" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'capitulo_gratis'})">Ler o capítulo 1 de graça</a>
           </div>
-          <p class="guia-note">Material educativo · não substitui avaliação e acompanhamento profissional</p>
+          <p class="guia-note">Escrito por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727). Material educativo: não substitui avaliação e acompanhamento profissional.</p>
         </div>
         <div class="guia-cover">
           <img src="img/guia/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
