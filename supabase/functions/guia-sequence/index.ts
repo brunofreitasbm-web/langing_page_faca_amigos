@@ -12,7 +12,7 @@
 //    List-Unsubscribe one-click). Interrompe a sequência, desmarca o opt-in de todos os leads do
 //    mesmo e-mail e tira o contato da lista do Brevo.
 //  - Também interrompe se o contato estiver bloqueado ou tiver saído da lista no Brevo.
-//  - LIMITAÇÃO: ainda não sabe quem já comprou (falta o postback da Hotmart).
+//  - Quem já comprou sai da sequência: hotmart-sync grava as vendas em fa_ebook_compras e marca os leads.
 //
 // Secrets: BREVO_API_KEY, BREVO_LIST_ID (já existentes) e SEQ_SECRET (assinatura do link de descadastro).
 
@@ -147,9 +147,27 @@ async function runBatch(admin: ReturnType<typeof createClient>, dry: boolean) {
     for (const s of sent ?? []) sentByLead.set(s.lead_id, Math.max(sentByLead.get(s.lead_id) ?? 0, s.step));
   }
 
+  // Quem já comprou (fa_ebook_compras, alimentada por hotmart-sync) sai da sequência, inclusive se a
+  // compra veio antes de o lead existir.
+  const buyers = new Set<string>();
+  const leadEmails = [...new Set((leads as Lead[]).map((l) => (l.guardian_email ?? "").trim().toLowerCase()).filter(Boolean))];
+  if (leadEmails.length) {
+    const { data: compras } = await admin.from("fa_ebook_compras").select("email").in("email", leadEmails);
+    for (const c of compras ?? []) buyers.add(String(c.email).toLowerCase());
+  }
+
   const emailsDone = new Set<string>();
   for (const lead of leads as Lead[]) {
     if (summary.sent + summary.failed >= MAX_PER_RUN) break;
+    if (buyers.has((lead.guardian_email ?? "").trim().toLowerCase())) {
+      if (!dry) {
+        await admin.from("fa_leads_teste_comportamento")
+          .update({ ebook_seq_stopped_at: new Date().toISOString(), ebook_seq_stop_reason: "purchased" })
+          .eq("id", lead.id);
+      }
+      summary.stopped++;
+      continue;
+    }
     const next = STEPS.find((s) => s.step === (sentByLead.get(lead.id) ?? 0) + 1);
     if (!next) continue;
     if (new Date(lead.completed_at).getTime() + next.delayHours * 3600000 > now) continue;
