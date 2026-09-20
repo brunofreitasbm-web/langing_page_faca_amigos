@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Você está conectado! — FaçaAmigos</title>
+<meta name="robots" content="noindex, nofollow">
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-PN5D2BTS');</script>
+<!-- End Google Tag Manager -->
+<style>
+  :root {
+    --pink: #F0196B;
+    --pink-dark: #C81158;
+    --teal: #2ECFB5;
+    --teal-dark: #1FA893;
+    --yellow: #FFE234;
+    --dark: #1A3F35;
+    --ink-soft: #4C6B62;
+    --cream: #FFF9F1;
+    --white: #FFFFFF;
+    --wa: #25D366;
+    --wa-dark: #1DA851;
+    --ring: conic-gradient(from 200deg, #8B5CF6, #F0196B, #FF7A00, #FFE234, #8B5CF6);
+    --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
+    --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
+    --shadow-pink: 0 10px 26px rgba(240, 25, 107, 0.32);
+    --t-fast: 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: var(--dark);
+    background: var(--cream);
+    line-height: 1.5;
+  }
+  h1, h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; line-height: 1.18; }
+  .wrap { max-width: 460px; margin: 0 auto; padding: 26px 18px 40px; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
+  .logo-row img { width: 40px; height: 40px; border-radius: 50%; }
+  .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 18px; }
+  .logo-row .amigos { color: var(--pink); }
+  .logo-row .faca { color: var(--dark); }
+
+  .confirm {
+    background: rgba(46,207,181,0.14);
+    color: var(--teal-dark);
+    border-radius: 16px;
+    padding: 12px 16px;
+    font-weight: 800;
+    font-size: 13.5px;
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  .hero {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  .hero .kicker {
+    display: inline-block;
+    background: rgba(240,25,107,0.1);
+    color: var(--pink-dark);
+    font-weight: 800;
+    font-size: 11.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .hero h1 { font-size: 21px; margin-bottom: 8px; }
+  .hero p { color: var(--ink-soft); font-size: 14.5px; }
+
+  .benefits { display: flex; flex-direction: column; gap: 12px; margin-bottom: 18px; }
+  .benefit {
+    background: var(--white);
+    border-radius: 20px;
+    box-shadow: var(--shadow-sm);
+    padding: 16px 16px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .benefit .dot {
+    width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 900; color: var(--white);
+  }
+  .benefit.always .dot { background: var(--teal); }
+  .benefit.weekday .dot { background: var(--yellow); color: var(--dark); }
+  .benefit h3 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 14.5px; margin-bottom: 3px; }
+  .benefit p { font-size: 13px; color: var(--ink-soft); }
+  .benefit .tag {
+    display: inline-block; margin-top: 6px; font-size: 11px; font-weight: 800;
+    color: var(--teal-dark); background: rgba(46,207,181,0.12); padding: 2px 9px; border-radius: 999px;
+  }
+  .benefit.weekday .tag { color: var(--pink-dark); background: rgba(240,25,107,0.1); }
+
+  .rule-note {
+    font-size: 12px; color: var(--ink-soft); text-align: center; margin: -4px 0 18px; padding: 0 8px;
+  }
+  .rule-note strong { color: var(--dark); }
+
+  .cta-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+  .btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: none; border-radius: 999px; padding: 15px; text-decoration: none;
+    font-family: 'Fredoka One', sans-serif; font-size: 15.5px; cursor: pointer;
+    transition: transform var(--t-fast);
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-wa { background: var(--wa); color: var(--white); box-shadow: 0 10px 26px rgba(37,211,102,0.32); }
+  .btn-outline { background: var(--white); color: var(--dark); border: 2px solid #E7E1D5; }
+  .btn-ghost { background: transparent; color: var(--ink-soft); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13.5px; text-decoration: underline; }
+
+  .secondary-card {
+    background: var(--white); border-radius: 20px; box-shadow: var(--shadow-sm);
+    padding: 16px; margin-bottom: 14px; text-align: center;
+  }
+  .secondary-card h3 { font-size: 14.5px; font-weight: 900; margin-bottom: 4px; }
+  .secondary-card p { font-size: 13px; color: var(--ink-soft); margin-bottom: 10px; }
+
+  .review-card {
+    display: none;
+    background: linear-gradient(135deg, rgba(255,226,52,0.18), rgba(240,25,107,0.06));
+    border-radius: 20px; padding: 16px; margin-bottom: 14px; text-align: center;
+  }
+  .review-card.show { display: block; }
+  .review-card h3 { font-size: 14px; font-weight: 900; margin-bottom: 4px; }
+  .review-card p { font-size: 12.5px; color: var(--ink-soft); margin-bottom: 10px; }
+  .stars { color: var(--yellow); font-size: 18px; letter-spacing: 2px; margin-bottom: 6px; }
+
+  .foot { text-align: center; margin-top: 10px; }
+  .foot a { color: var(--ink-soft); font-size: 12px; text-decoration: underline; margin: 0 6px; }
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<div class="wrap">
+  <div class="logo-row">
+    <img src="logo.png" alt="FaçaAmigos" onerror="this.style.display='none'">
+    <span><span class="faca">Faça</span><span class="amigos">Amigos</span></span>
+  </div>
+
+  <div class="confirm">✓ Wi-Fi liberado! Seu cupom ESPERA já foi enviado por e-mail e WhatsApp.</div>
+
+  <div class="hero" id="heroCard">
+    <span class="kicker" id="heroKicker">Enquanto você espera</span>
+    <h1 id="heroTitle">Um lugar onde seu filho não vai ser olhado torto</h1>
+    <p id="heroSub">O FaçaAmigos também tem um Playground e um Circuito inclusivos no Parque Shopping — a 15 min daqui.</p>
+  </div>
+
+  <div class="benefits">
+    <div class="benefit always">
+      <div class="dot">♥</div>
+      <div>
+        <h3>Meia inclusiva, todo dia</h3>
+        <p>Criança com laudo ou CIPTEA paga R$ 50 na entrada do Playground, em vez de R$ 60. É um direito — só avise na recepção.</p>
+        <span class="tag">Sempre válido</span>
+      </div>
+    </div>
+    <div class="benefit always">
+      <div class="dot">★</div>
+      <div>
+        <h3>Seu cartão fidelidade já começa andando</h3>
+        <p>Mostre este cupom e ganhe 2 dos 10 carimbos de graça. Depois de 8 visitas, a 9ª e 10ª saem por nossa conta.</p>
+        <span class="tag">Sempre válido</span>
+      </div>
+    </div>
+    <div class="benefit weekday" id="weekdayBenefit">
+      <div class="dot">+5</div>
+      <div>
+        <h3 id="weekdayTitle">+5 minutos grátis no Circuito</h3>
+        <p id="weekdaySub">De segunda a sexta, em qualquer plano de carrinho ou pelúcia.</p>
+        <span class="tag">Seg a sex</span>
+      </div>
+    </div>
+  </div>
+
+  <p class="rule-note">Use <strong>um benefício por visita</strong> — Playground ou Circuito. Válido por 15 dias, mediante apresentação do cupom recebido por e-mail/WhatsApp.</p>
+
+  <div class="cta-group">
+    <a class="btn btn-wa" id="ctaPlayground" href="#" target="_blank" rel="noopener">Quero levar meu filho ao Playground</a>
+    <a class="btn btn-outline" id="ctaCircuito" href="#" target="_blank" rel="noopener">Ver o Circuito de carrinhos</a>
+  </div>
+
+  <div class="secondary-card">
+    <h3>Enquanto a sessão não acaba</h3>
+    <p>Faça o Mapeamento Comportamental gratuito — 5 minutos, 25 perguntas, e um retrato de como seu filho se comunica, brinca e se relaciona.</p>
+    <a class="btn btn-outline" id="ctaTeste" href="#" style="text-decoration:none">Fazer o mapeamento agora</a>
+  </div>
+
+  <div class="review-card" id="reviewCard">
+    <div class="stars">★★★★★</div>
+    <h3>Você já é da família FaçaAmigos</h3>
+    <p>Se a gente tem cuidado bem de vocês, um comentário no Google ajuda outras famílias a nos encontrar.</p>
+    <a class="btn btn-outline" id="ctaReview" href="#" target="_blank" rel="noopener" style="text-decoration:none">Avaliar no Google</a>
+  </div>
+
+  <div class="foot">
+    <a href="https://institutofacaamigos.com.br/wifi" id="linkWifiPage" target="_blank" rel="noopener">Ver todos os benefícios</a>
+    <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://institutofacaamigos.com.br/politica-privacidade" target="_blank" rel="noopener">Privacidade</a>
+  </div>
+</div>
+
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function pushDL(eventName, extra) {
+    window.dataLayer.push(Object.assign({ event: eventName }, extra || {}));
+  }
+
+  var WA_NUMBER = "5591992347673";
+  var UTM_BASE = "utm_source=wifi&utm_medium=captive_portal&utm_campaign=clinica_fatima";
+
+  /* ── A/B de mensagem (a lista de benefícios é sempre a mesma; só a manchete muda) ── */
+  var VARIANTS = [
+    {
+      key: "acolhimento",
+      kicker: "Enquanto você espera",
+      title: "Um lugar onde seu filho não vai ser olhado torto",
+      sub: "O FaçaAmigos também tem um Playground e um Circuito inclusivos no Parque Shopping — a 15 min daqui."
+    },
+    {
+      key: "prova_social",
+      kicker: "Já são mais de 1.100 famílias",
+      title: "Famílias de Belém já brincam com a gente toda semana",
+      sub: "Playground inclusivo no Parque Shopping, com monitores de inclusão e ambiente pensado para todo tipo de criança."
+    },
+    {
+      key: "beneficio",
+      kicker: "Vantagem de quem já é da família",
+      title: "Seu cartão fidelidade já começa com 2 carimbos",
+      sub: "E de segunda a sexta, mais 5 minutos grátis no Circuito. É nosso jeito de dizer obrigado."
+    }
+  ];
+  var variant = VARIANTS[Math.floor(Math.random() * VARIANTS.length)];
+  document.getElementById("heroKicker").textContent = variant.kicker;
+  document.getElementById("heroTitle").textContent = variant.title;
+  document.getElementById("heroSub").textContent = variant.sub;
+  pushDL("wifi_variant", { variant: variant.key });
+
+  /* ── Segmentação por dia/horário ── */
+  var now = new Date();
+  var day = now.getDay(); // 0 = domingo, 6 = sábado
+  var hour = now.getHours();
+  var isWeekday = day >= 1 && day <= 5;
+  var isInclusiveWindow = isWeekday && hour >= 10 && hour < 16;
+
+  if (!isWeekday) {
+    // Fim de semana: sem desconto, foco em capacidade e diversão.
+    document.getElementById("weekdayBenefit").style.display = "none";
+  } else if (!isInclusiveWindow) {
+    document.getElementById("weekdayTitle").textContent = "+5 minutos grátis no Circuito, hoje";
+    document.getElementById("weekdaySub").textContent = "Válido de segunda a sexta, em qualquer plano de carrinho ou pelúcia.";
+  }
+
+  /* ── CTAs com UTM e mensagem pré-preenchida ── */
+  function waLink(text) {
+    return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text);
+  }
+  document.getElementById("ctaPlayground").href = waLink("Vim da clínica e quero levar meu filho para brincar no Playground");
+  document.getElementById("ctaCircuito").href = waLink("Vim da clínica e quero saber mais sobre o Circuito");
+  document.getElementById("ctaTeste").href = "https://institutofacaamigos.com.br/teste?" + UTM_BASE + "&utm_content=" + variant.key;
+  document.getElementById("linkWifiPage").href = "https://institutofacaamigos.com.br/wifi?" + UTM_BASE + "&utm_content=" + variant.key;
+
+  ["ctaPlayground", "ctaCircuito", "ctaTeste"].forEach(function (id) {
+    document.getElementById(id).addEventListener("click", function () {
+      pushDL("wifi_cta_click", { cta: id, variant: variant.key });
+    });
+  });
+
+  /* ── Recorrência: só pede avaliação no Google a partir da 3ª conexão do aparelho ── */
+  try {
+    var VISIT_KEY = "fa_wifi_visit_count";
+    var visits = parseInt(localStorage.getItem(VISIT_KEY) || "0", 10) + 1;
+    localStorage.setItem(VISIT_KEY, String(visits));
+    if (visits >= 3) {
+      document.getElementById("reviewCard").classList.add("show");
+      document.getElementById("ctaReview").href = "https://search.google.com/local/writereview?placeid=SEU_PLACE_ID_AQUI";
+      document.getElementById("ctaReview").addEventListener("click", function () {
+        pushDL("wifi_review_click", { visits: visits });
+      });
+    }
+  } catch (e) {
+    // localStorage indisponível (modo privado) — segue sem o bloco de avaliação.
+  }
+</script>
+</body>
+</html>

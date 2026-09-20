@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Você está conectado — FaçaAmigos</title>
+<meta name="robots" content="noindex, nofollow">
+<meta http-equiv="refresh" content="60">
+<style>
+  :root {
+    --pink: #F0196B; --pink-dark: #C81158; --teal: #2ECFB5; --teal-dark: #1FA893;
+    --yellow: #FFE234; --dark: #1A3F35; --ink-soft: #4C6B62; --cream: #FFF9F1;
+    --white: #FFFFFF; --wa: #25D366;
+    --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
+    --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
+    --shadow-pink: 0 10px 26px rgba(240, 25, 107, 0.32);
+    --t-fast: 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', 'Segoe UI', sans-serif; color: var(--dark); background: var(--cream); line-height: 1.5; }
+  h1, h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; }
+  .wrap { max-width: 440px; margin: 0 auto; padding: 26px 18px 40px; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 16px; }
+  .logo-row img { width: 40px; height: 40px; border-radius: 50%; }
+  .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 18px; }
+  .logo-row .amigos { color: var(--pink); } .logo-row .faca { color: var(--dark); }
+  .status-card {
+    background: var(--white); border-radius: 20px; box-shadow: var(--shadow-sm);
+    padding: 16px 18px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between;
+    font-size: 13.5px;
+  }
+  .status-card .dot { width: 9px; height: 9px; border-radius: 50%; background: #28C880; display: inline-block; margin-right: 7px; }
+  .hero { background: var(--white); border-radius: 24px; box-shadow: var(--shadow-lg); padding: 22px 20px; margin-bottom: 16px; text-align: center; }
+  .hero h1 { font-size: 19px; margin-bottom: 6px; }
+  .hero p { color: var(--ink-soft); font-size: 14px; }
+  .cta-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+  .btn { display: flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 999px; padding: 15px; text-decoration: none; font-family: 'Fredoka One', sans-serif; font-size: 15px; cursor: pointer; }
+  .btn-wa { background: var(--wa); color: var(--white); box-shadow: 0 10px 26px rgba(37,211,102,0.32); }
+  .btn-outline { background: var(--white); color: var(--dark); border: 2px solid #E7E1D5; }
+  .btn-logout { background: transparent; color: var(--ink-soft); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13.5px; text-decoration: underline; }
+  .foot { text-align: center; margin-top: 6px; }
+  .foot a { color: var(--ink-soft); font-size: 12px; text-decoration: underline; margin: 0 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-row">
+    <img src="logo.png" alt="FaçaAmigos" onerror="this.style.display='none'">
+    <span><span class="faca">Faça</span><span class="amigos">Amigos</span></span>
+  </div>
+
+  <div class="status-card">
+    <span><span class="dot"></span>Conectado</span>
+    <span>$(session-time-left) restantes</span>
+  </div>
+
+  <div class="hero">
+    <h1>Aproveite o Wi-Fi!</h1>
+    <p>E já de olho na sua próxima parada: o Playground e o Circuito inclusivos do FaçaAmigos no Parque Shopping.</p>
+  </div>
+
+  <div class="cta-group">
+    <a class="btn btn-wa" href="https://wa.me/5591992347673?text=Vim%20da%20cl%C3%ADnica%20e%20quero%20saber%20mais%20do%20Playground" target="_blank" rel="noopener">Falar sobre o Playground</a>
+    <a class="btn btn-outline" href="https://institutofacaamigos.com.br/wifi?utm_source=wifi&amp;utm_medium=captive_portal&amp;utm_campaign=clinica_fatima" target="_blank" rel="noopener">Ver todos os benefícios</a>
+    <a class="btn btn-logout" href="$(link-logout)">Encerrar minha sessão</a>
+  </div>
+
+  <div class="foot">
+    <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://institutofacaamigos.com.br/politica-privacidade" target="_blank" rel="noopener">Privacidade</a>
+  </div>
+</div>
+</body>
+</html>

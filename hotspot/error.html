@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Ops! — FaçaAmigos</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+  :root {
+    --pink: #F0196B; --dark: #1A3F35; --ink-soft: #4C6B62; --cream: #FFF9F1;
+    --white: #FFFFFF; --error: #E83030;
+    --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Nunito', 'Segoe UI', sans-serif; color: var(--dark); background: var(--cream); line-height: 1.5; }
+  h1 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 20px; margin-bottom: 10px; }
+  .wrap { max-width: 420px; margin: 0 auto; padding: 40px 18px; text-align: center; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
+  .logo-row img { width: 40px; height: 40px; border-radius: 50%; }
+  .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 18px; }
+  .logo-row .amigos { color: var(--pink); } .logo-row .faca { color: var(--dark); }
+  .card { background: var(--white); border-radius: 24px; box-shadow: var(--shadow-lg); padding: 26px 20px; }
+  .msg { color: var(--error); font-weight: 800; font-size: 15px; margin-bottom: 16px; }
+  p { color: var(--ink-soft); font-size: 14px; margin-bottom: 18px; }
+  .btn { display: inline-block; background: var(--pink); color: var(--white); border-radius: 999px; padding: 13px 22px; text-decoration: none; font-family: 'Fredoka One', sans-serif; font-size: 15px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-row">
+    <img src="logo.png" alt="FaçaAmigos" onerror="this.style.display='none'">
+    <span><span class="faca">Faça</span><span class="amigos">Amigos</span></span>
+  </div>
+  <div class="card">
+    <div class="msg">$(error)</div>
+    <p>Tente se conectar de novo. Se continuar sem funcionar, chame a recepção — a gente resolve rapidinho.</p>
+    <a class="btn" href="./login.html">Tentar novamente</a>
+  </div>
+</div>
+</body>
+</html>

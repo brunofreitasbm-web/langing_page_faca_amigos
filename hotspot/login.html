@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Wi-Fi FaçaAmigos — Clínica</title>
+<meta name="robots" content="noindex, nofollow">
+<script src="md5.js"></script>
+<style>
+  :root {
+    --pink: #F0196B;
+    --pink-dark: #C81158;
+    --teal: #2ECFB5;
+    --teal-dark: #1FA893;
+    --yellow: #FFE234;
+    --dark: #1A3F35;
+    --ink-soft: #4C6B62;
+    --cream: #FFF9F1;
+    --white: #FFFFFF;
+    --wa: #25D366;
+    --error: #E83030;
+    --ring: conic-gradient(from 200deg, #8B5CF6, #F0196B, #FF7A00, #FFE234, #8B5CF6);
+    --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
+    --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
+    --shadow-pink: 0 10px 26px rgba(240, 25, 107, 0.32);
+    --t-fast: 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    color: var(--dark);
+    background: var(--cream);
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+  }
+  h1, h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; line-height: 1.15; }
+  .wrap { max-width: 420px; margin: 0 auto; padding: 28px 20px 40px; }
+  .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 18px; }
+  .logo-row img { width: 44px; height: 44px; border-radius: 50%; box-shadow: var(--shadow-sm); }
+  .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 19px; }
+  .logo-row .amigos { color: var(--pink); }
+  .logo-row .faca { color: var(--dark); }
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: var(--shadow-lg);
+    padding: 26px 22px;
+  }
+  .kicker {
+    display: inline-block;
+    background: rgba(46,207,181,0.14);
+    color: var(--teal-dark);
+    font-weight: 800;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  h1 { font-size: 22px; color: var(--dark); margin-bottom: 6px; }
+  .sub { color: var(--ink-soft); font-size: 14.5px; margin-bottom: 20px; }
+  label { display: block; font-weight: 800; font-size: 13.5px; color: var(--dark); margin: 14px 0 6px; }
+  input[type="text"], input[type="tel"], input[type="email"] {
+    width: 100%;
+    border: 2px solid #E7E1D5;
+    border-radius: 14px;
+    padding: 13px 14px;
+    font-size: 16px;
+    font-family: inherit;
+    color: var(--dark);
+    background: var(--cream);
+    transition: border-color var(--t-fast);
+  }
+  input:focus { outline: none; border-color: var(--teal); }
+  .field-error { display: none; color: var(--error); font-size: 12.5px; font-weight: 700; margin-top: 5px; }
+  .field-error.show { display: block; }
+  .consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; }
+  .consent input[type="checkbox"] { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--pink); }
+  .consent label { margin: 0; font-weight: 600; font-size: 13px; color: var(--ink-soft); line-height: 1.4; }
+  .consent a { color: var(--pink); font-weight: 800; text-decoration: underline; }
+  .consent.opt label { font-weight: 500; }
+  .btn {
+    width: 100%;
+    margin-top: 22px;
+    background: var(--pink);
+    color: var(--white);
+    border: none;
+    border-radius: 999px;
+    padding: 16px;
+    font-family: 'Fredoka One', sans-serif;
+    font-size: 17px;
+    box-shadow: var(--shadow-pink);
+    cursor: pointer;
+    transition: transform var(--t-fast), background var(--t-fast);
+  }
+  .btn:active { transform: scale(0.97); background: var(--pink-dark); }
+  .btn:disabled { opacity: 0.55; cursor: default; }
+  .honey { position: absolute; left: -9999px; top: -9999px; }
+  .foot-note { text-align: center; font-size: 12px; color: var(--ink-soft); margin-top: 16px; }
+  .server-error {
+    display: none;
+    background: rgba(232,48,48,0.1);
+    color: var(--error);
+    border-radius: 14px;
+    padding: 10px 14px;
+    font-weight: 700;
+    font-size: 13.5px;
+    margin-bottom: 14px;
+  }
+  .server-error.show { display: block; }
+  .spinner {
+    display: none;
+    width: 18px; height: 18px;
+    border: 3px solid rgba(255,255,255,0.4);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    margin: 0 auto;
+  }
+  .spinner.show { display: block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="logo-row">
+    <img src="logo.png" alt="FaçaAmigos" onerror="this.style.display='none'">
+    <span><span class="faca">Faça</span><span class="amigos">Amigos</span></span>
+  </div>
+
+  <div class="card">
+    <span class="kicker">Wi-Fi da Clínica</span>
+    <h1>Bem-vindo(a) à FaçaAmigos!</h1>
+    <p class="sub">Enquanto você espera, conecte-se e descubra um jeito diferente de aproveitar Belém com a família.</p>
+
+    <div class="server-error" id="serverError">$(error)</div>
+
+    <!-- Formulário visível: coleta o lead. O envio dispara o registro do lead e, em
+         seguida, submete o formulário real do hotspot (oculto) para liberar a internet. -->
+    <form id="leadForm" autocomplete="on" novalidate>
+      <label for="guardianName">Seu nome</label>
+      <input type="text" id="guardianName" name="guardianName" placeholder="Como você se chama?" required>
+      <div class="field-error" id="err-name">Digite seu nome, por favor.</div>
+
+      <label for="guardianPhone">WhatsApp</label>
+      <input type="tel" id="guardianPhone" name="guardianPhone" placeholder="(91) 9XXXX-XXXX" inputmode="tel" required>
+      <div class="field-error" id="err-phone">Informe um WhatsApp válido com DDD.</div>
+
+      <label for="guardianEmail">E-mail</label>
+      <input type="email" id="guardianEmail" name="guardianEmail" placeholder="seuemail@exemplo.com" required>
+      <div class="field-error" id="err-email">Digite um e-mail válido.</div>
+
+      <!-- honeypot anti-robô -->
+      <input type="text" class="honey" id="website-hp" name="website-hp" tabindex="-1" autocomplete="off">
+
+      <div class="consent">
+        <input type="checkbox" id="consent" name="consent" required>
+        <label for="consent">Li e concordo com a <a href="https://institutofacaamigos.com.br/politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> e autorizo o uso dos meus dados para liberar o Wi-Fi.</label>
+      </div>
+      <div class="field-error" id="err-consent">Precisamos do seu aceite para liberar o acesso.</div>
+
+      <div class="consent opt">
+        <input type="checkbox" id="optIn" name="optIn" checked>
+        <label for="optIn">Quero receber novidades e cupons do Playground e do Circuito por WhatsApp e e-mail.</label>
+      </div>
+
+      <button type="submit" class="btn" id="submitBtn">
+        <span id="btnLabel">Liberar meu Wi-Fi</span>
+        <div class="spinner" id="btnSpinner"></div>
+      </button>
+    </form>
+
+    <p class="foot-note">Sessão de 1 hora · Rede exclusiva para visitantes</p>
+  </div>
+</div>
+
+<!-- Formulário real do hotspot, enviado via JS após o cadastro do lead. -->
+<form name="login" id="hotspotForm" action="$(link-login-only)" method="post" style="display:none">
+  <input type="hidden" name="dst" value="$(link-orig-esc)">
+  <input type="hidden" name="popup" value="true">
+  <input type="hidden" name="chap-id" value="$(chap-id)">
+  <input type="hidden" name="chap-challenge" value="$(chap-challenge)">
+  <input type="text" name="username" id="hsUsername">
+  <input type="password" name="password" id="hsPassword">
+</form>
+
+<script>
+  /* ── Config ─────────────────────────────────────────────────────────── */
+  // Conta compartilhada de visitante configurada no RouterOS (ver LEIA-ME-HOTSPOT.md).
+  // O gate real de acesso é este formulário de cadastro, não uma senha por família.
+  var HOTSPOT_USERNAME = "visitante";
+  var HOTSPOT_PASSWORD = "visitante";
+  var LEAD_WEBHOOK_URL = "https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/wifi-lead-webhook";
+  var LEAD_TIMEOUT_MS = 3500;
+
+  function getUtm(name) {
+    var params = new URLSearchParams(window.location.search);
+    return params.get(name) || "";
+  }
+
+  function pushDL(eventName, extra) {
+    window.dataLayer = window.dataLayer || [];
+    var payload = Object.assign({ event: eventName }, extra || {});
+    window.dataLayer.push(payload);
+  }
+
+  pushDL("wifi_view", { mac: "$(mac)" });
+
+  function validate() {
+    var ok = true;
+    var name = document.getElementById("guardianName").value.trim();
+    var phone = document.getElementById("guardianPhone").value.trim();
+    var email = document.getElementById("guardianEmail").value.trim();
+    var consent = document.getElementById("consent").checked;
+
+    var phoneDigits = phone.replace(/\D/g, "");
+    var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    toggleError("err-name", name.length < 2);
+    toggleError("err-phone", phoneDigits.length < 10);
+    toggleError("err-email", !emailOk);
+    toggleError("err-consent", !consent);
+
+    if (name.length < 2) ok = false;
+    if (phoneDigits.length < 10) ok = false;
+    if (!emailOk) ok = false;
+    if (!consent) ok = false;
+    return ok;
+  }
+
+  function toggleError(id, show) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle("show", !!show);
+  }
+
+  function setLoading(loading) {
+    document.getElementById("submitBtn").disabled = loading;
+    document.getElementById("btnLabel").style.display = loading ? "none" : "inline";
+    document.getElementById("btnSpinner").classList.toggle("show", loading);
+  }
+
+  function submitHotspot() {
+    var form = document.forms["login"];
+    document.getElementById("hsUsername").value = HOTSPOT_USERNAME;
+    document.getElementById("hsPassword").value = HOTSPOT_PASSWORD;
+    // CHAP: se o roteador forneceu chap-id/chap-challenge, criptografa a senha (padrão RouterOS).
+    var chapId = form["chap-id"] ? form["chap-id"].value : "";
+    var chapChallenge = form["chap-challenge"] ? form["chap-challenge"].value : "";
+    if (chapId !== "" && typeof hexMD5 === "function") {
+      document.getElementById("hsPassword").value = hexMD5(chapId + HOTSPOT_PASSWORD + chapChallenge);
+    }
+    form.submit();
+  }
+
+  document.getElementById("leadForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    // Honeypot: se um robô preencheu esse campo invisível, finge sucesso e não grava nada.
+    if (document.getElementById("website-hp").value !== "") {
+      submitHotspot();
+      return;
+    }
+
+    if (!validate()) return;
+    setLoading(true);
+
+    var lead = {
+      guardian_name: document.getElementById("guardianName").value.trim(),
+      guardian_phone: document.getElementById("guardianPhone").value.trim(),
+      guardian_email: document.getElementById("guardianEmail").value.trim(),
+      marketing_opt_in_whatsapp: document.getElementById("optIn").checked,
+      marketing_opt_in_email: document.getElementById("optIn").checked,
+      mac: "$(mac)",
+      utm_source: getUtm("utm_source") || "wifi",
+      utm_medium: getUtm("utm_medium") || "captive_portal",
+      utm_campaign: getUtm("utm_campaign") || "clinica_fatima",
+      landing_page: "hotspot/login.html",
+      consent_at: new Date().toISOString()
+    };
+
+    pushDL("wifi_signup", { mac: lead.mac });
+
+    var controller = ("AbortController" in window) ? new AbortController() : null;
+    var timeout = controller ? setTimeout(function () { controller.abort(); }, LEAD_TIMEOUT_MS) : null;
+
+    fetch(LEAD_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(lead),
+      signal: controller ? controller.signal : undefined
+    }).catch(function () {
+      // Falha de rede ao gravar o lead não pode travar o acesso à internet do cliente.
+    }).finally(function () {
+      if (timeout) clearTimeout(timeout);
+      submitHotspot();
+    });
+
+    // Rede de segurança: nunca deixar a família esperando mais que o timeout configurado.
+    setTimeout(function () {
+      if (document.getElementById("hotspotForm").querySelector("[name=password]").value === "") {
+        submitHotspot();
+      }
+    }, LEAD_TIMEOUT_MS + 500);
+  });
+
+  // Mostra erro do roteador (ex.: sessão expirada) somente se o placeholder foi substituído.
+  (function () {
+    var box = document.getElementById("serverError");
+    if (box.textContent && box.textContent.indexOf("$(error)") === -1 && box.textContent.trim() !== "") {
+      box.classList.add("show");
+    }
+  })();
+</script>
+</body>
+</html>

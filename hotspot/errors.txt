@@ -1,0 +1,13 @@
+# Tradução das mensagens de erro do Hotspot (RouterOS)
+# Formato: mensagem original em inglês=mensagem em português, no tom da marca.
+# Uma por linha. Não remover a linha "invalid username or password" — é a mais comum.
+
+invalid username or password=Não conseguimos liberar seu acesso agora. Tente novamente em alguns segundos.
+user is disabled=Este acesso está temporariamente desativado. Fale com a recepção.
+not enough space=A rede está cheia no momento. Tente novamente em instantes.
+Login failed, please try again=Não deu certo dessa vez. Vamos tentar de novo?
+Login failed, wrong password=Não conseguimos liberar seu acesso agora. Tente novamente em alguns segundos.
+Login failed, user not found=Não conseguimos liberar seu acesso agora. Tente novamente em alguns segundos.
+Login failed, user already logged in=Este aparelho já está conectado. Aproveite o Wi-Fi!
+Login failed, session limit reached=Limite de conexões simultâneas atingido. Fale com a recepção.
+internal error=Tivemos um probleminha técnico. Tente novamente em instantes.
