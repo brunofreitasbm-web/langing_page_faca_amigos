@@ -382,7 +382,7 @@ CONTEÚDO FICTÍCIO REMOVIDO
 AINDA PRECISA DA SUA CONFIRMAÇÃO (não dá para checar no banco)
 [ ] "+8 anos de atuação" no hub.html — o banco só tem dados desde
     01/01/2026. Se o número vier da Clínica, tudo bem; se não, tirar.
-[ ] "Manhã Inclusiva (10h–12h)" no FAQ do index.html — não existe
+[ ] "Horário Inclusivo (10h–16h)" no FAQ do index.html — não existe
     nada no sistema marcando esse horário.
 [ ] "Passaporte mensal em 3x sem juros" — não há registro de
     parcelamento no sistema (o pacote PORTO SEGURO existe: 10 h por

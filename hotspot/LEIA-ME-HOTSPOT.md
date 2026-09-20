@@ -163,8 +163,8 @@ aqui é a configuração técnica, não uma orientação legal.
 - **Backend:** `supabase/migrations/20260919120000_fa_wifi_leads.sql` (tabela
   `fa_wifi_leads`) + `supabase/functions/wifi-lead-webhook/` (grava o lead, gera o
   cupom `ESPERA-XXXX` e envia por Brevo) + `supabase/functions/wifi-coupon-admin/`
-  (consulta/resgate do cupom pelo balcão). **Nada disso foi implantado (deploy)** — são
-  arquivos no repositório, aguardando `supabase db push` / deploy das functions.
+  (consulta/resgate do cupom pelo balcão). Migration aplicada e as duas functions
+  implantadas em 19/09/2026 (projeto `ivjvpdzsfjdpyabbzzuj`).
 - **Site:** `wifi.html` na raiz do repo, rota `/wifi` (via `cleanUrls` do Vercel),
   `noindex` em `robots.txt` e `vercel.json` — é para onde os botões "Ver todos os
   benefícios" do `alogin.html`/`status.html` apontam.
@@ -199,5 +199,5 @@ como um pedido separado quando o volume de resgates justificar.
 
 - **Google Place ID:** o botão de avaliação em `alogin.html` usa um placeholder
   (`SEU_PLACE_ID_AQUI`) — substituir pelo Place ID real da clínica no Google Maps.
-- **Alinhar o horário do Horário Inclusivo:** ver aviso na proposta 4 do plano —
-  `playground.html` fala em 10h–12h, o portal fala em 10h–16h.
+- **Horário Inclusivo:** confirmado como 10h–16h, todos os dias — `playground.html`,
+  `wifi.html` e o portal já estão alinhados (o nome "Manhã Inclusiva" foi trocado).

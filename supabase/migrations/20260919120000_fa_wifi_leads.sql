@@ -69,6 +69,7 @@ alter table public.fa_wifi_leads enable row level security;
 create or replace function public.fa_wifi_leads_set_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
