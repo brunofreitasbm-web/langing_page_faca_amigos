@@ -41,7 +41,7 @@
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7LHH3C9P8"></script>
@@ -782,16 +782,17 @@
 
     .human-block p { color: var(--dark); font-weight: 600; margin-bottom: 14px; }
 
-    /* Oferta do e-book (Hotmart) */
+    /* Oferta do e-book "O Brincar com Propósito" — identidade FaçaAmigos (Centro de Terapia Comportamental):
+       petróleo #065264, rosa #FB3D6A só em botão, amarelo/turquesa só como fundo. */
     .ebook-banner {
       position: relative;
       overflow: hidden;
-      background: var(--dark);
+      background: #065264;
       color: #fff;
-      border-radius: var(--r-card);
+      border-radius: 24px;
       padding: 26px 22px 22px;
       margin: 22px 0;
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 2px 4px rgba(6, 82, 100, .10), 0 14px 38px rgba(6, 82, 100, .18);
     }
 
     .ebook-banner::before,
@@ -802,17 +803,17 @@
       pointer-events: none;
     }
 
-    .ebook-banner::before { width: 170px; height: 170px; right: -60px; top: -70px; background: rgba(46, 207, 181, 0.22); }
-    .ebook-banner::after { width: 110px; height: 110px; left: -40px; bottom: -50px; background: rgba(255, 226, 52, 0.18); }
+    .ebook-banner::before { width: 120px; height: 120px; right: -48px; top: -56px; background: #07C5C8; }
+    .ebook-banner::after { width: 90px; height: 90px; left: -40px; bottom: -44px; background: #FDC51D; }
 
     .ebook-banner > * { position: relative; z-index: 1; }
 
     .ebook-eyebrow {
       display: inline-block;
-      background: var(--yellow);
-      color: var(--dark);
+      background: #FDC51D;
+      color: #065264;
       font-size: 0.72rem;
-      font-weight: 900;
+      font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       padding: 5px 12px;
@@ -821,72 +822,56 @@
     }
 
     .ebook-headline {
-      font-family: 'Fredoka One', 'Nunito', sans-serif;
-      font-weight: 400;
+      font-family: 'Fredoka', 'Nunito', sans-serif;
+      font-weight: 600;
       font-size: 1.45rem;
-      line-height: 1.25;
+      line-height: 1.22;
       color: #fff;
       margin: 0 0 10px;
     }
 
-    .ebook-sub { color: rgba(255, 255, 255, 0.86); font-weight: 600; font-size: 0.95rem; margin: 0 0 18px; }
+    .ebook-sub { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 0.95rem; margin: 0 0 18px; }
 
     .ebook-body { display: flex; gap: 20px; align-items: center; margin-bottom: 18px; }
 
-    .ebook-cover {
-      flex: 0 0 132px;
-      height: 176px;
-      position: relative;
-      border-radius: 6px 12px 12px 6px;
-      background: linear-gradient(140deg, var(--pink) 0%, var(--pink-dark) 100%);
-      box-shadow: 8px 10px 22px rgba(0, 0, 0, 0.35);
-      transform: rotate(-4deg);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 14px 12px 14px 20px;
-    }
-
-    .ebook-cover::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 9px;
-      border-radius: 6px 0 0 6px;
-      background: rgba(0, 0, 0, 0.22);
-    }
-
-    .ebook-cover small { font-size: 0.6rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: var(--yellow); margin-bottom: 8px; }
-    .ebook-cover strong { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 1.12rem; line-height: 1.15; color: #fff; }
-    .ebook-cover i { display: block; width: 34px; height: 4px; border-radius: 2px; background: var(--teal); margin-top: 10px; }
+    .ebook-cover { flex: 0 0 118px; margin: 0; transform: rotate(-3deg); }
+    .ebook-cover img { display: block; width: 100%; height: auto; border-radius: 4px 10px 10px 4px; box-shadow: 8px 10px 22px rgba(0, 0, 0, 0.35); }
 
     .ebook-bullets { list-style: none; margin: 0; padding: 0; flex: 1; }
-    .ebook-bullets li { position: relative; padding-left: 26px; margin-bottom: 9px; font-weight: 700; font-size: 0.9rem; color: rgba(255, 255, 255, 0.92); }
+    .ebook-bullets li { position: relative; padding-left: 26px; margin-bottom: 9px; font-weight: 700; font-size: 0.9rem; color: #fff; }
     .ebook-bullets li:last-child { margin-bottom: 0; }
     .ebook-bullets li::before {
       content: '\2713';
       position: absolute; left: 0; top: 1px;
       width: 18px; height: 18px; border-radius: 50%;
-      background: var(--teal); color: var(--dark);
+      background: #07C5C8; color: #065264;
       font-size: 0.72rem; font-weight: 900;
       display: flex; align-items: center; justify-content: center;
     }
 
     .ebook-price { text-align: center; margin-bottom: 14px; }
-    .ebook-price-from { display: inline-block; margin-right: 8px; color: rgba(255, 255, 255, 0.6); font-weight: 700; text-decoration: line-through; }
-    .ebook-price-to-label { font-weight: 700; color: rgba(255, 255, 255, 0.86); }
-    .ebook-price-to { font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 2.1rem; line-height: 1; color: var(--yellow); margin-left: 4px; }
-    .ebook-installments { display: block; margin-top: 4px; font-size: 0.82rem; font-weight: 700; color: rgba(255, 255, 255, 0.7); }
+    .ebook-price-from { display: inline-block; margin-right: 8px; color: rgba(255, 255, 255, 0.7); font-weight: 700; text-decoration: line-through; }
+    .ebook-price-to-label { font-weight: 700; color: #fff; }
+    .ebook-price-to { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; font-size: 2.3rem; line-height: 1; color: #fff; margin-left: 4px; }
+    .ebook-installments { display: block; margin-top: 4px; font-size: 0.82rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
 
-    .ebook-cta { width: 100%; font-size: 1.05rem; padding: 16px 20px; }
+    /* Botão de compra: pílula rosa da marca, texto branco grande e em negrito */
+    .ebook-cta {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; min-height: 56px; padding: 14px 20px;
+      background: #FB3D6A; color: #fff; text-decoration: none;
+      font-size: 1.17rem; font-weight: 800; line-height: 1.2;
+      border-radius: 9999px;
+      box-shadow: 0 2px 4px rgba(251, 61, 106, .25), 0 8px 20px rgba(251, 61, 106, .30);
+    }
 
-    .ebook-trust { margin: 12px 0 0; text-align: center; font-size: 0.76rem; font-weight: 700; color: rgba(255, 255, 255, 0.68); }
+    .ebook-sample { display: block; margin: 12px 0 0; text-align: center; font-size: 0.92rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+
+    .ebook-trust { margin: 12px 0 0; text-align: center; font-size: 0.76rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
 
     @media (max-width: 520px) {
       .ebook-body { flex-direction: column; align-items: stretch; }
-      .ebook-cover { align-self: center; flex-basis: auto; width: 140px; }
+      .ebook-cover { align-self: center; flex-basis: auto; width: 124px; }
       .ebook-headline { font-size: 1.28rem; }
     }
 
@@ -1110,10 +1095,9 @@
           <h3 class="ebook-headline" id="ebook-headline"></h3>
           <p class="ebook-sub" id="ebook-sub"></p>
           <div class="ebook-body">
-            <div class="ebook-cover" aria-hidden="true">
-              <small>Guia prático</small>
-              <strong id="ebook-cover-title"></strong>
-              <i></i>
+            <div class="ebook-cover">
+              <img src="img/guia/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
+                alt="Capa do e-book O Brincar com Propósito">
             </div>
             <ul class="ebook-bullets" id="ebook-bullets"></ul>
           </div>
@@ -1123,7 +1107,8 @@
             <span class="ebook-price-to" id="ebook-price-to" hidden></span>
             <span class="ebook-installments" id="ebook-installments" hidden></span>
           </div>
-          <a id="ebook-cta" class="btn btn-pink ebook-cta" href="#" target="_blank" rel="noopener">Quero o guia agora</a>
+          <a id="ebook-cta" class="ebook-cta" href="#" target="_blank" rel="noopener">Quero o guia</a>
+          <a id="ebook-sample" class="ebook-sample" href="#" target="_blank" rel="noopener" hidden>Ler o capítulo 1 de graça</a>
           <p class="ebook-trust" id="ebook-trust"></p>
         </aside>
 
@@ -1769,7 +1754,7 @@
 
       // ---- Oferta do e-book (Hotmart) ----
       // Todo o conteúdo (copy, preço, link) vem do servidor em result.ebook;
-      // sem ele (EBOOK_URL não configurada) o banner fica oculto.
+      // sem ele (EBOOK_URL não configurada) o banner fica oculto. Bullets e copy vêm do servidor.
       var ebookViewSent = false;
       var ebookObserver = null;
 
@@ -1789,7 +1774,6 @@
         setText('ebook-eyebrow', ebook.eyebrow);
         setText('ebook-headline', ebook.headline);
         setText('ebook-sub', ebook.sub);
-        setText('ebook-cover-title', ebook.title);
         setText('ebook-trust', ebook.trust);
 
         var list = $('ebook-bullets');
@@ -1802,21 +1786,15 @@
 
         setText('ebook-price-from', ebook.price_from ? 'de ' + ebook.price_from : '');
         setText('ebook-price-to', ebook.price_to);
-        $('ebook-price-to-label').hidden = !ebook.price_to;
+        $('ebook-price-to-label').hidden = !(ebook.price_to && ebook.price_from);
         setText('ebook-installments', ebook.installments);
         $('ebook-price').hidden = !(ebook.price_from || ebook.price_to);
 
-        // Pré-preenche o checkout da Hotmart com os dados já informados.
-        var href = ebook.url;
-        try {
-          var u = new URL(ebook.url);
-          if (/(^|\.)hotmart\.com$/i.test(u.hostname)) {
-            if (state.guardianName) u.searchParams.set('name', state.guardianName);
-            if (state.guardianEmail) u.searchParams.set('email', state.guardianEmail);
-          }
-          href = u.toString();
-        } catch (e) { /* mantém a URL original */ }
-        $('ebook-cta').href = href;
+        // O botão leva à página de vendas (/guia) com src/sck/utm já montados no servidor.
+        // Nome e e-mail NÃO vão na URL: ela passa por analytics (GA4/Clarity) e não pode carregar dados pessoais.
+        $('ebook-cta').href = ebook.url;
+        var sample = $('ebook-sample');
+        if (sample) { sample.href = ebook.sample_url || '#'; sample.hidden = !ebook.sample_url; }
         box.setAttribute('data-band', band || '');
 
         // Com área em atenção especial, o contato humano vem primeiro e o
@@ -1844,6 +1822,11 @@
       $('ebook-cta').addEventListener('click', function () {
         var box = $('result-ebook');
         pushEvent({ event: 'teste_ebook_click', band: (box && box.getAttribute('data-band')) || '' });
+      });
+
+      $('ebook-sample').addEventListener('click', function () {
+        var box = $('result-ebook');
+        pushEvent({ event: 'teste_ebook_amostra_click', band: (box && box.getAttribute('data-band')) || '' });
       });
 
       $('result-wa').addEventListener('click', function () {

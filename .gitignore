@@ -8,3 +8,6 @@ supabase/.temp
 # vazadas em memory/PRD.md e backend/tests/backend_test.py — não versionar,
 # e apagar a pasta local depois de validar a migração.
 Teste de Comportamento/
+
+# E-book "O Brincar com Propósito": PDFs pagos de origem (nunca publicar; a Vercel serve tudo da raiz)
+ebook/

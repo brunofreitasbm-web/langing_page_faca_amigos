@@ -1,3 +1,74 @@
+ATUALIZAÇÃO 20/09/2026 — página de vendas /guia + funil do e-book
+-----------------------------------------------------------------
+O e-book "O Brincar com Propósito" agora tem página de vendas própria
+(guia.html → /guia), no padrão visual da marca FaçaAmigos (Centro de Terapia
+Comportamental: petróleo #065264, rosa #FB3D6A só em botão, Fredoka + Nunito).
+O banner do resultado do /teste e o e-mail do resultado agora levam para
+/guia (e não mais direto à Hotmart); é a /guia que leva ao checkout.
+
+ARQUIVOS
+- guia.html                        página de vendas (mobile-first, 14 seções)
+- img/guia/                        capa, prévias, 7 anexos, logo branca, autora, og (WebP/PNG/JPG)
+- downloads/o-brincar-com-proposito-capitulo-1.pdf   capítulo 1 grátis (capa, dedicatória,
+                                   "como usar", introdução e cap. 1 = páginas 1,3,4 e 5–15)
+- supabase/email-templates/        3 e-mails da sequência (D+1, D+3, D+6) para colar no Brevo
+- ebook/                           PDFs pagos de ORIGEM — no .gitignore e no .vercelignore.
+                                   NUNCA remover essas linhas: a Vercel serve tudo da raiz do
+                                   repositório, então um push com ebook/ publicaria o produto.
+
+ANTES DE PUBLICAR /guia  (a página está com noindex de propósito)
+[x] Checkout configurado em guia.html (CONFIG.checkout = https://pay.hotmart.com/M107692257Y) e parcelamento
+    "ou 10x de R$ 17,91 no cartão" (CONFIG.parcelas; também é o padrão do banner/e-mail no webhook). Se o
+    parcelamento mudar na Hotmart, alterar nos dois lugares. NÃO usar o go.hotmart.com/M107692257Y: ele cai na
+    vitrine do marketplace, não no checkout.
+[ ] Testar uma compra/checkout real com ?src=...&utm_source=... para ver os parâmetros nos relatórios da Hotmart.
+[ ] CONFIG.metaPixelId se o Pixel da Meta não vier pelo GTM.
+[ ] Remover <meta name="robots" content="noindex, nofollow"> de guia.html e incluir /guia no sitemap.xml.
+[x] Preço único de R$ 149, sem promoção "de/por" (decidido em 20/09/2026). Só reintroduzir "de/por"
+    se houver promoção real e praticada (CDC): guia.html (hero e oferta), EBOOK_PRICE_FROM no webhook.
+[ ] Rodapé usa os dados do Instituto Faça Amigos Ltda do sistema da Clínica: CNPJ 22.161.197/0001-83,
+    Rua Boaventura da Silva, 1573, Umarizal, CEP 66060-147 (o CEP 66060-060 está ERRADO: não usar em lugar nenhum),
+    e-mail institutofacaamigos@gmail.com (contato@clinicafacaamigos.com.br não existe) e Instagram
+    @facaamigos.belem (é um só para todas as unidades). A conta da Hotmart é de pessoa física (a Isabella, dona do
+    CNPJ): por isso o rodapé diz que o guia é vendido por ela na Hotmart, e o CNPJ do Instituto aparece só
+    como a empresa do site/e-mails. Não escrever que a venda é feita pelo CNPJ.
+    Falta criar página de Termos (o rodapé só tem a Política de Privacidade).
+[ ] Bio da Isabella: hoje só há texto factual (CRP 10/0427, fundadora do Instituto). Ver o
+    comentário [PREENCHER] em guia.html.
+[ ] Na Hotmart: garantia de 7 dias e, se quiser, o "O Código do Desenvolvimento Infantil"
+    como order bump. Não há segundo produto na página.
+[ ] Depoimentos: seção 11 fica de fora até haver depoimentos reais e autorizados.
+
+ATIVAR O BANNER NO RESULTADO E NO E-MAIL (só depois de /guia estar no ar)
+1. Reimplantar behavior-test-webhook e publicar o site (ordem de sempre: função, depois site).
+2. Secret EBOOK_URL = https://institutofacaamigos.com.br/guia
+   (mudou o significado: agora é a página de vendas, não o checkout. Sem o secret o banner
+   e o bloco do e-mail continuam ocultos.) EBOOK_PRICE_TO/INSTALLMENTS são opcionais;
+   o padrão do código já é R$ 149 (EBOOK_PRICE_FROM fica vazio: sem "de/por").
+3. Copy do banner: gerada no servidor (buildEbookCopy). Liga cada área do mapa aos capítulos
+   que "conversam" com ela (AREA_CHAPTERS). O guia não é organizado por área do mapa.
+4. Rastreio: o link leva src=teste_tela|teste_email, sck=<faixa>, utm_source=teste,
+   utm_medium=tela|email, utm_campaign=ebook_pos_mapa; /guia repassa ao checkout da Hotmart.
+   Eventos no dataLayer: teste_ebook_view/click, teste_ebook_amostra_click, guia_cta_click,
+   guia_oferta_view, guia_amostra_click. Nome/e-mail NÃO vão mais na URL (iriam parar no GA4).
+
+SEQUÊNCIA DE E-MAILS (Brevo) — só para quem marcou o opt-in de conteúdos
+1. JÁ FEITO no Brevo (20/09/2026, mesma conta/chave do sistema da Clínica): lista ID 3
+   "Guia O Brincar com Proposito - opt-in do mapa" e atributos NOME_CRIANCA, FAIXA_RESULTADO e
+   CAPITULOS_INDICADOS. Nesta conta o atributo de primeiro nome é NOME (não FIRSTNAME); o
+   webhook e os templates já usam NOME. O domínio institutofacaamigos.com.br está autenticado
+   no Brevo, então o remetente instituto@institutofacaamigos.com.br funciona.
+2. Falta só o secret BREVO_LIST_ID=3 na função behavior-test-webhook (o MCP não grava secrets):
+   supabase secrets set BREVO_LIST_ID=3 --project-ref ivjvpdzsfjdpyabbzzuj
+   BREVO_API_KEY e BREVO_FROM já existem nessa função. A partir daí, quem completa o teste com
+   opt-in entra na lista.
+3. Em Automations, gatilho "contato adicionado à lista": esperar 1 dia → e-mail D+1
+   (ebook-d1-capitulo-gratis.html) → esperar 2 dias → D+3 (ebook-d3-diagnostico.html) →
+   esperar 3 dias → D+6 (ebook-d6-garantia.html). Os templates usam {{ unsubscribe }} do Brevo.
+4. ATENÇÃO (LGPD): o checkbox do /teste diz "conteúdos gratuitos ... sobre desenvolvimento
+   infantil, autismo e neurodivergência". Os e-mails D+3 e D+6 são ofertas do e-book. Ajuste o
+   texto do checkbox para incluir "novidades e ofertas dos nossos materiais" antes de ativar.
+
 ATUALIZAÇÃO 19/09/2026 — banner de venda do e-book (Hotmart) no resultado do teste
 -----------------------------------------------------------------------------------
 O resultado do /teste (tela e e-mail) agora traz um banner persuasivo de venda

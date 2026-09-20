@@ -263,10 +263,23 @@ const TIER_LEGEND: Record<Tier, string> = {
 const LEAD_WHATSAPP = (Deno.env.get("LEAD_WHATSAPP") ?? "5591991782027").replace(/\D/g, "");
 
 // ---------------------------------------------------------------------
-// E-book (Hotmart) — oferta exibida na tela de resultado e no e-mail.
-// Tudo vem de secrets, então trocar link/preço não exige mexer no código.
-// Sem EBOOK_URL válida (https), a oferta some da tela e do e-mail.
+// E-book "O Brincar com Propósito" — oferta exibida na tela de resultado e no
+// e-mail. A tela e o e-mail levam para a PÁGINA DE VENDAS (/guia), que é quem
+// leva ao checkout da Hotmart (o link da Hotmart fica em guia.html, não aqui).
+// Sem EBOOK_URL válida (https), a oferta some da tela e do e-mail — é o
+// interruptor: só configurar o secret quando /guia estiver pronta.
+//   EBOOK_URL          https://institutofacaamigos.com.br/guia   (obrigatório p/ aparecer)
+//   EBOOK_PRICE_FROM / EBOOK_PRICE_TO / EBOOK_INSTALLMENTS  (opcionais; sobrescrevem o padrão)
 // ---------------------------------------------------------------------
+
+const EBOOK_TITLE = "O Brincar com Propósito";
+// Preço único, sem "de/por". Só preencha EBOOK_PRICE_FROM se existir uma promoção de verdade.
+const EBOOK_PRICE_FROM_DEFAULT = "";
+const EBOOK_PRICE_TO_DEFAULT = "R$ 149";
+const EBOOK_INSTALLMENTS_DEFAULT = "ou 10x de R$ 17,91 no cartão";
+// Capítulo 1 (com a introdução) gratuito — arquivo em /downloads do site.
+const EBOOK_SAMPLE_URL = "https://institutofacaamigos.com.br/downloads/o-brincar-com-proposito-capitulo-1.pdf";
+const EBOOK_COVER_EMAIL_URL = "https://institutofacaamigos.com.br/img/guia/capa-email.jpg";
 
 interface EbookOffer {
   url: string;
@@ -281,15 +294,15 @@ function loadEbookOffer(): EbookOffer | null {
   if (!/^https:\/\/[^\s]+$/i.test(url)) return null;
   return {
     url,
-    title: (Deno.env.get("EBOOK_TITLE") ?? "").trim() || "O Brincar com Propósito",
-    price_from: (Deno.env.get("EBOOK_PRICE_FROM") ?? "").trim(),
-    price_to: (Deno.env.get("EBOOK_PRICE_TO") ?? "").trim(),
-    installments: (Deno.env.get("EBOOK_INSTALLMENTS") ?? "").trim(),
+    title: EBOOK_TITLE,
+    price_from: (Deno.env.get("EBOOK_PRICE_FROM") ?? "").trim() || EBOOK_PRICE_FROM_DEFAULT,
+    price_to: (Deno.env.get("EBOOK_PRICE_TO") ?? "").trim() || EBOOK_PRICE_TO_DEFAULT,
+    installments: (Deno.env.get("EBOOK_INSTALLMENTS") ?? "").trim() || EBOOK_INSTALLMENTS_DEFAULT,
   };
 }
 
-// Acrescenta rastreio de origem (src/sck são lidos pela Hotmart e aparecem
-// nos relatórios de venda) mais UTMs. `medium` = "tela" | "email".
+// Acrescenta rastreio de origem: src/sck (a página /guia repassa ao checkout da
+// Hotmart, onde aparecem nos relatórios de venda) mais UTMs. `medium` = "tela" | "email".
 function buildEbookLink(baseUrl: string, medium: "tela" | "email", band: string): string {
   try {
     const u = new URL(baseUrl);
@@ -309,46 +322,135 @@ function joinNames(names: string[]): string {
   return `${names.slice(0, -1).join(", ")} e ${names[names.length - 1]}`;
 }
 
+// Capítulos do guia que conversam com cada área do mapa. O guia NÃO é organizado
+// por área do mapa — por isso a copy diz "conversam com", nunca "resolvem".
+// Títulos curtos; os completos estão em guia.html.
+const CHAPTER_SHORT: Record<number, string> = {
+  2: "Conceitos básicos",
+  3: "Regras e limites",
+  4: "Consequências e reforço",
+  5: "Rotina com propósito",
+  6: "Comunicação que conecta",
+  7: "Birras e crises",
+  11: "Plano de 30 dias",
+};
+
+const AREA_CHAPTERS: Record<AreaKey, number[]> = {
+  emotional: [5],
+  conduct: [3, 7],
+  hyperactivity: [5, 4],
+  peer: [6],
+  prosocial: [4],
+};
+
+// Até 3 capítulos, priorizando as áreas em atenção especial e depois as em "olhar mais de perto".
+function pickChapters(results: AreaResult[]): number[] {
+  const out: number[] = [];
+  for (const tier of ["tier3", "tier2"] as Tier[]) {
+    for (const r of results.filter((x) => x.tier === tier)) {
+      for (const n of AREA_CHAPTERS[r.key]) if (!out.includes(n)) out.push(n);
+    }
+  }
+  if (out.length === 0) return [4, 11];
+  return out.slice(0, 3).sort((a, b) => a - b);
+}
+
+function chapterLabel(n: number): string {
+  return `${n} (${CHAPTER_SHORT[n] ?? ""})`;
+}
+
 // Copy da oferta conforme o resultado. Fica no servidor para tela e e-mail
 // dizerem exatamente a mesma coisa. Com área em atenção especial, o convite
 // à conversa com a equipe vem primeiro e o guia entra como apoio.
+// Nada de promessa de resultado, prazo ou "resolver": só apoio educativo.
 function buildEbookCopy(
   childFirstName: string,
   results: AreaResult[],
   tier3Count: number,
-): { eyebrow: string; headline: string; sub: string } {
+): { eyebrow: string; headline: string; sub: string; bullets: string[] } {
   const nome = childFirstName || "seu filho(a)";
   const names = (tier: Tier) => joinNames(results.filter((r) => r.tier === tier).map((r) => `“${r.name.toLowerCase()}”`).slice(0, 3));
   const t2 = results.some((r) => r.tier === "tier2");
 
+  const chapters = pickChapters(results);
+  const many = chapters.length > 1;
+  const chapterList = joinNames(chapters.map(chapterLabel));
+  const chapterLine = tier3Count === 0 && !t2
+    ? `Para seguir fortalecendo o que já vai bem: ${many ? "capítulos" : "capítulo"} ${chapterList}`
+    : many
+      ? `Os capítulos ${chapterList} conversam com o que apareceu no mapa de ${nome}`
+      : `O capítulo ${chapterList} conversa com o que apareceu no mapa de ${nome}`;
+  const bullets = [
+    chapterLine,
+    "11 capítulos com cenas do cotidiano e uma Tarefa de Casa simples em cada um",
+    "Plano de 30 dias e 7 materiais para imprimir (Diário de Bordo, quadros de rotina e de reforço)",
+    "Escrito por Isabella Gonçalves Freitas, psicóloga (CRP 10/0427)",
+  ];
+
   if (tier3Count > 0) {
-    const focus = names("tier3");
     return {
       eyebrow: "Enquanto isso, em casa",
-      headline: `O que você pode fazer em casa, já nesta semana, para apoiar ${nome}`,
-      sub: `A conversa com a nossa equipe é o primeiro passo. O guia é o apoio do dia a dia: brincadeiras simples e intencionais para ${focus}.`,
+      headline: `Um apoio prático para o dia a dia com ${nome}`,
+      sub: `A conversa com a nossa equipe é o primeiro passo. O guia é o apoio de casa: exercícios simples, pensados para a rotina, sobre ${names("tier3")}.`,
+      bullets,
     };
   }
   if (t2) {
     return {
       eyebrow: `Próximo passo para ${nome}`,
-      headline: `${nome} mostrou pontos que merecem um olhar mais de perto. Veja como apoiar brincando.`,
-      sub: `Brincadeiras curtas, pensadas para ${names("tier2")}, que cabem na rotina da sua casa.`,
+      headline: `${nome} mostrou pontos que merecem um olhar mais de perto. Veja como apoiar no dia a dia.`,
+      sub: `Ferramentas práticas de Análise do Comportamento, sem jargão, sobre ${names("tier2")}.`,
+      bullets,
     };
   }
   return {
     eyebrow: `Próximo passo para ${nome}`,
-    headline: `${nome} está fluindo bem. Mantenha esse caminho com brincadeiras que fortalecem.`,
-    sub: "Brincar com intenção fortalece o vínculo, a autorregulação e a confiança, todos os dias.",
+    headline: `${nome} está fluindo bem. Continue fortalecendo esse caminho.`,
+    sub: "Entender o porquê dos comportamentos ajuda a manter o vínculo e a rotina em equilíbrio, mesmo nos dias difíceis.",
+    bullets,
   };
 }
 
-const EBOOK_BULLETS = [
-  "Brincadeiras organizadas pelas mesmas áreas do seu mapa",
-  "Passo a passo de 10 a 15 minutos por dia, com o que você já tem em casa",
-  "Escrito pela equipe do Centro de Terapia Comportamental FaçaAmigos",
-];
-const EBOOK_TRUST = "Pagamento seguro pela Hotmart · Pix, cartão ou boleto · Acesso imediato · 7 dias de garantia";
+const EBOOK_TRUST = "Pagamento seguro pela Hotmart · Acesso imediato · 7 dias de garantia. Material educativo, não substitui avaliação profissional.";
+
+// Sincroniza o contato com uma lista do Brevo (para a sequência de e-mails de
+// nutrição montada no próprio Brevo, que cuida de agendamento e descadastro).
+// Só roda para quem marcou o opt-in de conteúdos e se BREVO_LIST_ID existir.
+// Atributos personalizados (NOME_CRIANCA, FAIXA_RESULTADO, CAPITULOS_INDICADOS)
+// precisam ter sido criados no Brevo; se não existirem, tenta de novo só com
+// NOME para não perder o contato. (Nesta conta do Brevo o atributo de primeiro nome se chama NOME.)
+async function syncBrevoContact(params: {
+  guardianName: string;
+  guardianEmail: string;
+  childFirstName: string;
+  resultBand: string;
+  results: AreaResult[];
+}): Promise<void> {
+  const apiKey = Deno.env.get("BREVO_API_KEY");
+  const listId = Number((Deno.env.get("BREVO_LIST_ID") ?? "").trim());
+  if (!apiKey || !Number.isInteger(listId) || listId <= 0) return;
+  const headers = { "api-key": apiKey, "Content-Type": "application/json", Accept: "application/json" };
+  const firstName = params.guardianName.split(/\s+/)[0] ?? params.guardianName;
+  const chapters = pickChapters(params.results).join(",");
+  const attempt = async (attributes: Record<string, string>) =>
+    await fetch("https://api.brevo.com/v3/contacts", {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ email: params.guardianEmail, attributes, listIds: [listId], updateEnabled: true }),
+    });
+  try {
+    let resp = await attempt({
+      NOME: firstName,
+      NOME_CRIANCA: params.childFirstName,
+      FAIXA_RESULTADO: params.resultBand,
+      CAPITULOS_INDICADOS: chapters,
+    });
+    if (resp.status === 400) resp = await attempt({ NOME: firstName });
+    if (!resp.ok) console.error("Brevo contato:", resp.status, await resp.text().catch(() => ""));
+  } catch (err) {
+    console.error("Brevo contato:", err instanceof Error ? err.message : err);
+  }
+}
 
 // ---------------------------------------------------------------------
 // Validação
@@ -582,40 +684,39 @@ async function sendResultEmailToGuardian(params: {
   if (ebook) {
     const copy = buildEbookCopy(params.childFirstName, params.results, params.tier3Count);
     const link = buildEbookLink(ebook.url, "email", params.resultBand);
-    const bullets = EBOOK_BULLETS.map(
-      (b) => `<tr><td valign="top" style="font-family:Arial,sans-serif;font-size:14px;color:#2ECFB5;font-weight:bold;padding:3px 8px 3px 0;">&#10003;</td><td style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#E9F5F1;padding:3px 0;">${escapeHtml(b)}</td></tr>`,
+    const sampleLink = `${EBOOK_SAMPLE_URL}`;
+    const bullets = copy.bullets.map(
+      (b) => `<tr><td valign="top" style="font-family:Arial,sans-serif;font-size:14px;color:#07C5C8;font-weight:bold;padding:3px 8px 3px 0;">&#10003;</td><td style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#FFFFFF;padding:3px 0;">${escapeHtml(b)}</td></tr>`,
     ).join("");
     const priceFrom = ebook.price_from
-      ? `<span style="font-family:Arial,sans-serif;font-size:14px;color:#9FC2B8;text-decoration:line-through;">de ${escapeHtml(ebook.price_from)}</span>&nbsp;&nbsp;`
+      ? `<span style="font-family:Arial,sans-serif;font-size:14px;color:#B7D3DA;text-decoration:line-through;">de ${escapeHtml(ebook.price_from)}</span>&nbsp;&nbsp;`
       : "";
     const priceTo = ebook.price_to
-      ? `<span style="font-family:Arial,sans-serif;font-size:13px;color:#E9F5F1;">por </span><span style="font-family:Arial,sans-serif;font-size:30px;font-weight:800;color:#FFE234;">${escapeHtml(ebook.price_to)}</span>`
+      ? `${priceFrom ? '<span style="font-family:Arial,sans-serif;font-size:13px;color:#FFFFFF;">por </span>' : ""}<span style="font-family:Arial,sans-serif;font-size:32px;font-weight:800;color:#FFFFFF;">${escapeHtml(ebook.price_to)}</span>`
       : "";
     const installments = ebook.installments
-      ? `<div style="font-family:Arial,sans-serif;font-size:12px;color:#9FC2B8;margin-top:2px;">${escapeHtml(ebook.installments)}</div>`
+      ? `<div style="font-family:Arial,sans-serif;font-size:12px;color:#B7D3DA;margin-top:2px;">${escapeHtml(ebook.installments)}</div>`
       : "";
     const priceRow = priceFrom || priceTo
-      ? `<tr><td style="padding:14px 0 4px 0;">${priceFrom}${priceTo}${installments}</td></tr>`
+      ? `<tr><td style="padding:14px 0 4px 0;text-align:center;">${priceFrom}${priceTo}${installments}</td></tr>`
       : "";
     ebookBlock = `
     <tr><td style="padding:8px 32px 8px 32px;">
-      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#1A3F35;border-radius:18px;">
-        <tr><td style="padding:24px 24px 22px 24px;">
-          <p style="font-family:Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#FFE234;margin:0 0 8px 0;">${escapeHtml(copy.eyebrow)}</p>
-          <h2 style="font-family:Arial,sans-serif;font-size:21px;line-height:1.3;color:#FFFFFF;margin:0 0 10px 0;">${escapeHtml(copy.headline)}</h2>
-          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#CFE6DF;margin:0 0 14px 0;">${escapeHtml(copy.sub)}</p>
-          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#F0196B;border-radius:12px;margin:0 0 14px 0;">
-            <tr><td style="padding:14px 16px;text-align:center;">
-              <span style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#FFD3E3;">Guia prático</span><br>
-              <span style="font-family:Arial,sans-serif;font-size:19px;font-weight:800;color:#FFFFFF;">${escapeHtml(ebook.title)}</span>
-            </td></tr>
-          </table>
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#065264;border-radius:24px;">
+        <tr><td style="padding:26px 24px 22px 24px;">
+          <p style="margin:0 0 12px 0;"><span style="display:inline-block;background:#FDC51D;color:#065264;font-family:Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;padding:5px 12px;border-radius:9999px;">${escapeHtml(copy.eyebrow)}</span></p>
+          <h2 style="font-family:Arial,sans-serif;font-size:22px;line-height:1.3;color:#FFFFFF;margin:0 0 10px 0;">${escapeHtml(copy.headline)}</h2>
+          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#E2F8F8;margin:0 0 16px 0;">${escapeHtml(copy.sub)}</p>
+          <div style="text-align:center;margin:0 0 16px 0;">
+            <img src="${EBOOK_COVER_EMAIL_URL}" alt="Capa do e-book ${escapeHtml(ebook.title)}" width="130" style="display:inline-block;width:130px;height:auto;border-radius:8px;">
+          </div>
           <table cellpadding="0" cellspacing="0" role="presentation">${bullets}</table>
           <table width="100%" cellpadding="0" cellspacing="0" role="presentation">${priceRow}</table>
           <div style="text-align:center;padding:14px 0 6px 0;">
-            <a href="${escapeHtml(link)}" style="display:inline-block;background:#F0196B;color:#FFFFFF;font-family:Arial,sans-serif;font-weight:800;text-decoration:none;padding:15px 30px;border-radius:9999px;font-size:16px;">Quero o guia agora</a>
+            <a href="${escapeHtml(link)}" style="display:inline-block;background:#FB3D6A;color:#FFFFFF;font-family:Arial,sans-serif;font-weight:800;text-decoration:none;padding:16px 32px;border-radius:9999px;font-size:18px;">Quero o guia</a>
           </div>
-          <p style="font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:#9FC2B8;text-align:center;margin:8px 0 0 0;">${escapeHtml(EBOOK_TRUST)}</p>
+          <p style="font-family:Arial,sans-serif;font-size:13px;text-align:center;margin:10px 0 0 0;"><a href="${escapeHtml(sampleLink)}" style="color:#FFFFFF;font-weight:700;">Ler o capítulo 1 de graça</a></p>
+          <p style="font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:#B7D3DA;text-align:center;margin:10px 0 0 0;">${escapeHtml(EBOOK_TRUST)}</p>
         </td></tr>
       </table>
     </td></tr>`;
@@ -871,7 +972,7 @@ Deno.serve(async (req) => {
     const { data: existingLead, error: fetchError } = await admin
       .from("fa_leads_teste_comportamento")
       .select(
-        "id, child_first_name, child_age_range, guardian_relation, guardian_name, guardian_email, guardian_phone, preferred_unit, landing_page, utm_source, utm_medium, utm_campaign",
+        "id, child_first_name, child_age_range, guardian_relation, guardian_name, guardian_email, guardian_phone, preferred_unit, landing_page, utm_source, utm_medium, utm_campaign, marketing_opt_in",
       )
       .eq("id", leadId)
       .single();
@@ -966,6 +1067,17 @@ Deno.serve(async (req) => {
       resultBand,
     });
 
+    // Quem marcou o opt-in entra na lista do Brevo (sequência de nutrição do guia).
+    if (existingLead.marketing_opt_in === true) {
+      await syncBrevoContact({
+        guardianName: existingLead.guardian_name,
+        guardianEmail: existingLead.guardian_email,
+        childFirstName: existingLead.child_first_name,
+        resultBand,
+        results,
+      });
+    }
+
     await admin
       .from("fa_leads_teste_comportamento")
       .update({
@@ -982,11 +1094,11 @@ Deno.serve(async (req) => {
     const ebookPayload = ebookOffer
       ? {
         url: buildEbookLink(ebookOffer.url, "tela", resultBand),
+        sample_url: EBOOK_SAMPLE_URL,
         title: ebookOffer.title,
         price_from: ebookOffer.price_from,
         price_to: ebookOffer.price_to,
         installments: ebookOffer.installments,
-        bullets: EBOOK_BULLETS,
         trust: EBOOK_TRUST,
         ...buildEbookCopy(existingLead.child_first_name, results, tier3Count),
       }
