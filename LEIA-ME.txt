@@ -22,6 +22,7 @@ STATUS 20/09/2026 (noite) — o que já foi feito e ligado
   e linkada no rodapé; Política de Privacidade atualizada (guia, e-mails de conteúdo/ofertas, Hotmart).
   Os textos de /termos e da política foram redigidos sem revisão jurídica: revisar com advogado.
 - Checkbox de opt-in do /teste agora inclui "novidades e ofertas dos materiais".
+- Brevo: remetente cadastrado e 3 templates criados; falta montar a automação na interface (ver "SEQUÊNCIA DE E-MAILS").
 - Secrets BREVO_LIST_ID=3 e EBOOK_URL=https://institutofacaamigos.com.br/guia configurados
   (para desligar o banner/e-mail de venda: supabase secrets unset EBOOK_URL --project-ref ivjvpdzsfjdpyabbzzuj).
 - Testado: fluxo do /teste no navegador com o payload real da função (banner, preço, links) e e-mail do
@@ -71,12 +72,14 @@ SEQUÊNCIA DE E-MAILS (Brevo) — só para quem marcou o opt-in de conteúdos
    supabase secrets set BREVO_LIST_ID=3 --project-ref ivjvpdzsfjdpyabbzzuj
    BREVO_API_KEY e BREVO_FROM já existem nessa função. A partir daí, quem completa o teste com
    opt-in entra na lista.
-3. Em Automations, gatilho "contato adicionado à lista": esperar 1 dia → e-mail D+1
-   (ebook-d1-capitulo-gratis.html) → esperar 2 dias → D+3 (ebook-d3-diagnostico.html) →
-   esperar 3 dias → D+6 (ebook-d6-garantia.html). Os templates usam {{ unsubscribe }} do Brevo.
-4. ATENÇÃO (LGPD): o checkbox do /teste diz "conteúdos gratuitos ... sobre desenvolvimento
-   infantil, autismo e neurodivergência". Os e-mails D+3 e D+6 são ofertas do e-book. Ajuste o
-   texto do checkbox para incluir "novidades e ofertas dos nossos materiais" antes de ativar.
+3. JÁ FEITO no Brevo: remetente instituto@institutofacaamigos.com.br cadastrado e ativo (o nome de exibição
+   ficou "Instituto FacaAmigos", sem cedilha: corrigir em Senders & IP se quiser) e os 3 templates criados
+   (IDs 1, 2 e 3: "Guia D+1 - capitulo gratis", "Guia D+3 - diagnostico", "Guia D+6 - garantia").
+   FALTA só o passo que a API do Brevo não permite: em Automations > Create a workflow, gatilho
+   "Contact added to a list" = lista 3; esperar 1 dia -> enviar template 1; esperar 2 dias -> template 2;
+   esperar 3 dias -> template 3. Marque "sair do fluxo" se o contato sair da lista.
+4. LGPD: o checkbox do /teste já foi ajustado (inclui "novidades e ofertas"). Só quem marcar a partir de
+   agora deve entrar na sequência; contatos antigos com o texto antigo não devem receber os e-mails D+3/D+6.
 
 ATUALIZAÇÃO 19/09/2026 — banner de venda do e-book (Hotmart) no resultado do teste
 -----------------------------------------------------------------------------------
