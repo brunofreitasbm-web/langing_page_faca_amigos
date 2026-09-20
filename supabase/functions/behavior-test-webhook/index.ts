@@ -384,7 +384,7 @@ function buildEbookCopy(
     chapterLine,
     "11 capítulos com cenas do cotidiano e uma Tarefa de Casa simples em cada um",
     "Plano de 30 dias e 7 materiais para imprimir (Diário de Bordo, quadros de rotina e de reforço)",
-    "Escrito por Isabella Gonçalves Freitas, psicóloga (CRP 10/0427)",
+    "Escrito por Isabella Gonçalves Freitas, psicóloga (CRP 10/4727)",
   ];
 
   if (tier3Count > 0) {

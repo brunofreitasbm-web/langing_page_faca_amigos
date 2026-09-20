@@ -42,8 +42,9 @@ CHECKLIST DE LANÇAMENTO DA /guia (o que ainda depende de decisão/dados)
     e Instagram @facaamigos.belem. A conta da Hotmart é de pessoa física (a Isabella, dona do CNPJ): o rodapé e
     os termos dizem que o guia é vendido por ela na Hotmart; o CNPJ do Instituto aparece só como a empresa do
     site/e-mails. Não escrever que a venda é feita pelo CNPJ.
-[ ] Bio da Isabella: hoje só há texto factual (CRP 10/0427, fundadora do Instituto). Ver o
-    comentário [PREENCHER] em guia.html.
+[x] Bio da Isabella: montada só com o que está no Instagram dela (@isagoncalvesfreitas): psicóloga infantil,
+    CRP 10/4727, "Desenvolvimento infantil e inclusão, da clínica ao brincar", fundadora do FaçaAmigos. ATENÇÃO:
+    o CRP no Instagram é 10/4727 (antes eu usava 10/0427, informado no chat): CONFIRMAR o número correto.
 [ ] Na Hotmart: garantia de 7 dias ativa e, se quiser, "O Código do Desenvolvimento Infantil"
     como order bump. Não há segundo produto na página.
 [ ] Depoimentos: seção 11 fica de fora até haver depoimentos reais e autorizados.
