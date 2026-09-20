@@ -21,6 +21,19 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- Guia O Brincar com Propósito (página de vendas) -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/guia</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/termos</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
   <!-- Mapeamento Comportamental (Instituto FaçaAmigos) -->
   <url>
     <loc>https://institutofacaamigos.com.br/teste</loc>
