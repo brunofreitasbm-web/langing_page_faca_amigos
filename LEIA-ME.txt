@@ -22,7 +22,7 @@ STATUS 20/09/2026 (noite) — o que já foi feito e ligado
   e linkada no rodapé; Política de Privacidade atualizada (guia, e-mails de conteúdo/ofertas, Hotmart).
   Os textos de /termos e da política foram redigidos sem revisão jurídica: revisar com advogado.
 - Checkbox de opt-in do /teste agora inclui "novidades e ofertas dos materiais".
-- Brevo: remetente cadastrado e 3 templates criados; falta montar a automação na interface (ver "SEQUÊNCIA DE E-MAILS").
+- Brevo: remetente cadastrado, 3 templates criados e sequência automática rodando (ver "SEQUÊNCIA DE E-MAILS DO GUIA").
 - Secrets BREVO_LIST_ID=3 e EBOOK_URL=https://institutofacaamigos.com.br/guia configurados
   (para desligar o banner/e-mail de venda: supabase secrets unset EBOOK_URL --project-ref ivjvpdzsfjdpyabbzzuj).
 - Testado: fluxo do /teste no navegador com o payload real da função (banner, preço, links) e e-mail do
@@ -62,24 +62,31 @@ ATIVAR O BANNER NO RESULTADO E NO E-MAIL (só depois de /guia estar no ar)
    Eventos no dataLayer: teste_ebook_view/click, teste_ebook_amostra_click, guia_cta_click,
    guia_oferta_view, guia_amostra_click. Nome/e-mail NÃO vão mais na URL (iriam parar no GA4).
 
-SEQUÊNCIA DE E-MAILS (Brevo) — só para quem marcou o opt-in de conteúdos
-1. JÁ FEITO no Brevo (20/09/2026, mesma conta/chave do sistema da Clínica): lista ID 3
-   "Guia O Brincar com Proposito - opt-in do mapa" e atributos NOME_CRIANCA, FAIXA_RESULTADO e
-   CAPITULOS_INDICADOS. Nesta conta o atributo de primeiro nome é NOME (não FIRSTNAME); o
-   webhook e os templates já usam NOME. O domínio institutofacaamigos.com.br está autenticado
-   no Brevo, então o remetente instituto@institutofacaamigos.com.br funciona.
-2. Falta só o secret BREVO_LIST_ID=3 na função behavior-test-webhook (o MCP não grava secrets):
-   supabase secrets set BREVO_LIST_ID=3 --project-ref ivjvpdzsfjdpyabbzzuj
-   BREVO_API_KEY e BREVO_FROM já existem nessa função. A partir daí, quem completa o teste com
-   opt-in entra na lista.
-3. JÁ FEITO no Brevo: remetente instituto@institutofacaamigos.com.br cadastrado e ativo (o nome de exibição
-   ficou "Instituto FacaAmigos", sem cedilha: corrigir em Senders & IP se quiser) e os 3 templates criados
-   (IDs 1, 2 e 3: "Guia D+1 - capitulo gratis", "Guia D+3 - diagnostico", "Guia D+6 - garantia").
-   FALTA só o passo que a API do Brevo não permite: em Automations > Create a workflow, gatilho
-   "Contact added to a list" = lista 3; esperar 1 dia -> enviar template 1; esperar 2 dias -> template 2;
-   esperar 3 dias -> template 3. Marque "sair do fluxo" se o contato sair da lista.
-4. LGPD: o checkbox do /teste já foi ajustado (inclui "novidades e ofertas"). Só quem marcar a partir de
-   agora deve entrar na sequência; contatos antigos com o texto antigo não devem receber os e-mails D+3/D+6.
+SEQUÊNCIA DE E-MAILS DO GUIA (dias 1, 3 e 6) — NO AR desde 20/09/2026
+O Brevo NÃO tem API para criar workflows (só pela interface), então o agendamento roda no nosso lado:
+- Edge Function guia-sequence (supabase/functions/guia-sequence) + pg_cron "guia-sequence-hourly"
+  (jobid 9, de hora em hora: POST .../functions/v1/guia-sequence?run=1). Cria o job de novo com:
+    select cron.schedule('guia-sequence-hourly','0 * * * *', $$select net.http_post(url:='https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/guia-sequence?run=1', headers:='{"Content-Type":"application/json"}'::jsonb, body:='{}'::jsonb, timeout_milliseconds:=30000);$$);
+- Envia os templates do Brevo 1, 2 e 3 (transacional, com params NOME/NOME_CRIANCA/FAIXA_RESULTADO/UNSUB_URL)
+  24h, 72h e 144h depois de completed_at, das 08h às 20h59 de Belém. Cada envio é reservado na tabela
+  fa_teste_ebook_seq (chave única lead+passo): nunca duplica; se o Brevo falhar, tenta na hora seguinte.
+- Só entra quem tem marketing_opt_in = true E consent_at >= 2026-09-20T16:50Z (quando o texto novo do
+  checkbox foi ao ar). Leads antigos ficam de fora. (OPTIN_SINCE em guia-sequence/index.ts.)
+- Para de enviar se: o lead se descadastrar (/descadastrar, ou o botão de descadastro do Gmail/Outlook via
+  cabeçalho List-Unsubscribe), o contato for bloqueado no Brevo ou sair da lista 3.
+  Para tirar alguém na mão: remover da lista 3 no Brevo.
+- Secret SEQ_SECRET (assina o link de descadastro). Não trocar sem necessidade: links já enviados deixam
+  de valer (os e-mails seguintes já saem com o link novo).
+- Migração: 20260920200000_fa_teste_ebook_sequence.sql (colunas ebook_seq_stopped_at/_stop_reason no lead
+  e tabela fa_teste_ebook_seq).
+- Testado em produção com um lead de teste (apagado depois): os 3 e-mails chegaram (Brevo "delivered"),
+  não reenviam, a sequência para no passo 3 e o descadastro funciona (opt-in desmarcado, saiu da lista 3).
+- LIMITAÇÃO: a sequência não sabe quem já COMPROU. Falta o postback (webhook) da Hotmart para marcar
+  compradores e parar os e-mails. Até lá, o D+3 e o D+6 podem chegar a quem já comprou.
+- Editar o texto dos e-mails: supabase/email-templates/*.html -> colar no template correspondente no Brevo
+  (ou PUT /v3/smtp/templates/{id}). O remetente é instituto@institutofacaamigos.com.br.
+- Ver o que foi enviado: select * from fa_teste_ebook_seq order by sent_at desc;
+- Pausar tudo: select cron.unschedule('guia-sequence-hourly');
 
 ATUALIZAÇÃO 19/09/2026 — banner de venda do e-book (Hotmart) no resultado do teste
 -----------------------------------------------------------------------------------

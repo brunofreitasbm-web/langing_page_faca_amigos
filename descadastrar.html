@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descadastrar dos e-mails | FaçaAmigos</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --petrol: #065264; --ice: #F4FAFB; --pink: #FB3D6A; --yellow: #FDC51D; --teal: #07C5C8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: 'Nunito', system-ui, sans-serif; color: var(--petrol); background: var(--ice); line-height: 1.6; font-size: 1.0625rem; }
+    header { background: var(--petrol); padding: 18px 16px; }
+    header img { width: 170px; height: auto; display: block; margin: 0 auto; }
+    main { max-width: 520px; margin: 0 auto; padding: 40px 16px 64px; text-align: center; }
+    .card { background: #fff; border-radius: 24px; padding: 28px 22px; box-shadow: 0 1px 2px rgba(6, 82, 100, .10), 0 4px 14px rgba(6, 82, 100, .10); }
+    h1 { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 1.6rem; line-height: 1.2; margin: 0 0 12px; }
+    p { margin: 0 0 16px; }
+    button { min-height: 56px; padding: 14px 30px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: 800 1.15rem 'Nunito', sans-serif; cursor: pointer; box-shadow: 0 2px 4px rgba(251, 61, 106, .25), 0 8px 20px rgba(251, 61, 106, .30); }
+    button[disabled] { opacity: .6; cursor: default; }
+    a { color: var(--petrol); font-weight: 800; }
+    .dots { display: inline-flex; gap: 8px; margin-bottom: 16px; }
+    .dots i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+    .dots i:nth-child(1) { background: var(--yellow); } .dots i:nth-child(2) { background: var(--teal); } .dots i:nth-child(3) { background: var(--pink); }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+  </style>
+</head>
+
+<body>
+  <header><img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="170" height="29"></header>
+  <main>
+    <div class="card">
+      <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+      <div id="ask" hidden>
+        <h1>Quer parar de receber nossos e-mails?</h1>
+        <p>Você deixa de receber os conteúdos, novidades e ofertas sobre o guia O Brincar com Propósito. O resultado do mapeamento que você já pediu não é afetado.</p>
+        <button id="go" type="button">Sim, descadastrar</button>
+      </div>
+      <div id="done" hidden>
+        <h1>Pronto, você foi descadastrado(a)</h1>
+        <p>Você não vai mais receber esses e-mails. Se mudar de ideia, é só fazer o mapeamento de novo e marcar a opção de receber conteúdos.</p>
+        <p><a href="/guia">Voltar para o site</a></p>
+      </div>
+      <div id="bad" hidden>
+        <h1>Este link não é válido</h1>
+        <p>Ele pode ter sido copiado incompleto. Fale com a gente em <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a> e resolvemos para você.</p>
+      </div>
+    </div>
+  </main>
+  <script>
+    (function () {
+      var q = new URLSearchParams(location.search), u = q.get('u') || '', s = q.get('s') || '';
+      var ask = document.getElementById('ask'), done = document.getElementById('done'), bad = document.getElementById('bad');
+      if (!/^[0-9a-f-]{36}$/i.test(u) || !/^[0-9a-f]{20,}$/i.test(s)) { bad.hidden = false; return; }
+      ask.hidden = false;
+      var btn = document.getElementById('go');
+      btn.addEventListener('click', function () {
+        btn.disabled = true; btn.textContent = 'Enviando...';
+        fetch('https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/guia-sequence', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ u: u, s: s })
+        }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+          .then(function (r) { ask.hidden = true; (r.ok ? done : bad).hidden = false; })
+          .catch(function () { btn.disabled = false; btn.textContent = 'Tentar de novo'; });
+      });
+    })();
+  </script>
+</body>
+
+</html>
