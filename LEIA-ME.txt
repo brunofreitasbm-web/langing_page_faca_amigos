@@ -1,3 +1,36 @@
+ATUALIZAÇÃO 19/09/2026 — banner de venda do e-book (Hotmart) no resultado do teste
+-----------------------------------------------------------------------------------
+O resultado do /teste (tela e e-mail) agora traz um banner persuasivo de venda
+do e-book. O pagamento acontece 100% na Hotmart; o site só leva a pessoa até
+o checkout.
+
+SEM CONFIGURAR NADA, O BANNER NÃO APARECE. Ele só liga quando o secret
+EBOOK_URL existir (https). Secrets da função behavior-test-webhook:
+
+  EBOOK_URL           link de checkout da Hotmart (pay.hotmart.com/... ou
+                      go.hotmart.com/...)          OBRIGATÓRIO p/ aparecer
+  EBOOK_TITLE         padrão "O Brincar com Propósito" (provisório)
+  EBOOK_PRICE_FROM    ex.: R$ 97,00  (preço cheio, riscado)
+  EBOOK_PRICE_TO      ex.: R$ 47,00  (preço promocional)
+  EBOOK_INSTALLMENTS  ex.: ou 5x de R$ 9,90 (opcional)
+
+Como funciona
+- Copy personalizada pelo resultado (nome da criança e áreas do mapa). Se
+  houver área em "atenção especial", o WhatsApp da Clínica continua sendo o
+  primeiro convite e o e-book vem logo abaixo, como apoio.
+- Os links ganham src, sck (faixa do resultado) e utm_* para aparecer nos
+  relatórios da Hotmart. Na tela, nome e e-mail do responsável são enviados
+  ao checkout para pré-preenchimento (confirmar no teste real).
+- Eventos no dataLayer: teste_ebook_view e teste_ebook_click.
+- A capa é um mockup em CSS (tela) e um bloco colorido (e-mail). Quando
+  existir a capa real, trocar o bloco .ebook-cover em teste.html e o bloco
+  ebookBlock em behavior-test-webhook/index.ts.
+
+Atenção
+- O preço "de" deve ser um preço realmente praticado; preço de referência
+  inventado configura propaganda enganosa (Código de Defesa do Consumidor).
+- Precisa de redeploy da função behavior-test-webhook e deploy do site.
+
 ATUALIZAÇÃO 18/09/2026 — questionário definitivo do Teste de Comportamento
 (versão "2026-09-18")
 ---------------------------------------------------------------------------

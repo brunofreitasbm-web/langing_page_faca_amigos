@@ -263,6 +263,94 @@ const TIER_LEGEND: Record<Tier, string> = {
 const LEAD_WHATSAPP = (Deno.env.get("LEAD_WHATSAPP") ?? "5591991782027").replace(/\D/g, "");
 
 // ---------------------------------------------------------------------
+// E-book (Hotmart) — oferta exibida na tela de resultado e no e-mail.
+// Tudo vem de secrets, então trocar link/preço não exige mexer no código.
+// Sem EBOOK_URL válida (https), a oferta some da tela e do e-mail.
+// ---------------------------------------------------------------------
+
+interface EbookOffer {
+  url: string;
+  title: string;
+  price_from: string;
+  price_to: string;
+  installments: string;
+}
+
+function loadEbookOffer(): EbookOffer | null {
+  const url = (Deno.env.get("EBOOK_URL") ?? "").trim();
+  if (!/^https:\/\/[^\s]+$/i.test(url)) return null;
+  return {
+    url,
+    title: (Deno.env.get("EBOOK_TITLE") ?? "").trim() || "O Brincar com Propósito",
+    price_from: (Deno.env.get("EBOOK_PRICE_FROM") ?? "").trim(),
+    price_to: (Deno.env.get("EBOOK_PRICE_TO") ?? "").trim(),
+    installments: (Deno.env.get("EBOOK_INSTALLMENTS") ?? "").trim(),
+  };
+}
+
+// Acrescenta rastreio de origem (src/sck são lidos pela Hotmart e aparecem
+// nos relatórios de venda) mais UTMs. `medium` = "tela" | "email".
+function buildEbookLink(baseUrl: string, medium: "tela" | "email", band: string): string {
+  try {
+    const u = new URL(baseUrl);
+    u.searchParams.set("src", `teste_${medium}`);
+    u.searchParams.set("sck", band);
+    u.searchParams.set("utm_source", "teste");
+    u.searchParams.set("utm_medium", medium);
+    u.searchParams.set("utm_campaign", "ebook_pos_mapa");
+    return u.toString();
+  } catch {
+    return baseUrl;
+  }
+}
+
+function joinNames(names: string[]): string {
+  if (names.length <= 1) return names.join("");
+  return `${names.slice(0, -1).join(", ")} e ${names[names.length - 1]}`;
+}
+
+// Copy da oferta conforme o resultado. Fica no servidor para tela e e-mail
+// dizerem exatamente a mesma coisa. Com área em atenção especial, o convite
+// à conversa com a equipe vem primeiro e o guia entra como apoio.
+function buildEbookCopy(
+  childFirstName: string,
+  results: AreaResult[],
+  tier3Count: number,
+): { eyebrow: string; headline: string; sub: string } {
+  const nome = childFirstName || "seu filho(a)";
+  const names = (tier: Tier) => joinNames(results.filter((r) => r.tier === tier).map((r) => `“${r.name.toLowerCase()}”`).slice(0, 3));
+  const t2 = results.some((r) => r.tier === "tier2");
+
+  if (tier3Count > 0) {
+    const focus = names("tier3");
+    return {
+      eyebrow: "Enquanto isso, em casa",
+      headline: `O que você pode fazer em casa, já nesta semana, para apoiar ${nome}`,
+      sub: `A conversa com a nossa equipe é o primeiro passo. O guia é o apoio do dia a dia: brincadeiras simples e intencionais para ${focus}.`,
+    };
+  }
+  if (t2) {
+    return {
+      eyebrow: `Próximo passo para ${nome}`,
+      headline: `${nome} mostrou pontos que merecem um olhar mais de perto. Veja como apoiar brincando.`,
+      sub: `Brincadeiras curtas, pensadas para ${names("tier2")}, que cabem na rotina da sua casa.`,
+    };
+  }
+  return {
+    eyebrow: `Próximo passo para ${nome}`,
+    headline: `${nome} está fluindo bem. Mantenha esse caminho com brincadeiras que fortalecem.`,
+    sub: "Brincar com intenção fortalece o vínculo, a autorregulação e a confiança, todos os dias.",
+  };
+}
+
+const EBOOK_BULLETS = [
+  "Brincadeiras organizadas pelas mesmas áreas do seu mapa",
+  "Passo a passo de 10 a 15 minutos por dia, com o que você já tem em casa",
+  "Escrito pela equipe do Centro de Terapia Comportamental FaçaAmigos",
+];
+const EBOOK_TRUST = "Pagamento seguro pela Hotmart · Pix, cartão ou boleto · Acesso imediato · 7 dias de garantia";
+
+// ---------------------------------------------------------------------
 // Validação
 // ---------------------------------------------------------------------
 
@@ -434,6 +522,7 @@ async function sendResultEmailToGuardian(params: {
   childFirstName: string;
   results: AreaResult[];
   tier3Count: number;
+  resultBand: string;
 }): Promise<{ sent: boolean; error?: string }> {
   const apiKey = Deno.env.get("BREVO_API_KEY");
   const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <nao-responder@institutofacaamigos.com.br>";
@@ -488,6 +577,50 @@ async function sendResultEmailToGuardian(params: {
     </td></tr>`
     : "";
 
+  const ebook = loadEbookOffer();
+  let ebookBlock = "";
+  if (ebook) {
+    const copy = buildEbookCopy(params.childFirstName, params.results, params.tier3Count);
+    const link = buildEbookLink(ebook.url, "email", params.resultBand);
+    const bullets = EBOOK_BULLETS.map(
+      (b) => `<tr><td valign="top" style="font-family:Arial,sans-serif;font-size:14px;color:#2ECFB5;font-weight:bold;padding:3px 8px 3px 0;">&#10003;</td><td style="font-family:Arial,sans-serif;font-size:14px;line-height:1.5;color:#E9F5F1;padding:3px 0;">${escapeHtml(b)}</td></tr>`,
+    ).join("");
+    const priceFrom = ebook.price_from
+      ? `<span style="font-family:Arial,sans-serif;font-size:14px;color:#9FC2B8;text-decoration:line-through;">de ${escapeHtml(ebook.price_from)}</span>&nbsp;&nbsp;`
+      : "";
+    const priceTo = ebook.price_to
+      ? `<span style="font-family:Arial,sans-serif;font-size:13px;color:#E9F5F1;">por </span><span style="font-family:Arial,sans-serif;font-size:30px;font-weight:800;color:#FFE234;">${escapeHtml(ebook.price_to)}</span>`
+      : "";
+    const installments = ebook.installments
+      ? `<div style="font-family:Arial,sans-serif;font-size:12px;color:#9FC2B8;margin-top:2px;">${escapeHtml(ebook.installments)}</div>`
+      : "";
+    const priceRow = priceFrom || priceTo
+      ? `<tr><td style="padding:14px 0 4px 0;">${priceFrom}${priceTo}${installments}</td></tr>`
+      : "";
+    ebookBlock = `
+    <tr><td style="padding:8px 32px 8px 32px;">
+      <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#1A3F35;border-radius:18px;">
+        <tr><td style="padding:24px 24px 22px 24px;">
+          <p style="font-family:Arial,sans-serif;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#FFE234;margin:0 0 8px 0;">${escapeHtml(copy.eyebrow)}</p>
+          <h2 style="font-family:Arial,sans-serif;font-size:21px;line-height:1.3;color:#FFFFFF;margin:0 0 10px 0;">${escapeHtml(copy.headline)}</h2>
+          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#CFE6DF;margin:0 0 14px 0;">${escapeHtml(copy.sub)}</p>
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#F0196B;border-radius:12px;margin:0 0 14px 0;">
+            <tr><td style="padding:14px 16px;text-align:center;">
+              <span style="font-family:Arial,sans-serif;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#FFD3E3;">Guia prático</span><br>
+              <span style="font-family:Arial,sans-serif;font-size:19px;font-weight:800;color:#FFFFFF;">${escapeHtml(ebook.title)}</span>
+            </td></tr>
+          </table>
+          <table cellpadding="0" cellspacing="0" role="presentation">${bullets}</table>
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation">${priceRow}</table>
+          <div style="text-align:center;padding:14px 0 6px 0;">
+            <a href="${escapeHtml(link)}" style="display:inline-block;background:#F0196B;color:#FFFFFF;font-family:Arial,sans-serif;font-weight:800;text-decoration:none;padding:15px 30px;border-radius:9999px;font-size:16px;">Quero o guia agora</a>
+          </div>
+          <p style="font-family:Arial,sans-serif;font-size:11px;line-height:1.5;color:#9FC2B8;text-align:center;margin:8px 0 0 0;">${escapeHtml(EBOOK_TRUST)}</p>
+        </td></tr>
+      </table>
+    </td></tr>`;
+  }
+
   const disclaimer = "Este material é educativo e não constitui diagnóstico psicológico. Ele não substitui uma avaliação profissional completa.";
 
   const html = `<!DOCTYPE html>
@@ -508,10 +641,12 @@ async function sendResultEmailToGuardian(params: {
           <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#6A7186;margin:0 0 20px 0;font-style:italic;font-weight:bold;">${disclaimer}</p>
           <table width="100%" cellpadding="0" cellspacing="0" role="presentation">${rows}</table>
         </td></tr>
+        ${hasTier3 ? "" : ebookBlock}
         ${humanBlock}
         <tr><td style="padding:14px 32px 8px 32px;text-align:center;">
           <a href="${waLink}" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;text-decoration:none;padding:14px 28px;border-radius:9999px;font-size:15px;margin-bottom:12px;">Conversar com a equipe no WhatsApp</a>
         </td></tr>
+        ${hasTier3 ? ebookBlock : ""}
         <tr><td style="padding:0 32px 28px 32px;text-align:center;">
           <p style="margin:0 0 14px;font-size:14px;"><a href="${clinicaLink}" style="color:#1f917f;font-weight:700;text-decoration:none;">Conhecer o Centro de Terapia Comportamental FaçaAmigos</a></p>
           <p style="font-family:Arial,sans-serif;font-size:11px;color:#8791A6;margin:0;line-height:1.5;">
@@ -828,6 +963,7 @@ Deno.serve(async (req) => {
       childFirstName: existingLead.child_first_name,
       results,
       tier3Count,
+      resultBand,
     });
 
     await admin
@@ -842,6 +978,20 @@ Deno.serve(async (req) => {
       })
       .eq("id", targetId);
 
+    const ebookOffer = loadEbookOffer();
+    const ebookPayload = ebookOffer
+      ? {
+        url: buildEbookLink(ebookOffer.url, "tela", resultBand),
+        title: ebookOffer.title,
+        price_from: ebookOffer.price_from,
+        price_to: ebookOffer.price_to,
+        installments: ebookOffer.installments,
+        bullets: EBOOK_BULLETS,
+        trust: EBOOK_TRUST,
+        ...buildEbookCopy(existingLead.child_first_name, results, tier3Count),
+      }
+      : null;
+
     return jsonResponse(req, {
       child_first_name: existingLead.child_first_name,
       score,
@@ -850,6 +1000,7 @@ Deno.serve(async (req) => {
       tier_legend: TIER_LEGEND,
       results,
       result_email_sent: guardianEmailResult.sent,
+      ebook: ebookPayload,
     });
   }
 
