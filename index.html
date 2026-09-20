@@ -519,6 +519,46 @@
         margin-inline: auto;
       }
     }
+
+    /* Guia digital "O Brincar com Propósito" (Instituto FaçaAmigos) — petróleo da marca da Clínica */
+    .guia-banner {
+      background: #065264;
+      color: #fff;
+      border-radius: var(--r-card);
+      box-shadow: var(--shadow-lg);
+      padding: 44px 48px;
+      display: grid;
+      grid-template-columns: 1.4fr 0.6fr;
+      gap: 36px;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .guia-banner::before, .guia-banner::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
+    .guia-banner::before { width: 260px; height: 260px; right: -90px; bottom: -110px; background: #07C5C8; }
+    .guia-banner::after { width: 120px; height: 120px; left: -50px; top: -50px; background: #FDC51D; }
+    .guia-banner > * { position: relative; z-index: 1; }
+
+    .guia-banner .eyebrow { background: #FDC51D; color: #065264; }
+    .guia-banner h2 { color: #fff; }
+    .guia-banner p.guia-text { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 1.05rem; margin-bottom: 22px; max-width: 36rem; }
+    .guia-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+    .guia-actions .btn-sample { background: #07C5C8; color: #065264; box-shadow: none; }
+    .guia-note { font-size: 0.82rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); margin-top: 14px; }
+    .guia-cover { display: flex; justify-content: center; }
+    .guia-cover img { width: 190px; height: auto; border-radius: 4px 10px 10px 4px; box-shadow: 10px 14px 30px rgba(0, 0, 0, 0.35); transform: rotate(-3deg); }
+
+    @media (max-width: 960px) {
+      .guia-banner { grid-template-columns: 1fr; text-align: center; padding: 36px 26px 78px; }
+      .guia-banner::before { width: 150px; height: 150px; right: -50px; bottom: -84px; }
+      .guia-banner p.guia-text { margin-inline: auto; }
+      .guia-actions { justify-content: center; }
+      .guia-cover { order: -1; }
+      .guia-cover img { width: 150px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) { .guia-cover img { transform: none; } }
   </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7LHH3C9P8"></script>
@@ -561,6 +601,7 @@
         <a href="#clinica">Clínica</a>
         <a href="#playground">Playground</a>
         <a href="#circuito">Circuito</a>
+        <a href="#guia">Guia</a>
         <a href="#carreiras">Trabalhe Conosco</a>
       </div>
       <div class="nav-actions">
@@ -758,6 +799,28 @@
     </div>
   </section>
 
+  <!-- GUIA DIGITAL — O Brincar com Propósito (página de vendas em /guia) -->
+  <section class="sec" id="guia" style="padding: 20px 0 30px;">
+    <div class="wrap fx">
+      <div class="guia-banner">
+        <div>
+          <span class="eyebrow">Guia digital · Instituto FaçaAmigos</span>
+          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">O Brincar com Propósito: um guia para o dia a dia da sua casa</h2>
+          <p class="guia-text">Guia prático e afetivo de Análise do Comportamento para mães, pais e cuidadores. 11 capítulos com exercícios simples, Plano de 30 dias e 7 materiais para imprimir. Em PDF, com acesso imediato.</p>
+          <div class="guia-actions">
+            <a href="/guia?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'conhecer'})">Conhecer o guia</a>
+            <a href="downloads/o-brincar-com-proposito-capitulo-1.pdf" download class="btn btn-sample" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'capitulo_gratis'})">Ler o capítulo 1 grátis</a>
+          </div>
+          <p class="guia-note">Material educativo · não substitui avaliação e acompanhamento profissional</p>
+        </div>
+        <div class="guia-cover">
+          <img src="img/guia/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
+            alt="Capa do e-book O Brincar com Propósito: Guia Prático e Afetivo de Análise do Comportamento para Mães, Pais e Cuidadores">
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- SEÇÃO TRABALHE CONOSCO / CARREIRAS -->
   <section class="sec" id="carreiras" style="padding: 40px 0 60px;">
     <div class="wrap fx">
@@ -810,7 +873,7 @@
         rel="noopener">@facaamigos.belem</a></p>
     <p style="margin-top: 18px;"><a
         href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental."
-        target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;" style="color: var(--yellow); font-weight: 800; text-decoration: underline;">Venha fazer parte do nosso time</a> · <a href="politica-privacidade.html">Política de
+        target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;" style="color: var(--yellow); font-weight: 800; text-decoration: underline;">Venha fazer parte do nosso time</a> · <a href="#guia">Guia O Brincar com Propósito</a> · <a href="politica-privacidade.html">Política de
         privacidade</a></p>
     <p class="legal">FaçaAmigos · CNPJ 66.318.630/0001-17 · Belém/PA</p>
   </footer>
