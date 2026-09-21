@@ -30,6 +30,11 @@ a família não vê o botão de submeter a conta de visitante. Documento isso ex
 para não gerar expectativa de autenticação forte por família — se no futuro for necessário
 (ex.: cobrança, RADIUS corporativo), o formulário pode ser adaptado sem tocar no visual.
 
+> **Segurança (21/09/2026):** a pasta `hotspot/` não é mais publicada no site (`.vercelignore` e `robots.txt`); ela só vai
+> para o roteador. A senha `visitante` fica dentro do `login.html` por desenho (é a conta compartilhada de visitante),
+> então **troque `visitante`/`visitante` por credenciais próprias no RouterOS e em `login.html` antes de instalar**, e
+> nunca reutilize essa senha em outro lugar.
+
 ## 1. Upload dos arquivos
 
 Via WinBox → Files, ou FTP:

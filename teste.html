@@ -2,16 +2,7 @@
 <html lang="pt-BR">
 
 <head>
-  <!-- Google Tag Manager -->
-  <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-PN5D2BTS');</script>
-  <!-- End Google Tag Manager -->
+  <script src="/assets/fa-track.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapeamento Comportamental Infantil Gratuito | Instituto FaçaAmigos</title>
@@ -42,27 +33,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q7LHH3C9P8"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag() { dataLayer.push(arguments); }
-    gtag('js', new Date());
-    gtag('config', 'G-Q7LHH3C9P8');
-  </script>
-
-  <!-- Microsoft Clarity -->
-  <script type="text/javascript">
-    (function (c, l, a, r, i, t, y) {
-      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) };
-      t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i;
-      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
-    })(window, document, "clarity", "script", "xz0butjjbh");
-  </script>
-
-  <!-- Hotjar/Contentsquare -->
-  <script src="https://t.contentsquare.net/uxa/c3b9c7ee91c87.js" defer></script>
 
   <style>
     :root {
@@ -1253,12 +1223,18 @@
       function captureAcquisition() {
         if (state.utm) return;
         var params = new URLSearchParams(window.location.search);
+        // fa-track.js guarda a origem real (Instagram, Google, QR...) mesmo depois de navegar pelo site.
+        var o = (window.faOrigin && window.faOrigin()) || {};
         state.utm = {
-          source: params.get('utm_source') || '',
-          medium: params.get('utm_medium') || '',
-          campaign: params.get('utm_campaign') || ''
+          source: params.get('utm_source') || o.utm_source || '',
+          medium: params.get('utm_medium') || o.utm_medium || '',
+          campaign: params.get('utm_campaign') || o.utm_campaign || '',
+          content: params.get('utm_content') || o.utm_content || '',
+          term: params.get('utm_term') || o.utm_term || '',
+          gclid: params.get('gclid') || o.gclid || '',
+          fbclid: params.get('fbclid') || o.fbclid || ''
         };
-        state.referrer = document.referrer || '';
+        state.referrer = o.referrer || document.referrer || '';
         state.landingPage = window.location.href;
         saveState();
       }

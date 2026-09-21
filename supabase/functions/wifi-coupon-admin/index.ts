@@ -34,8 +34,18 @@ function normalizeCode(raw: string): string {
   return raw.trim().toUpperCase();
 }
 
-function isSameDay(a: Date, b: Date): boolean {
-  return a.toDateString() === b.toDateString();
+function safeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+// Início do dia de hoje em Belém (UTC-3, sem horário de verão), em ISO/UTC.
+function startOfTodayBelemIso(now = new Date()): string {
+  const belem = new Date(now.getTime() - 3 * 3600_000);
+  belem.setUTCHours(0, 0, 0, 0);
+  return new Date(belem.getTime() + 3 * 3600_000).toISOString();
 }
 
 Deno.serve(async (req) => {
@@ -44,7 +54,7 @@ Deno.serve(async (req) => {
   const adminApiKey = Deno.env.get("WIFI_ADMIN_API_KEY");
   const authHeader = req.headers.get("authorization") ?? "";
   const providedKey = authHeader.replace(/^Bearer\s+/i, "");
-  if (!adminApiKey || providedKey !== adminApiKey) {
+  if (!adminApiKey || !safeEqual(providedKey, adminApiKey)) {
     return jsonResponse({ error: "não autorizado" }, 401);
   }
 
@@ -101,11 +111,9 @@ Deno.serve(async (req) => {
     if (new Date(lead.coupon_expires_at) < new Date()) {
       return jsonResponse({ error: "cupom expirado" }, 409);
     }
-    if (lead.last_redeemed_at && isSameDay(new Date(lead.last_redeemed_at), new Date())) {
-      return jsonResponse({ error: "este cupom já foi resgatado hoje — um benefício por dia" }, 409);
-    }
-
-    const { error: updateError } = await admin
+    // Resgate atômico: o filtro vai na própria UPDATE, então dois toques simultâneos não passam os dois.
+    const todayStart = startOfTodayBelemIso();
+    const { data: updated, error: updateError } = await admin
       .from("fa_wifi_leads")
       .update({
         coupon_status: "redeemed",
@@ -113,9 +121,14 @@ Deno.serve(async (req) => {
         last_redeemed_at: new Date().toISOString(),
         redeemed_count: (lead.redeemed_count ?? 0) + 1,
       })
-      .eq("id", lead.id);
+      .eq("id", lead.id)
+      .or(`last_redeemed_at.is.null,last_redeemed_at.lt.${todayStart}`)
+      .select("id");
 
     if (updateError) return jsonResponse({ error: "falha ao registrar resgate" }, 500);
+    if (!updated?.length) {
+      return jsonResponse({ error: "este cupom já foi resgatado hoje — um benefício por dia" }, 409);
+    }
 
     return jsonResponse({ ok: true, coupon_code: code, operation });
   }

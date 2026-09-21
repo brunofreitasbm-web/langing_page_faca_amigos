@@ -920,6 +920,9 @@ Deno.serve(async (req) => {
         utm_medium: str(utm.medium) || null,
         utm_campaign: str(utm.campaign) || null,
         utm_content: str(utm.content) || null,
+        utm_term: str(utm.term) || null,
+        gclid: str(utm.gclid) || null,
+        fbclid: str(utm.fbclid) || null,
         referrer: referrer || null,
         landing_page: landingPage || null,
         ip: ip || null,
@@ -972,7 +975,7 @@ Deno.serve(async (req) => {
     const { data: existingLead, error: fetchError } = await admin
       .from("fa_leads_teste_comportamento")
       .select(
-        "id, child_first_name, child_age_range, guardian_relation, guardian_name, guardian_email, guardian_phone, preferred_unit, landing_page, utm_source, utm_medium, utm_campaign, marketing_opt_in",
+        "id, status, child_first_name, child_age_range, guardian_relation, guardian_name, guardian_email, guardian_phone, preferred_unit, landing_page, utm_source, utm_medium, utm_campaign, marketing_opt_in",
       )
       .eq("id", leadId)
       .single();
@@ -1011,84 +1014,99 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     const targetId = dupe?.id ?? leadId;
-    if (dupe?.id) {
-      await admin
+
+    // Idempotência: só a primeira chamada de um lead "started" grava e dispara e-mails. Repetir o
+    // POST (duplo clique, replay) devolve o mesmo resultado sem reenviar nada. O "claim" é feito
+    // na própria UPDATE (status = started), então duas chamadas simultâneas também não passam as duas.
+    let firstCompletion = existingLead.status === "started";
+    if (firstCompletion && dupe?.id) {
+      const { data: claimed } = await admin
         .from("fa_leads_teste_comportamento")
         .update({ status: "abandoned" })
         .eq("id", leadId)
-        .eq("status", "started");
+        .eq("status", "started")
+        .select("id");
+      firstCompletion = !!claimed?.length;
     }
 
-    const { error: updateError } = await admin
-      .from("fa_leads_teste_comportamento")
-      .update({
-        status: dupe?.status === "contacted" ? "contacted" : "completed",
-        answers,
+    if (firstCompletion) {
+      let updateQuery = admin
+        .from("fa_leads_teste_comportamento")
+        .update({
+          status: dupe?.status === "contacted" ? "contacted" : "completed",
+          answers,
+          score,
+          results,
+          result_band: resultBand,
+          completed_at: new Date().toISOString(),
+        })
+        .eq("id", targetId);
+      if (!dupe?.id) updateQuery = updateQuery.eq("status", "started");
+      const { data: updatedRows, error: updateError } = await updateQuery.select("id");
+
+      if (updateError) {
+        console.error("Erro ao concluir lead:", updateError);
+        return jsonResponse(req, { error: "falha ao registrar resultado" }, 500);
+      }
+      firstCompletion = !!updatedRows?.length;
+    }
+
+    let guardianEmailResult: { sent: boolean; error?: string } = { sent: true };
+    if (firstCompletion) {
+      const emailResult = await sendLeadEmailToIdealizadora({
+        leadId: targetId,
+        childFirstName: existingLead.child_first_name,
+        childAgeRange: existingLead.child_age_range,
+        guardianRelation: existingLead.guardian_relation,
+        guardianName: existingLead.guardian_name,
+        guardianEmail: existingLead.guardian_email,
+        guardianPhone: existingLead.guardian_phone,
+        preferredUnit: existingLead.preferred_unit ?? "",
         score,
+        resultBand,
+        tier3Count,
         results,
-        result_band: resultBand,
-        completed_at: new Date().toISOString(),
-      })
-      .eq("id", targetId);
+        answers,
+        utm: {
+          source: existingLead.utm_source ?? "",
+          medium: existingLead.utm_medium ?? "",
+          campaign: existingLead.utm_campaign ?? "",
+        },
+        landingPage: existingLead.landing_page ?? "",
+      });
 
-    if (updateError) {
-      console.error("Erro ao concluir lead:", updateError);
-      return jsonResponse(req, { error: "falha ao registrar resultado" }, 500);
-    }
-
-    const emailResult = await sendLeadEmailToIdealizadora({
-      leadId: targetId,
-      childFirstName: existingLead.child_first_name,
-      childAgeRange: existingLead.child_age_range,
-      guardianRelation: existingLead.guardian_relation,
-      guardianName: existingLead.guardian_name,
-      guardianEmail: existingLead.guardian_email,
-      guardianPhone: existingLead.guardian_phone,
-      preferredUnit: existingLead.preferred_unit ?? "",
-      score,
-      resultBand,
-      tier3Count,
-      results,
-      answers,
-      utm: {
-        source: existingLead.utm_source ?? "",
-        medium: existingLead.utm_medium ?? "",
-        campaign: existingLead.utm_campaign ?? "",
-      },
-      landingPage: existingLead.landing_page ?? "",
-    });
-
-    const guardianEmailResult = await sendResultEmailToGuardian({
-      guardianName: existingLead.guardian_name,
-      guardianEmail: existingLead.guardian_email,
-      childFirstName: existingLead.child_first_name,
-      results,
-      tier3Count,
-      resultBand,
-    });
-
-    // Quem marcou o opt-in entra na lista do Brevo (sequência de nutrição do guia).
-    if (existingLead.marketing_opt_in === true) {
-      await syncBrevoContact({
+      guardianEmailResult = await sendResultEmailToGuardian({
         guardianName: existingLead.guardian_name,
         guardianEmail: existingLead.guardian_email,
         childFirstName: existingLead.child_first_name,
-        resultBand,
         results,
+        tier3Count,
+        resultBand,
       });
-    }
 
-    await admin
-      .from("fa_leads_teste_comportamento")
-      .update({
-        ...(emailResult.sent
-          ? { email_sent_at: new Date().toISOString() }
-          : { email_error: emailResult.error ?? "falha desconhecida" }),
-        ...(guardianEmailResult.sent
-          ? { result_email_sent_at: new Date().toISOString() }
-          : { result_email_error: guardianEmailResult.error ?? "falha desconhecida" }),
-      })
-      .eq("id", targetId);
+      // Quem marcou o opt-in entra na lista do Brevo (sequência de nutrição do guia).
+      if (existingLead.marketing_opt_in === true) {
+        await syncBrevoContact({
+          guardianName: existingLead.guardian_name,
+          guardianEmail: existingLead.guardian_email,
+          childFirstName: existingLead.child_first_name,
+          resultBand,
+          results,
+        });
+      }
+
+      await admin
+        .from("fa_leads_teste_comportamento")
+        .update({
+          ...(emailResult.sent
+            ? { email_sent_at: new Date().toISOString() }
+            : { email_error: emailResult.error ?? "falha desconhecida" }),
+          ...(guardianEmailResult.sent
+            ? { result_email_sent_at: new Date().toISOString() }
+            : { result_email_error: guardianEmailResult.error ?? "falha desconhecida" }),
+        })
+        .eq("id", targetId);
+    }
 
     const ebookOffer = loadEbookOffer();
     const ebookPayload = ebookOffer

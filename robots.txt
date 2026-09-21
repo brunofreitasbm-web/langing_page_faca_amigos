@@ -5,6 +5,7 @@ Disallow: /admin.html
 Disallow: /teste-perguntas.json
 Disallow: /wifi
 Disallow: /wifi.html
+Disallow: /hotspot
 
 Sitemap: https://institutofacaamigos.com.br/sitemap.xml
 Sitemap: https://playground.institutofacaamigos.com.br/sitemap.xml

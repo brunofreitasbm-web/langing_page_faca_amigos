@@ -289,6 +289,9 @@ async function verifyClinicaGestorLogin(
 // ---------------------------------------------------------------------
 
 const SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12h
+const LOGIN_WINDOW_MS = 15 * 60 * 1000;
+const LOGIN_MAX_FAILS_PER_IP = 5;
+const LOGIN_MAX_FAILS_PER_LOGIN = 10;
 
 function newSessionToken(): string {
   const arr = new Uint8Array(32);
@@ -542,8 +545,24 @@ Deno.serve(async (req) => {
     const password = str(body.password);
     if (!loginInput || !password) return jsonResponse(req, { error: "e-mail/CPF e senha são obrigatórios" }, 400);
 
+    // Limite de tentativas: este endpoint é a porta dos fundos para a senha do Gestor da Clínica.
+    // Conta falhas por IP e por identificador (quem troca de IP continua barrado pelo segundo filtro).
+    const loginIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+    const since = new Date(Date.now() - LOGIN_WINDOW_MS).toISOString();
+    const [byIp, byLogin] = await Promise.all([
+      admin.from("fa_teste_admin_login_attempts").select("id", { count: "exact", head: true }).eq("ip", loginIp).gte("created_at", since),
+      admin.from("fa_teste_admin_login_attempts").select("id", { count: "exact", head: true }).eq("login", loginInput.toLowerCase()).gte("created_at", since),
+    ]);
+    if ((byIp.count ?? 0) >= LOGIN_MAX_FAILS_PER_IP || (byLogin.count ?? 0) >= LOGIN_MAX_FAILS_PER_LOGIN) {
+      return jsonResponse(req, { error: "muitas tentativas, aguarde 15 minutos" }, 429);
+    }
+
     const check = await verifyClinicaGestorLogin(loginInput, password);
     if (!check.ok) {
+      // Só senha errada conta; erro de serviço (5xx) não pune o gestor.
+      if (check.status < 500) {
+        await admin.from("fa_teste_admin_login_attempts").insert({ ip: loginIp, login: loginInput.toLowerCase() });
+      }
       return jsonResponse(req, { error: check.error }, check.status);
     }
 

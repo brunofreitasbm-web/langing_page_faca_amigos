@@ -248,31 +248,38 @@ Deno.serve(async (req) => {
     }
   }
 
-  const couponCode = generateCouponCode();
   const couponExpiresAt = new Date(Date.now() + COUPON_VALIDITY_DAYS * 24 * 60 * 60 * 1000);
 
-  const { data, error } = await admin
-    .from("fa_wifi_leads")
-    .insert({
-      guardian_name: guardianName,
-      guardian_phone: guardianPhone,
-      guardian_email: guardianEmail,
-      mac: mac || null,
-      coupon_code: couponCode,
-      coupon_status: "issued",
-      coupon_expires_at: couponExpiresAt.toISOString(),
-      consent_at: str(body.consent_at) || new Date().toISOString(),
-      marketing_opt_in_whatsapp: optInWhatsapp,
-      marketing_opt_in_email: optInEmail,
-      utm_source: utmSource,
-      utm_medium: utmMedium,
-      utm_campaign: utmCampaign,
-      landing_page: landingPage,
-      ip: ip || null,
-      user_agent: userAgent || null,
-    })
-    .select("id")
-    .single();
+  // Código de 4 caracteres tem colisão possível (unique em coupon_code): gera outro e tenta de novo.
+  let couponCode = generateCouponCode();
+  let data: { id: string } | null = null;
+  let error: { code?: string } | null = null;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    ({ data, error } = await admin
+      .from("fa_wifi_leads")
+      .insert({
+        guardian_name: guardianName,
+        guardian_phone: guardianPhone,
+        guardian_email: guardianEmail,
+        mac: mac || null,
+        coupon_code: couponCode,
+        coupon_status: "issued",
+        coupon_expires_at: couponExpiresAt.toISOString(),
+        consent_at: str(body.consent_at) || new Date().toISOString(),
+        marketing_opt_in_whatsapp: optInWhatsapp,
+        marketing_opt_in_email: optInEmail,
+        utm_source: utmSource,
+        utm_medium: utmMedium,
+        utm_campaign: utmCampaign,
+        landing_page: landingPage,
+        ip: ip || null,
+        user_agent: userAgent || null,
+      })
+      .select("id")
+      .single());
+    if (!error || error.code !== "23505") break;
+    couponCode = generateCouponCode();
+  }
 
   if (error || !data) {
     console.error("Erro ao gravar lead do Wi-Fi:", error);

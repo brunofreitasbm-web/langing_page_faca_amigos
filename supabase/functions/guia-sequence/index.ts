@@ -1,7 +1,7 @@
 // Sequência de e-mails do guia "O Brincar com Propósito" (dias 1, 3 e 6 após o resultado do mapa).
 //
 // Como funciona:
-//  - pg_cron chama POST ?run=1 de hora em hora. A função procura leads que marcaram o opt-in
+//  - pg_cron chama POST ?run=1 de hora em hora, com o cabeçalho x-run-key. A função procura leads que marcaram o opt-in
 //    (com o texto novo do checkbox), concluíram o mapa e já passaram do prazo de cada passo, e
 //    envia o template do Brevo correspondente pela API transacional (POST /v3/smtp/email).
 //  - O Brevo não permite criar workflows por API, por isso o agendamento é feito aqui.
@@ -14,7 +14,8 @@
 //  - Também interrompe se o contato estiver bloqueado ou tiver saído da lista no Brevo.
 //  - Quem já comprou sai da sequência: hotmart-sync grava as vendas em fa_ebook_compras e marca os leads.
 //
-// Secrets: BREVO_API_KEY, BREVO_LIST_ID (já existentes) e SEQ_SECRET (assinatura do link de descadastro).
+// Secrets: BREVO_API_KEY, BREVO_LIST_ID (já existentes), SEQ_SECRET (assinatura do link de descadastro)
+// e SEQ_RUN_KEY (senha do ?run=1; sem ela a função recusa o disparo).
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
@@ -265,7 +266,10 @@ Deno.serve(async (req) => {
   }
 
   // Execução agendada (pg_cron). Idempotente: só envia o que já venceu e nunca duplica.
+  // Exige o cabeçalho x-run-key (secret SEQ_RUN_KEY, o mesmo guardado no Vault para o cron); sem o secret, recusa.
   if (url.searchParams.get("run") === "1") {
+    const runKey = Deno.env.get("SEQ_RUN_KEY") ?? "";
+    if (!runKey || !safeEqual(req.headers.get("x-run-key") ?? "", runKey)) return json(req, { error: "não autorizado" }, 401);
     return json(req, await runBatch(admin, url.searchParams.get("dry") === "1"));
   }
 

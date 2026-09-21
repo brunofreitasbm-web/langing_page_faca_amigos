@@ -59,11 +59,13 @@ interface Sale {
 }
 
 async function fetchSales(token: string, days: number): Promise<Sale[]> {
-  const productId = (Deno.env.get("HOTMART_PRODUCT_ID") ?? "").trim();
+  // HOTMART_PRODUCT_ID aceita vários ids separados por vírgula (guia + Código). Vazio = todos os produtos.
+  const productIds = (Deno.env.get("HOTMART_PRODUCT_ID") ?? "").split(",").map((x) => x.trim()).filter(Boolean);
   const end = Date.now();
   const start = end - days * 86400000;
   const sales = new Map<string, Sale>();
-  for (const status of BUY_STATUSES) {
+  for (const productId of productIds.length ? productIds : [""]) {
+   for (const status of BUY_STATUSES) {
     let pageToken = "";
     for (let page = 0; page < MAX_PAGES; page++) {
       const params: Record<string, string> = {
@@ -91,6 +93,7 @@ async function fetchSales(token: string, days: number): Promise<Sale[]> {
       pageToken = data?.page_info?.next_page_token ?? "";
       if (!pageToken) break;
     }
+   }
   }
   return [...sales.values()];
 }
