@@ -538,8 +538,16 @@
     .guia-banner::before, .guia-banner::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
     .guia-banner::before { width: 220px; height: 220px; right: -90px; bottom: -100px; background: #07C5C8; }
     .guia-banner::after { width: 110px; height: 110px; left: -46px; top: -46px; background: #FDC51D; }
+    /* Card do "Código": amarelo-sol (mesma paleta da página /codigo) para não se confundir com o petróleo do "Brincar" */
+    .guia-banner.alt { background: #FDC51D; color: #065264; }
     .guia-banner.alt::before { background: #FB3D6A; }
     .guia-banner.alt::after { background: #07C5C8; }
+    .guia-banner.alt .eyebrow { background: #065264; color: #fff; }
+    .guia-banner.alt h3, .guia-banner.alt .guia-list li, .guia-banner.alt .guia-price { color: #065264; }
+    .guia-banner.alt p.guia-text { color: #065264; }
+    .guia-banner.alt .guia-list li::before { background: #065264; color: #fff; }
+    .guia-banner.alt .btn-pink { background: #065264; color: #fff; box-shadow: 0 10px 26px rgba(6, 82, 100, 0.32); }
+    .guia-banner.alt .guia-cover img { box-shadow: 10px 14px 30px rgba(6, 82, 100, 0.35); }
     .guia-banner > * { position: relative; z-index: 1; }
 
     .guia-banner .eyebrow { background: #FDC51D; color: #065264; align-self: flex-start; }

@@ -85,16 +85,18 @@
     h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.15; margin: 0; letter-spacing: -.005em; }
     p { margin: 0; }
     a { color: inherit; }
-    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 8px; }
+    :focus-visible { outline: 3px solid var(--petrol); outline-offset: 3px; border-radius: 8px; }
+    .topbar :focus-visible, footer :focus-visible { outline-color: var(--yellow); }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: var(--petrol); padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 100; }
     .skip:focus { top: 8px; }
 
     .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 1; }
     section { position: relative; overflow: hidden; padding: 64px 0; }
-    .bg-petrol { background: var(--petrol); color: #fff; }
-    .bg-ice { background: var(--ice); }
-    .bg-teal10 { background: var(--teal-10); }
+    /* Paleta desta página: amarelo-sol dominante (o /guia é petróleo), com rosa, turquesa e petróleo de apoio */
+    .bg-sun { background: var(--yellow); color: var(--petrol); }
+    .bg-cream { background: var(--yellow-20); }
+    .bg-blush { background: var(--pink-10); }
     .center { text-align: center; }
 
     .eyebrow {
@@ -102,7 +104,7 @@
       letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px;
     }
     .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--pink); }
-    .bg-petrol .eyebrow { color: #fff; }
+    .bg-sun .eyebrow::before { background: var(--petrol); }
     h2.title { font-size: clamp(1.7rem, 5.6vw, 2.5rem); margin-bottom: 14px; }
     .lead { font-size: 1.12rem; max-width: 640px; }
     .center .lead { margin-left: auto; margin-right: auto; }
@@ -113,6 +115,9 @@
     .dots i:nth-child(1) { background: var(--yellow); }
     .dots i:nth-child(2) { background: var(--teal); }
     .dots i:nth-child(3) { background: var(--pink); }
+    .bg-sun .dots i { background: #fff; }
+    .bg-sun .dots i:nth-child(2) { background: var(--teal); }
+    .bg-sun .dots i:nth-child(3) { background: var(--pink); }
     .sep { display: flex; justify-content: center; margin: 0 0 22px; }
 
     .circ { position: absolute; border-radius: 50%; z-index: 0; pointer-events: none; }
@@ -126,6 +131,7 @@
     }
     .btn-buy:hover { transform: translateY(-2px) scale(1.015); }
     .btn-buy:active { transform: scale(.97); }
+    .bg-sun .btn-buy { background: var(--petrol); box-shadow: 0 2px 4px rgba(6, 82, 100, .25), 0 8px 20px rgba(6, 82, 100, .30); }
     .btn-buy.sm { min-height: 44px; padding: 8px 20px; box-shadow: 0 2px 8px rgba(251, 61, 106, .35); }
     .btn-buy.block { width: 100%; }
     .btn-sample {
@@ -147,11 +153,11 @@
     .hero { padding: 40px 0 72px; }
     .hero .wrap { display: grid; gap: 40px; }
     .hero h1 { font-size: clamp(2.05rem, 8.4vw, 3.5rem); font-weight: 600; margin-bottom: 18px; }
-    .hero h1 mark { background: var(--yellow); color: var(--petrol); padding: 0 .28em; border-radius: 14px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-    .hero .sub { font-size: 1.14rem; color: rgba(255, 255, 255, .92); max-width: 560px; }
+    .hero h1 mark { background: var(--pink); color: #fff; padding: 0 .28em; border-radius: 14px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+    .hero .sub { font-size: 1.14rem; color: var(--petrol); max-width: 560px; }
     .seal { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
-    .seal span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .13); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .88rem; }
-    .price-hint { margin-top: 14px; font-weight: 700; color: rgba(255, 255, 255, .9); }
+    .seal span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .6); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .88rem; }
+    .price-hint { margin-top: 14px; font-weight: 700; }
     .price-hint s { opacity: .7; }
     .hero-cta { margin-top: 26px; display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
     .hero-cta .btn-buy { width: 100%; }
@@ -171,11 +177,10 @@
 
     /* Cartões */
     .card { background: #fff; border-radius: 24px; box-shadow: var(--shadow); padding: 24px; }
-    .bg-ice .card { background: #fff; }
 
     /* Dor */
     .pains { display: grid; gap: 16px; margin-top: 36px; }
-    .pain { display: flex; gap: 16px; align-items: flex-start; background: var(--ice); border-radius: 24px; padding: 20px; box-shadow: var(--shadow); }
+    .pain { display: flex; gap: 16px; align-items: flex-start; background: var(--yellow-20); border-radius: 24px; padding: 20px; box-shadow: var(--shadow); }
     .pain .ib { flex: none; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; color: var(--petrol); }
     .pain .ib .ico { width: 26px; height: 26px; }
     .pain:nth-child(3n+1) .ib { background: var(--yellow); }
@@ -195,12 +200,12 @@
     .step:nth-child(3) .ib { background: var(--pink); color: #fff; }
     .step h3 { font-size: 1.3rem; margin-bottom: 8px; }
     .step .n { font-weight: 800; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; opacity: .75; margin-bottom: 6px; }
-    .pull { margin-top: 30px; background: var(--yellow-20); border-radius: 24px; padding: 22px 24px; font-weight: 700; }
+    .pull { margin-top: 30px; background: var(--yellow); border-radius: 24px; padding: 22px 24px; font-weight: 700; }
     .pull small { display: block; font-weight: 600; opacity: .8; margin-top: 6px; font-size: .88rem; }
 
     /* Capítulos */
     .chapters { display: grid; gap: 14px; margin-top: 36px; }
-    .chap { display: flex; gap: 16px; align-items: flex-start; background: var(--ice); border-radius: 24px; padding: 18px; box-shadow: var(--shadow); }
+    .chap { display: flex; gap: 16px; align-items: flex-start; background: var(--yellow-20); border-radius: 24px; padding: 18px; box-shadow: var(--shadow); }
     .chap .num { flex: none; width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 700; font-size: 1.7rem; color: var(--petrol); }
     .chap:nth-child(3n+1) .num { background: var(--yellow); }
     .chap:nth-child(3n+2) .num { background: var(--teal); }
@@ -208,7 +213,7 @@
     .chap h3 { font-size: 1.1rem; margin-bottom: 4px; line-height: 1.2; }
     .chap p { font-size: .96rem; opacity: .9; }
     .extras { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    .extras span { background: var(--teal-10); border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: .92rem; }
+    .extras span { background: var(--yellow-20); border-radius: 999px; padding: 8px 16px; font-weight: 700; font-size: .92rem; }
 
     /* Como funciona */
     .how { display: grid; gap: 16px; margin-top: 36px; }
@@ -234,9 +239,9 @@
     .a4 span { font-size: .92rem; opacity: .88; display: block; }
     .a4 em { font-style: normal; font-weight: 800; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; display: inline-block; margin-bottom: 6px; background: var(--yellow); color: var(--petrol); padding: 2px 10px; border-radius: 999px; }
     .pg { width: min(66vw, 240px); margin: 0; }
-    .pg img { border-radius: 14px; box-shadow: 0 10px 30px rgba(0, 0, 0, .35); background: #fff; width: 100%; }
-    .pg figcaption { padding: 12px 4px 0; font-weight: 700; font-size: .95rem; color: #fff; }
-    .sample { margin-top: 10px; background: var(--ice); color: var(--petrol); border-radius: 24px; padding: 26px 24px; display: grid; gap: 14px; justify-items: start; box-shadow: var(--shadow); }
+    .pg img { border-radius: 14px; box-shadow: 0 10px 30px rgba(6, 82, 100, .28); background: #fff; width: 100%; }
+    .pg figcaption { padding: 12px 4px 0; font-weight: 700; font-size: .95rem; }
+    .sample { margin-top: 10px; background: var(--yellow-20); color: var(--petrol); border-radius: 24px; padding: 26px 24px; display: grid; gap: 14px; justify-items: start; box-shadow: var(--shadow); }
     .sample h3 { font-size: 1.4rem; }
 
     /* Autora */
@@ -260,7 +265,7 @@
     .incl li { display: flex; gap: 12px; align-items: flex-start; font-weight: 600; font-size: 1rem; }
     .incl .ck { flex: none; width: 24px; height: 24px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; margin-top: 1px; }
     .incl .ck .ico { width: 14px; height: 14px; stroke-width: 3; }
-    .price { text-align: center; padding: 18px 0 20px; border-top: 2px dashed var(--teal-10); }
+    .price { text-align: center; padding: 18px 0 20px; border-top: 2px dashed var(--yellow); }
     .price .from { font-weight: 700; opacity: .75; }
     .price .from s { text-decoration-thickness: 2px; }
     .price .to { display: flex; justify-content: center; align-items: baseline; gap: 8px; }
@@ -276,7 +281,7 @@
 
     /* FAQ */
     .faq { max-width: 780px; margin: 34px auto 0; display: grid; gap: 12px; }
-    details { background: var(--ice); border-radius: 24px; box-shadow: var(--shadow); }
+    details { background: var(--yellow-20); border-radius: 24px; box-shadow: var(--shadow); }
     summary { list-style: none; cursor: pointer; padding: 18px 20px; font-weight: 800; display: flex; justify-content: space-between; align-items: center; gap: 14px; min-height: 60px; }
     summary::-webkit-details-marker { display: none; }
     summary .chev { flex: none; width: 32px; height: 32px; border-radius: 50%; background: var(--teal); display: grid; place-items: center; transition: transform .2s ease; }
@@ -383,10 +388,10 @@
   <main id="conteudo">
 
     <!-- 2. Hero -->
-    <section class="hero bg-petrol" aria-labelledby="h-hero">
-      <span class="circ hero-c1" style="background:var(--teal)"></span>
-      <span class="circ hero-c2" style="background:var(--yellow)"></span>
-      <span class="circ hero-c3" style="background:var(--pink)"></span>
+    <section class="hero bg-sun" aria-labelledby="h-hero">
+      <span class="circ hero-c1" style="background:var(--pink)"></span>
+      <span class="circ hero-c2" style="background:var(--teal)"></span>
+      <span class="circ hero-c3" style="background:#fff"></span>
       <div class="wrap">
         <div>
           <span class="eyebrow">Um guia de coração · E-book em PDF</span>
@@ -438,7 +443,7 @@
     </section>
 
     <!-- 4. A virada -->
-    <section class="bg-ice turn" aria-labelledby="h-virada">
+    <section class="bg-cream turn" aria-labelledby="h-virada">
       <div class="wrap">
         <div class="sep"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="center">
@@ -495,7 +500,7 @@
     </section>
 
     <!-- 6. Ferramentas -->
-    <section class="bg-ice" aria-labelledby="h-como">
+    <section class="bg-blush" aria-labelledby="h-como">
       <div class="wrap">
         <div class="center">
           <span class="eyebrow">Para começar hoje</span>
@@ -517,7 +522,7 @@
     </section>
 
     <!-- 7. Prévia do interior -->
-    <section class="bg-petrol" aria-labelledby="h-previa">
+    <section class="bg-cream" aria-labelledby="h-previa">
       <span class="circ" style="width:230px;height:230px;left:-140px;top:-150px;background:var(--teal)"></span>
       <span class="circ" style="width:150px;height:150px;right:-60px;bottom:-40px;background:var(--pink)"></span>
       <div class="wrap">
@@ -545,7 +550,7 @@
     </section>
 
     <!-- 8. Sobre a autora -->
-    <section class="bg-ice" aria-labelledby="h-autora">
+    <section aria-labelledby="h-autora">
       <div class="wrap about">
         <div class="ph"><img src="img/guia/autora.webp" width="560" height="749" loading="lazy" alt="Isabella Gonçalves Freitas, psicóloga e idealizadora do Instituto FaçaAmigos, sorrindo, sentada com um tablet nas mãos"></div>
         <div>
@@ -560,7 +565,7 @@
     </section>
 
     <!-- 9. Oferta -->
-    <section class="bg-teal10" id="oferta" aria-labelledby="h-oferta">
+    <section class="bg-blush" id="oferta" aria-labelledby="h-oferta">
       <span class="circ" style="width:260px;height:260px;right:-120px;top:-100px;background:var(--yellow);opacity:.55"></span>
       <div class="wrap">
         <div class="center">
@@ -627,10 +632,10 @@
     </section>
 
     <!-- 12. Fechamento emocional -->
-    <section class="bg-petrol closing" aria-label="Fechamento">
+    <section class="bg-sun closing" aria-label="Fechamento">
       <span class="circ" style="width:340px;height:340px;left:-200px;bottom:-250px;background:var(--teal)"></span>
-      <span class="circ" style="width:170px;height:170px;right:-70px;top:-60px;background:var(--yellow)"></span>
-      <span class="circ" style="width:56px;height:56px;left:9%;top:34px;background:var(--pink)"></span>
+      <span class="circ" style="width:170px;height:170px;right:-70px;top:-60px;background:var(--pink)"></span>
+      <span class="circ" style="width:56px;height:56px;left:9%;top:34px;background:#fff"></span>
       <div class="wrap">
         <div class="sep"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <blockquote>&ldquo;Não peço que você seja perfeita. Peço que você seja presente, intencional e paciente consigo mesma no processo.&rdquo;
