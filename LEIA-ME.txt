@@ -1,3 +1,21 @@
+ATUALIZAÇÃO 20/09/2026 (noite) — página de vendas /codigo (2º e-book)
+-----------------------------------------------------------------
+"O Código do Desenvolvimento Infantil" (40 páginas A5, 9 capítulos, autora Isabella) tem página própria:
+codigo.html → /codigo, no mesmo padrão visual da /guia. Imagens em img/codigo/ (capa, 6 prévias, og).
+- Checkout: produto Hotmart V107698297N. Todos os botões usam o widget da Hotmart (classe hotmart-fb,
+  checkoutMode=2): no desktop o checkout abre em janela sobre a página; no celular abre o checkout.
+  NÃO usar a classe hotmart__button-checkout: a Hotmart aplica nela o botão verde padrão dela.
+  O widget apaga da página todo link para hotmart.com se a checagem de saúde da API dele falhar; o script da
+  página recoloca os botões como link comum (nova aba). Repassa utm_*/src/sck ao checkout (src padrão: codigo_direto).
+- Sem preço na página (decisão do usuário): o valor aparece só no checkout. Para exibir, acrescentar na seção
+  "oferta" (.price) e, se houver parcelamento, informar aqui e na Hotmart.
+- /termos passou a cobrir os dois e-books; sitemap inclui /codigo. A página principal (index.html, #guia) agora mostra os dois e-books lado a lado (eventos hub_guia_click e hub_codigo_click, utm_campaign=hub).
+- Pendente: testar uma compra real (clique no desktop e no celular); ID do Pixel Meta (CONFIG.metaPixelId);
+  garantia de 7 dias ativa no produto; depoimentos só quando reais e autorizados.
+- Não está ligado ao funil do /teste nem à sequência de e-mails (hotmart-sync só acompanha o produto 8560642).
+- O PDF pago fica em ebook/ (fora do git e da Vercel). Antes de publicar, conferir que codigo.html e img/codigo/
+  estão no commit e que ebook/ continua de fora.
+
 ATUALIZAÇÃO 20/09/2026 — página de vendas /guia + funil do e-book
 -----------------------------------------------------------------
 O e-book "O Brincar com Propósito" agora tem página de vendas própria

@@ -28,6 +28,13 @@
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- E-book O Código do Desenvolvimento Infantil (página de vendas) -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/codigo</loc>
+    <lastmod>2026-09-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://institutofacaamigos.com.br/termos</loc>
     <lastmod>2026-09-20</lastmod>

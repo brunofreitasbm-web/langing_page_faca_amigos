@@ -198,6 +198,12 @@
     <a class="btn btn-outline" id="ctaTeste" href="#" style="text-decoration:none">Fazer o mapeamento agora</a>
   </div>
 
+  <div class="secondary-card">
+    <h3>Guia para pais: O Brincar com Propósito</h3>
+    <p>Entenda o que seu filho está tentando dizer e saiba o que fazer no dia a dia. Um guia prático da psicóloga Isabella Gonçalves Freitas (CRP 10/4727), com o primeiro capítulo grátis.</p>
+    <a class="btn btn-outline" id="ctaGuia" href="#" style="text-decoration:none">Conhecer o guia</a>
+  </div>
+
   <div class="review-card" id="reviewCard">
     <div class="stars">★★★★★</div>
     <h3>Você já é da família FaçaAmigos</h3>
@@ -270,9 +276,10 @@
   document.getElementById("ctaPlayground").href = waLink("Vim da clínica e quero levar meu filho para brincar no Playground");
   document.getElementById("ctaCircuito").href = waLink("Vim da clínica e quero saber mais sobre o Circuito");
   document.getElementById("ctaTeste").href = "https://institutofacaamigos.com.br/teste?" + UTM_BASE + "&utm_content=" + variant.key;
+  document.getElementById("ctaGuia").href = "https://institutofacaamigos.com.br/guia?" + UTM_BASE + "&utm_content=" + variant.key;
   document.getElementById("linkWifiPage").href = "https://institutofacaamigos.com.br/wifi?" + UTM_BASE + "&utm_content=" + variant.key;
 
-  ["ctaPlayground", "ctaCircuito", "ctaTeste"].forEach(function (id) {
+  ["ctaPlayground", "ctaCircuito", "ctaTeste", "ctaGuia"].forEach(function (id) {
     document.getElementById(id).addEventListener("click", function () {
       pushDL("wifi_cta_click", { cta: id, variant: variant.key });
     });
