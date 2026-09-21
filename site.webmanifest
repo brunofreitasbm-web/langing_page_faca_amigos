@@ -1,0 +1,15 @@
+{
+  "name": "FaçaAmigos",
+  "short_name": "FaçaAmigos",
+  "description": "Instituto Faça Amigos: playground inclusivo, circuito de carrinhos, mapeamento comportamental e e-books para famílias, em Belém/PA.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "theme_color": "#F0196B",
+  "background_color": "#FFF9F1",
+  "icons": [
+    { "src": "/img/logo-simbolo.png", "sizes": "460x416", "type": "image/png", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}

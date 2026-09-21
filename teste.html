@@ -10,7 +10,10 @@
     content="Faça gratuitamente o Mapeamento Comportamental do Instituto FaçaAmigos e receba, em poucos minutos, um retrato inicial de como seu filho está se desenvolvendo. Não substitui avaliação profissional. Para crianças de 4 a 17 anos.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/teste">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
-  <link rel="apple-touch-icon" href="img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F0196B">
 
   <!-- Open Graph / redes sociais (Instagram, WhatsApp, Facebook) -->
   <meta property="og:type" content="website">
@@ -32,7 +35,7 @@
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
@@ -857,9 +860,35 @@
       margin-top: 20px;
     }
   </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Mapeamento Comportamental gratuito para crianças de 4 a 17 anos",
+  "url": "https://institutofacaamigos.com.br/teste",
+  "inLanguage": "pt-BR",
+  "description": "Um retrato inicial e acolhedor de como seu filho se comunica, brinca e se relaciona. Gratuito, cerca de 5 minutos. Não substitui avaliação profissional.",
+  "isAccessibleForFree": true,
+  "author": {
+    "@type": "Person",
+    "name": "Isabella Gonçalves Freitas",
+    "jobTitle": "Psicóloga infantil",
+    "identifier": "CRP 10/4727"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Instituto Faça Amigos Ltda",
+    "url": "https://institutofacaamigos.com.br/"
+  }
+}
+  </script>
 </head>
 
 <body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
@@ -910,6 +939,7 @@
         </div>
         <div id="landing-error" class="form-error" aria-live="polite"></div>
         <button type="button" id="btn-start" class="btn btn-pink btn-block" disabled>Carregando mapeamento...</button>
+        <p class="note-small" id="intro-credit" style="margin-top:10px;">Criado por <b>Isabella Gonçalves Freitas</b>, psicóloga infantil (CRP 10/4727), fundadora do FaçaAmigos.</p>
         <p class="note-small" id="intro-disclaimer">Desenvolvido pela idealizadora do FaçaAmigos · não substitui avaliação profissional</p>
       </section>
 
@@ -1057,7 +1087,8 @@
 
         <div id="result-human" class="human-block" hidden>
           <p>Podemos conversar antes de qualquer coisa? Se você sentir que algum desses pontos está pesando bastante
-            na rotina da família, terei prazer em conversar com você antes de qualquer outra coisa.</p>
+            na rotina da família, queremos ouvir você. A nossa Clínica ainda não abriu, mas você pode entrar na lista
+            de espera e avisamos assim que abrirmos as agendas.</p>
         </div>
 
         <aside id="result-ebook" class="ebook-banner" aria-labelledby="ebook-headline" hidden>
@@ -1066,7 +1097,7 @@
           <p class="ebook-sub" id="ebook-sub"></p>
           <div class="ebook-body">
             <div class="ebook-cover">
-              <img src="img/guia/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
+              <img id="ebook-cover-img" src="img/guia/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
                 alt="Capa do e-book O Brincar com Propósito">
             </div>
             <ul class="ebook-bullets" id="ebook-bullets"></ul>
@@ -1088,7 +1119,7 @@
               <path
                 d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" />
             </svg>
-            Conversar no WhatsApp
+            <span id="result-wa-label">Conversar no WhatsApp</span>
           </a>
           <a id="result-clinica" class="btn btn-ghost btn-block"
             href="https://institutofacaamigos.com.br/#clinica">Conhecer a Clínica</a>
@@ -1106,7 +1137,7 @@
     </div>
   </main>
 
-  <footer>
+  <footer data-fa-footer="teste">
     <img src="img/logo-simbolo.png" width="460" height="416" alt=""
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
     <span class="logo" style="color: #fff;">Faça<span class="amigos">Amigos</span></span>
@@ -1119,7 +1150,7 @@
         href="https://wa.me/5591991782027?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida."
         target="_blank" rel="noopener">Fale conosco</a> · <a href="https://institutofacaamigos.com.br/">Voltar ao
         início</a> · <a href="/politica-privacidade">Política de privacidade</a></p>
-    <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 · Belém/PA</p>
+    <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>
   </footer>
 
   <a class="wa-float"
@@ -1724,13 +1755,18 @@
         renderEbook(result.ebook, hasTier3, result.result_band);
 
         var childLabel = state.childName || 'meu filho';
-        var waResultMsg = 'Acabei de fazer o Mapeamento Comportamental do(a) ' + childLabel + '. Gostaria de conversar.';
+        // Clínica ainda não abriu: com área em atenção especial o convite é para a lista de espera.
+        var waResultMsg = hasTier3
+          ? 'Acabei de fazer o Mapeamento Comportamental do(a) ' + childLabel + ' e gostaria de entrar na lista de espera da Clínica.'
+          : 'Acabei de fazer o Mapeamento Comportamental do(a) ' + childLabel + '. Gostaria de conversar.';
+        $('result-wa-label').textContent = hasTier3 ? 'Entrar na lista de espera da Clínica' : 'Conversar no WhatsApp';
         $('result-wa').href = 'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(waResultMsg);
       }
 
       // ---- Oferta do e-book (Hotmart) ----
       // Todo o conteúdo (copy, preço, link) vem do servidor em result.ebook;
-      // sem ele (EBOOK_URL não configurada) o banner fica oculto. Bullets e copy vêm do servidor.
+      // sem ele (EBOOK_URL não configurada) o banner fica oculto. Sem nenhuma área em atenção especial e com
+      // EBOOK2_URL, a oferta é O Código do Desenvolvimento Infantil (ebook.offer = 'codigo', sem preço nem amostra). Bullets e copy vêm do servidor.
       var ebookViewSent = false;
       var ebookObserver = null;
 
@@ -1769,9 +1805,16 @@
         // O botão leva à página de vendas (/guia) com src/sck/utm já montados no servidor.
         // Nome e e-mail NÃO vão na URL: ela passa por analytics (GA4/Clarity) e não pode carregar dados pessoais.
         $('ebook-cta').href = ebook.url;
+        $('ebook-cta').textContent = ebook.cta_label || 'Quero o guia';
+        var cover = $('ebook-cover-img');
+        if (cover) {
+          cover.src = ebook.cover_url || 'img/guia/capa.webp';
+          cover.alt = ebook.cover_alt || 'Capa do e-book O Brincar com Propósito';
+        }
         var sample = $('ebook-sample');
         if (sample) { sample.href = ebook.sample_url || '#'; sample.hidden = !ebook.sample_url; }
         box.setAttribute('data-band', band || '');
+        box.setAttribute('data-offer', ebook.offer || 'guia');
 
         // Com área em atenção especial, o contato humano vem primeiro e o
         // e-book fica depois dos botões; sem ela, entra logo após o mapa.
@@ -1786,7 +1829,7 @@
           ebookObserver = new IntersectionObserver(function (entries) {
             if (entries.some(function (en) { return en.isIntersecting; })) {
               ebookViewSent = true;
-              pushEvent({ event: 'teste_ebook_view', band: band || '' });
+              pushEvent({ event: 'teste_ebook_view', band: band || '', offer: ebook.offer || 'guia' });
               ebookObserver.disconnect();
               ebookObserver = null;
             }
@@ -1797,12 +1840,12 @@
 
       $('ebook-cta').addEventListener('click', function () {
         var box = $('result-ebook');
-        pushEvent({ event: 'teste_ebook_click', band: (box && box.getAttribute('data-band')) || '' });
+        pushEvent({ event: 'teste_ebook_click', band: (box && box.getAttribute('data-band')) || '', offer: (box && box.getAttribute('data-offer')) || 'guia' });
       });
 
       $('ebook-sample').addEventListener('click', function () {
         var box = $('result-ebook');
-        pushEvent({ event: 'teste_ebook_amostra_click', band: (box && box.getAttribute('data-band')) || '' });
+        pushEvent({ event: 'teste_ebook_amostra_click', band: (box && box.getAttribute('data-band')) || '', offer: (box && box.getAttribute('data-offer')) || 'guia' });
       });
 
       $('result-wa').addEventListener('click', function () {
@@ -1890,6 +1933,7 @@
       });
     })();
   </script>
+  <script src="/assets/fa-footer.js" defer></script>
 </body>
 
 </html>

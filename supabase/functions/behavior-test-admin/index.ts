@@ -1,6 +1,7 @@
 // Painel de administração do Teste de Comportamento (admin.html): login da
-// idealizadora, listagem/detalhe dos leads, geração de insight via Gemini
-// e envio desse insight ao responsável por e-mail (Brevo). Tudo numa única
+// idealizadora, listagem/detalhe dos leads, exportação dos leads em CSV, geração de insight via Gemini,
+// envio desse insight ao responsável por e-mail (Brevo) e a aba "Cupons Wi-Fi" (consulta e resgate dos cupons
+// do portal Wi-Fi da clínica, com a mesma regra de wifi-coupon-admin). Tudo numa única
 // função, roteada por `action` no corpo JSON — mesmo motivo de CORS/JSON
 // inline das demais funções deste projeto (import relativo de ../_shared
 // quebra no deploy via MCP).
@@ -96,6 +97,32 @@ interface AreaResult {
 }
 
 const LEAD_STATUSES = ["started", "abandoned", "completed", "contacted"];
+
+// Início do dia de hoje em Belém (UTC-3, sem horário de verão), em ISO/UTC. Igual a wifi-coupon-admin.
+function startOfTodayBelemIso(now = new Date()): string {
+  const belem = new Date(now.getTime() - 3 * 3600_000);
+  belem.setUTCHours(0, 0, 0, 0);
+  return new Date(belem.getTime() + 3 * 3600_000).toISOString();
+}
+
+// "AAAA-MM-DD HH:MM" em horário de Belém (para planilha).
+function belemStamp(iso: unknown): string {
+  if (typeof iso !== "string" || !iso) return "";
+  const t = new Date(iso).getTime();
+  if (!Number.isFinite(t)) return "";
+  return new Date(t - 3 * 3600_000).toISOString().slice(0, 16).replace("T", " ");
+}
+
+// Célula de CSV: aspas duplas dobradas, campo entre aspas se tiver vírgula/aspas/quebra de linha, e proteção
+// contra injeção de fórmula (planilha executa células que começam com = + - @ ; tab e CR também) prefixando '.
+function csvCell(v: unknown): string {
+  let s = v === null || v === undefined ? "" : String(v);
+  if (/^[=+\-@\t\r]/.test(s)) s = `'${s}`;
+  return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+const CSV_MAX_ROWS = 5000;
+const CSV_PAGE = 1000; // o PostgREST costuma limitar a 1000 linhas por requisição: pagina com range()
 
 // 5 áreas do questionário definitivo (versão 2026-09-18) e seus defaults —
 // devem ficar em sincronia com AREAS/DEFAULT_TIER_LABELS/DEFAULT_FEEDBACK em
@@ -596,7 +623,7 @@ Deno.serve(async (req) => {
     let query = admin
       .from("fa_leads_teste_comportamento")
       .select(
-        "id, status, child_first_name, child_age_range, guardian_name, guardian_email, guardian_phone, preferred_unit, score, result_band, results, test_version, ai_insight_generated_at, ai_insight_sent_at, contacted_at, marketing_opt_in, created_at",
+        "id, status, child_first_name, child_age_range, guardian_name, guardian_email, guardian_phone, preferred_unit, score, result_band, results, test_version, ai_insight_generated_at, ai_insight_sent_at, contacted_at, marketing_opt_in, created_at, utm_source, utm_medium, utm_campaign, lista_espera_clinica",
       )
       .order("created_at", { ascending: false })
       .limit(limit);
@@ -612,6 +639,63 @@ Deno.serve(async (req) => {
     const { data, error } = await query;
     if (error) return jsonResponse(req, { error: "falha ao listar leads" }, 500);
     return jsonResponse(req, { leads: data });
+  }
+
+  // Exportação dos leads em CSV (mesmos filtros de list_leads, até 5000 linhas). Devolve o arquivo (text/csv com BOM
+  // UTF-8, para o Excel reconhecer os acentos); quem baixa é o admin.html.
+  if (action === "export_leads_csv") {
+    const status = str(body.status);
+    const q = str(body.q);
+    const cols =
+      "created_at, status, child_first_name, child_age_range, guardian_name, guardian_email, guardian_phone, result_band, score, marketing_opt_in, contacted_at, preferred_unit, utm_source, utm_medium, utm_campaign, utm_content, utm_term, referrer, lista_espera_clinica";
+    const rows: Record<string, unknown>[] = [];
+    for (let from = 0; from < CSV_MAX_ROWS; from += CSV_PAGE) {
+      let query = admin
+        .from("fa_leads_teste_comportamento")
+        .select(cols)
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .range(from, Math.min(from + CSV_PAGE, CSV_MAX_ROWS) - 1);
+      if (status && LEAD_STATUSES.includes(status)) query = query.eq("status", status);
+      if (q) {
+        const pattern = quoteFilterValue(`%${q.replace(/[%_]/g, "")}%`);
+        query = query.or(
+          `guardian_name.ilike.${pattern},guardian_email.ilike.${pattern},child_first_name.ilike.${pattern}`,
+        );
+      }
+      const { data, error } = await query;
+      if (error) {
+        console.error("export_leads_csv:", error);
+        return jsonResponse(req, { error: "falha ao exportar leads" }, 500);
+      }
+      rows.push(...((data ?? []) as Record<string, unknown>[]));
+      if (!data || data.length < CSV_PAGE) break;
+    }
+
+    const header = [
+      "criado em", "status", "criança", "faixa etária", "responsável", "e-mail", "telefone", "resultado", "score",
+      "opt-in", "contatado em", "unidade", "utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term",
+      "referrer", "lista_espera_clinica",
+    ];
+    const lines = [header.map(csvCell).join(",")];
+    for (const r of rows) {
+      lines.push([
+        belemStamp(r.created_at), r.status, r.child_first_name, r.child_age_range, r.guardian_name, r.guardian_email,
+        r.guardian_phone, r.result_band, r.score, r.marketing_opt_in ? "sim" : "não", belemStamp(r.contacted_at),
+        r.preferred_unit, r.utm_source, r.utm_medium, r.utm_campaign, r.utm_content, r.utm_term, r.referrer,
+        r.lista_espera_clinica ? "sim" : "não",
+      ].map(csvCell).join(","));
+    }
+    const day = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
+    return new Response("\uFEFF" + lines.join("\r\n") + "\r\n", {
+      status: 200,
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="leads-${day}.csv"`,
+        "Cache-Control": "no-store",
+        ...corsHeaders(req),
+      },
+    });
   }
 
   if (action === "get_lead") {
@@ -713,6 +797,76 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "falha ao salvar configuração" }, 500);
     }
     return jsonResponse(req, { overrides: config });
+  }
+
+  // --- aba "Cupons Wi-Fi" (portal Wi-Fi da clínica) ---
+  if (action === "wifi_list_coupons") {
+    const q = str(body.q);
+    let query = admin
+      .from("fa_wifi_leads")
+      .select(
+        "id, guardian_name, guardian_phone, guardian_email, coupon_code, coupon_status, coupon_operation, coupon_expires_at, last_redeemed_at, redeemed_count, visit_count, created_at",
+      )
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (q) {
+      const like = quoteFilterValue(`%${q.replace(/[%_]/g, "")}%`);
+      const conds = [`coupon_code.ilike.${like}`, `guardian_email.ilike.${like}`, `guardian_name.ilike.${like}`];
+      const digits = q.replace(/\D/g, "");
+      if (digits.length >= 3) conds.push(`guardian_phone.ilike.${quoteFilterValue(`%${digits}%`)}`);
+      query = query.or(conds.join(","));
+    }
+    const { data, error } = await query;
+    if (error) return jsonResponse(req, { error: "falha ao listar cupons" }, 500);
+
+    const now = Date.now();
+    const todayStart = new Date(startOfTodayBelemIso()).getTime();
+    const coupons = (data ?? []).map((c) => ({
+      ...c,
+      expired: new Date(c.coupon_expires_at).getTime() < now,
+      redeemed_today: !!c.last_redeemed_at && new Date(c.last_redeemed_at).getTime() >= todayStart,
+    }));
+    return jsonResponse(req, { coupons });
+  }
+
+  // Mesma regra de negócio e mesmo resgate atômico de wifi-coupon-admin: um benefício por dia (dia de Belém),
+  // cupom expirado bloqueia, e o filtro do dia vai na própria UPDATE para dois toques simultâneos não passarem.
+  if (action === "wifi_redeem") {
+    const code = str(body.code).toUpperCase();
+    const operation = str(body.operation);
+    if (!code) return jsonResponse(req, { error: "informe o código do cupom" }, 400);
+    if (!["playground", "circuito"].includes(operation)) {
+      return jsonResponse(req, { error: "escolha playground ou circuito" }, 400);
+    }
+
+    const { data: lead, error: fetchError } = await admin
+      .from("fa_wifi_leads")
+      .select("id, coupon_expires_at, last_redeemed_at, redeemed_count")
+      .eq("coupon_code", code)
+      .maybeSingle();
+    if (fetchError) return jsonResponse(req, { error: "falha na consulta" }, 500);
+    if (!lead) return jsonResponse(req, { error: "cupom não encontrado" }, 404);
+    if (new Date(lead.coupon_expires_at) < new Date()) {
+      return jsonResponse(req, { error: "cupom expirado" }, 409);
+    }
+
+    const todayStart = startOfTodayBelemIso();
+    const { data: updated, error: updateError } = await admin
+      .from("fa_wifi_leads")
+      .update({
+        coupon_status: "redeemed",
+        coupon_operation: operation,
+        last_redeemed_at: new Date().toISOString(),
+        redeemed_count: (lead.redeemed_count ?? 0) + 1,
+      })
+      .eq("id", lead.id)
+      .or(`last_redeemed_at.is.null,last_redeemed_at.lt.${todayStart}`)
+      .select("id");
+    if (updateError) return jsonResponse(req, { error: "falha ao registrar resgate" }, 500);
+    if (!updated?.length) {
+      return jsonResponse(req, { error: "este cupom já foi resgatado hoje — um benefício por dia" }, 409);
+    }
+    return jsonResponse(req, { ok: true, coupon_code: code, operation });
   }
 
   if (action === "mark_contacted") {

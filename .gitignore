@@ -11,3 +11,11 @@ Teste de Comportamento/
 
 # E-book "O Brincar com Propósito": PDFs pagos de origem (nunca publicar; a Vercel serve tudo da raiz)
 ebook/
+
+# Dependências e ambiente
+node_modules/
+.env
+.env.*
+.DS_Store
+Thumbs.db
+*.log

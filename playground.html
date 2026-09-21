@@ -10,7 +10,10 @@
     content="O playground inclusivo de Belém no Parque Shopping e em breve no Shopping Bosque Grão-Pará. Espaço seguro, equipe especializada e acolhimento para todas as crianças.">
   <link rel="canonical" href="https://playground.institutofacaamigos.com.br/">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
-  <link rel="apple-touch-icon" href="img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F0196B">
 
   <!-- Open Graph / redes sociais (Instagram, WhatsApp, Facebook) -->
   <meta property="og:type" content="business.business">
@@ -32,7 +35,7 @@
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <!-- Dados estruturados (Schema.org) -->
   <script type="application/ld+json">
@@ -1553,6 +1556,10 @@
 
 <body>
   <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
@@ -1876,6 +1883,27 @@
     </div>
   </section>
 
+  <!-- PARA LER EM CASA — e-books (depois da decisão de compra, sem disputar com o CTA principal) -->
+  <section class="sec ebooks-strip" aria-labelledby="ebooks-strip-h" style="padding: 30px 0 10px;">
+    <style>
+      .ebooks-strip .es-card { max-width: 860px; margin: 0 auto; background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 6px 24px rgba(0,0,0,.08); }
+      .ebooks-strip h2 { margin: 0 0 6px; font-size: clamp(1.3rem, 3vw, 1.7rem); }
+      .ebooks-strip p { margin: 0 0 14px; font-weight: 600; }
+      .ebooks-strip .es-links { display: flex; flex-wrap: wrap; gap: 10px 22px; }
+      .ebooks-strip .es-links a { font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
+    </style>
+    <div class="wrap">
+      <div class="es-card">
+        <h2 id="ebooks-strip-h">Para ler em casa</h2>
+        <p>Dois e-books da psicóloga Isabella Gonçalves Freitas (CRP 10/4727), criadora do FaçaAmigos, para entender o comportamento do seu filho e saber o que fazer no dia a dia.</p>
+        <div class="es-links">
+          <a href="/guia?utm_source=site&amp;utm_medium=faixa&amp;utm_campaign=playground">O Brincar com Propósito</a>
+          <a href="/codigo?utm_source=site&amp;utm_medium=faixa&amp;utm_campaign=playground">O Código do Desenvolvimento Infantil</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- CIRCUITO — seção própria, sem roubar o hero -->
   <section class="sec circuito" id="circuito">
     <div class="wrap circ-grid fx">
@@ -2025,7 +2053,7 @@
     </div>
   </div>
 
-  <footer>
+  <footer data-fa-footer="playground">
     <img src="img/logo-simbolo.png" width="460" height="416" alt=""
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
     <span class="logo" style="color: #fff;">Faça<span class="amigos">Amigos</span></span>
@@ -2038,7 +2066,7 @@
         href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida."
         target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;">Venha
         fazer parte do nosso time</a> · <a href="politica-privacidade.html">Política de privacidade</a></p>
-    <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 · Belém/PA</p>
+    <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>
   </footer>
 
   <!-- Modal: Venha Fazer Parte do Nosso Time -->
@@ -2211,6 +2239,7 @@
           .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
           .then(function (r) {
             if (!r.ok) throw new Error(r.data.error || 'Falha ao enviar candidatura');
+            if (window.faTrack) window.faTrack('job_application_submit', { pagina: location.pathname });
             jobForm.innerHTML = '<div style="text-align:center; padding: 10px 0;">' +
               '<h4 style="color:var(--dark); margin-bottom:12px; font-family:\'Fredoka One\',sans-serif; font-size:1.3rem;">Candidatura enviada!</h4>' +
               '<p style="color:var(--ink-soft); font-weight:600; font-size:0.95rem;">Obrigado pelo interesse em fazer parte do FaçaAmigos. Nosso time de RH vai analisar seu currículo e entrar em contato.</p></div>';
@@ -2230,6 +2259,9 @@
       });
     })();
   </script>
+  <script src="/assets/fa-modal.js" defer></script>
+  <script src="/assets/fa-footer.js" defer></script>
+  <script src="/assets/fa-cta.js" defer data-label="Ver preços" data-href="#precos" data-event="ver_precos"></script>
 </body>
 
 </html>

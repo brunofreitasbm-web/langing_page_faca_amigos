@@ -10,7 +10,10 @@
     content="Terapia especializada, playground inclusivo e circuito de carrinhos elétricos, tudo sob o mesmo cuidado. Conheça o ecossistema FaçaAmigos no Parque Shopping Belém.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
-  <link rel="apple-touch-icon" href="img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F0196B">
 
   <!-- Open Graph / redes sociais -->
   <meta property="og:type" content="website">
@@ -19,19 +22,19 @@
   <meta property="og:description"
     content="Terapia especializada, playground inclusivo e circuito de carrinhos elétricos, tudo sob o mesmo cuidado. Conheça o ecossistema FaçaAmigos.">
   <meta property="og:url" content="https://institutofacaamigos.com.br/">
-  <meta property="og:image" content="https://playground.institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg">
+  <meta property="og:image" content="https://institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg">
   <meta property="og:locale" content="pt_BR">
 
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="FaçaAmigos — Clínica, Playground e Circuito Inclusivos">
   <meta name="twitter:description"
     content="Terapia especializada, playground inclusivo e circuito de carrinhos elétricos, tudo sob o mesmo cuidado.">
-  <meta name="twitter:image" content="https://playground.institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg">
+  <meta name="twitter:image" content="https://institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg">
 
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <script type="application/ld+json">
 {
@@ -56,7 +59,7 @@
   "subOrganization": [
     {
       "@type": "MedicalBusiness",
-      "name": "FaçaAmigos — Centro de Terapia Comportamental",
+      "name": "FaçaAmigos — Centro de Terapia Comportamental (inauguração em breve)",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Rua Boaventura da Silva, 1573 — Umarizal",
@@ -75,6 +78,7 @@
 
   <style>
     :root {
+      --r-card: 24px;
       --pink: #F0196B;
       --pink-dark: #C81158;
       --teal: #2ECFB5;
@@ -174,7 +178,16 @@
     .nav-actions { display: flex; gap: 10px; align-items: center; }
 
     @media (max-width: 760px) {
-      .nav-units { display: none; }
+      /* Sem hambúrguer: os destinos viram uma faixa rolável abaixo da logo (antes sumiam no celular). */
+      .nav-units { order: 3; flex: 1 0 100%; overflow-x: auto; gap: 4px; padding-bottom: 2px; scrollbar-width: none; }
+      .nav-units::-webkit-scrollbar { display: none; }
+      .nav-units a { white-space: nowrap; font-size: 0.85rem; padding: 6px 12px; }
+      .nav-units a[href="#carreiras"] { display: none; }
+      .nav-actions .btn-ghost { display: none; } /* "Trabalhe Conosco" já está na faixa do topo */
+      .navbar { padding: 8px 0; }
+      .navbar .logo { font-size: 1.35rem; }
+      .navbar .logo .simbolo { height: 32px; }
+      .hl { white-space: normal; } /* o destaque do título passava da tela em 390px */
     }
 
     /* Hero — âncora de marca, sem escolher um lado */
@@ -247,6 +260,15 @@
       padding: 9px 18px; font-size: 0.92rem; font-weight: 800; box-shadow: var(--shadow-sm);
     }
     .chip svg { width: 17px; height: 17px; color: var(--teal-dark); flex-shrink: 0; }
+
+
+    /* Prova social (avaliações) */
+    .rv-grid { display: grid; gap: 16px; margin-top: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+    .rv { margin: 0; background: var(--white); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-sm); }
+    .rv-stars { color: #F5B301; letter-spacing: 2px; font-size: 1.05rem; margin-bottom: 8px; }
+    .rv blockquote { margin: 0 0 10px; font-weight: 700; color: var(--ink); }
+    .rv figcaption { font-size: 0.85rem; font-weight: 800; color: var(--ink-soft); }
+    .rv-note { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px; }
 
     /* Bloco Clínica — registro sóbrio */
     .clinica-block { background: var(--white); border-radius: 48px; margin: 40px 0; padding: 60px 0; }
@@ -571,6 +593,10 @@
 
 <body>
   <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
@@ -582,12 +608,13 @@
 
   <nav class="navbar">
     <div class="wrap">
-      <a class="logo" href="#"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
+      <a class="logo" href="/"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
           alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span>Faça<span class="amigos">Amigos</span></span></a>
       <div class="nav-units">
         <a href="#clinica">Clínica</a>
         <a href="#playground">Playground</a>
         <a href="#circuito">Circuito</a>
+        <a href="/teste?utm_source=site&amp;utm_medium=nav&amp;utm_campaign=hub">Mapeamento grátis</a>
         <a href="#guia" class="nav-guia">E-books para pais</a>
         <a href="#carreiras">Trabalhe Conosco</a>
       </div>
@@ -599,7 +626,7 @@
             <path
               d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" />
           </svg>
-          WhatsApp Clínica
+          WhatsApp
         </a>
       </div>
     </div>
@@ -617,7 +644,7 @@
   <!-- SELETOR — resolve o conflito de jornadas: saúde x lazer -->
   <section class="selector" aria-label="Escolha o que você procura hoje">
     <a href="#clinica" class="card-unit card-clinica fx on">
-      <img src="img/clinica-fachada.jpg" width="900" height="1080" alt="" loading="eager" decoding="async">
+      <img src="img/clinica-fachada.webp" width="900" height="1080" alt="" loading="eager" decoding="async">
       <span class="unit-tag" style="background: var(--teal-dark); color: #fff;">Clínica · Em breve · Convênios IASEP &amp; PROASA</span>
       <h3>FaçaAmigos — Centro de Terapia Comportamental</h3>
       <p class="micro">Rua Boaventura da Silva, 1573 · Umarizal, Belém - PA</p>
@@ -629,7 +656,7 @@
     </a>
 
     <a href="playground.html" class="card-unit card-playground fx on">
-      <img src="img/hero-piscina-bolinhas.jpg" alt="" loading="lazy" decoding="async">
+      <img src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="" loading="lazy" decoding="async">
       <span class="unit-tag">Playground (2 Unidades)</span>
       <h3>Um playground onde toda criança é bem-vinda</h3>
       <p class="micro">Parque Shopping Belém &amp; 🚀 Em Breve no Shopping Bosque Grão-Pará</p>
@@ -641,7 +668,7 @@
     </a>
 
     <a href="circuito.html" class="card-unit card-circuito fx on">
-      <img src="img/circuito-carrinhos.jpg" alt="" loading="lazy" decoding="async">
+      <img src="img/circuito-carrinhos.webp" width="1000" height="750" alt="" loading="lazy" decoding="async">
       <span class="unit-tag">Circuito</span>
       <h3>Na pista, o motorista é ele (ou ela)</h3>
       <p class="micro">Minicarros elétricos · Sem hora marcada</p>
@@ -654,7 +681,7 @@
   </section>
 
   <p class="center" style="max-width: 34rem; margin: 18px auto 0; color: var(--ink-soft); font-weight: 700; font-size: 0.95rem; padding: 0 22px;">
-    Não sabe por onde começar? <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." style="color: var(--teal-dark); text-decoration: underline;">Fala com a gente no WhatsApp da Clínica</a> que a gente te ajuda.
+    Não sabe por onde começar? <a href="/teste?utm_source=site&amp;utm_medium=hero&amp;utm_campaign=hub" style="color: var(--pink); font-weight: 800; text-decoration: underline;">Faça o mapeamento gratuito (5 min)</a> ou <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." style="color: var(--teal-dark); text-decoration: underline;">fale com a gente no WhatsApp</a>.
   </p>
 
   <!-- PROVA DE ECOSSISTEMA — autoridade coletiva, sem citar tratamento específico -->
@@ -666,7 +693,7 @@
     <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
         <path
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
-      </svg> Mais de 1.100 famílias atendidas</span>
+      </svg> Mais de 1.100 famílias já brincaram com a gente</span>
     <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
         <path
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
@@ -676,6 +703,53 @@
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
       </svg> Parque Shopping Belém &amp; Shopping Bosque Grão-Pará</span>
   </div>
+
+  <!-- PROVA SOCIAL — avaliações reais do Google (as mesmas do /playground) -->
+  <section class="sec reviews-hub" aria-labelledby="reviews-hub-h" style="padding: 24px 0 10px;">
+    <div class="wrap fx">
+      <h2 id="reviews-hub-h" class="sec-title" style="font-size: clamp(1.4rem, 3vw, 1.9rem); text-align: center;">O que as famílias dizem</h2>
+      <div class="rv-grid">
+        <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+          <blockquote>“Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!”</blockquote>
+          <figcaption>Vanessa S. · avaliação no Google</figcaption></figure>
+        <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+          <blockquote>“Super amo esse lugar, deixo meus filhos com tranquilidade.”</blockquote>
+          <figcaption>Eledes F. · Local Guide no Google</figcaption></figure>
+        <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+          <blockquote>“Amei muito, meu filho se sentiu muito seguro e brincou bastante!”</blockquote>
+          <figcaption>Ana M. · avaliação no Google</figcaption></figure>
+      </div>
+      <p class="rv-note">Avaliações reais sobre o FaçaAmigos Playground, no Parque Shopping Belém.</p>
+    </div>
+  </section>
+
+  <!-- TESTE DE COMPORTAMENTO — Instituto FaçaAmigos -->
+  <section class="sec" id="teste" style="padding-bottom: 30px;">
+    <div class="wrap fx">
+      <div class="teste-banner">
+        <div>
+          <span class="eyebrow" style="background: var(--cream);">Instituto FaçaAmigos</span>
+          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">Entenda melhor o comportamento do seu
+            filho</h2>
+          <p
+            style="color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; margin-bottom: 24px; max-width: 34rem;">
+            Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu pequeno. Em poucos minutos, você tem um
+            retrato inicial de como ele está se desenvolvendo — e pode decidir com mais segurança os próximos passos.
+          </p>
+          <a href="/teste?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink">Fazer o
+            mapeamento agora</a>
+          <p style="font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px;">Desenvolvido pela
+            idealizadora do FaçaAmigos · não substitui avaliação profissional · leva cerca de 5 minutos</p>
+        </div>
+        <div class="teste-visual">
+          <div class="teste-photo"><img src="img/idealizadora.jpg" width="700" height="936"
+              alt="Idealizadora do FaçaAmigos, criadora do Mapeamento Comportamental" loading="lazy" decoding="async">
+          </div>
+          <span>criado pela idealizadora<br>do FaçaAmigos</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- CLÍNICA — registro sóbrio -->
   <section class="wrap" id="clinica">
@@ -730,7 +804,7 @@
       </div>
       <div class="lazer-grid">
         <div class="lazer-card fx" id="playground">
-          <div class="lazer-photo"><img src="img/hero-piscina-bolinhas.jpg" width="784" height="490"
+          <div class="lazer-photo"><img src="img/hero-piscina-bolinhas.webp" width="784" height="490"
               alt="Piscina de bolinhas gigante do playground FaçaAmigos" loading="lazy" decoding="async"></div>
           <div class="lazer-body">
             <h3>Playground Inclusivo</h3>
@@ -744,7 +818,7 @@
         </div>
 
         <div class="lazer-card fx" id="circuito">
-          <div class="lazer-photo"><img src="img/circuito-carrinhos.jpg" width="784" height="490"
+          <div class="lazer-photo"><img src="img/circuito-carrinhos.webp" width="784" height="490"
               alt="Criança dirigindo minicarro elétrico no Circuito FaçaAmigos" loading="lazy" decoding="async"></div>
           <div class="lazer-body">
             <h3>Circuito de Carrinhos</h3>
@@ -753,34 +827,6 @@
               <a href="circuito.html" class="btn btn-pink btn-sm">Andar de carrinho</a>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- TESTE DE COMPORTAMENTO — Instituto FaçaAmigos -->
-  <section class="sec" id="teste" style="padding-bottom: 30px;">
-    <div class="wrap fx">
-      <div class="teste-banner">
-        <div>
-          <span class="eyebrow" style="background: var(--cream);">Instituto FaçaAmigos</span>
-          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">Entenda melhor o comportamento do seu
-            filho</h2>
-          <p
-            style="color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; margin-bottom: 24px; max-width: 34rem;">
-            Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu pequeno. Em poucos minutos, você tem um
-            retrato inicial de como ele está se desenvolvendo — e pode decidir com mais segurança os próximos passos.
-          </p>
-          <a href="/teste?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink">Fazer o
-            mapeamento agora</a>
-          <p style="font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px;">Desenvolvido pela
-            idealizadora do FaçaAmigos · não substitui avaliação profissional · leva cerca de 5 minutos</p>
-        </div>
-        <div class="teste-visual">
-          <div class="teste-photo"><img src="img/idealizadora.jpg" width="700" height="936"
-              alt="Idealizadora do FaçaAmigos, criadora do Mapeamento Comportamental" loading="lazy" decoding="async">
-          </div>
-          <span>criado pela idealizadora<br>do FaçaAmigos</span>
         </div>
       </div>
     </div>
@@ -877,7 +923,7 @@
     </div>
   </section>
 
-  <footer>
+  <footer data-fa-footer="hub">
     <img src="img/logo-simbolo.png" width="460" height="416" alt=""
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
     <span class="logo">Faça<span class="amigos">Amigos</span></span>
@@ -890,7 +936,7 @@
         href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental."
         target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;" style="color: var(--yellow); font-weight: 800; text-decoration: underline;">Venha fazer parte do nosso time</a> · <a href="#guia">E-books para pais</a> · <a href="politica-privacidade.html">Política de
         privacidade</a></p>
-    <p class="legal">FaçaAmigos · CNPJ 66.318.630/0001-17 · Belém/PA</p>
+    <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>
   </footer>
 
   <a class="wa-float"
@@ -1064,6 +1110,7 @@
           .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
           .then(function (r) {
             if (!r.ok) throw new Error(r.data.error || 'Falha ao enviar candidatura');
+            if (window.faTrack) window.faTrack('job_application_submit', { pagina: location.pathname });
             jobForm.innerHTML = '<div style="text-align:center; padding: 10px 0;">' +
               '<h4 style="color:var(--dark, #1a3f35); margin-bottom:12px; font-family:\'Fredoka One\',sans-serif; font-size:1.3rem;">Candidatura enviada!</h4>' +
               '<p style="color:var(--ink-soft, #556b63); font-weight:600; font-size:0.95rem;">Obrigado pelo interesse em fazer parte do FaçaAmigos. Nosso time de RH vai analisar seu currículo e entrar em contato.</p></div>';
@@ -1083,6 +1130,9 @@
       });
     })();
   </script>
+  <script src="/assets/fa-modal.js" defer></script>
+  <script src="/assets/fa-footer.js" defer></script>
+  <script src="/assets/fa-cta.js" defer data-label="Fazer o mapeamento grátis" data-href="/teste?utm_source=site&amp;utm_medium=barra&amp;utm_campaign=hub" data-event="mapeamento"></script>
 </body>
 
 </html>

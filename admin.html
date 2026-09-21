@@ -587,6 +587,32 @@
       align-items: center;
       margin-top: 8px;
     }
+
+    /* ---------- Origem (UTM) e detalhes extras ---------- */
+    .origin-tag {
+      display: inline-block;
+      background: var(--gray-bg);
+      color: var(--dark);
+      border-radius: 9999px;
+      padding: 3px 11px;
+      font-weight: 800;
+      font-size: 0.76rem;
+      word-break: break-word;
+    }
+
+    .origin-direct { color: var(--ink-soft); }
+
+    .detail-grid .field.wide { grid-column: 1 / -1; }
+    .detail-grid .field .value { overflow-wrap: anywhere; }
+
+    .toolbar .btn-export { margin-left: auto; }
+
+    /* ---------- Cupons Wi-Fi ---------- */
+    .wifi-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .leads-table .code { font-weight: 800; letter-spacing: 0.02em; word-break: break-all; }
+
+    .tab-bar { max-width: 100%; overflow-x: auto; }
+    .tab-btn { white-space: nowrap; }
   </style>
 </head>
 
@@ -635,9 +661,11 @@
       <div class="tab-bar">
         <button type="button" class="tab-btn active" id="tabLeadsBtn">Leads</button>
         <button type="button" class="tab-btn" id="tabConfigBtn">Textos do resultado</button>
+        <button type="button" class="tab-btn" id="tabWifiBtn">Cupons Wi-Fi</button>
       </div>
 
       <div id="leadsView">
+        <div id="exportError" class="form-error" role="alert"></div>
         <div class="toolbar">
           <div class="form-group search-group">
             <label for="searchInput" class="form-label">Buscar</label>
@@ -655,6 +683,7 @@
             </select>
           </div>
           <span class="count" id="resultCount"></span>
+          <button type="button" class="btn btn-ghost btn-sm btn-export" id="exportCsvBtn">Exportar CSV</button>
         </div>
 
         <div class="leads-wrap">
@@ -667,6 +696,7 @@
                   <th>Criança</th>
                   <th>Responsável</th>
                   <th>Unidade</th>
+                  <th>Origem</th>
                   <th>Resultado</th>
                   <th>Status</th>
                   <th>Data</th>
@@ -678,6 +708,44 @@
           </div>
 
           <div class="leads-cards" id="leadsCards" hidden></div>
+        </div>
+      </div>
+
+      <div id="wifiView" hidden>
+        <div class="toolbar">
+          <div class="form-group search-group">
+            <label for="wifiSearchInput" class="form-label">Buscar cupom</label>
+            <input type="search" id="wifiSearchInput" class="form-control"
+              placeholder="Código, telefone, e-mail ou nome">
+          </div>
+          <span class="count" id="wifiCount"></span>
+        </div>
+
+        <div id="wifiError" class="form-error" role="alert"></div>
+        <div id="wifiNotice" class="form-notice" role="status"></div>
+
+        <div class="leads-wrap">
+          <div id="wifiState" class="state-msg">Carregando cupons…</div>
+
+          <div style="overflow-x:auto;">
+            <table class="leads-table" id="wifiTable" hidden>
+              <thead>
+                <tr>
+                  <th>Código</th>
+                  <th>Nome</th>
+                  <th>Telefone</th>
+                  <th>Validade</th>
+                  <th>Status</th>
+                  <th>Visitas</th>
+                  <th>Último resgate</th>
+                  <th>Resgatar</th>
+                </tr>
+              </thead>
+              <tbody id="wifiTbody"></tbody>
+            </table>
+          </div>
+
+          <div class="leads-cards" id="wifiCards" hidden></div>
         </div>
       </div>
 
@@ -985,6 +1053,14 @@
           .replace(/'/g, '&#39;');
       }
 
+      // Origem do lead (UTM): "fonte / mídia" + campanha; sem UTM = direto. Tudo escapado (dado vindo da URL).
+      function originHtml(lead) {
+        var main = [lead.utm_source, lead.utm_medium].filter(function (x) { return x; }).join(' / ');
+        if (!main && !lead.utm_campaign) return '<span class="origin-tag origin-direct">direto</span>';
+        return '<span class="origin-tag">' + escapeHtml(main || '—') + '</span>' +
+          (lead.utm_campaign ? '<div class="guardian-meta">' + escapeHtml(lead.utm_campaign) + '</div>' : '');
+      }
+
       function waLink(phone) {
         if (!phone) return '';
         var digits = String(phone).replace(/\D/g, '');
@@ -1047,7 +1123,9 @@
           var guardianPhone = lead.guardian_phone || '';
           var wa = waLink(guardianPhone);
           var unit = lead.preferred_unit || '—';
-          var resultBadge = badgeForResult(lead);
+          var resultBadge = badgeForResult(lead) +
+            (lead.lista_espera_clinica ? ' <span class="badge badge-yellow" title="Clínica ainda não abriu: registrar na lista de espera">Lista de espera</span>' : '');
+          var originBlock = originHtml(lead);
           var statusBadge = badgeForStatus(lead.status);
           var dateStr = formatDate(lead.created_at);
 
@@ -1062,6 +1140,7 @@
               (phoneHtml ? '<div class="guardian-meta">' + phoneHtml + '</div>' : '') +
             '</td>' +
             '<td>' + escapeHtml(unit) + '</td>' +
+            '<td>' + originBlock + '</td>' +
             '<td>' + resultBadge + '</td>' +
             '<td>' + statusBadge + '</td>' +
             '<td>' + escapeHtml(dateStr) + '</td>' +
@@ -1077,6 +1156,7 @@
               (phoneHtml ? '<div class="guardian-meta">' + phoneHtml + '</div>' : '') +
             '</div></div>' +
             '<div class="row"><div><div class="label">Unidade</div><div>' + escapeHtml(unit) + '</div></div></div>' +
+            '<div class="row"><div><div class="label">Origem</div>' + originBlock + '</div></div>' +
             '<div class="badges-row">' + resultBadge + '</div>' +
             '<div class="guardian-meta">' + escapeHtml(dateStr) + '</div>' +
             '<div class="actions"><button type="button" class="btn btn-ghost btn-sm" data-lead-id="' + escapeHtml(lead.id) + '" style="width:100%;">Ver detalhes</button></div>' +
@@ -1133,12 +1213,24 @@
           ['E-mail de resultado', lead.result_email_sent_at ? ('Enviado em ' + new Date(lead.result_email_sent_at).toLocaleString('pt-BR')) : (lead.result_email_error ? ('Falhou: ' + lead.result_email_error) : 'Não enviado')],
           ['Resultado', badgeForResult(lead).replace(/<[^>]+>/g, '')],
           ['Pontuação', scoreLabel],
+          ['Lista de espera da Clínica', lead.lista_espera_clinica ? 'Sim (registrar e avisar na abertura)' : 'Não'],
           ['Versão do teste', lead.test_version || '—'],
-          ['Criado em', formatDate(lead.created_at)]
+          ['Criado em', formatDate(lead.created_at)],
+          ['utm_source', lead.utm_source || '—'],
+          ['utm_medium', lead.utm_medium || '—'],
+          ['utm_campaign', lead.utm_campaign || '—'],
+          ['utm_content', lead.utm_content || '—'],
+          ['utm_term', lead.utm_term || '—']
         ];
+        // Identificadores de clique (anúncios), só quando existem.
+        if (lead.gclid) fields.push(['gclid (Google Ads)', lead.gclid, true]);
+        if (lead.fbclid) fields.push(['fbclid (Meta)', lead.fbclid, true]);
+        fields.push(['Referrer', lead.referrer || '—', true]);
+        fields.push(['Página de entrada', lead.landing_page || '—', true]);
 
+        // Todo valor é escapado: origem, referrer e página vêm da URL/navegador de terceiros.
         leadDetailGrid.innerHTML = fields.map(function (f) {
-          return '<div class="field"><div class="label">' + escapeHtml(f[0]) + '</div><div class="value">' + escapeHtml(f[1]) + '</div></div>';
+          return '<div class="field' + (f[2] ? ' wide' : '') + '"><div class="label">' + escapeHtml(f[0]) + '</div><div class="value">' + escapeHtml(f[1]) + '</div></div>';
         }).join('');
 
         var resultsHtml = isV2
@@ -1244,6 +1336,71 @@
         e.stopPropagation();
       });
 
+      // O HTML usa onclick="closeLeadModal()" (botão X e clique fora); a função vive dentro deste escopo.
+      window.closeLeadModal = closeLeadModal;
+
+      // ---------- Exportar CSV ----------
+      var exportCsvBtn = document.getElementById('exportCsvBtn');
+      var exportError = document.getElementById('exportError');
+
+      function todayStamp() {
+        var d = new Date();
+        function p(n) { return (n < 10 ? '0' : '') + n; }
+        return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate());
+      }
+
+      exportCsvBtn.addEventListener('click', function () {
+        exportError.classList.remove('active');
+        exportError.textContent = '';
+        exportCsvBtn.disabled = true;
+        var originalText = exportCsvBtn.textContent;
+        exportCsvBtn.innerHTML = '<span class="spinner" style="border-color:rgba(26,63,53,0.3);border-top-color:var(--dark);"></span> Exportando...';
+
+        var payload = { action: 'export_leads_csv' };
+        if (statusFilter.value) payload.status = statusFilter.value;
+        if (searchInput.value.trim()) payload.q = searchInput.value.trim();
+        var headers = { 'Content-Type': 'application/json' };
+        var token = getToken();
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+
+        fetch(API_URL, { method: 'POST', headers: headers, body: JSON.stringify(payload) })
+          .then(function (res) {
+            if (res.status === 401) {
+              sessionExpired();
+              var authErr = new Error('sessão expirada');
+              authErr.handled = true;
+              throw authErr;
+            }
+            if (!res.ok) {
+              return res.json().catch(function () { return {}; }).then(function (d) {
+                throw new Error((d && d.error) || 'Não foi possível exportar os leads.');
+              });
+            }
+            return res.blob();
+          })
+          .then(function (blob) {
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = 'leads-' + todayStamp() + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+          })
+          .catch(function (err) {
+            if (err.handled) return;
+            exportError.textContent = (err instanceof TypeError)
+              ? 'Não foi possível conectar. Verifique sua internet e tente novamente.'
+              : (err.message || 'Não foi possível exportar os leads.');
+            exportError.classList.add('active');
+          })
+          .then(function () {
+            exportCsvBtn.disabled = false;
+            exportCsvBtn.textContent = originalText;
+          });
+      });
+
       // ---------- Generate insight ----------
       generateInsightBtn.addEventListener('click', function () {
         if (!currentLead) return;
@@ -1321,23 +1478,181 @@
       // ---------- Tabs ----------
       var tabLeadsBtn = document.getElementById('tabLeadsBtn');
       var tabConfigBtn = document.getElementById('tabConfigBtn');
+      var tabWifiBtn = document.getElementById('tabWifiBtn');
       var leadsView = document.getElementById('leadsView');
       var configView = document.getElementById('configView');
+      var wifiView = document.getElementById('wifiView');
       var configLoaded = false;
 
-      tabLeadsBtn.addEventListener('click', function () {
-        tabLeadsBtn.classList.add('active');
-        tabConfigBtn.classList.remove('active');
-        leadsView.hidden = false;
-        configView.hidden = true;
-      });
+      function showTab(name) {
+        tabLeadsBtn.classList.toggle('active', name === 'leads');
+        tabConfigBtn.classList.toggle('active', name === 'config');
+        tabWifiBtn.classList.toggle('active', name === 'wifi');
+        leadsView.hidden = name !== 'leads';
+        configView.hidden = name !== 'config';
+        wifiView.hidden = name !== 'wifi';
+      }
+
+      tabLeadsBtn.addEventListener('click', function () { showTab('leads'); });
 
       tabConfigBtn.addEventListener('click', function () {
-        tabConfigBtn.classList.add('active');
-        tabLeadsBtn.classList.remove('active');
-        leadsView.hidden = true;
-        configView.hidden = false;
+        showTab('config');
         if (!configLoaded) loadConfig();
+      });
+
+      tabWifiBtn.addEventListener('click', function () {
+        showTab('wifi');
+        loadWifi();
+      });
+
+      // ---------- Cupons Wi-Fi ----------
+      // Mesma regra do balcão (wifi-coupon-admin): um resgate por dia (dia de Belém) e cupom vencido não resgata;
+      // quem decide é o servidor, aqui os botões só refletem o estado. Todo dado do cupom é escapado (o cadastro
+      // é digitado por terceiros no portal Wi-Fi).
+      var wifiSearchInput = document.getElementById('wifiSearchInput');
+      var wifiCount = document.getElementById('wifiCount');
+      var wifiError = document.getElementById('wifiError');
+      var wifiNotice = document.getElementById('wifiNotice');
+      var wifiState = document.getElementById('wifiState');
+      var wifiTable = document.getElementById('wifiTable');
+      var wifiTbody = document.getElementById('wifiTbody');
+      var wifiCards = document.getElementById('wifiCards');
+      var wifiDebounce = null;
+      var OP_LABEL = { playground: 'Playground', circuito: 'Circuito' };
+
+      function formatDay(iso) {
+        if (!iso) return '—';
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        return d.toLocaleDateString('pt-BR');
+      }
+
+      function wifiStatusBadge(c) {
+        if (c.expired) return '<span class="badge badge-gray">Expirado</span>';
+        if (c.redeemed_today) return '<span class="badge badge-blue">Resgatado hoje' + (OP_LABEL[c.coupon_operation] ? ' (' + OP_LABEL[c.coupon_operation] + ')' : '') + '</span>';
+        return '<span class="badge badge-teal">Disponível hoje</span>';
+      }
+
+      function wifiButtons(c) {
+        var off = (c.expired || c.redeemed_today) ? ' disabled' : '';
+        var code = escapeHtml(c.coupon_code);
+        return '<div class="wifi-actions">' +
+          '<button type="button" class="btn btn-teal btn-sm" data-wifi-code="' + code + '" data-wifi-op="playground"' + off + '>Resgatar no Playground</button>' +
+          '<button type="button" class="btn btn-pink btn-sm" data-wifi-code="' + code + '" data-wifi-op="circuito"' + off + '>Resgatar no Circuito</button>' +
+          '</div>';
+      }
+
+      function loadWifi(keepMessages) {
+        wifiState.hidden = false;
+        wifiState.textContent = 'Carregando cupons…';
+        wifiTable.hidden = true;
+        wifiCards.hidden = true;
+        if (keepMessages !== true) {
+          wifiError.classList.remove('active');
+          wifiError.textContent = '';
+          wifiNotice.classList.remove('active');
+          wifiNotice.textContent = '';
+        }
+
+        var payload = { action: 'wifi_list_coupons' };
+        var q = wifiSearchInput.value.trim();
+        if (q) payload.q = q;
+
+        apiRequest(payload).then(function (data) {
+          renderWifi((data && data.coupons) || []);
+        }).catch(function (err) {
+          if (err.handled) return;
+          wifiState.hidden = false;
+          wifiState.textContent = err.message || 'Não foi possível carregar os cupons.';
+        });
+      }
+
+      function renderWifi(coupons) {
+        wifiCount.textContent = coupons.length + (coupons.length === 1 ? ' cupom' : ' cupons') + (coupons.length >= 100 ? ' (últimos 100)' : '');
+
+        if (!coupons.length) {
+          wifiState.hidden = false;
+          wifiState.textContent = 'Nenhum cupom encontrado.';
+          wifiTable.hidden = true;
+          wifiCards.hidden = true;
+          return;
+        }
+
+        wifiState.hidden = true;
+        wifiTable.hidden = false;
+        wifiCards.hidden = false;
+
+        var rowsHtml = '';
+        var cardsHtml = '';
+        coupons.forEach(function (c) {
+          var wa = waLink(c.guardian_phone);
+          var phoneHtml = c.guardian_phone
+            ? (wa ? '<a class="wa-link" href="' + escapeHtml(wa) + '" target="_blank" rel="noopener">' + escapeHtml(c.guardian_phone) + '</a>' : escapeHtml(c.guardian_phone))
+            : '—';
+          var lastRedeem = c.last_redeemed_at
+            ? escapeHtml(formatDate(c.last_redeemed_at)) + (OP_LABEL[c.coupon_operation] ? ' · ' + escapeHtml(OP_LABEL[c.coupon_operation]) : '')
+            : '—';
+          var visits = escapeHtml(c.visit_count === null || c.visit_count === undefined ? '—' : c.visit_count);
+          var valid = escapeHtml(formatDay(c.coupon_expires_at));
+
+          rowsHtml += '<tr>' +
+            '<td><div class="code">' + escapeHtml(c.coupon_code) + '</div></td>' +
+            '<td><div class="guardian-name">' + escapeHtml(c.guardian_name || '—') + '</div>' +
+              (c.guardian_email ? '<div class="guardian-meta">' + escapeHtml(c.guardian_email) + '</div>' : '') + '</td>' +
+            '<td>' + phoneHtml + '</td>' +
+            '<td>' + valid + '</td>' +
+            '<td>' + wifiStatusBadge(c) + '</td>' +
+            '<td>' + visits + '</td>' +
+            '<td>' + lastRedeem + '</td>' +
+            '<td>' + wifiButtons(c) + '</td>' +
+            '</tr>';
+
+          cardsHtml += '<div class="lead-card">' +
+            '<div class="row"><div><div class="child-name code">' + escapeHtml(c.coupon_code) + '</div>' +
+              '<div class="guardian-name">' + escapeHtml(c.guardian_name || '—') + '</div></div>' + wifiStatusBadge(c) + '</div>' +
+            '<div class="guardian-meta">' + phoneHtml + '</div>' +
+            (c.guardian_email ? '<div class="guardian-meta">' + escapeHtml(c.guardian_email) + '</div>' : '') +
+            '<div class="guardian-meta" style="margin-top:6px;">Validade: ' + valid + ' · Visitas: ' + visits + '</div>' +
+            '<div class="guardian-meta">Último resgate: ' + lastRedeem + '</div>' +
+            '<div class="actions">' + wifiButtons(c) + '</div>' +
+            '</div>';
+        });
+
+        wifiTbody.innerHTML = rowsHtml;
+        wifiCards.innerHTML = cardsHtml;
+      }
+
+      function redeemWifi(code, operation, btn) {
+        var label = OP_LABEL[operation] || operation;
+        if (!window.confirm('Resgatar o cupom ' + code + ' no ' + label + '?\n\nSó vale um resgate por dia e não dá para desfazer aqui.')) return;
+        wifiError.classList.remove('active');
+        wifiNotice.classList.remove('active');
+        wifiError.textContent = '';
+        wifiNotice.textContent = '';
+        btn.disabled = true;
+
+        apiRequest({ action: 'wifi_redeem', code: code, operation: operation }).then(function () {
+          wifiNotice.textContent = 'Cupom ' + code + ' resgatado no ' + label + '.';
+          wifiNotice.classList.add('active');
+          loadWifi(true);
+        }).catch(function (err) {
+          if (err.handled) return;
+          wifiError.textContent = err.message || 'Não foi possível resgatar o cupom.';
+          wifiError.classList.add('active');
+          loadWifi(true);
+        });
+      }
+
+      // Delegação: as linhas são recriadas a cada busca.
+      wifiView.addEventListener('click', function (e) {
+        var btn = e.target.closest ? e.target.closest('[data-wifi-code]') : null;
+        if (!btn || btn.disabled) return;
+        redeemWifi(btn.getAttribute('data-wifi-code'), btn.getAttribute('data-wifi-op'), btn);
+      });
+
+      wifiSearchInput.addEventListener('input', function () {
+        clearTimeout(wifiDebounce);
+        wifiDebounce = setTimeout(loadWifi, 400);
       });
 
       // ---------- Config (Textos do resultado) ----------

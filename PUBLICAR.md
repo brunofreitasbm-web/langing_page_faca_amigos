@@ -53,3 +53,32 @@ Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e
 | QR no Circuito | `https://institutofacaamigos.com.br/teste?utm_source=qr&utm_medium=presencial&utm_campaign=circuito` |
 | QR na Clínica | `https://institutofacaamigos.com.br/teste?utm_source=qr&utm_medium=presencial&utm_campaign=clinica` |
 | Perfil do Google | `https://institutofacaamigos.com.br/?utm_source=google&utm_medium=organico&utm_campaign=perfil` |
+
+## Verificação antes de cada push
+
+- `npm run check` (ou `node scripts/check.mjs`): links internos quebrados, canonical/description/JSON-LD, imagens sem
+  tamanho, `fa-track.js` faltando, `hotspot/` referenciado, `ebook/` fora do deploy. O GitHub Actions
+  (`.github/workflows/check.yml`) roda o mesmo em push e pull_request. Só ERRO reprova; AVISO é informativo.
+- `npm run sitemap`: refaz os `lastmod` do `sitemap.xml` pela data do último commit de cada página. Rode depois do commit.
+- `.vercelignore` agora também exclui `supabase/`, `scripts/`, `.github/`, `PUBLICAR.md` e `LEIA-ME.txt`
+  (funções e migrations são implantadas pela CLI do Supabase, não pela Vercel).
+
+## Arquivos compartilhados do site (`assets/`)
+
+| Arquivo | Para quê |
+|---|---|
+| `fa-track.js` | GTM/GA4/Clarity/Contentsquare com consentimento, origem do visitante, eventos |
+| `fa-footer.js` | Rodapé único (status das unidades e CNPJs numa constante só: virar "Clínica aberta" = 1 edição) |
+| `fa-cta.js` | Barra de ação fixa no celular (hub, /playground, /circuito) |
+| `fa-modal.js` | Acessibilidade do modal de vagas (rótulos, foco, Esc) |
+
+Cache de `/assets/*` é de 1 dia: depois de mudar um deles, o visitante recebe a versão nova em até 24 h.
+
+## Rotinas (alerta diário e resumo semanal)
+
+Ver `supabase/ops/agendar-rotinas.sql` (ordem de execução comentada no arquivo). Secrets: `OPS_KEY`, `ALERT_EMAIL`
+(opcional; senão usa `LEAD_NOTIFY_EMAIL`). Teste primeiro com `?dry=1`.
+
+## Oferta do Código no resultado do teste
+
+Secret `EBOOK2_URL=https://institutofacaamigos.com.br/codigo`. Sem ele, o resultado continua oferecendo só o guia.

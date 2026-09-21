@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página não encontrada | FaçaAmigos</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/png" href="/img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#F0196B">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --rosa: #F0196B;
+      --turquesa: #2ECFB5;
+      --amarelo: #FFE234;
+      --escuro: #1A3F35;
+      --creme: #FFF9F1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: var(--creme);
+      color: var(--escuro);
+      font-family: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      font-size: 17px;
+      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 18px 40px;
+    }
+    main { width: 100%; max-width: 560px; text-align: center; }
+    .brand { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--escuro); margin-bottom: 26px; }
+    .brand img { width: 44px; height: auto; display: block; }
+    .brand span { font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 1.35rem; letter-spacing: .2px; }
+    .num {
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      font-size: clamp(5rem, 26vw, 8rem);
+      line-height: 1;
+      letter-spacing: 2px;
+      color: var(--rosa);
+    }
+    .num em { font-style: normal; color: var(--turquesa); }
+    .num i { font-style: normal; color: var(--amarelo); text-shadow: 0 0 0 var(--escuro); -webkit-text-stroke: 3px var(--escuro); }
+    h1 { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: clamp(1.5rem, 6vw, 1.9rem); line-height: 1.2; margin: 14px 0 10px; }
+    .lead { max-width: 440px; margin: 0 auto 26px; }
+    .grid { display: grid; gap: 12px; grid-template-columns: 1fr; text-align: left; }
+    @media (min-width: 480px) { .grid { grid-template-columns: 1fr 1fr; } }
+    .card {
+      display: flex; align-items: center; gap: 12px;
+      min-height: 56px; padding: 12px 16px;
+      background: #fff; color: var(--escuro); text-decoration: none;
+      border: 2px solid var(--escuro); border-radius: 16px;
+      box-shadow: 0 4px 0 var(--escuro);
+      font-weight: 800; line-height: 1.25;
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .card:hover { transform: translateY(-2px); box-shadow: 0 6px 0 var(--escuro); }
+    .card:active { transform: translateY(2px); box-shadow: 0 2px 0 var(--escuro); }
+    .card:focus-visible { outline: 3px solid var(--rosa); outline-offset: 3px; }
+    .card small { display: block; font-weight: 600; font-size: .82rem; opacity: .75; }
+    .dot { flex: 0 0 auto; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--escuro); }
+    .c-rosa .dot { background: var(--rosa); }
+    .c-turq .dot { background: var(--turquesa); }
+    .c-amar .dot { background: var(--amarelo); }
+    .card.principal { background: var(--rosa); color: #fff; }
+    .card.principal .dot { background: #fff; }
+    h2 { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 1.05rem; margin: 30px 0 12px; opacity: .85; }
+    .foot { margin-top: 34px; font-size: .85rem; opacity: .7; }
+    @media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+  </style>
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR"
+      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <main>
+    <a class="brand" href="/" aria-label="FaçaAmigos, ir para o início">
+      <img src="/img/logo-simbolo.png" width="44" height="40" alt="">
+      <span>FaçaAmigos</span>
+    </a>
+
+    <p class="num" aria-hidden="true">4<i>0</i><em>4</em></p>
+    <h1>Ops, essa página saiu para brincar</h1>
+    <p class="lead">Não encontramos o endereço que você procurava. O link pode ter mudado ou ter um errinho de digitação. Mas tem muita coisa boa por aqui, escolha por onde continuar.</p>
+
+    <nav aria-label="Páginas do site">
+      <div class="grid">
+        <a class="card principal" href="/"><span class="dot" aria-hidden="true"></span><span>Início<small>Todos os caminhos em um lugar</small></span></a>
+        <a class="card c-turq" href="/playground"><span class="dot" aria-hidden="true"></span><span>Playground<small>Brincar com inclusão</small></span></a>
+        <a class="card c-amar" href="/circuito"><span class="dot" aria-hidden="true"></span><span>Circuito<small>Circuito de carrinhos</small></span></a>
+        <a class="card c-rosa" href="/teste"><span class="dot" aria-hidden="true"></span><span>Mapeamento gratuito<small>Entenda o comportamento do seu filho</small></span></a>
+      </div>
+
+      <h2>Para ler e aprender em casa</h2>
+      <div class="grid">
+        <a class="card c-rosa" href="/guia"><span class="dot" aria-hidden="true"></span><span>O Brincar com Propósito<small>E-book, guia prático</small></span></a>
+        <a class="card c-turq" href="/codigo"><span class="dot" aria-hidden="true"></span><span>O Código do Desenvolvimento Infantil<small>E-book, guia de coração</small></span></a>
+      </div>
+    </nav>
+
+    <p class="foot">Instituto Faça Amigos, Belém/PA</p>
+  </main>
+</body>
+
+</html>
