@@ -4,8 +4,8 @@
  *   <script src="/assets/fa-track.js"></script>
  *
  * O que faz
- *  1. Consent Mode v2: tudo começa NEGADO. GTM e GA4 carregam em modo sem cookies; Clarity e Contentsquare
- *     (gravação de sessão) só carregam depois que a pessoa aceita no banner.
+ *  1. Consent Mode v2: tudo começa NEGADO. GTM e GA4 carregam em modo sem cookies até a pessoa aceitar no
+ *     banner. (Clarity e Contentsquare, gravação de sessão, foram removidos em 22/09/2026.)
  *  2. Origem do visitante: guarda a primeira origem (utm_*, gclid, fbclid, src, sck, referrer) e a mais recente,
  *     num cookie do domínio raiz — assim ela sobrevive ao salto entre o hub e o subdomínio do playground.
  *     Links internos deixam de sobrescrever a origem real (ex.: o banner do hub não vira "site").
@@ -25,7 +25,7 @@
   // e custo por conversão saem errados). Antes de mexer, conferir em tagmanager.google.com quais tags existem em
   // cada um; se um estiver vazio ou for legado, remover daqui E do noscript das páginas (grep pelo ID). Enquanto
   // a checagem não acontecer, os dois ficam como estão — remover às cegas apaga disparo de conversão em produção.
-  var IDS = { gtm: 'GTM-PN5D2BTS', gtm2: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG', clarity: 'xz0butjjbh', cs: 'c3b9c7ee91c87' };
+  var IDS = { gtm: 'GTM-PN5D2BTS', gtm2: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
@@ -111,28 +111,16 @@
   var GRANTED = { ad_storage: 'granted', ad_user_data: 'granted', ad_personalization: 'granted', analytics_storage: 'granted' };
   gtag('consent', 'default', Object.assign({ wait_for_update: 500 }, DENIED));
 
-  var recordersLoaded = false;
   function loadScript(src, attrs) {
     var s = document.createElement('script');
     s.async = true; s.src = src;
     for (var k in attrs) s.setAttribute(k, attrs[k]);
     (document.head || document.documentElement).appendChild(s);
   }
-  function loadRecorders() {
-    if (recordersLoaded) return;
-    recordersLoaded = true;
-    (function (c, l, a, r, i, t, y) {
-      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
-      t = l.createElement(r); t.async = 1; t.src = 'https://www.clarity.ms/tag/' + i;
-      y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y);
-    })(window, document, 'clarity', 'script', IDS.clarity);
-    loadScript('https://t.contentsquare.net/uxa/' + IDS.cs + '.js');
-  }
+  // Clarity e Contentsquare (gravação de sessão) foram removidos por pedido explícito — não carregam mais
+  // nem com consentimento dado. O Consent Mode continua igual para GTM/GA4/Ads.
   function applyConsent(choice) {
-    if (choice === 'all') {
-      gtag('consent', 'update', GRANTED);
-      loadRecorders();
-    }
+    if (choice === 'all') gtag('consent', 'update', GRANTED);
   }
   function setConsent(choice) {
     write(CONSENT_KEY, choice);
@@ -306,9 +294,8 @@
       '#fa-consent .fa-c-ok{background:#FDC51D;border-color:#FDC51D;color:#065264}' +
       '#fa-consent .fa-c-no{background:transparent;color:#fff}' +
       '</style>' +
-      '<p>Usamos cookies para entender como o site é usado e melhorar a experiência. ' +
-      'Se aceitar, também usamos ferramentas que registram a navegação de forma anônima. ' +
-      'Nenhum campo digitado (nome, e-mail, telefone) é gravado. ' +
+      '<p>Usamos cookies para entender como o site é usado e melhorar a experiência, e medir a origem das ' +
+      'visitas para o Google e a Meta. Nenhum campo digitado (nome, e-mail, telefone) é gravado. ' +
       '<a href="/politica-privacidade">Saiba mais</a>.</p>' +
       '<div class="fa-c-row"><button type="button" class="fa-c-ok">Aceitar</button>' +
       '<button type="button" class="fa-c-no">Só o essencial</button></div>';

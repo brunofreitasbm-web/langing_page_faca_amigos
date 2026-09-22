@@ -1,3 +1,20 @@
+ATUALIZAÇÃO 22/09/2026 (4) — Clarity e Contentsquare removidos
+------------------------------------------------------------------
+Pedido explícito: tirar as duas ferramentas de gravação de sessão de todas as páginas. Ficam só os dois
+containers GTM e o GA4 (esses continuam como estavam — GTM não foi tocado, só Clarity/Contentsquare saíram).
+
+- assets/fa-track.js: removida a função loadRecorders() e os IDs clarity/cs de IDS. O Consent Mode v2 não
+  mudou de comportamento para GTM/GA4/Ads — só não existe mais nada para carregar quando a pessoa aceita
+  cookies além do que já estava sendo carregado sem consentimento (GTM/GA4 em modo negado). Texto do banner
+  de cookies ajustado (não fala mais em "gravação de navegação").
+- vercel.json: domínios do Clarity e do Contentsquare removidos do Content-Security-Policy-Report-Only
+  (script-src e connect-src).
+- politica-privacidade.html: as duas menções ao Microsoft Clarity e ao Contentsquare removidas (seções
+  "Dados que coletamos" e "Com quem compartilhamos").
+
+Se algum dia quiser reativar gravação de sessão, o código de loadRecorders() está no histórico do git
+(commit anterior a este).
+
 ATUALIZAÇÃO 22/09/2026 (3) — troca do measurement ID do GA4
 --------------------------------------------------------------
 G-Q7LHH3C9P8 virou G-37G5XLBXKG (assets/fa-track.js e o fallback em
