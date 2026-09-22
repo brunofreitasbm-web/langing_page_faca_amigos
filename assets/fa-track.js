@@ -6,7 +6,8 @@
  * O que faz
  *  1. Consent Mode v2: tudo começa NEGADO. GTM e GA4 carregam em modo sem cookies; Clarity e Contentsquare
  *     (gravação de sessão) só carregam depois que a pessoa aceita no banner.
- *  2. Origem do visitante: guarda a primeira origem (utm_*, gclid, fbclid, src, sck, referrer) e a mais recente.
+ *  2. Origem do visitante: guarda a primeira origem (utm_*, gclid, fbclid, src, sck, referrer) e a mais recente,
+ *     num cookie do domínio raiz — assim ela sobrevive ao salto entre o hub e o subdomínio do playground.
  *     Links internos deixam de sobrescrever a origem real (ex.: o banner do hub não vira "site").
  *     window.faOrigin() devolve a origem para os formulários.
  *  3. Eventos: whatsapp_click, begin_checkout (Hotmart), file_download, scroll_depth 50/90.
@@ -16,19 +17,69 @@
 (function () {
   'use strict';
 
+  // ATENÇÃO — dois containers GTM carregam em todas as páginas (gtm e gtm2). Isso NÃO foi verificado no painel
+  // do GTM: se os dois tiverem a mesma tag de GA4/Meta/Ads, todo evento é contado em dobro (sessões, conversões
+  // e custo por conversão saem errados). Antes de mexer, conferir em tagmanager.google.com quais tags existem em
+  // cada um; se um estiver vazio ou for legado, remover daqui E do noscript das páginas (grep pelo ID). Enquanto
+  // a checagem não acontecer, os dois ficam como estão — remover às cegas apaga disparo de conversão em produção.
   var IDS = { gtm: 'GTM-PN5D2BTS', gtm2: 'GTM-NPDJ58XR', ga4: 'G-Q7LHH3C9P8', clarity: 'xz0butjjbh', cs: 'c3b9c7ee91c87' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
+  var ROOT_DOMAIN = 'institutofacaamigos.com.br';
   var INTERNAL_HOSTS = ['institutofacaamigos.com.br', 'www.institutofacaamigos.com.br', 'playground.institutofacaamigos.com.br'];
   var WHATSAPP_UNITS = { '5591991782027': 'clinica', '5591992347673': 'playground_circuito' };
   var CHECKOUTS = {
     M107692257Y: { id: 'guia', name: 'O Brincar com Propósito', value: 149 },
-    V107698297N: { id: 'codigo', name: 'O Código do Desenvolvimento Infantil' }
+    // O preço não aparece na página /codigo (decisão do projeto), mas o begin_checkout precisa do valor: sem ele
+    // o Google Ads e o Meta não conseguem otimizar por ROAS nem calcular custo por conversão desse produto.
+    // Se o preço mudar na Hotmart, mudar aqui também.
+    V107698297N: { id: 'codigo', name: 'O Código do Desenvolvimento Infantil', value: 47 }
   };
 
   function read(key) { try { return window.localStorage.getItem(key); } catch (e) { return null; } }
   function write(key, val) { try { window.localStorage.setItem(key, val); } catch (e) { /* modo privado */ } }
+
+  // ---------- origem compartilhada entre os subdomínios ----------
+  // O localStorage é isolado por origem: o que institutofacaamigos.com.br grava, playground.institutofacaamigos.com.br
+  // NÃO lê. Quem entra por anúncio no hub e vai para o playground perdia a origem no meio do caminho. Por isso a
+  // origem passa a viver num cookie de primeira parte no domínio raiz (.institutofacaamigos.com.br), que todos os
+  // subdomínios enxergam. O localStorage continua como espelho: serve de leitura para quem já tinha origem gravada
+  // antes desta mudança e de reserva quando o cookie não está disponível (localhost, file://, cookies bloqueados).
+  var ORIGIN_MAX_AGE = 15552000; // 180 dias
+  var COOKIE_LIMIT = 3500;       // margem para o limite de ~4KB por cookie
+
+  function cookieDomain() {
+    var h = window.location.hostname;
+    if (h === ROOT_DOMAIN || h.slice(-(ROOT_DOMAIN.length + 1)) === '.' + ROOT_DOMAIN) return '.' + ROOT_DOMAIN;
+    return ''; // localhost/preview: cookie de host mesmo
+  }
+
+  function readCookie(key) {
+    try {
+      var parts = document.cookie ? document.cookie.split('; ') : [];
+      for (var i = 0; i < parts.length; i++) {
+        var eq = parts[i].indexOf('=');
+        if (eq > 0 && parts[i].slice(0, eq) === key) return decodeURIComponent(parts[i].slice(eq + 1));
+      }
+    } catch (e) { /* cookies bloqueados */ }
+    return null;
+  }
+
+  function writeCookie(key, val) {
+    var encoded = encodeURIComponent(val);
+    if (encoded.length > COOKIE_LIMIT) return false;
+    try {
+      var d = cookieDomain();
+      document.cookie = key + '=' + encoded + '; path=/; max-age=' + ORIGIN_MAX_AGE + '; SameSite=Lax' +
+        (d ? '; domain=' + d : '') + (window.location.protocol === 'https:' ? '; Secure' : '');
+      return true;
+    } catch (e) { return false; }
+  }
+
+  // Lê o cookie primeiro; cai no localStorage para não perder a origem de quem já navegava antes.
+  function readOrigin() { var v = readCookie(ORIGIN_KEY); return v !== null && v !== '' ? v : read(ORIGIN_KEY); }
+  function writeOrigin(val) { writeCookie(ORIGIN_KEY, val); write(ORIGIN_KEY, val); }
 
   // ---------- dataLayer / gtag ----------
   window.dataLayer = window.dataLayer || [];
@@ -84,7 +135,9 @@
   loadScript('https://www.googletagmanager.com/gtm.js?id=' + IDS.gtm2);
   loadScript('https://www.googletagmanager.com/gtag/js?id=' + IDS.ga4);
   gtag('js', new Date());
-  gtag('config', IDS.ga4);
+  // linker: sem isso o GA4 abre sessão nova no salto hub -> playground e registra o próprio subdomínio como
+  // referral, matando a atribuição do tráfego pago. accept_incoming fecha o outro lado do mesmo problema.
+  gtag('config', IDS.ga4, { linker: { domains: INTERNAL_HOSTS, accept_incoming: true } });
   applyConsent(read(CONSENT_KEY));
 
   // ---------- origem do visitante ----------
@@ -96,7 +149,7 @@
     var has = false;
     PARAMS.forEach(function (p) { var v = q.get(p); if (v) { found[p] = v.slice(0, 120); has = true; } });
     var stored = {};
-    try { stored = JSON.parse(read(ORIGIN_KEY) || '{}') || {}; } catch (e) { stored = {}; }
+    try { stored = JSON.parse(readOrigin() || '{}') || {}; } catch (e) { stored = {}; }
 
     var ref = '';
     try {
@@ -110,7 +163,7 @@
     var lastHasParams = stored.last && Object.keys(stored.last.params || {}).length > 0;
     if (!stored.first) stored.first = snapshot;
     if (has || (ref && !lastHasParams)) stored.last = snapshot;
-    write(ORIGIN_KEY, JSON.stringify(stored));
+    writeOrigin(JSON.stringify(stored));
     return stored;
   }
   var originStore = captureOrigin();

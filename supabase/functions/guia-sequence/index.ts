@@ -37,6 +37,46 @@ const LOOKBACK_DAYS = 30;
 
 const ALLOWED_ORIGINS = [SITE, "https://www.institutofacaamigos.com.br", "http://localhost:3000", "http://localhost:5500"];
 
+// Produto oferecido em cada e-mail da sequência. O behavior-test-webhook grava em fa_leads_teste_comportamento
+// .ebook_offer qual e-book o lead viu na tela de resultado; aqui a sequência manda o mesmo produto, em vez de
+// falar do guia para quem viu o Código. Os 3 templates do Brevo devem usar as variáveis PRODUTO_* abaixo no
+// lugar do texto fixo do guia — enquanto não usarem, o e-mail sai igual ao de hoje e nada quebra.
+// O Código não tem preço na comunicação (decisão do projeto: o valor só aparece no checkout).
+const OFFERS = {
+  guia: {
+    title: "O Brincar com Propósito",
+    path: "/guia",
+    cta: "Quero o guia",
+    price: "R$ 149",
+    installments: "ou 10x de R$ 17,91 no cartão",
+  },
+  codigo: {
+    title: "O Código do Desenvolvimento Infantil",
+    path: "/codigo",
+    cta: "Conhecer o e-book",
+    price: "",
+    installments: "",
+  },
+} as const;
+
+type OfferKey = keyof typeof OFFERS;
+
+function offerKeyOf(lead: Lead): OfferKey {
+  return lead.ebook_offer === "codigo" ? "codigo" : "guia";
+}
+
+// Link da página de vendas com rastreio: src/sck chegam aos relatórios de venda da Hotmart (a página de vendas
+// repassa ao checkout); os utm_* alimentam o GA4. Mesmo padrão do buildEbookLink do behavior-test-webhook.
+function offerUrl(key: OfferKey, lead: Lead, step: number): string {
+  const u = new URL(SITE + OFFERS[key].path);
+  u.searchParams.set("src", `seq_d${step}`);
+  u.searchParams.set("sck", lead.result_band ?? "");
+  u.searchParams.set("utm_source", "email");
+  u.searchParams.set("utm_medium", "sequencia");
+  u.searchParams.set("utm_campaign", `seq_${key}_d${step}`);
+  return u.toString();
+}
+
 function cors(req: Request): Record<string, string> {
   const origin = req.headers.get("Origin") ?? "";
   return {
@@ -87,6 +127,7 @@ interface Lead {
   child_first_name: string;
   result_band: string | null;
   completed_at: string;
+  ebook_offer: string | null;
 }
 
 // Confere o contato no Brevo. Devolve "ok", ou o motivo para parar a sequência.
@@ -126,7 +167,7 @@ async function runBatch(admin: ReturnType<typeof createClient>, dry: boolean) {
   const since = new Date(now - LOOKBACK_DAYS * 86400000).toISOString();
   const { data: leads, error } = await admin
     .from("fa_leads_teste_comportamento")
-    .select("id, guardian_name, guardian_email, child_first_name, result_band, completed_at")
+    .select("id, guardian_name, guardian_email, child_first_name, result_band, completed_at, ebook_offer")
     .eq("marketing_opt_in", true)
     .is("ebook_seq_stopped_at", null)
     .in("status", ["completed", "contacted"])
@@ -192,6 +233,8 @@ async function runBatch(admin: ReturnType<typeof createClient>, dry: boolean) {
     const { error: claimErr } = await admin.from("fa_teste_ebook_seq").insert({ lead_id: lead.id, step: next.step });
     if (claimErr) { summary.skipped++; continue; }
 
+    const offerKey = offerKeyOf(lead);
+    const offer = OFFERS[offerKey];
     const sig = await sign(lead.id);
     const unsubPage = `${SITE}/descadastrar?u=${lead.id}&s=${sig}`;
     const unsubOneClick = `${FUNCTION_URL}?u=${lead.id}&s=${sig}`;
@@ -206,10 +249,16 @@ async function runBatch(admin: ReturnType<typeof createClient>, dry: boolean) {
             NOME: (lead.guardian_name ?? "").split(/\s+/)[0] ?? "",
             NOME_CRIANCA: lead.child_first_name,
             FAIXA_RESULTADO: lead.result_band ?? "",
+            PRODUTO: offerKey,
+            PRODUTO_TITULO: offer.title,
+            PRODUTO_URL: offerUrl(offerKey, lead, next.step),
+            PRODUTO_CTA: offer.cta,
+            PRODUTO_PRECO: offer.price,
+            PRODUTO_PARCELAS: offer.installments,
             UNSUB_URL: unsubPage,
           },
           headers: { "List-Unsubscribe": `<${unsubOneClick}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" },
-          tags: ["guia_sequencia", `d${next.step}`],
+          tags: ["guia_sequencia", `d${next.step}`, `produto_${offerKey}`],
         }),
       });
       if (!resp.ok) {

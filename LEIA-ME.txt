@@ -1,3 +1,52 @@
+ATUALIZAÇÃO 22/09/2026 — atribuição entre subdomínios, valor do /codigo e produto certo na sequência
+------------------------------------------------------------------------------------------------------
+Três correções de rastreio e funil. Nada de visual mudou.
+
+1) ORIGEM DO VISITANTE AGORA ATRAVESSA OS SUBDOMÍNIOS (assets/fa-track.js)
+   O problema: a origem (utm_*, gclid, fbclid, referrer) era guardada no localStorage, que é isolado por
+   origem. O que institutofacaamigos.com.br gravava, playground.institutofacaamigos.com.br NÃO lia. Quem
+   entrava por anúncio no hub e ia para o playground chegava lá como visita direta, e o GA4 ainda abria
+   sessão nova registrando o próprio subdomínio como referral. Todo o tráfego pago que cruzava os dois
+   domínios perdia a atribuição.
+   A correção: a origem passou a viver num cookie de primeira parte no domínio raiz
+   (.institutofacaamigos.com.br, 180 dias, SameSite=Lax, Secure), que todos os subdomínios enxergam. O
+   localStorage continua como espelho, para não perder a origem de quem já navegava antes da mudança e
+   como reserva quando o cookie não está disponível (localhost, file://, cookies bloqueados).
+   Também foi ligado o linker do GA4 (gtag config com linker.domains + accept_incoming) para os três hosts.
+   Testado com uma simulação dos dois hosts: antes, a origem chegava vazia no playground; depois, chega
+   completa. Falta testar no navegador de verdade (abrir o hub com ?utm_source=..., clicar para o
+   playground e conferir window.faOrigin() no console).
+
+2) begin_checkout DO /codigo AGORA TEM VALOR (assets/fa-track.js)
+   CHECKOUTS.V107698297N ganhou value: 47. Sem valor no evento, o Google Ads e o Meta não conseguem
+   otimizar por ROAS nem calcular custo por conversão desse produto. O preço NÃO aparece na página (a
+   decisão do projeto continua valendo) — o valor vai só no evento. SE O PREÇO MUDAR NA HOTMART, MUDAR AQUI.
+
+3) A SEQUÊNCIA DE E-MAILS MANDA O PRODUTO QUE O LEAD VIU (guia-sequence + behavior-test-webhook + migration)
+   O problema: o behavior-test-webhook já escolhe entre /guia e /codigo na tela de resultado (tier3Count === 0
+   e EBOOK2_URL configurada -> Código), mas essa escolha não ficava gravada. A guia-sequence mandava os 3
+   e-mails do guia mesmo para quem tinha visto o Código na tela.
+   A correção: nova coluna fa_leads_teste_comportamento.ebook_offer ('guia' | 'codigo'), gravada na conclusão
+   do mapa. A guia-sequence lê a coluna e manda ao Brevo as variáveis PRODUTO, PRODUTO_TITULO, PRODUTO_URL
+   (com src/sck/utm_*), PRODUTO_CTA, PRODUTO_PRECO e PRODUTO_PARCELAS, mais a tag produto_guia/produto_codigo.
+   PENDENTE, E SÓ VOCÊ PODE FAZER: editar os 3 templates no Brevo para usar essas variáveis no lugar do texto
+   fixo do guia. Enquanto não editar, os e-mails saem exatamente como hoje — nada quebra, mas o item 3 ainda
+   não está valendo na prática.
+
+O QUE CONTINUA PENDENTE DE CONFIGURAÇÃO (não é código, são secrets/painéis)
+- EBOOK2_URL=https://institutofacaamigos.com.br/codigo no Supabase. Sem esse secret, o /codigo NUNCA é
+  oferecido no resultado do mapa, por mais que o código saiba fazer isso.
+- HOTMART_PRODUCT_ID precisa conter os DOIS ids de produto separados por vírgula. A hotmart-sync já aceita
+  vários (supabase/functions/hotmart-sync/index.ts, fetchSales); se só o id do guia estiver lá, as vendas do
+  Código não param a sequência de e-mails. Para descobrir o id do Código:
+  POST na hotmart-sync com ?list_products=1 e o cabeçalho x-sync-key.
+- DOIS CONTAINERS GTM (GTM-PN5D2BTS e GTM-NPDJ58XR) carregam em todas as páginas. NÃO foi verificado se os
+  dois têm as mesmas tags — se tiverem, todo evento é contado em dobro. Conferir em tagmanager.google.com o
+  que existe em cada um antes de remover qualquer um dos dois (está anotado no topo do fa-track.js).
+- Nenhuma compra volta para o GA4/Meta: hotmart-webhook e hotmart-sync gravam a venda no Supabase e param a
+  sequência, mas não mandam purchase por Measurement Protocol nem por Conversions API. Enquanto isso não
+  existir, dá para saber quem clicou no checkout, nunca quem comprou por qual anúncio.
+
 ATUALIZAÇÃO 20/09/2026 (noite) — página de vendas /codigo (2º e-book)
 -----------------------------------------------------------------
 "O Código do Desenvolvimento Infantil" (40 páginas A5, 9 capítulos, autora Isabella) tem página própria:

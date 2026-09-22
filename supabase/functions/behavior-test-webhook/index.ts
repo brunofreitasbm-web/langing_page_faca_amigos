@@ -1129,6 +1129,9 @@ Deno.serve(async (req) => {
           results,
           result_band: resultBand,
           completed_at: new Date().toISOString(),
+          // Grava qual e-book o lead viu na tela. A guia-sequence lê isso para mandar os e-mails do produto
+          // certo: sem a coluna, quem via o Código na tela recebia a sequência do guia.
+          ebook_offer: loadEbookOffer(tier3Count)?.key ?? null,
           // A Clínica ainda não abriu: área em atenção especial = entra na lista de espera (nunca volta a false aqui).
           ...(tier3Count > 0 ? { lista_espera_clinica: true } : {}),
         })
