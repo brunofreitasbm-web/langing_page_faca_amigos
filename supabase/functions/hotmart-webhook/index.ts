@@ -18,6 +18,19 @@
 //
 // Secrets: HOTMART_HOTTOK; HOTMART_PRODUCT_ID (guia, 8560642); HOTMART_CODIGO_PRODUCT_ID (id numérico do
 // "Código", opcional); BREVO_API_KEY, BREVO_FROM, BREVO_REPLY_TO (já existentes).
+//
+// Compra server-side no GA4 e na Meta (opcional; sem os secrets, esse pedaço é pulado em silêncio)
+//  - Antes disso, a venda ficava só no relatório da Hotmart: o GA4 sabia quem clicou em begin_checkout e nunca
+//    quem comprou, então dava para medir CTR de checkout mas não ROAS nem custo por venda de verdade.
+//  - GA4 (Measurement Protocol): manda o evento "purchase" usando o client_id que veio disfarçado no campo
+//    xcod (a Hotmart devolve esse campo do jeito que ele foi mandado; ver assets/fa-track.js e o CONFIG.checkout
+//    de guia.html/codigo.html). Sem client_id (venda antiga, ou xcod raspado por outra ferramenta no caminho),
+//    a venda não é mandada pro GA4 — melhor não mandar do que mandar como sessão desconhecida, que só polui
+//    o relatório sem ligar receita à campanha.
+//    Secret: GA4_API_SECRET (Admin > Fluxos de dados > Measurement Protocol > Criar, na propriedade do GA4).
+//  - Meta (Conversions API): manda o evento "Purchase" usando o e-mail do comprador, com hash SHA-256 (padrão
+//    de correspondência avançada da Meta) — não depende de cookie nem de fbclid, funciona mesmo sem eles.
+//    Secrets: META_PIXEL_ID e META_CAPI_TOKEN (Gerenciador de Eventos > Configurações > Conversions API > Gerar token).
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
@@ -50,6 +63,7 @@ type Any = any;
 
 interface Product {
   title: string;
+  path: string; // página de vendas do produto, sem domínio (usada como event_source_url na Meta CAPI)
   otherTitle: string;
   otherUrl: string;
   otherBlurb: string;
@@ -61,6 +75,7 @@ function classify(productId: number | null): Product {
   if (productId && guia && productId === guia) {
     return {
       title: "O Brincar com Propósito",
+      path: "/guia",
       otherTitle: "O Código do Desenvolvimento Infantil",
       otherUrl: `${SITE}/codigo?utm_source=email&utm_medium=posvenda&utm_campaign=guia_comprador`,
       otherBlurb: "Um e-book curto (40 páginas) para entender que o comportamento do seu filho tem lógica. Combina bem com o guia.",
@@ -69,12 +84,83 @@ function classify(productId: number | null): Product {
   if (productId && codigo && productId === codigo) {
     return {
       title: "O Código do Desenvolvimento Infantil",
+      path: "/codigo",
       otherTitle: "O Brincar com Propósito",
       otherUrl: `${SITE}/guia?utm_source=email&utm_medium=posvenda&utm_campaign=codigo_comprador`,
       otherBlurb: "O guia completo (97 páginas) com o passo a passo do dia a dia: rotinas, birras e brincadeiras.",
     };
   }
-  return { title: "seu e-book", otherTitle: "", otherUrl: "", otherBlurb: "" };
+  return { title: "seu e-book", path: "/", otherTitle: "", otherUrl: "", otherBlurb: "" };
+}
+
+// ---------------------------------------------------------------------
+// Compra server-side (ver o bloco no topo do arquivo)
+// ---------------------------------------------------------------------
+
+// client_id do GA4 disfarçado no xcod do checkout (formato "ga.<client_id>"; ver assets/fa-track.js).
+function ga4ClientIdFromXcod(xcod: unknown): string {
+  const s = String(xcod ?? "");
+  const m = /^ga\.(\d+\.\d+)$/.exec(s);
+  return m ? m[1] : "";
+}
+
+async function sha256Hex(input: string): Promise<string> {
+  const bytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
+  return Array.from(new Uint8Array(bytes)).map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+// GA4 Measurement Protocol: só manda se houver client_id (ver comentário no topo do arquivo — sem ele a
+// venda ficaria como sessão desconhecida, o que atrapalha mais do que ajuda).
+async function sendGA4Purchase(clientId: string, tx: string, value: number | null, item: Product): Promise<void> {
+  const secret = Deno.env.get("GA4_API_SECRET");
+  if (!secret || !clientId) return;
+  const measurementId = Deno.env.get("GA4_MEASUREMENT_ID") || "G-Q7LHH3C9P8"; // mesmo ID do assets/fa-track.js
+  try {
+    await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${secret}`, {
+      method: "POST",
+      body: JSON.stringify({
+        client_id: clientId,
+        events: [{
+          name: "purchase",
+          params: {
+            transaction_id: tx,
+            currency: "BRL",
+            value: value ?? 0,
+            items: [{ item_id: item.path.replace("/", ""), item_name: item.title, price: value ?? 0 }],
+          },
+        }],
+      }),
+    });
+  } catch (err) {
+    console.error("hotmart-webhook: falha ao enviar purchase ao GA4", err instanceof Error ? err.message : err);
+  }
+}
+
+// Meta Conversions API: correspondência por e-mail com hash (funciona sem fbclid/fbp/cookie).
+async function sendMetaPurchase(email: string, tx: string, value: number | null, item: Product): Promise<void> {
+  const pixelId = Deno.env.get("META_PIXEL_ID");
+  const token = Deno.env.get("META_CAPI_TOKEN");
+  if (!pixelId || !token) return;
+  try {
+    const emHash = await sha256Hex(email.trim().toLowerCase());
+    await fetch(`https://graph.facebook.com/v21.0/${pixelId}/events?access_token=${token}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        data: [{
+          event_name: "Purchase",
+          event_time: Math.floor(Date.now() / 1000),
+          event_id: tx, // não repete: não existe Purchase disparado pelo pixel no navegador para deduplicar
+          action_source: "website",
+          event_source_url: `${SITE}${item.path}`,
+          user_data: { em: [emHash] },
+          custom_data: { currency: "BRL", value: value ?? 0, content_name: item.title },
+        }],
+      }),
+    });
+  } catch (err) {
+    console.error("hotmart-webhook: falha ao enviar Purchase à Meta", err instanceof Error ? err.message : err);
+  }
 }
 
 async function sendWelcome(email: string, name: string, p: Product): Promise<{ sent: boolean; error?: string }> {
@@ -187,6 +273,18 @@ Deno.serve(async (req) => {
 
       // Quem já tinha carrinho aberto deixa de ser "abandono".
       await admin.from("fa_ebook_carrinhos").update({ recuperado_at: new Date().toISOString() }).ilike("email", email).is("recuperado_at", null);
+
+      // Compra pro GA4/Meta: só na primeira vez que esta transação aparece (existing === null), para não
+      // contar a mesma venda duas vezes quando PURCHASE_APPROVED e PURCHASE_COMPLETE chegam para o mesmo tx.
+      if (!existing) {
+        const product = classify(productId);
+        const clientId = ga4ClientIdFromXcod(data?.purchase?.origin?.xcod);
+        const valorNum = Number.isFinite(valor) ? valor : null;
+        await Promise.all([
+          sendGA4Purchase(clientId, tx, valorNum, product),
+          sendMetaPurchase(email, tx, valorNum, product),
+        ]);
+      }
 
       if (!existing?.welcome_sent_at) {
         const mail = await sendWelcome(email, String(data?.buyer?.name ?? ""), classify(productId));

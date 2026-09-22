@@ -1,3 +1,33 @@
+ATUALIZAÇÃO 22/09/2026 (2) — compra chega ao GA4 e à Meta (server-side)
+------------------------------------------------------------------------
+Até aqui o GA4 e o Meta sabiam quem clicava em begin_checkout e nunca quem comprava: dava para medir CTR de
+checkout, não ROAS nem custo por venda de verdade. O hotmart-webhook agora manda a compra pros dois, cada um
+por um caminho diferente (código em supabase/functions/hotmart-webhook/index.ts).
+
+- GA4 (Measurement Protocol): o assets/fa-track.js lê o client_id do cookie _ga e leva ele disfarçado no campo
+  xcod do link de checkout (xcod é um campo que a própria Hotmart criou para isso — "código externo" — e
+  devolve do jeito que foi mandado no payload da compra). O webhook lê de volta e manda o evento "purchase"
+  pro Measurement Protocol, com o client_id certo: a venda aparece ligada à sessão e à campanha que trouxe a
+  pessoa, e não como conversão solta. SEM client_id (venda de antes desta mudança, ou alguma ferramenta no
+  caminho apagando o xcod), a venda simplesmente não é mandada pro GA4 — decisão consciente: melhor não mandar
+  do que mandar como sessão desconhecida, que só suja o relatório sem ligar receita a campanha nenhuma.
+  Secret novo: GA4_API_SECRET (criar em Admin > Fluxos de dados > Measurement Protocol, na propriedade GA4;
+  é diferente da chave de API do site, essa é só de servidor).
+- Meta (Conversions API): manda o evento "Purchase" usando o e-mail do comprador com hash SHA-256 (padrão de
+  correspondência avançada da Meta). Não depende de cookie nem de fbclid — funciona mesmo para quem nunca
+  clicou em anúncio nenhum, então também maior taxa de correspondência que o pixel do navegador sozinho.
+  Secrets novos: META_PIXEL_ID e META_CAPI_TOKEN (Gerenciador de Eventos > Configurações > Conversions API >
+  Gerar token de acesso, na conta de anúncios da Meta).
+
+SEM OS SECRETS, ESSE PEDAÇO INTEIRO É PULADO EM SILÊNCIO (nenhum erro, nenhuma venda perdida no Supabase) —
+é seguro reimplantar a função antes de decidir se/quando configurar o GA4 e a Meta.
+
+Testado: simulação de node com o cookie _ga fake mostrando o xcod = "ga.<client_id>" saindo certo de
+window.faOrigin(); parse do xcod de volta pro client_id (com e sem valor, incluindo xcod de outra origem, como
+um código de afiliado manual, que deve ser ignorado); hash SHA-256 de um e-mail de teste batendo com o cálculo
+de referência do Python. deno check e node scripts/check.mjs sem erros novos. NÃO testado: envio real pro GA4
+Realtime nem pro Gerenciador de Eventos da Meta (precisa dos secrets configurados e uma compra de verdade).
+
 ATUALIZAÇÃO 22/09/2026 — atribuição entre subdomínios, valor do /codigo e produto certo na sequência
 ------------------------------------------------------------------------------------------------------
 Três correções de rastreio e funil. Nada de visual mudou.

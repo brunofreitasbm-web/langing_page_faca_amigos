@@ -11,6 +11,9 @@
  *     Links internos deixam de sobrescrever a origem real (ex.: o banner do hub não vira "site").
  *     window.faOrigin() devolve a origem para os formulários.
  *  3. Eventos: whatsapp_click, begin_checkout (Hotmart), file_download, scroll_depth 50/90.
+ *  4. client_id do GA4 até o checkout: guia.html/codigo.html pegam o xcod de faOrigin() e mandam junto no link
+ *     da Hotmart. O hotmart-webhook lê de volta e manda a compra pro GA4 via Measurement Protocol — sem isso,
+ *     nenhuma venda aparecia ligada à campanha que trouxe a pessoa.
  *
  * IDs em um lugar só (antes estavam copiados em 9 arquivos).
  */
@@ -80,6 +83,17 @@
   // Lê o cookie primeiro; cai no localStorage para não perder a origem de quem já navegava antes.
   function readOrigin() { var v = readCookie(ORIGIN_KEY); return v !== null && v !== '' ? v : read(ORIGIN_KEY); }
   function writeOrigin(val) { writeCookie(ORIGIN_KEY, val); write(ORIGIN_KEY, val); }
+
+  // client_id do GA4 (cookie _ga, formato GA1.1.<id1>.<id2>; client_id = "<id1>.<id2>"). Serve para levar a
+  // compra até o Measurement Protocol no hotmart-webhook: a Hotmart não devolve o client_id sozinha, então ele
+  // viaja disfarçado no campo xcod (criado pela Hotmart para isso mesmo — "código externo") até o checkout, e
+  // volta no webhook da compra. Sem isso, toda venda aparece no GA4 como sessão desconhecida, sem UTM nenhuma.
+  function ga4ClientId() {
+    var raw = readCookie('_ga');
+    if (!raw) return '';
+    var m = /^GA1\.\d+\.(\d+\.\d+)$/.exec(raw);
+    return m ? m[1] : '';
+  }
 
   // ---------- dataLayer / gtag ----------
   window.dataLayer = window.dataLayer || [];
@@ -184,6 +198,10 @@
       referrer: pick.referrer || '',
       first_landing: (originStore.first && originStore.first.landing) || ''
     };
+    // xcod carrega o client_id do GA4 até o checkout da Hotmart (ver ga4ClientId acima). Só entra se a página
+    // não tiver definido outro xcod na URL — guia.html/codigo.html priorizam ?xcod=... quando presente.
+    var gaId = ga4ClientId();
+    if (gaId) o.xcod = 'ga.' + gaId;
     return o;
   };
 
