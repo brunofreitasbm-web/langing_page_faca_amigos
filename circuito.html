@@ -1569,10 +1569,9 @@
         <div class="form-group">
           <select id="job-tipo" class="form-control" required>
             <option value="" disabled selected>Tipo de oportunidade</option>
-            <option value="REMUNERADO">Vaga remunerada (CLT)</option>
+            <option value="REMUNERADO">CLT</option>
             <option value="PJ">Prestador de Serviço (PJ)</option>
             <option value="ESTAGIO">Estágio</option>
-            <option value="BOLSA">Bolsa / Trainee</option>
           </select>
         </div>
         <div class="form-group">
@@ -1641,7 +1640,7 @@
             var sentEmail = document.getElementById('job-email').value.trim();
             jobForm.innerHTML = '<div style="text-align:center; padding: 10px 0;">' +
               '<h4 style="color:var(--dark, #1a3f35); margin-bottom:12px; font-family:\'Fredoka One\',sans-serif; font-size:1.3rem;">Currículo enviado com sucesso!</h4>' +
-              '<p style="color:var(--ink-soft, #556b63); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Obrigado pelo interesse em fazer parte do FaçaAmigos. Recebemos sua candidatura.</p>' +
+              '<p style="color:var(--ink-soft, #556b63); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Agradecemos por querer fazer parte do Instituto Faça Amigos. Recebemos sua candidatura.</p>' +
               '<p style="color:var(--ink-soft, #556b63); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Fique atento(a) ao seu e-mail <strong id="job-sent-email" style="word-break:break-all;"></strong>: em alguns minutos você vai receber o link do nosso <strong>teste de perfil comportamental</strong>. Responda em até 7 dias para seguir no processo seletivo.</p>' +
               '<p style="color:var(--ink-soft, #556b63); font-size:0.85rem;">Não encontrou? Confira as pastas de spam e promoções.</p></div>';
             // textContent, não innerHTML: o e-mail vem do campo digitado.
