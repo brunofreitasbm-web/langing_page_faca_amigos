@@ -114,7 +114,7 @@ async function sha256Hex(input: string): Promise<string> {
 async function sendGA4Purchase(clientId: string, tx: string, value: number | null, item: Product): Promise<void> {
   const secret = Deno.env.get("GA4_API_SECRET");
   if (!secret || !clientId) return;
-  const measurementId = Deno.env.get("GA4_MEASUREMENT_ID") || "G-Q7LHH3C9P8"; // mesmo ID do assets/fa-track.js
+  const measurementId = Deno.env.get("GA4_MEASUREMENT_ID") || "G-37G5XLBXKG"; // mesmo ID do assets/fa-track.js
   try {
     await fetch(`https://www.google-analytics.com/mp/collect?measurement_id=${measurementId}&api_secret=${secret}`, {
       method: "POST",

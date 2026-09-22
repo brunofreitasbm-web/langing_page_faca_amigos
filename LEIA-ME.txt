@@ -1,3 +1,12 @@
+ATUALIZAÇÃO 22/09/2026 (3) — troca do measurement ID do GA4
+--------------------------------------------------------------
+G-Q7LHH3C9P8 virou G-37G5XLBXKG (assets/fa-track.js e o fallback em
+supabase/functions/hotmart-webhook/index.ts). Substituição simples: mesma
+lógica de Consent Mode v2, mesmos dois containers GTM, nada mais mudou. Se
+GA4_MEASUREMENT_ID estiver configurada como secret no Supabase, ela continua
+tendo prioridade sobre esse fallback — conferir se não ficou apontando pro ID
+antigo.
+
 ATUALIZAÇÃO 22/09/2026 (2) — compra chega ao GA4 e à Meta (server-side)
 ------------------------------------------------------------------------
 Até aqui o GA4 e o Meta sabiam quem clicava em begin_checkout e nunca quem comprava: dava para medir CTR de

@@ -25,7 +25,7 @@
   // e custo por conversão saem errados). Antes de mexer, conferir em tagmanager.google.com quais tags existem em
   // cada um; se um estiver vazio ou for legado, remover daqui E do noscript das páginas (grep pelo ID). Enquanto
   // a checagem não acontecer, os dois ficam como estão — remover às cegas apaga disparo de conversão em produção.
-  var IDS = { gtm: 'GTM-PN5D2BTS', gtm2: 'GTM-NPDJ58XR', ga4: 'G-Q7LHH3C9P8', clarity: 'xz0butjjbh', cs: 'c3b9c7ee91c87' };
+  var IDS = { gtm: 'GTM-PN5D2BTS', gtm2: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG', clarity: 'xz0butjjbh', cs: 'c3b9c7ee91c87' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
