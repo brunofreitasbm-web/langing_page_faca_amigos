@@ -2240,9 +2240,14 @@
           .then(function (r) {
             if (!r.ok) throw new Error(r.data.error || 'Falha ao enviar candidatura');
             if (window.faTrack) window.faTrack('job_application_submit', { pagina: location.pathname });
+            var sentEmail = document.getElementById('job-email').value.trim();
             jobForm.innerHTML = '<div style="text-align:center; padding: 10px 0;">' +
-              '<h4 style="color:var(--dark); margin-bottom:12px; font-family:\'Fredoka One\',sans-serif; font-size:1.3rem;">Candidatura enviada!</h4>' +
-              '<p style="color:var(--ink-soft); font-weight:600; font-size:0.95rem;">Obrigado pelo interesse em fazer parte do FaçaAmigos. Nosso time de RH vai analisar seu currículo e entrar em contato.</p></div>';
+              '<h4 style="color:var(--dark); margin-bottom:12px; font-family:\'Fredoka One\',sans-serif; font-size:1.3rem;">Currículo enviado com sucesso!</h4>' +
+              '<p style="color:var(--ink-soft); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Obrigado pelo interesse em fazer parte do FaçaAmigos. Recebemos sua candidatura.</p>' +
+              '<p style="color:var(--ink-soft); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Fique atento(a) ao seu e-mail <strong id="job-sent-email" style="word-break:break-all;"></strong>: em alguns minutos você vai receber o link do nosso <strong>teste de perfil comportamental</strong>. Responda em até 7 dias para seguir no processo seletivo.</p>' +
+              '<p style="color:var(--ink-soft); font-size:0.85rem;">Não encontrou? Confira as pastas de spam e promoções.</p></div>';
+            // textContent, não innerHTML: o e-mail vem do campo digitado.
+            document.getElementById('job-sent-email').textContent = sentEmail;
           })
           .catch(function (err) {
             var errorMsg = err.message || '';
