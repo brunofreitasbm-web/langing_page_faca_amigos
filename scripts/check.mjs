@@ -22,6 +22,7 @@ const paginas = readdirSync(root)
 let totalErros = 0;
 let totalAvisos = 0;
 const resumo = [];
+const nomesOrganization = new Map(); // name -> Set(arquivo)
 
 // ---------- utilidades ----------
 // Remove comentários, o corpo de <script> e <style> (mantém as tags de abertura, com seus atributos).
@@ -43,7 +44,24 @@ function attrs(tag) {
 }
 
 function decodeHtml(s) {
-  return s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'");
+  return s.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, ' ');
+}
+
+// Remove tags (sem inserir espaço — a formatação do HTML já tem os espaços reais entre palavras)
+// e decodifica entidades, para comparar texto visível com texto de JSON-LD.
+function textoVisivel(html) {
+  return decodeHtml(html.replace(/<[^>]+>/g, '')).replace(/\s+/g, ' ').trim();
+}
+
+// Achata um documento JSON-LD (objeto único ou @graph) em uma lista de nós.
+function noJsonLd(doc) {
+  if (doc && Array.isArray(doc['@graph'])) return doc['@graph'];
+  return [doc];
+}
+
+function tipos(no) {
+  const t = no?.['@type'];
+  return Array.isArray(t) ? t : t ? [t] : [];
 }
 
 // Converte uma URL/href em caminho relativo à raiz do site (ou null se for externa/ignorável).
@@ -202,9 +220,45 @@ for (const arq of paginas) {
 
   // JSON-LD
   let nLd = 0;
+  const nosLd = []; // todos os nós (objeto único ou @graph achatado) de todos os blocos da página
   for (const m of html.matchAll(/<script\b[^>]*type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)) {
     nLd++;
-    try { JSON.parse(m[1]); } catch (e) { erros.push(`JSON-LD #${nLd} não parseia: ${e.message}`); }
+    let doc;
+    try { doc = JSON.parse(m[1]); } catch (e) { erros.push(`JSON-LD #${nLd} não parseia: ${e.message}`); continue; }
+    nosLd.push(...noJsonLd(doc));
+  }
+
+  // Organization / LocalBusiness: precisam de "@id" (para o parentOrganization de outras páginas linkar)
+  // e o nome da Organization tem que ser igual em todo o site.
+  for (const no of nosLd) {
+    const t = tipos(no);
+    if (t.includes('Organization') || t.includes('LocalBusiness')) {
+      if (!no['@id']) erros.push(`JSON-LD ${t.join('/')} "${no.name ?? '?'}" sem "@id"`);
+    }
+    if (t.includes('Organization') && no.name) {
+      if (!nomesOrganization.has(no.name)) nomesOrganization.set(no.name, new Set());
+      nomesOrganization.get(no.name).add(arq);
+    }
+  }
+
+  // FAQPage: o texto do JSON-LD tem que ser idêntico ao FAQ visível (<details><summary>...</summary>...</details>).
+  {
+    const faqLd = nosLd.filter((no) => tipos(no).includes('FAQPage')).flatMap((no) => no.mainEntity ?? []);
+    const faqVisivel = [...limpo.matchAll(/<details\b[^>]*>\s*<summary[^>]*>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/gi)]
+      .map((m) => ({ name: textoVisivel(m[1]), resposta: textoVisivel(m[2]) }));
+    if (faqLd.length || faqVisivel.length) {
+      if (faqLd.length !== faqVisivel.length) {
+        erros.push(`FAQ: ${faqVisivel.length} pergunta(s) visível(is) vs ${faqLd.length} no JSON-LD`);
+      } else {
+        faqVisivel.forEach((v, i) => {
+          const q = faqLd[i] ?? {};
+          const ldNome = textoVisivel(q.name ?? '');
+          const ldResposta = textoVisivel(q.acceptedAnswer?.text ?? '');
+          if (v.name !== ldNome) erros.push(`FAQ #${i + 1}: pergunta visível difere do JSON-LD ("${v.name}" vs "${ldNome}")`);
+          else if (v.resposta !== ldResposta) erros.push(`FAQ #${i + 1} ("${v.name}"): resposta visível difere do JSON-LD`);
+        });
+      }
+    }
   }
 
   // og:image / twitter:image
@@ -223,6 +277,31 @@ for (const arq of paginas) {
   resumo.push({ arq, erros, avisos, nLd });
   totalErros += erros.length;
   totalAvisos += avisos.length;
+}
+
+// ---------- verificação global: nome da Organization e preços do llms*.txt ----------
+if (nomesOrganization.size > 1) {
+  const lista = [...nomesOrganization.entries()].map(([nome, arqs]) => `"${nome}" (${[...arqs].join(', ')})`).join(' vs ');
+  globais.erros.push(`nome da Organization diverge entre páginas: ${lista}`);
+}
+{
+  const precoRe = /R\$\s?\d+(?:,\d{2})?/g;
+  // Compara pelo valor numérico (centavos), não pelo texto: "R$ 60" e "R$ 60,00" são o mesmo preço.
+  const centavos = (txt) => Math.round(parseFloat(txt.replace(/^R\$\s?/, '').replace(',', '.')) * 100);
+  const precosPaginas = new Set();
+  for (const arq of paginas) {
+    if (arq === 'wifi.html') continue; // cupom Wi-Fi tem valores próprios, não é preço de tabela
+    for (const m of read(arq).matchAll(precoRe)) precosPaginas.add(centavos(m[0]));
+  }
+  for (const arqLlm of ['llms.txt', 'llms-full.txt']) {
+    if (!existsSync(join(root, arqLlm))) continue;
+    const vistos = new Map(); // centavos -> texto original (para a mensagem)
+    for (const m of read(arqLlm).matchAll(precoRe)) vistos.set(centavos(m[0]), m[0]);
+    const faltando = [...vistos.entries()].filter(([c]) => !precosPaginas.has(c)).map(([, txt]) => txt);
+    if (faltando.length) {
+      globais.erros.push(`${arqLlm}: preço(s) ${faltando.join(', ')} não aparece(m) em nenhuma página do site.`);
+    }
+  }
 }
 
 // ---------- saída ----------

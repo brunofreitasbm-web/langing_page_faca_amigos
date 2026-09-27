@@ -14,3 +14,5 @@ jobs:
           node-version: 20
       - name: Verificar páginas, links e JSON-LD
         run: node scripts/check.mjs
+      - name: Verificar llms.txt/llms-full.txt contra o snapshot do quiosque
+        run: node scripts/geo-build.mjs --check

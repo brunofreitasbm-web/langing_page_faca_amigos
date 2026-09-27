@@ -7,7 +7,9 @@
 //  c) eventos da Hotmart em fa_hotmart_eventos com error;
 //  d) pg_cron: execuções falhas nas últimas 24h, respostas HTTP de erro do pg_net e ausência de execução dos jobs
 //     guia-sequence-hourly e hotmart-sync-15min (via função SQL fa_health_snapshot(), security definer);
-//  e) cupons do Wi-Fi com email_error.
+//  e) cupons do Wi-Fi com email_error;
+//  f) GEO: preços/descontos que o site (llms.txt, JSON-LD, #precos) pressupõe divergindo do que o
+//     quiosque cobra de verdade hoje (fa_kiosk_plans/packages/coupons).
 //
 // Follow-up de lead quente: lead "completed" com result_band = 'tier3' (pior faixa entre as áreas), concluído há
 // mais de 24h, sem contacted_at e sem hot_reminder_sent_at recebe UM lembrete por e-mail para LEAD_NOTIFY_EMAIL
@@ -258,6 +260,97 @@ Deno.serve(async (req) => {
         title: "Cupons Wi-Fi com falha ao enviar e-mail",
         count: data.length,
         items: data.map((w: Row) => `${shortDate(w.created_at)} · ${w.coupon_code} · ${w.guardian_email ?? "sem e-mail"} · ${cut(w.email_error, 100)}`),
+      });
+    }
+  }
+
+  // (f) GEO: o site (llms.txt, JSON-LD, #precos) pressupõe valores específicos do quiosque — se o
+  // quiosque mudar plano, pacote ou o % dos cupons automáticos sem avisar, o site passa a mentir
+  // para famílias e para IAs até alguém rodar "npm run geo" e publicar. Ver geo-facts.json e
+  // scripts/geo-build.mjs.
+  {
+    const UNIT_PARQUE = "11111111-1111-1111-1111-111111111111";
+    const UNIT_CIRCUITO = "e43ba7a8-bd5f-47ad-b81d-dae7ea19d504";
+    // O que o site publica hoje (espelha geo-facts.json commitado). Preço de tabela em centavos.
+    const ESPERADO = {
+      descontoGeralPct: 40,
+      descontoInclusivoPct: 50,
+      planosParque: { "30 minutos": 10000, "1 hora": 18000, "2 horas": 32000 },
+      overageParqueCents: 300,
+      pacotesParque: { "DAY USE": 45000, "PORTO SEGURO": 140000 },
+      planosCircuito: { "Pelúcia e Jeep (20 min)": 4800, "Carro e moto (30 min)": 4800 },
+      overageCircuitoCents: 300,
+    };
+    const divergencias: string[] = [];
+    try {
+      const [cuponsQ, planosParqueQ, pacotesParqueQ, planosCircuitoQ] = await Promise.all([
+        admin.from("fa_kiosk_coupons").select("unit_id, value, description").eq("unit_id", UNIT_PARQUE).eq("active", true).eq("kind", "DESCONTO_PCT").is("allowed_plan_id", null),
+        admin.from("fa_kiosk_plans").select("name, value_cents, overage_cents_per_minute").eq("unit_id", UNIT_PARQUE).eq("active", true).is("asset_kind", null),
+        admin.from("fa_kiosk_packages").select("name, price_cents").eq("unit_id", UNIT_PARQUE).eq("active", true),
+        admin.from("fa_kiosk_plans").select("name, value_cents, overage_cents_per_minute").eq("unit_id", UNIT_CIRCUITO).eq("active", true),
+      ]);
+      for (const [nome, q] of [["cupons", cuponsQ], ["planos do Playground", planosParqueQ], ["pacotes do Playground", pacotesParqueQ], ["planos do Circuito", planosCircuitoQ]] as const) {
+        if (q.error) checkErrors.push(`GEO — ${nome}: ${q.error.message}`);
+      }
+
+      let geral: number | null = null;
+      let inclusivo: number | null = null;
+      for (const c of (cuponsQ.data ?? []) as Row[]) {
+        if (/inclusivo/i.test(c.description ?? "")) inclusivo = Math.max(inclusivo ?? 0, c.value);
+        else geral = Math.max(geral ?? 0, c.value);
+      }
+      if (geral !== ESPERADO.descontoGeralPct) {
+        divergencias.push(`desconto automático do público geral: quiosque tem ${geral ?? "nenhum"}%, site pressupõe ${ESPERADO.descontoGeralPct}%`);
+      }
+      if (inclusivo !== ESPERADO.descontoInclusivoPct) {
+        divergencias.push(`desconto da meia-entrada inclusiva: quiosque tem ${inclusivo ?? "nenhum"}%, site pressupõe ${ESPERADO.descontoInclusivoPct}%`);
+      }
+
+      for (const p of (planosParqueQ.data ?? []) as Row[]) {
+        const esperado = (ESPERADO.planosParque as Row)[p.name];
+        if (esperado != null && p.value_cents !== esperado) {
+          divergencias.push(`plano Playground "${p.name}": quiosque cobra R$ ${(p.value_cents / 100).toFixed(2)}, site pressupõe R$ ${(esperado / 100).toFixed(2)}`);
+        }
+        if (p.overage_cents_per_minute !== ESPERADO.overageParqueCents) {
+          divergencias.push(`minuto adicional Playground "${p.name}": quiosque cobra R$ ${(p.overage_cents_per_minute / 100).toFixed(2)}, site pressupõe R$ ${(ESPERADO.overageParqueCents / 100).toFixed(2)}`);
+        }
+      }
+      for (const nomeEsperado of Object.keys(ESPERADO.planosParque)) {
+        if (!(planosParqueQ.data ?? []).some((p: Row) => p.name === nomeEsperado)) {
+          divergencias.push(`plano Playground "${nomeEsperado}" não está mais ativo no quiosque`);
+        }
+      }
+
+      for (const pkg of (pacotesParqueQ.data ?? []) as Row[]) {
+        const esperado = (ESPERADO.pacotesParque as Row)[pkg.name];
+        if (esperado != null && pkg.price_cents !== esperado) {
+          divergencias.push(`pacote Playground "${pkg.name}": quiosque cobra R$ ${(pkg.price_cents / 100).toFixed(2)}, site pressupõe R$ ${(esperado / 100).toFixed(2)}`);
+        }
+      }
+      for (const nomeEsperado of Object.keys(ESPERADO.pacotesParque)) {
+        if (!(pacotesParqueQ.data ?? []).some((p: Row) => p.name === nomeEsperado)) {
+          divergencias.push(`pacote Playground "${nomeEsperado}" não está mais ativo no quiosque`);
+        }
+      }
+
+      for (const p of (planosCircuitoQ.data ?? []) as Row[]) {
+        const esperado = (ESPERADO.planosCircuito as Row)[p.name];
+        if (esperado != null && p.value_cents !== esperado) {
+          divergencias.push(`plano Circuito "${p.name}": quiosque cobra R$ ${(p.value_cents / 100).toFixed(2)}, site pressupõe R$ ${(esperado / 100).toFixed(2)}`);
+        }
+        if (p.overage_cents_per_minute !== ESPERADO.overageCircuitoCents) {
+          divergencias.push(`minuto adicional Circuito "${p.name}": quiosque cobra R$ ${(p.overage_cents_per_minute / 100).toFixed(2)}, site pressupõe R$ ${(ESPERADO.overageCircuitoCents / 100).toFixed(2)}`);
+        }
+      }
+    } catch (e) {
+      checkErrors.push(`GEO: ${e instanceof Error ? e.message : "erro desconhecido"}`);
+    }
+    if (divergencias.length) {
+      problems.push({
+        key: "geo_price_drift",
+        title: "Preços do site divergem do que o quiosque cobra hoje",
+        count: divergencias.length,
+        items: [...divergencias, 'Rode "npm run geo" (ou atualize à mão) e publique.'],
       });
     }
   }

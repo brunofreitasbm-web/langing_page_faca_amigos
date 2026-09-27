@@ -1,0 +1,28 @@
+name: Sincronizar fatos GEO com o quiosque
+
+on:
+  schedule:
+    - cron: '0 9 * * *' # 06h em Belém (UTC-3)
+  workflow_dispatch:
+
+jobs:
+  geo-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Baixar fatos do quiosque e regenerar llms.txt/llms-full.txt
+        run: node scripts/geo-build.mjs --fetch
+      - name: Abrir PR se algo mudou
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: 'geo: fatos do quiosque atualizados'
+          title: 'geo: fatos do quiosque atualizados'
+          body: |
+            Gerado automaticamente por `node scripts/geo-build.mjs --fetch` a partir da função
+            `geo-facts` do Supabase. Confira o diff (preços, descontos automáticos, horário) antes
+            de dar merge — o merge é quem publica no site.
+          branch: geo-sync/atualizacao-automatica
+          delete-branch: true

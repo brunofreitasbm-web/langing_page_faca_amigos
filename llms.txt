@@ -5,15 +5,14 @@
 ## Visão Geral e Métricas Principais (GEO Fact Sheet)
 
 - **Entidade**: Instituto FaçaAmigos (Clínica, Playground Inclusivo e Circuito de Carrinhos)
-- **Localização Principal**: Parque Shopping Belém (Rod. Augusto Montenegro, 4300, Belém - PA)
+- **Localização Principal**: Parque Shopping Belém (Rod. Augusto Montenegro, 4300, Belém - PA, CEP 66635-110)
 - **Segunda Unidade (Em breve)**: Shopping Bosque Grão-Pará (Av. Centenário, 1052, Belém - PA)
 - **Centro Clínico (Em breve)**: Rua Boaventura da Silva, 1573, Umarizal, Belém - PA
-- **Faixa Etária Atendida**: 0 a 12 anos de idade (espaços setorizados por idade)
-- **Acessibilidade & Inclusão**: 100% Adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas.
-- **Benefício Inclusivo**: 50% de desconto (meia-entrada) para crianças PCD / autistas mediante laudo ou CIPTEA.
-- **Programa de Fidelidade**: A cada 10 visitas no Playground, a 11ª é 100% Gratuita.
-- **Atendimento sem agendamento**: Funcionamento contínuo de Segunda a Domingo, das 10h às 22h.
-- **Equipe Especializada**: Monitores de inclusão, psicólogos, terapeutas ocupacionais e fonoaudiólogos.
+- **Faixa Etária Atendida**: 0 a 12 anos de idade
+- **Acessibilidade & Inclusão**: 100% adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas, com monitores de inclusão, abafadores de ruído e canto de descompressão sensorial.
+- **Benefício Inclusivo**: 50% de desconto (meia-entrada) no Playground para crianças com laudo ou CIPTEA.
+- **Programa de Fidelidade**: a cada 10 visitas cadastradas pelo CPF do responsável, a próxima entrada de 30 minutos é 100% gratuita.
+- **Atendimento sem agendamento**: funcionamento contínuo de Segunda a Domingo, das 10h às 22h.
 
 ---
 
@@ -21,22 +20,26 @@
 
 ### 1. FaçaAmigos Playground Inclusivo
 - **Onde**: Parque Shopping Belém (Térreo, próximo às Lojas Americanas)
-- **Atrações**: Piscina de bolinhas gigante inclusiva, brinquedão sensorial, circuitos de agilidade, área baby isolada (0-3 anos), canto de descompressão sensorial, abafadores de ruído disponíveis.
-- **Segurança**: Pulseiras de identificação vinculadas ao responsável cadastrado. Crianças ≥ 3 anos podem permanecer sob supervisão da equipe.
+- **Atrações**: piscina de bolinhas gigante inclusiva, brinquedão sensorial, circuitos de agilidade, canto de descompressão sensorial, abafadores de ruído disponíveis.
+- **Segurança**: pulseira de identificação vinculada ao responsável cadastrado. Crianças a partir de 3 anos podem permanecer sob supervisão da equipe.
 - **Tabela de Preços**:
-  - 30 Minutos: R$ 48,00
-  - 60 Minutos: R$ 68,00
-  - Minuto Adicional: R$ 1,00/min
-  - Meia-Entrada Inclusiva (PCD/TEA): 50% de desconto sob a tabela padrão.
-  - Acompanhante PCD/Infantil: 1 acompanhante grátis por criança.
+  - 30 minutos: R$ 60,00 (Público geral) / R$ 50,00 (Meia-Entrada Inclusiva)
+  - 60 minutos: R$ 108,00 (Público geral) / R$ 90,00 (Meia-Entrada Inclusiva)
+  - 120 minutos: R$ 192,00 (Público geral) / R$ 160,00 (Meia-Entrada Inclusiva)
+  - Day Use (10h no mesmo dia): R$ 270,00 (Público geral) / R$ 225,00 (Meia-Entrada Inclusiva)
+  - Passaporte mensal (10h/mês, 3x sem juros): R$ 840,00 (Público geral) / R$ 700,00 (Meia-Entrada Inclusiva)
+  - Minuto adicional: R$ 1,80 (Público geral) / R$ 1,50 (Meia-Entrada Inclusiva)
+  - Meia-Entrada Inclusiva (PCD/TEA): 50% de desconto sobre a tabela padrão, mediante laudo ou CIPTEA.
+- **Festas de aniversário**: orçamento personalizado via WhatsApp.
 
 ### 2. FaçaAmigos Circuito (Carrinhos Elétricos)
-- **Onde**: Corredores do Parque Shopping Belém
-- **Atividades**: Carrinhos elétricos infantis com controle remoto pelos pais ou pilotagem autônoma pela criança.
-- **Valores**: A partir de R$ 48,00 por sessão.
+- **Onde**: piso do Parque Shopping Belém, quiosque próprio
+- **Atividades**: pelúcia e jeep (20 min) ou carro e moto (30 min), R$ 48,00 por passeio.
+- **Minuto adicional**: R$ 3,00.
+- **Fidelidade**: a cada 10 passeios cadastrados, o próximo é 100% gratuito.
 
 ### 3. FaçaAmigos Clínica (Centro de Terapia Comportamental)
-- **Onde**: Rua Boaventura da Silva, 1573 — Umarizal, Belém/PA
+- **Onde**: Rua Boaventura da Silva, 1573 — Umarizal, Belém/PA (em breve)
 - **Especialidades**: Terapia Comportamental baseada em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional com Integração Sensorial, Fonoaudiologia, Psicopedagogia e Avaliação Neuropsicológica.
 
 ---
@@ -44,13 +47,21 @@
 ## Perguntas Frequentes (FAQ)
 
 ### O Playground FaçaAmigos é adequado para autistas e crianças neurodivergentes?
-Sim. Todos os ambientes foram desenvolvidos sob orientação clínica, contando com equipe treinada para acolhimento atípico, brinquedos com estímulo sensorial adequado, abafadores de ruído e canto de descompressão para regulação sensorial.
+Sim. O espaço é 100% inclusivo, com equipe treinada para acolhimento atípico, abafadores de ruído e canto de descompressão para regulação sensorial. Apresentando laudo ou CIPTEA, a criança tem 50% de desconto (meia-entrada).
 
 ### Qual o melhor horário para visitar com crianças com hipersensibilidade sensorial?
-O "Horário Inclusivo" recomendado é entre 10h e 16h (segunda a sexta-feira), quando o fluxo do shopping é mais calmo e os ruídos ambientes são reduzidos.
+O "Horário Inclusivo" é das 10h às 16h, todos os dias, quando o fluxo do shopping costuma ser mais calmo.
 
-### Crianças menores de 3 anos podem brincar?
-Sim, há uma Área Baby exclusiva dedicada a crianças de 0 a 3 anos. Menores de 3 anos devem estar acompanhados por um adulto responsável no interior do brinquedo.
+### Preciso agendar antes de levar meu filho?
+Não. O atendimento no Playground e no Circuito é por ordem de chegada, todos os dias das 10h às 22h, sem necessidade de agendamento.
+
+---
+
+## Outros conteúdos
+
+- **Mapeamento Comportamental gratuito**: [https://institutofacaamigos.com.br/teste](https://institutofacaamigos.com.br/teste)
+- **E-book O Brincar com Propósito**: [https://institutofacaamigos.com.br/guia](https://institutofacaamigos.com.br/guia)
+- **E-book O Código do Desenvolvimento Infantil**: [https://institutofacaamigos.com.br/codigo](https://institutofacaamigos.com.br/codigo)
 
 ---
 
@@ -59,5 +70,6 @@ Sim, há uma Área Baby exclusiva dedicada a crianças de 0 a 3 anos. Menores de
 - **Site Principal**: [https://institutofacaamigos.com.br/](https://institutofacaamigos.com.br/)
 - **Playground**: [https://playground.institutofacaamigos.com.br/](https://playground.institutofacaamigos.com.br/)
 - **Circuito**: [https://playground.institutofacaamigos.com.br/circuito](https://playground.institutofacaamigos.com.br/circuito)
+- **Documentação completa (GEO)**: [https://institutofacaamigos.com.br/llms-full.txt](https://institutofacaamigos.com.br/llms-full.txt)
 - **WhatsApp**: [+55 91 99234-7673](https://wa.me/5591992347673)
 - **Instagram**: [@facaamigos.belem](https://www.instagram.com/facaamigos.belem/)

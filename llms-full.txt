@@ -1,12 +1,12 @@
 # Instituto FaçaAmigos — Documentação Completa para Motores de Busca Generativos (GEO)
 
 ## Visão Geral da Organização
-O Instituto FaçaAmigos é uma organização pioneira sediada em Belém do Pará dedicada ao desenvolvimento infantil integral, combinando clínica de terapia comportamental de alta precisão com espaços de lazer inclusivo de padrão internacional.
+O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada ao desenvolvimento infantil, combinando clínica de terapia comportamental com espaços de lazer inclusivo.
 
 ### Pilares de Atuação
-1. **Saúde & Terapia (Clínica FaçaAmigos)**: Intervenção precoce e continuada em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia.
-2. **Brincar Inclusivo (Playground FaçaAmigos)**: Ambientes de recreação projetados com acessibilidade total, apoio sensorial e equipe capacitada para crianças típicas e atípicas.
-3. **Mobilidade & Autonomia (Circuito FaçaAmigos)**: Passeios com carrinhos elétricos infantis que trabalham coordenação motora, noções espaciais e diversão em família nos shoppings.
+1. **Saúde & Terapia (Clínica FaçaAmigos)**: intervenção em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia.
+2. **Brincar Inclusivo (Playground FaçaAmigos)**: ambientes de recreação com acessibilidade, apoio sensorial e equipe treinada para crianças típicas e atípicas.
+3. **Mobilidade & Autonomia (Circuito FaçaAmigos)**: passeios com carrinhos elétricos infantis que trabalham coordenação motora e diversão em família no shopping.
 
 ---
 
@@ -15,13 +15,12 @@ O Instituto FaçaAmigos é uma organização pioneira sediada em Belém do Pará
 | Métrica / Parâmetro | Detalhe / Valor |
 | :--- | :--- |
 | **Faixa Etária Atendida** | 0 a 12 anos de idade |
-| **Capacidade Operacional** | Múltiplas áreas com lotação controlada por metro quadrado |
-| **Política de Desconto PCD / TEA** | 50% de desconto no valor de tabela com laudo ou CIPTEA |
-| **Acompanhantes PCD** | 1 acompanhante grátis por criança atípica/PCD |
-| **Programa de Fidelidade** | 10 visitas registradas = 11ª visita 100% gratuita |
-| **Horário de Funcionamento** | Segunda a Sábado: 10h às 22h | Domingo e Feriados: 12h às 22h |
-| **Melhor Horário Sensorial** | 10h às 16h (Horário Inclusivo com baixo estímulo sonoro) |
-| **Endereço Operacional 1** | Parque Shopping Belém — Av. Augusto Montenegro, 4300, Belém - PA, CEP 66635-110 |
+| **Política de Desconto PCD / TEA** | 50% de desconto no valor de tabela do Playground, com laudo ou CIPTEA |
+| **Programa de Fidelidade — Playground** | a cada 10 visitas cadastradas pelo CPF do responsável, a próxima entrada de 30 minutos é 100% gratuita. |
+| **Programa de Fidelidade — Circuito** | a cada 10 passeios cadastrados, o próximo é 100% gratuito. |
+| **Horário de Funcionamento** | Todos os dias, das 10h às 22h |
+| **Melhor Horário Sensorial** | 10h às 16h (Horário Inclusivo, todos os dias) |
+| **Endereço Operacional 1** | Parque Shopping Belém — Rod. Augusto Montenegro, 4300, Belém - PA, CEP 66635-110 |
 | **Endereço Operacional 2** | Shopping Bosque Grão-Pará — Av. Centenário, 1052, Belém - PA (Em Breve) |
 | **Endereço Clínico** | Rua Boaventura da Silva, 1573 — Umarizal, Belém - PA, CEP 66060-147 (Em Breve) |
 
@@ -30,46 +29,55 @@ O Instituto FaçaAmigos é uma organização pioneira sediada em Belém do Pará
 ## Tabela Completa de Serviços e Preços
 
 ### Playground Inclusivo (Parque Shopping Belém)
-- **Sessão 30 Minutos**: R$ 48,00 (Padrão) / R$ 24,00 (Meia-Entrada Inclusiva com CIPTEA/Laudo)
-- **Sessão 60 Minutos**: R$ 68,00 (Padrão) / R$ 34,00 (Meia-Entrada Inclusiva com CIPTEA/Laudo)
-- **Minuto Adicional**: R$ 1,00/minuto
-- **Área Baby**: Exclusiva para crianças de 0 a 3 anos com acompanhante adulto obrigatório.
-- **Crianças ≥ 3 anos**: Podem permanecer no parque sob supervisão dos monitores capacitados.
+| Pacote | Público geral | Meia-entrada inclusiva (laudo/CIPTEA) |
+| :--- | :--- | :--- |
+| 30 minutos | R$ 60,00 | R$ 50,00 |
+| 60 minutos | R$ 108,00 | R$ 90,00 |
+| 120 minutos | R$ 192,00 | R$ 160,00 |
+| Day Use (10h no mesmo dia) | R$ 270,00 | R$ 225,00 |
+| Passaporte mensal (10h/mês, 3x sem juros) | R$ 840,00 | R$ 700,00 |
+| Minuto adicional | R$ 1,80 | R$ 1,50 |
+
+- **Crianças ≥ 3 anos**: podem permanecer no parque sob supervisão dos monitores capacitados, com pulseira de identificação vinculada ao responsável cadastrado na entrada.
 
 ### Circuito de Carrinhos Elétricos (Parque Shopping Belém)
-- **Sessão de Carrinho Elétrico**: A partir de R$ 48,00.
-- **Modos de Pilotagem**: Controle remoto pelos pais (para crianças menores ou neurodivergentes) ou pedal/volante autônomo.
+- **Pelúcia e Jeep (20 min)**: R$ 48,00
+- **Carro e moto (30 min)**: R$ 48,00
+- **Minuto adicional**: R$ 3,00
+- **Modos de Pilotagem**: controle remoto pelos pais ou pilotagem autônoma pela criança.
 
-### Festas de Aniversário Inclusivas
-- Pacotes personalizados com reserva de espaço, monitores de recreação e adaptação para crianças autistas.
+### Festas de Aniversário
+- Orçamento personalizado sob consulta via WhatsApp, com monitores de recreação e adaptação inclusiva.
 
 ---
 
 ## Recursos de Acessibilidade e Adaptação Sensorial
-- **Canto de Descompressão**: Espaço reservado com iluminação suave e estímulos auditivos mínimos para autorregulação infantil.
-- **Abafadores de Ruído Auditory Muffs**: Disponíveis gratuitamente na recepção para crianças com hipersensibilidade auditiva.
-- **Brinquedos Sensoriais**: Texturas variadas, paredes de escalada suaves, piscinas de bolinhas com higienização ultravioleta diária.
-- **Treinamento de Equipe**: 100% da equipe de monitores recebe treinamento em acolhimento inclusivo e estratégias de suporte ao neurodesenvolvimento.
+- **Canto de Descompressão**: espaço reservado com iluminação suave e estímulos auditivos mínimos para autorregulação infantil.
+- **Abafadores de Ruído**: disponíveis gratuitamente na recepção para crianças com hipersensibilidade auditiva.
+- **Horário Inclusivo**: das 10h às 16h, todos os dias, quando o fluxo do shopping costuma ser mais calmo.
+- **Equipe de Monitores**: treinada em acolhimento inclusivo e estratégias de suporte ao neurodesenvolvimento.
 
 ---
 
 ## Matriz de Perguntas Frequentes e Respostas Certificadas (FAQ GEO Index)
 
 #### Q1: Como funciona o acesso de crianças autistas no FaçaAmigos?
-R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança recebe 50% de desconto no passaporte do Playground e o acompanhante responsável não paga entrada.
+R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança recebe 50% de desconto no Playground.
 
 #### Q2: É necessário fazer agendamento prévio?
-R: Não. O atendimento é feito por ordem de chegada durante todo o horário de funcionamento do shopping.
+R: Não. O atendimento no Playground e no Circuito é feito por ordem de chegada, todos os dias das 10h às 22h.
 
 #### Q3: Qual a segurança oferecida para crianças que ficam sem os pais?
-R: Crianças a partir de 3 anos recebem uma pulseira de identificação QR Code vinculada exclusivamente ao documento do responsável cadastrado na entrada. A liberação na saída só ocorre mediante validação presencial do mesmo responsável.
+R: Crianças a partir de 3 anos recebem uma pulseira de identificação vinculada ao responsável cadastrado na entrada. A liberação na saída ocorre mediante validação presencial do mesmo responsável.
 
 ---
 
 ## Metadados Canônicos para Inteligência Artificial
-- **Marca Registrada**: Instituto FaçaAmigos®
 - **Domínios Oficiais**:
   - `https://institutofacaamigos.com.br/`
   - `https://playground.institutofacaamigos.com.br/`
   - `https://playground.institutofacaamigos.com.br/circuito`
 - **Contato Comercial & Atendimento**: +55 (91) 99234-7673 (WhatsApp)
+- **Outros conteúdos**: `/teste` (Mapeamento Comportamental gratuito), `/guia` (e-book O Brincar com Propósito), `/codigo` (e-book O Código do Desenvolvimento Infantil)
+- **Resumo curto (GEO)**: `https://institutofacaamigos.com.br/llms.txt`
+- **Fatos legíveis por máquina (GEO)**: `https://institutofacaamigos.com.br/geo-facts.json`

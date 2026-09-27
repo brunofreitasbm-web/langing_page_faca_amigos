@@ -55,13 +55,14 @@
       "@type": ["LocalBusiness", "EntertainmentBusiness"],
       "@id": "https://playground.institutofacaamigos.com.br/#parqueshopping",
       "name": "FaçaAmigos — Playground Inclusivo (Parque Shopping Belém)",
+      "parentOrganization": { "@id": "https://institutofacaamigos.com.br/#organization" },
       "image": "https://playground.institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg",
       "url": "https://playground.institutofacaamigos.com.br/",
       "telephone": "+55 91 99234-7673",
       "priceRange": "$$",
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "Av. Augusto Montenegro, 4300 — Parque Shopping Belém, Térreo, próximo às Lojas Americanas",
+        "streetAddress": "Rod. Augusto Montenegro, 4300 — Parque Shopping Belém, Térreo, próximo às Lojas Americanas",
         "addressLocality": "Belém",
         "addressRegion": "PA",
         "postalCode": "66635-110",
@@ -80,12 +81,123 @@
       },
       "sameAs": [
         "https://www.instagram.com/facaamigos.belem/"
+      ],
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "name": "30 minutos — público geral",
+          "price": "60.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "60.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 30, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "30 minutos — meia-entrada inclusiva",
+          "eligibleCustomerType": "https://schema.org/DisabledPerson",
+          "price": "50.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "50.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 30, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "1 hora — público geral",
+          "price": "108.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "108.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 60, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "1 hora — meia-entrada inclusiva",
+          "eligibleCustomerType": "https://schema.org/DisabledPerson",
+          "price": "90.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "90.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 60, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "2 horas — público geral",
+          "price": "192.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "192.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 120, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "2 horas — meia-entrada inclusiva",
+          "eligibleCustomerType": "https://schema.org/DisabledPerson",
+          "price": "160.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "160.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 120, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Day Use (10h no mesmo dia) — público geral",
+          "price": "270.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "270.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 600, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Day Use (10h no mesmo dia) — meia-entrada inclusiva",
+          "eligibleCustomerType": "https://schema.org/DisabledPerson",
+          "price": "225.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "225.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 600, "unitCode": "MIN" }
+          }
+        }
       ]
     },
     {
       "@type": ["LocalBusiness", "EntertainmentBusiness"],
       "@id": "https://playground.institutofacaamigos.com.br/#bosquegraopara",
       "name": "FaçaAmigos — Playground Inclusivo (Shopping Bosque Grão-Pará)",
+      "parentOrganization": { "@id": "https://institutofacaamigos.com.br/#organization" },
       "image": "https://playground.institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg",
       "url": "https://playground.institutofacaamigos.com.br/",
       "telephone": "+55 91 99234-7673",
@@ -105,6 +217,52 @@
       },
       "sameAs": [
         "https://www.instagram.com/facaamigos.belem/"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://playground.institutofacaamigos.com.br/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Preciso agendar para brincar?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não! É só chegar entre 10h e 22h, qualquer dia da semana, fazer o cadastro rápido na recepção e brincar."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Posso deixar meu filho e circular pelo shopping?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Crianças a partir de 3 anos podem ficar sem os pais — a equipe acompanha as brincadeiras o tempo todo e a pulseira garante que a saída só acontece com o responsável cadastrado. Menores de 3 anos precisam de um adulto no local."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Meu filho é atípico. Como funciona o acolhimento?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Avise a equipe na entrada. Temos monitores de inclusão, abafadores de ruído e canto de descompressão. A meia-entrada inclusiva (50%) vale mediante laudo ou CIPTEA (Carteira de Identificação da Pessoa com Transtorno do Espectro Autista) — e o Horário Inclusivo (10h–16h) é o melhor horário para a primeira visita."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Qual a faixa etária?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "De 0 a 12 anos, com áreas e brinquedos pensados para cada fase do desenvolvimento."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Vocês fazem festa de aniversário?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim! Chame a gente no WhatsApp e peça um orçamento personalizado para a festa do seu filho."
+          }
+        }
       ]
     }
   ]
@@ -1829,7 +1987,7 @@
     <div class="wrap fx">
       <div class="center">
         <h2 class="sec-title">Quanto custa uma tarde tranquila?</h2>
-        <p class="sec-sub">Preço transparente, direto no site. A meia-entrada inclusiva vale para crianças
+        <p class="sec-sub">Preço transparente, direto no site, já com desconto automático aplicado na recepção. A meia-entrada inclusiva (50% sobre a tabela) vale para crianças
           neurodivergentes (com laudo ou CIPTEA — Carteira de Identificação da Pessoa com Transtorno do Espectro Autista).</p>
       </div>
       <div class="price-cards">
@@ -1990,7 +2148,7 @@
         <div class="partner" style="border: 2px solid var(--teal, #1f917f); background: #fff;">
           <span class="badge" style="background: var(--teal, #1f917f); color: #fff; margin-bottom: 12px; display: inline-block;">📍 Aberto Todos os Dias</span>
           <h3 style="margin-top: 8px;">Parque Shopping Belém</h3>
-          <p style="margin-bottom: 6px;"><b>Endereço:</b> Av. Augusto Montenegro, 4300 · Térreo (próximo às Lojas Americanas)</p>
+          <p style="margin-bottom: 6px;"><b>Endereço:</b> Rod. Augusto Montenegro, 4300 · Térreo (próximo às Lojas Americanas)</p>
           <p style="margin-bottom: 6px;"><b>Horário:</b> Segunda a Domingo, 10h às 22h</p>
           <p>Piscina de bolinhas gigante, casa na árvore, cantinho de leitura, monitores especializados e espaço sensorial completo.</p>
           <a href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top: 14px;">Traçar rota no Maps</a>
@@ -2070,7 +2228,7 @@
     <img src="img/logo-simbolo.png" width="460" height="416" alt=""
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
     <span class="logo" style="color: #fff;">Faça<span class="amigos">Amigos</span></span>
-    <p><b>Parque Shopping Belém:</b> Av. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
+    <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
     <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground - Em Breve)</p>
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica - Em Breve)</p>
     <p>Todos os dias, das 10h às 22h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank"

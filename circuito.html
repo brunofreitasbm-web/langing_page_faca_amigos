@@ -50,32 +50,105 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": ["LocalBusiness", "EntertainmentBusiness"],
-  "name": "FaçaAmigos Circuito",
-  "image": "https://playground.institutofacaamigos.com.br/img/circuito-carrinhos.jpg",
-  "url": "https://playground.institutofacaamigos.com.br/circuito",
-  "telephone": "+55 91 99234-7673",
-  "priceRange": "$$",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Av. Augusto Montenegro, 4300 — Parque Shopping Belém, Térreo, próximo às Lojas Americanas",
-    "addressLocality": "Belém",
-    "addressRegion": "PA",
-    "addressCountry": "BR"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": -1.3653,
-    "longitude": -48.4552
-  },
-  "openingHoursSpecification": {
-    "@type": "OpeningHoursSpecification",
-    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
-    "opens": "10:00",
-    "closes": "22:00"
-  },
-  "sameAs": [
-    "https://www.instagram.com/facaamigos.belem/"
+  "@graph": [
+    {
+      "@type": ["LocalBusiness", "EntertainmentBusiness"],
+      "@id": "https://playground.institutofacaamigos.com.br/circuito#circuito",
+      "name": "FaçaAmigos Circuito",
+      "image": "https://playground.institutofacaamigos.com.br/img/circuito-carrinhos.jpg",
+      "url": "https://playground.institutofacaamigos.com.br/circuito",
+      "telephone": "+55 91 99234-7673",
+      "priceRange": "$$",
+      "parentOrganization": { "@id": "https://institutofacaamigos.com.br/#organization" },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Rod. Augusto Montenegro, 4300 — Parque Shopping Belém, Térreo, próximo às Lojas Americanas",
+        "addressLocality": "Belém",
+        "addressRegion": "PA",
+        "postalCode": "66635-110",
+        "addressCountry": "BR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -1.3653,
+        "longitude": -48.4552
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "10:00",
+        "closes": "22:00"
+      },
+      "sameAs": [
+        "https://www.instagram.com/facaamigos.belem/"
+      ],
+      "makesOffer": [
+        {
+          "@type": "Offer",
+          "name": "Pelúcia e Jeep (20 minutos)",
+          "price": "48.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "48.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 20, "unitCode": "MIN" }
+          }
+        },
+        {
+          "@type": "Offer",
+          "name": "Carro e moto (30 minutos)",
+          "price": "48.00",
+          "priceCurrency": "BRL",
+          "priceSpecification": {
+            "@type": "UnitPriceSpecification",
+            "price": "48.00",
+            "priceCurrency": "BRL",
+            "unitCode": "MIN",
+            "referenceQuantity": { "@type": "QuantitativeValue", "value": 30, "unitCode": "MIN" }
+          }
+        }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://playground.institutofacaamigos.com.br/circuito#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Preciso agendar para andar de carrinho?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não! É só chegar no quiosque do FaçaAmigos Circuito, no piso do Parque Shopping Belém, todos os dias das 10h às 22h."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Meu filho vai sozinho no carrinho?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "A equipe FaçaAmigos acompanha de perto durante todo o passeio, com a mesma atenção e cuidado de quem já conhece o FaçaAmigos Playground."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quanto custa?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "R$ 48 o passeio: 20 minutos nas pelúcias e no jeep, ou 30 minutos nos carros e na moto. Se passar do tempo, o minuto adicional é R$ 3,00. A cada 10 passeios, o próximo é por nossa conta. Pagamento direto no quiosque do Circuito."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O Circuito fica dentro do FaçaAmigos Playground?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Não — o Circuito roda no piso do Parque Shopping Belém, como uma experiência à parte, mas com a mesma equipe e o mesmo cuidado do FaçaAmigos."
+          }
+        }
+      ]
+    }
   ]
 }
 </script>
@@ -1465,7 +1538,7 @@
     <img src="img/logo-simbolo.png" width="460" height="416" alt=""
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
     <span class="logo" style="color: #fff;">Faça<span class="amigos">Amigos</span> Circuito</span>
-    <p><b>Parque Shopping Belém:</b> Av. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
+    <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
     <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground - Em Breve)</p>
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica - Em Breve)</p>
     <p>Todos os dias, das 10h às 22h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank"

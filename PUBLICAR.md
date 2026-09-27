@@ -40,6 +40,30 @@ Depois de publicar, no GTM (`GTM-PN5D2BTS`):
    received_at desc;` (coluna `error` vazia). Se algum campo vier com outro nome, ajustar em `hotmart-webhook/index.ts`.
 6. Uma compra real de teste confirma a cadeia toda (compra gravada, sequência parada, e-mail de boas-vindas).
 
+## Lote 4: GEO — fonte única de fatos ligada ao quiosque (pendente, feito só no código em 27/09/2026)
+
+Objetivo: o site, o JSON-LD e os `llms*.txt` deixam de ser escritos à mão e passam a refletir o que o
+app dos quiosques (Supabase `ivjvpdzsfjdpyabbzzuj`, tabelas `fa_kiosk_plans`/`packages`/`coupons`) cobra
+de verdade. Regra decidida com o usuário em 27/09/2026: o preço de tabela do quiosque tem desconto
+automático de 40% para o público geral e 50% para crianças neurodivergentes (laudo/CIPTEA) — é exatamente
+o que reproduz os R$ 60/108/192/270/840 já publicados no site.
+
+1. Implantar a função nova: `supabase functions deploy geo-facts --no-verify-jwt --project-ref ivjvpdzsfjdpyabbzzuj`
+   (GET público, sem secret novo). Conferir com `curl` que só saem preços/pacotes/endereço — nunca dado de família.
+2. `npm run geo` (baixa `geo-facts.json` da função e regenera `llms.txt`/`llms-full.txt`) → revisar o diff → `npm run
+   check` → commit → push.
+3. Implantar a versão nova de `fa-health` (seção "GEO": compara os % de desconto e os preços do quiosque com o que o
+   site pressupõe; alerta por e-mail se divergir). Testar com `?dry=1` + `x-ops-key`.
+4. Merge do workflow `.github/workflows/geo-sync.yml` (roda `npm run geo` todo dia às 06h de Belém e abre PR se algo
+   mudou; o merge continua manual).
+5. Push de `assets/fa-track.js` (classifica visitas vindas de ChatGPT/Perplexity/Gemini/Copilot/Claude como
+   `utm_medium=ai`). Criar a dimensão personalizada `ai_engine` (escopo usuário) no GA4 — passo manual, painel do GA4.
+6. Implantar a versão nova de `fa-weekly-report` (seção "Visitas vindas de IA").
+
+Pendente (não faz parte deste lote): CTA de pré-check-in nas páginas (falta a URL pública do formulário do app do
+quiosque) e `AggregateRating` a partir de `fa_kiosk_google_reviews` (a tabela está vazia; não confirmado se guardaria
+notas reais do Google).
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.
@@ -60,6 +84,8 @@ Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e
   tamanho, `fa-track.js` faltando, `hotspot/` referenciado, `ebook/` fora do deploy. O GitHub Actions
   (`.github/workflows/check.yml`) roda o mesmo em push e pull_request. Só ERRO reprova; AVISO é informativo.
 - `npm run sitemap`: refaz os `lastmod` do `sitemap.xml` pela data do último commit de cada página. Rode depois do commit.
+- `npm run geo:check`: confere se `llms.txt`/`llms-full.txt` batem com `geo-facts.json` commitado (offline, roda no
+  CI). `npm run geo` baixa fatos novos da função `geo-facts` e regenera os dois arquivos.
 - `.vercelignore` agora também exclui `supabase/`, `scripts/`, `.github/`, `PUBLICAR.md` e `LEIA-ME.txt`
   (funções e migrations são implantadas pela CLI do Supabase, não pela Vercel).
 

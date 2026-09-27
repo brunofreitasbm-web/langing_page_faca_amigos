@@ -4,7 +4,9 @@
   "description": "Site institucional (hub + playground) do FaçaAmigos. Estático — este package.json existe só para declarar a dependência do Routing Middleware (middleware.js) que a Vercel precisa para buildar.",
   "scripts": {
     "check": "node scripts/check.mjs",
-    "sitemap": "node scripts/sitemap-lastmod.mjs"
+    "sitemap": "node scripts/sitemap-lastmod.mjs",
+    "geo": "node scripts/geo-build.mjs --fetch",
+    "geo:check": "node scripts/geo-build.mjs --check"
   },
   "dependencies": {
     "@vercel/functions": "^3.9.7"

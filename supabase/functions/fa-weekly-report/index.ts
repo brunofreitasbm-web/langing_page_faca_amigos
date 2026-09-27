@@ -3,7 +3,8 @@
 //
 // Compara os últimos 7 dias com os 7 anteriores:
 //  - leads do teste: iniciados, concluídos, taxa de conclusão e opt-ins, no total e por origem
-//    (utm_source / utm_medium / utm_campaign, top 10; sem origem = "direto");
+//    (utm_source / utm_medium / utm_campaign, top 10; sem origem = "direto"), com um recorte à parte
+//    para visitas vindas de resposta de IA generativa (utm_medium=ai, ver assets/fa-track.js);
 //  - leads com área em atenção especial (tier3) e quantos seguem sem contato há mais de 48h;
 //  - compras de e-book (fa_ebook_compras por produto: compras, receita, reembolsos/chargebacks/cancelamentos) e
 //    carrinhos abandonados (fa_ebook_carrinhos) com quantos foram recuperados;
@@ -214,6 +215,24 @@ Deno.serve(async (req) => {
   }
   const topOrigins = [...origins.entries()].sort((a, b) => b[1].started - a[1].started).slice(0, TOP_ORIGINS);
 
+  // Visitas vindas de resposta de IA generativa (utm_medium=ai, ver assets/fa-track.js AI_REFERRERS).
+  const aiEngines = new Map<string, { started: number; completed: number; prev: number }>();
+  for (const l of L1.rows) {
+    if (l.utm_medium !== "ai") continue;
+    const k = (typeof l.utm_source === "string" && l.utm_source.trim()) || "ia (origem desconhecida)";
+    const o = aiEngines.get(k) ?? { started: 0, completed: 0, prev: 0 };
+    o.started++;
+    if (isDone(l)) o.completed++;
+    aiEngines.set(k, o);
+  }
+  for (const l of L0.rows) {
+    if (l.utm_medium !== "ai") continue;
+    const k = (typeof l.utm_source === "string" && l.utm_source.trim()) || "ia (origem desconhecida)";
+    const o = aiEngines.get(k);
+    if (o) o.prev++;
+  }
+  const topAiEngines = [...aiEngines.entries()].sort((a, b) => b[1].started - a[1].started);
+
   // Backlog quente: tier3 concluído, sem contato, há mais de 48h (todo o histórico).
   let tier3Pending = 0;
   {
@@ -319,6 +338,15 @@ Deno.serve(async (req) => {
     String(o.optins),
   ]);
 
+  const aiRows = topAiEngines.map(([k, o]) => [
+    esc(k),
+    `${o.started} <span style="font-size:11px;">(${delta(o.started, o.prev)})</span>`,
+    String(o.completed),
+    pct(o.completed, o.started),
+  ]);
+  const aiTotal = topAiEngines.reduce((sum, [, o]) => sum + o.started, 0);
+  const aiTotalPrev = topAiEngines.reduce((sum, [, o]) => sum + o.prev, 0);
+
   const salesRows = salesKeys.map((k) => {
     const a = S1.get(k) ?? { name: productName(k), count: 0, sum: 0, lost: 0 };
     const b = S0.get(k) ?? { name: a.name, count: 0, sum: 0, lost: 0 };
@@ -345,6 +373,12 @@ Deno.serve(async (req) => {
       ${h2("Teste de comportamento: origem dos leads")}
       ${table(["Origem (fonte / mídia / campanha)", "Iniciaram", "Concluíram", "Taxa", "Opt-ins"], originRows, true)}
       <p style="font-size:11px;color:#6b7280;margin:2px 0 0;">Top ${TOP_ORIGINS} da semana por iniciados; entre parênteses, a variação frente à semana anterior. "direto" = sem UTM.</p>
+
+      ${h2("Visitas vindas de IA")}
+      ${aiRows.length
+        ? `${table(["Motor de IA", "Iniciaram", "Concluíram", "Taxa"], aiRows, true)}<p style="font-size:13px;margin:6px 0;">Total: <b>${aiTotal}</b> (${delta(aiTotal, aiTotalPrev)}).</p>`
+        : `<p style="font-size:13px;margin:6px 0;color:#6b7280;">Nenhuma visita chegou via ChatGPT, Perplexity, Gemini, Copilot ou Claude nesta semana.</p>`}
+      <p style="font-size:11px;color:#6b7280;margin:2px 0 0;">Detectado pelo referrer quando não há UTM na URL (ver assets/fa-track.js).</p>
 
       ${h2("Leads com área em atenção especial")}
       <p style="font-size:13px;margin:6px 0;">Concluídos na semana: <b>${L1.tier3}</b> (${delta(L1.tier3, L0.tier3)}). Ainda <b>sem contato há mais de 48h</b>: <b style="color:${tier3Pending > 0 ? "#b42318" : "#1f7a4d"};">${tier3Pending}</b>${tier3Pending > 0 ? ` · <a href="${SITE}/admin" style="color:${PETROLEO};font-weight:bold;">abrir o painel</a>` : ""}.</p>
@@ -377,6 +411,7 @@ Deno.serve(async (req) => {
       last7: { started: L1.started, completed: L1.completed, completion_rate: L1.rate, optins: L1.optins, tier3: L1.tier3 },
       previous7: { started: L0.started, completed: L0.completed, completion_rate: L0.rate, optins: L0.optins, tier3: L0.tier3 },
       by_origin: topOrigins.map(([origin, o]) => ({ origin, started: o.started, completed: o.completed, optins: o.optins, previous_started: o.prev })),
+      by_ai_engine: topAiEngines.map(([engine, o]) => ({ engine, started: o.started, completed: o.completed, previous_started: o.prev })),
       tier3_without_contact_over_48h: tier3Pending,
     },
     ebooks: {

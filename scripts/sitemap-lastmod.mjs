@@ -28,7 +28,10 @@ function arquivoDaUrl(loc) {
   const u = new URL(loc);
   const path = u.pathname.replace(/\/+$/, '');
   if (path === '' && u.hostname.startsWith('playground.')) return 'playground.html';
-  return (path === '' ? 'index' : path.slice(1)) + '.html';
+  if (path === '') return 'index.html';
+  const rel = path.slice(1);
+  // Arquivos com extensão própria (.txt, .json, .xml...) não ganham .html — são servidos como estão.
+  return /\.[a-z0-9]+$/i.test(rel) ? rel : rel + '.html';
 }
 
 function dataDoArquivo(arq) {

@@ -32,6 +32,19 @@
   var ROOT_DOMAIN = 'institutofacaamigos.com.br';
   var INTERNAL_HOSTS = ['institutofacaamigos.com.br', 'www.institutofacaamigos.com.br', 'playground.institutofacaamigos.com.br'];
   var WHATSAPP_UNITS = { '5591991782027': 'clinica', '5591992347673': 'playground_circuito' };
+  // GEO: quando não há utm_source na URL, mas o referrer é um desses domínios, a visita entrou por uma
+  // resposta de IA generativa. Vira utm_source=<engine>&utm_medium=ai em fa_origin, evento GA4 e user_property
+  // "ai_engine" (ver fa-weekly-report para o relatório semanal).
+  var AI_REFERRERS = {
+    'chatgpt.com': 'chatgpt',
+    'chat.openai.com': 'chatgpt',
+    'perplexity.ai': 'perplexity',
+    'www.perplexity.ai': 'perplexity',
+    'gemini.google.com': 'gemini',
+    'copilot.microsoft.com': 'copilot',
+    'claude.ai': 'claude',
+    'you.com': 'you'
+  };
   var CHECKOUTS = {
     M107692257Y: { id: 'guia', name: 'O Brincar com Propósito', value: 149 },
     // O preço não aparece na página /codigo (decisão do projeto), mas o begin_checkout precisa do valor: sem ele
@@ -154,12 +167,15 @@
     try { stored = JSON.parse(readOrigin() || '{}') || {}; } catch (e) { stored = {}; }
 
     var ref = '';
+    var aiEngine = null;
     try {
       var rh = document.referrer ? new URL(document.referrer).hostname : '';
       ref = rh && !isInternalHost(rh) ? rh : '';
+      if (ref) aiEngine = AI_REFERRERS[ref.replace(/^www\./, '')] || null;
     } catch (e) { ref = ''; }
+    if (aiEngine && !found.utm_source) { found.utm_source = aiEngine; found.utm_medium = 'ai'; has = true; }
 
-    var snapshot = { params: found, referrer: ref, landing: window.location.pathname, ts: Date.now() };
+    var snapshot = { params: found, referrer: ref, landing: window.location.pathname, ts: Date.now(), aiEngine: aiEngine };
     // O first-touch nunca é sobrescrito. O "last" só muda quando chega parâmetro novo, ou quando vem de outro
     // site e ainda não há origem com parâmetros; navegar entre páginas do próprio site não zera nada.
     var lastHasParams = stored.last && Object.keys(stored.last.params || {}).length > 0;
@@ -169,6 +185,12 @@
     return stored;
   }
   var originStore = captureOrigin();
+  // Só marca IA na primeira visita real (evita reclassificar sessões internas como IA de novo a cada página).
+  var landingAiEngine = originStore.first && originStore.first.aiEngine;
+  if (landingAiEngine && originStore.first.landing === window.location.pathname) {
+    gtag('set', 'user_properties', { ai_engine: landingAiEngine });
+    track('ai_referral', { ai_engine: landingAiEngine });
+  }
 
   // Origem para formulários: a mais recente que tenha parâmetros; senão a primeira.
   window.faOrigin = function () {
