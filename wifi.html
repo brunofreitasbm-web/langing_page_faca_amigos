@@ -5,21 +5,21 @@
   <script src="/assets/fa-track.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Benefícios do Wi-Fi da Clínica | Instituto FaçaAmigos</title>
+  <title>Conectado! | Instituto FaçaAmigos</title>
   <meta name="description"
-    content="Conectou no Wi-Fi da clínica FaçaAmigos? Veja aqui o Playground Inclusivo e o Circuito no Parque Shopping Belém, com meia inclusiva, fidelidade e benefícios exclusivos de quem passou pela clínica.">
+    content="Conectou no Wi-Fi da clínica FaçaAmigos? Enquanto espera, faça o Mapeamento Comportamental gratuito e use seu cupom no Playground Inclusivo e no Circuito, no Parque Shopping Belém.">
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://institutofacaamigos.com.br/wifi">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
-  <meta name="theme-color" content="#F0196B">
+  <meta name="theme-color" content="#1A3F35">
 
   <!-- Open Graph / redes sociais -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Instituto FaçaAmigos">
-  <meta property="og:title" content="Benefícios do Wi-Fi da Clínica | Instituto FaçaAmigos">
+  <meta property="og:title" content="Conectado! | Instituto FaçaAmigos">
   <meta property="og:description"
     content="O FaçaAmigos também tem um Playground e um Circuito inclusivos no Parque Shopping Belém — a 15 minutos da clínica.">
   <meta property="og:url" content="https://institutofacaamigos.com.br/wifi">
@@ -28,7 +28,8 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="img/hero-piscina-bolinhas.webp">
 
   <style>
     :root {
@@ -42,83 +43,221 @@
       --cream: #FFF9F1;
       --white: #FFFFFF;
       --wa: #25D366;
-      --ring: conic-gradient(from 200deg, #8B5CF6, #F0196B, #FF7A00, #FFE234, #8B5CF6);
+      --wa-dark: #1DA851;
       --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
       --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
-      --shadow-pink: 0 10px 26px rgba(240, 25, 107, 0.32);
+      --shadow-pink: 0 10px 26px rgba(240, 25, 107, 0.36);
       --t-fast: 0.2s cubic-bezier(0.34, 1.4, 0.64, 1);
+      --gutter: 20px;
+      --max: 640px;
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Nunito', sans-serif; color: var(--dark); background: var(--cream); line-height: 1.6; overflow-x: hidden; }
-    h1, h2, h3 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; line-height: 1.15; letter-spacing: 0.01em; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body { font-family: 'Nunito', 'Segoe UI', sans-serif; color: var(--dark); background: var(--cream); line-height: 1.4; overflow-x: hidden; }
+    h1, h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; line-height: 1.1; letter-spacing: 0.01em; }
     img { max-width: 100%; display: block; }
     a { text-decoration: none; color: inherit; }
-    .wrap { max-width: 1000px; margin: 0 auto; padding: 0 22px; }
+    svg { display: block; }
+    [hidden] { display: none !important; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
 
-    header { padding: 22px 0; text-align: center; }
-    .logo-row { display: inline-flex; align-items: center; gap: 10px; }
-    .logo-row img { width: 40px; height: 40px; border-radius: 50%; }
-    .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 19px; }
-    .logo-row .amigos { color: var(--pink); }
-    .logo-row .faca { color: var(--dark); }
-
-    .hero { text-align: center; padding: 20px 0 40px; }
-    .kicker {
-      display: inline-block; background: rgba(46,207,181,0.14); color: var(--teal-dark);
-      font-weight: 800; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase;
-      padding: 6px 14px; border-radius: 999px; margin-bottom: 14px;
-    }
-    .hero h1 { font-size: clamp(26px, 5vw, 38px); margin-bottom: 14px; max-width: 720px; margin-left: auto; margin-right: auto; }
-    .hero p { color: var(--ink-soft); font-size: 16px; max-width: 560px; margin: 0 auto; }
-
-    .benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding: 20px 0 46px; }
-    .benefit-card {
-      background: var(--white); border-radius: 24px; box-shadow: var(--shadow-sm); padding: 24px 22px;
-    }
-    .benefit-card .dot {
-      width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 20px; font-weight: 900; color: var(--white); background: var(--teal); margin-bottom: 14px;
-    }
-    .benefit-card.weekday .dot { background: var(--yellow); color: var(--dark); }
-    .benefit-card h3 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 17px; margin-bottom: 8px; }
-    .benefit-card p { color: var(--ink-soft); font-size: 14.5px; }
-    .benefit-card .tag {
-      display: inline-block; margin-top: 10px; font-size: 11.5px; font-weight: 800; color: var(--teal-dark);
-      background: rgba(46,207,181,0.12); padding: 3px 10px; border-radius: 999px;
-    }
-    .benefit-card.weekday .tag { color: var(--pink-dark); background: rgba(240,25,107,0.1); }
-
-    .rule-note { text-align: center; color: var(--ink-soft); font-size: 14px; max-width: 560px; margin: -20px auto 46px; }
-    .rule-note strong { color: var(--dark); }
-
-    section.op { padding: 30px 0; }
-    .op-card {
-      background: var(--white); border-radius: 28px; box-shadow: var(--shadow-lg); overflow: hidden;
-      display: grid; grid-template-columns: 1fr; gap: 0;
-    }
-    @media (min-width: 760px) { .op-card { grid-template-columns: 1fr 1fr; } }
-    .op-card img { width: 100%; height: 100%; object-fit: cover; min-height: 220px; }
-    .op-body { padding: 30px 28px; }
-    .op-body .kicker { margin-bottom: 10px; }
-    .op-body h2 { font-size: 24px; margin-bottom: 10px; }
-    .op-body p { color: var(--ink-soft); font-size: 15px; margin-bottom: 18px; }
+    /* ── Botões ─────────────────────────────────────────────────────── */
     .btn {
-      display: inline-flex; align-items: center; gap: 8px; border: none; border-radius: 999px;
-      padding: 14px 26px; font-family: 'Fredoka One', sans-serif; font-size: 15px; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      border: none; border-radius: 999px; padding: 17px 26px; cursor: pointer;
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 18px; line-height: 1; letter-spacing: 0.01em;
+      transition: transform var(--t-fast), background var(--t-fast);
+      -webkit-tap-highlight-color: transparent;
     }
-    .btn-wa { background: var(--wa); color: var(--white); box-shadow: 0 10px 26px rgba(37,211,102,0.32); }
-    .btn-pink { background: var(--pink); color: var(--white); box-shadow: var(--shadow-pink); }
+    .btn:active { transform: scale(0.96); }
+    .btn-pink { background: var(--pink); color: var(--white); box-shadow: var(--shadow-pink); width: 100%; }
+    .btn-pink:active { background: var(--pink-dark); }
+    .btn-wa { background: var(--wa); color: var(--white); padding: 11px 16px; font-size: 14.5px; box-shadow: 0 8px 20px rgba(37,211,102,0.35); }
+    .btn-wa:active { background: var(--wa-dark); }
+    .btn-outline { background: var(--white); color: var(--dark); border: 2px solid #E7E1D5; padding: 12px 20px; font-size: 14.5px; }
 
-    .teste-section {
-      background: var(--white); border-radius: 28px; box-shadow: var(--shadow-lg);
-      padding: 36px 28px; text-align: center; margin: 30px 0;
+    /* ── Hero ───────────────────────────────────────────────────────── */
+    .hero {
+      position: relative; min-height: 100svh; min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      color: var(--white); background: var(--dark); overflow: hidden;
     }
-    .teste-section h2 { font-size: 22px; margin-bottom: 10px; }
-    .teste-section p { color: var(--ink-soft); font-size: 15px; max-width: 480px; margin: 0 auto 20px; }
+    .hero .photo {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover; object-position: center 35%;
+    }
+    .hero .veil {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(26,63,53,0.10) 0%, rgba(26,63,53,0.30) 40%, rgba(26,63,53,0.88) 78%, rgba(26,63,53,0.97) 100%);
+    }
+    .hero .corner {
+      position: absolute; top: 0; right: 0; width: 112px; height: 112px;
+      background: var(--yellow); clip-path: polygon(100% 0, 18% 0, 100% 82%);
+    }
+    .hero .top {
+      position: absolute; top: 0; left: 0; right: 0; padding: 18px var(--gutter);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo-row { display: inline-flex; align-items: center; gap: 8px; }
+    .logo-row img { width: 38px; height: 38px; border-radius: 50%; box-shadow: var(--shadow-sm); background: var(--white); }
+    .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 18px; color: var(--white); text-shadow: 0 1px 6px rgba(0,0,0,0.35); }
+    .logo-row .amigos { color: var(--yellow); }
+    .hero .content { position: relative; padding: 0 var(--gutter) 30px; max-width: var(--max); margin: 0 auto; width: 100%; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--teal); color: var(--dark); font-weight: 900; font-size: 13px;
+      letter-spacing: 0.04em; text-transform: uppercase; padding: 7px 14px 7px 10px; border-radius: 999px;
+      margin-bottom: 16px; box-shadow: 0 6px 16px rgba(46,207,181,0.35);
+    }
+    .pill svg { width: 18px; height: 18px; }
+    .hero h1 { font-size: clamp(32px, 9vw, 46px); max-width: 11ch; margin-bottom: 12px; text-shadow: 0 2px 12px rgba(0,0,0,0.25); }
+    .hero .sub { font-size: 16px; font-weight: 700; opacity: 0.92; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+    .hero .sub .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--yellow); display: inline-block; }
+    .hero .btn-pink { animation: nudge 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 0.9s 1 both; }
+    .proof { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 13.5px; font-weight: 800; opacity: 0.95; }
+    .avatars { display: flex; }
+    .avatars span {
+      width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--dark);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 900; color: var(--dark); margin-left: -8px;
+    }
+    .avatars span:first-child { margin-left: 0; }
+    .stars { color: var(--yellow); letter-spacing: 1px; font-size: 14px; }
 
-    footer { text-align: center; padding: 40px 0 50px; color: var(--ink-soft); font-size: 13px; }
-    footer a { text-decoration: underline; margin: 0 8px; }
+    /* ── Barra fixa ─────────────────────────────────────────────────── */
+    .sticky {
+      position: fixed; left: 0; right: 0; bottom: 0; z-index: 50;
+      padding: 10px var(--gutter) calc(10px + env(safe-area-inset-bottom));
+      background: rgba(255,249,241,0.92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 -8px 24px rgba(26,63,53,0.10);
+      transform: translateY(110%); transition: transform 0.28s ease;
+    }
+    .sticky.show { transform: translateY(0); }
+    .sticky .btn-pink { max-width: var(--max); margin: 0 auto; display: flex; padding: 15px 22px; font-size: 16.5px; }
+
+    /* ── Seções ─────────────────────────────────────────────────────── */
+    section { padding: 34px 0 6px; }
+    .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .sec-head .ic { width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sec-head .ic svg { width: 20px; height: 20px; }
+    .sec-head h2 { font-size: 22px; }
+    .ic-teal { background: rgba(46,207,181,0.18); color: var(--teal-dark); }
+    .ic-yellow { background: rgba(255,226,52,0.45); color: var(--dark); }
+    .ic-pink { background: rgba(240,25,107,0.12); color: var(--pink-dark); }
+
+    /* Ticket */
+    .ticket {
+      display: flex; align-items: center; gap: 14px;
+      background: var(--white); border-radius: 22px; box-shadow: var(--shadow-sm);
+      padding: 14px 16px; margin-bottom: 14px; position: relative; overflow: hidden;
+    }
+    .ticket::before, .ticket::after {
+      content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: var(--cream); top: 50%; margin-top: -9px;
+    }
+    .ticket::before { left: -9px; } .ticket::after { right: -9px; }
+    .ticket .wa-ic { width: 46px; height: 46px; border-radius: 50%; background: var(--wa); color: var(--white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ticket .wa-ic svg { width: 26px; height: 26px; }
+    .ticket b { display: block; font-size: 15.5px; font-weight: 900; }
+    .ticket small { font-size: 13px; color: var(--ink-soft); font-weight: 700; }
+    .ticket small strong { color: var(--pink-dark); }
+
+    /* Tiles de benefício */
+    .tiles {
+      display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+      margin: 0 calc(var(--gutter) * -1); padding: 4px var(--gutter) 14px;
+      scrollbar-width: none;
+    }
+    .tiles::-webkit-scrollbar { display: none; }
+    .tile {
+      flex: 0 0 72%; scroll-snap-align: start;
+      background: var(--white); border-radius: 24px; box-shadow: var(--shadow-sm);
+      padding: 18px 18px 16px; min-height: 150px; display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .tile .big { font-family: 'Fredoka One', sans-serif; font-size: 40px; line-height: 1; color: var(--dark); display: flex; align-items: baseline; gap: 10px; }
+    .tile .big s { font-size: 20px; color: #B3A99C; text-decoration-color: var(--pink); text-decoration-thickness: 3px; }
+    .tile .big .unit { font-size: 22px; }
+    .tile .label { font-size: 14px; font-weight: 800; color: var(--ink-soft); margin-top: 10px; }
+    .tile .badge { align-self: flex-start; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; }
+    .badge-teal { background: rgba(46,207,181,0.16); color: var(--teal-dark); }
+    .badge-yellow { background: rgba(255,226,52,0.5); color: var(--dark); }
+    .badge-pink { background: rgba(240,25,107,0.1); color: var(--pink-dark); }
+    .stamps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; max-width: 190px; }
+    .stamp {
+      aspect-ratio: 1; border-radius: 50%; border: 2px dashed #D9D1C3; background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stamp.on { border: none; background: var(--pink); color: var(--white); animation: stampIn 0.5s cubic-bezier(0.34, 1.6, 0.64, 1) both; }
+    .stamp.on:nth-child(2) { animation-delay: 0.35s; }
+    .stamp.on svg { width: 60%; height: 60%; }
+    .tile .clock { display: flex; align-items: center; gap: 8px; }
+    .tile .clock svg { width: 34px; height: 34px; color: var(--teal-dark); }
+    .rule {
+      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px;
+      font-size: 13px; font-weight: 800; color: var(--ink-soft); margin-top: 2px;
+    }
+    .rule span { background: var(--white); padding: 6px 12px; border-radius: 999px; box-shadow: var(--shadow-sm); }
+    .rule .x { background: none; box-shadow: none; padding: 0; color: var(--pink); }
+
+    /* Lugares */
+    .places { display: grid; gap: 14px; }
+    .place {
+      position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3;
+      background: var(--teal); color: var(--white); box-shadow: var(--shadow-lg); display: block;
+    }
+    .place img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .place .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(26,63,53,0) 30%, rgba(26,63,53,0.85) 100%); }
+    .place .txt { position: absolute; left: 18px; right: 18px; bottom: 16px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+    .place h3 { font-family: 'Fredoka One', sans-serif; font-weight: 400; font-size: 22px; line-height: 1.1; margin-bottom: 4px; }
+    .place p { font-size: 13.5px; font-weight: 700; opacity: 0.92; }
+    .place .btn-wa { flex-shrink: 0; }
+    .place .btn-wa svg { width: 18px; height: 18px; }
+    .where { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 800; color: var(--ink-soft); margin: 14px 0 0; }
+    .where svg { width: 18px; height: 18px; color: var(--pink); }
+
+    /* Chips (e-books) */
+    .chips { display: grid; gap: 10px; }
+    .chip {
+      display: flex; align-items: center; gap: 12px; background: var(--white);
+      border-radius: 18px; box-shadow: var(--shadow-sm); padding: 12px 14px; transition: transform var(--t-fast);
+    }
+    .chip:active { transform: scale(0.98); }
+    .chip .ic { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .chip .ic svg { width: 22px; height: 22px; }
+    .chip b { display: block; font-size: 14.5px; font-weight: 900; line-height: 1.2; }
+    .chip small { font-size: 12px; color: var(--ink-soft); font-weight: 700; }
+    .chip .arrow { margin-left: auto; color: #B3A99C; }
+    .chip .arrow svg { width: 20px; height: 20px; }
+
+    /* Avaliação (3ª visita) */
+    .review {
+      display: none; text-align: center; margin-top: 30px;
+      background: linear-gradient(135deg, rgba(255,226,52,0.28), rgba(240,25,107,0.07));
+      border-radius: 22px; padding: 18px 16px;
+    }
+    .review.show { display: block; }
+    .review .stars { font-size: 20px; letter-spacing: 3px; margin-bottom: 4px; }
+    .review b { display: block; font-size: 15px; font-weight: 900; margin-bottom: 10px; }
+
+    footer { text-align: center; padding: 40px var(--gutter) 110px; color: var(--ink-soft); font-size: 12.5px; font-weight: 600; }
+    footer .links { margin-top: 8px; display: flex; justify-content: center; gap: 16px; }
+    footer .links a { text-decoration: underline; }
+
+    @keyframes stampIn { from { transform: scale(1.8) rotate(-12deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
+    @keyframes nudge { 0% { transform: translateY(0); } 40% { transform: translateY(-6px) scale(1.02); } 100% { transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) {
+      .stamp.on, .hero .btn-pink { animation: none; }
+      .sticky { transition: none; }
+    }
+
+    @media (min-width: 640px) {
+      .hero { min-height: 82vh; }
+      .hero h1 { max-width: 14ch; }
+      .hero .btn-pink { width: auto; min-width: 320px; }
+      .tiles { display: grid; grid-template-columns: repeat(2, 1fr); overflow: visible; margin: 0; padding: 4px 0 14px; }
+      .tile { flex: none; }
+      .places { grid-template-columns: 1fr 1fr; }
+      .chips { grid-template-columns: 1fr 1fr; }
+    }
   </style>
 </head>
 
@@ -131,93 +270,231 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <header>
-    <a class="logo-row" href="https://institutofacaamigos.com.br/">
-      <img src="img/logo-simbolo.png" width="460" height="416" alt="FaçaAmigos">
-      <span><span class="faca">Faça</span><span class="amigos">Amigos</span></span>
-    </a>
+  <!-- ── 1. Hero ─────────────────────────────────────────────────────── -->
+  <header class="hero" id="hero">
+    <img class="photo" src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="" fetchpriority="high" decoding="async">
+    <div class="veil"></div>
+    <div class="corner"></div>
+    <div class="top">
+      <a class="logo-row" href="https://institutofacaamigos.com.br/">
+        <img src="img/logo-simbolo.png" width="460" height="416" alt="FaçaAmigos">
+        <span>Faça<span class="amigos">Amigos</span></span>
+      </a>
+    </div>
+    <div class="content">
+      <span class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        Conectado
+      </span>
+      <h1>Enquanto você espera, entenda seu filho</h1>
+      <p class="sub"><span>5 minutos</span><span class="dot"></span><span>25 perguntas</span><span class="dot"></span><span>resultado na hora</span></p>
+      <a class="btn btn-pink" id="ctaTeste" href="#">
+        Quero entender meu filho
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <div class="proof">
+        <div class="avatars">
+          <span style="background:#FFE234">M</span>
+          <span style="background:#2ECFB5">A</span>
+          <span style="background:#FF7A00">J</span>
+        </div>
+        <span><span class="stars">★★★★★</span> 1.100 famílias já brincam com a gente</span>
+      </div>
+    </div>
   </header>
 
+  <!-- Barra fixa com o CTA único -->
+  <div class="sticky" id="stickyBar">
+    <a class="btn btn-pink" id="ctaTesteSticky" href="#">Fazer o mapeamento · 5 min</a>
+  </div>
+
   <div class="wrap">
-    <section class="hero">
-      <span class="kicker">Você veio do Wi-Fi da clínica</span>
-      <h1>Um lugar onde seu filho não vai ser olhado torto</h1>
-      <p>O FaçaAmigos também tem um Playground e um Circuito inclusivos no Parque Shopping Belém — a 15 minutos daqui. Veja os benefícios de quem já é da família.</p>
-    </section>
 
-    <section class="benefits">
-      <div class="benefit-card">
-        <div class="dot">♥</div>
-        <h3>Meia inclusiva, todo dia</h3>
-        <p>Criança com laudo ou CIPTEA paga R$ 50 na entrada do Playground, em vez de R$ 60. É um direito — só avise na recepção.</p>
-        <span class="tag">Sempre válido</span>
+    <!-- ── 2. Seu presente ─────────────────────────────────────────── -->
+    <section>
+      <div class="sec-head">
+        <div class="ic ic-yellow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1.5"/><path d="M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7M12 8v13M12 8c-2.5 0-4.5-1.3-4.5-3S9 2.5 12 8c3-5.5 4.5-3.8 4.5-3S14.5 8 12 8z"/></svg>
+        </div>
+        <h2>Seu presente pra depois</h2>
       </div>
-      <div class="benefit-card">
-        <div class="dot">★</div>
-        <h3>Fidelidade com largada</h3>
-        <p>Mostre o cupom recebido por e-mail/WhatsApp e ganhe 2 dos 10 carimbos do cartão fidelidade de graça.</p>
-        <span class="tag">Sempre válido</span>
-      </div>
-      <div class="benefit-card weekday">
-        <div class="dot">+5</div>
-        <h3>+5 minutos no Circuito</h3>
-        <p>De segunda a sexta, em qualquer plano de carrinho ou pelúcia — minutos extras por nossa conta.</p>
-        <span class="tag">Seg a sex</span>
-      </div>
-    </section>
 
-    <p class="rule-note">Use <strong>um benefício por visita</strong> — Playground ou Circuito, nunca os dois juntos. Válido por 15 dias a partir do cadastro no Wi-Fi.</p>
-
-    <section class="op">
-      <div class="op-card">
-        <img src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="Playground Inclusivo FaçaAmigos" loading="lazy" decoding="async">
-        <div class="op-body">
-          <span class="kicker">Playground Inclusivo</span>
-          <h2>O playground inclusivo de Belém</h2>
-          <p>Parque Shopping Belém, todos os dias, 10h–22h. Monitores de inclusão, abafadores de ruído, canto de descompressão e Horário Inclusivo todos os dias, das 10h às 16h.</p>
-          <a class="btn btn-wa" href="https://wa.me/5591992347673?text=Vim%20da%20cl%C3%ADnica%20e%20quero%20saber%20mais%20do%20Playground" target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <div class="ticket">
+        <div class="wa-ic">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm0 18.2a8.2 8.2 0 01-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1112 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.8 12 12 0 004.6 4c1.7.7 2.4.8 3.2.7a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+        </div>
+        <div>
+          <b>Seu cupom chegou no WhatsApp</b>
+          <small>e no e-mail · vale até <strong id="validUntil">--/--</strong></small>
         </div>
       </div>
-    </section>
 
-    <section class="op">
-      <div class="op-card">
-        <img src="img/circuito-carrinhos.webp" width="1000" height="750" alt="FaçaAmigos Circuito" loading="lazy" decoding="async">
-        <div class="op-body">
-          <span class="kicker">FaçaAmigos Circuito</span>
-          <h2>Seu filho no volante, você logo ali por perto</h2>
-          <p>Quiosque no piso do Parque Shopping Belém, sem agendamento. Passeio único por R$ 48 — e com o cupom, +5 minutos grátis de segunda a sexta.</p>
-          <a class="btn btn-wa" href="https://wa.me/5591992347673?text=Vim%20da%20cl%C3%ADnica%20e%20quero%20saber%20mais%20do%20Circuito" target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <div class="tiles">
+        <div class="tile">
+          <span class="badge badge-teal">Todo dia</span>
+          <div>
+            <div class="big"><s>R$ 60</s><span><span class="unit">R$</span> 50</span></div>
+            <div class="label">meia inclusiva no Playground</div>
+          </div>
         </div>
+        <div class="tile" id="tilePlus5">
+          <span class="badge badge-yellow">Seg a sex</span>
+          <div>
+            <div class="big clock">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6M12 2v3"/></svg>
+              <span>+5 <span class="unit">min</span></span>
+            </div>
+            <div class="label">grátis no Circuito</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule">
+        <span>1 cupom</span><span class="x">=</span><span>1 visita</span><span class="x">·</span><span>Playground <em style="color:var(--pink);font-style:normal">ou</em> Circuito</span>
       </div>
     </section>
 
-    <section class="teste-section">
-      <h2>Enquanto isso, na sala de espera...</h2>
-      <p>Faça o Mapeamento Comportamental gratuito — 5 minutos, 25 perguntas, e um retrato de como seu filho se comunica, brinca e se relaciona.</p>
-      <a class="btn btn-pink" href="https://institutofacaamigos.com.br/teste?utm_source=wifi&utm_medium=captive_portal&utm_campaign=clinica_fatima">Fazer o mapeamento agora</a>
+    <!-- ── 3. Lugares ──────────────────────────────────────────────── -->
+    <section>
+      <div class="sec-head">
+        <div class="ic ic-pink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/><circle cx="12" cy="12" r="9"/></svg>
+        </div>
+        <h2>Dois lugares pra ele sorrir</h2>
+      </div>
+
+      <div class="places">
+        <a class="place" id="ctaPlayground" href="#" target="_blank" rel="noopener">
+          <img src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="Playground Inclusivo FaçaAmigos" loading="lazy" decoding="async">
+          <div class="veil"></div>
+          <div class="txt">
+            <div>
+              <h3>Playground Inclusivo</h3>
+              <p>Onde ele brinca do jeito dele</p>
+            </div>
+            <span class="btn btn-wa">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.8 12 12 0 004.6 4c1.7.7 2.4.8 3.2.7a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+              Quero ir
+            </span>
+          </div>
+        </a>
+        <a class="place" id="ctaCircuito" href="#" target="_blank" rel="noopener">
+          <img src="img/circuito-carrinhos.webp" width="1000" height="750" alt="FaçaAmigos Circuito" loading="lazy" decoding="async">
+          <div class="veil"></div>
+          <div class="txt">
+            <div>
+              <h3>Circuito</h3>
+              <p>Ele no volante, você logo ali</p>
+            </div>
+            <span class="btn btn-wa">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 01-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 00-.7.3 3 3 0 00-.9 2.2 5.2 5.2 0 001.1 2.8 12 12 0 004.6 4c1.7.7 2.4.8 3.2.7a2.7 2.7 0 001.8-1.3 2.2 2.2 0 00.2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+              Quero ir
+            </span>
+          </div>
+        </a>
+      </div>
+
+      <p class="where">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        Parque Shopping Belém · 15 min daqui · 10h às 22h
+      </p>
     </section>
 
-    <section class="teste-section">
-      <h2>Guia para pais: O Brincar com Propósito</h2>
-      <p>Entenda o que seu filho está tentando dizer e saiba o que fazer no dia a dia. Um guia prático da psicóloga Isabella Gonçalves Freitas (CRP 10/4727), com o primeiro capítulo grátis.</p>
-      <a class="btn btn-pink" href="https://institutofacaamigos.com.br/guia?utm_source=wifi&utm_medium=captive_portal&utm_campaign=clinica_fatima">Conhecer o guia</a>
-    </section>
+    <!-- ── 4. Pra levar pra casa ───────────────────────────────────── -->
+    <section>
+      <div class="sec-head">
+        <div class="ic ic-teal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20V4H6.5A2.5 2.5 0 004 6.5v13zM4 19.5A2.5 2.5 0 006.5 22H20v-5"/></svg>
+        </div>
+        <h2>Pra levar pra casa</h2>
+      </div>
+      <div class="chips">
+        <a class="chip" id="ctaGuia" href="#">
+          <div class="ic ic-teal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6.5C10 4.8 7.3 4.5 3 5v13c4.3-.5 7 0 9 1.5 2-1.5 4.7-2 9-1.5V5c-4.3-.5-7-.2-9 1.5zM12 6.5V19.5"/></svg>
+          </div>
+          <div><b>O Brincar com Propósito</b><small>Guia pra pais · 1º capítulo grátis</small></div>
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="chip" id="ctaCodigo" href="#">
+          <div class="ic ic-pink">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2h-4M9 3v18M9 3h6v18"/></svg>
+          </div>
+          <div><b>O Código do Desenvolvimento Infantil</b><small>E-book curto · 40 páginas</small></div>
+          <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
 
-    <section class="teste-section">
-      <h2>Uma leitura rápida: O Código do Desenvolvimento Infantil</h2>
-      <p>Um e-book curto (40 páginas) para entender que o comportamento do seu filho tem lógica. Ótimo para começar, também da psicóloga Isabella Gonçalves Freitas (CRP 10/4727).</p>
-      <a class="btn btn-pink" href="https://institutofacaamigos.com.br/codigo?utm_source=wifi&utm_medium=captive_portal&utm_campaign=clinica_fatima">Conhecer o Código</a>
+      <div class="review" id="reviewCard">
+        <div class="stars">★★★★★</div>
+        <b>Você já é da família FaçaAmigos</b>
+        <a class="btn btn-outline" id="ctaReview" href="#" target="_blank" rel="noopener">Avaliar no Google</a>
+      </div>
     </section>
   </div>
 
-  <footer>
+  <footer id="footer">
     <div>Instituto Faça Amigos · Rua Boaventura da Silva, 1573 · Umarizal, Belém-PA</div>
-    <div style="margin-top:8px;">
+    <div class="links">
       <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">Instagram</a>
-      <a href="https://institutofacaamigos.com.br/politica-privacidade">Política de Privacidade</a>
-      <a href="https://institutofacaamigos.com.br/">Voltar ao site</a>
+      <a href="https://institutofacaamigos.com.br/politica-privacidade">Privacidade</a>
+      <a href="https://institutofacaamigos.com.br/">Site</a>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      window.dataLayer = window.dataLayer || [];
+      function pushDL(eventName, extra) { window.dataLayer.push(Object.assign({ event: eventName }, extra || {})); }
+
+      var WA_NUMBER = "5591992347673";
+      var UTM = "utm_source=wifi&utm_medium=captive_portal&utm_campaign=clinica_fatima";
+      var SITE = "https://institutofacaamigos.com.br";
+      function waLink(text) { return "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(text); }
+      function $(id) { return document.getElementById(id); }
+
+      /* CTAs */
+      $("ctaTeste").href = SITE + "/teste?" + UTM;
+      $("ctaTesteSticky").href = SITE + "/teste?" + UTM + "&utm_content=sticky";
+      $("ctaPlayground").href = waLink("Vim da clínica, tenho o cupom e quero usar a meia inclusiva no Playground");
+      $("ctaCircuito").href = waLink("Vim da clínica, tenho o cupom e quero usar os 5 minutos extras no Circuito");
+      $("ctaGuia").href = SITE + "/guia?" + UTM;
+      $("ctaCodigo").href = SITE + "/codigo?" + UTM;
+      ["ctaTeste", "ctaTesteSticky", "ctaPlayground", "ctaCircuito", "ctaGuia", "ctaCodigo"].forEach(function (id) {
+        $(id).addEventListener("click", function () { pushDL("wifi_cta_click", { cta: id }); });
+      });
+
+      /* Cupom vale até hoje + 15 dias */
+      var d = new Date(); d.setDate(d.getDate() + 15);
+      $("validUntil").textContent = ("0" + d.getDate()).slice(-2) + "/" + ("0" + (d.getMonth() + 1)).slice(-2);
+
+      /* +5 min só de segunda a sexta */
+      var day = new Date().getDay();
+      if (day === 0 || day === 6) { $("tilePlus5").hidden = true; }
+
+      /* Barra fixa: aparece depois do hero, some no rodapé */
+      var bar = $("stickyBar");
+      if ("IntersectionObserver" in window) {
+        var heroVisible = true, footVisible = false;
+        function update() { bar.classList.toggle("show", !heroVisible && !footVisible); }
+        new IntersectionObserver(function (e) { heroVisible = e[0].isIntersecting; update(); }, { threshold: 0.15 }).observe($("hero"));
+        new IntersectionObserver(function (e) { footVisible = e[0].isIntersecting; update(); }, { threshold: 0.1 }).observe($("footer"));
+      } else {
+        window.addEventListener("scroll", function () { bar.classList.toggle("show", window.scrollY > window.innerHeight * 0.8); });
+      }
+
+      /* Avaliação no Google só a partir da 3ª visita do aparelho */
+      try {
+        var VISIT_KEY = "fa_wifi_visit_count";
+        var visits = parseInt(localStorage.getItem(VISIT_KEY) || "0", 10) + 1;
+        localStorage.setItem(VISIT_KEY, String(visits));
+        if (visits >= 3) {
+          $("reviewCard").classList.add("show");
+          $("ctaReview").href = "https://search.google.com/local/writereview?placeid=SEU_PLACE_ID_AQUI";
+          $("ctaReview").addEventListener("click", function () { pushDL("wifi_review_click", { visits: visits }); });
+        }
+      } catch (e) { /* localStorage indisponível: segue sem o bloco */ }
+    })();
+  </script>
 </body>
 </html>

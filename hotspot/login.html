@@ -121,6 +121,34 @@
   }
   .spinner.show { display: block; }
   @keyframes spin { to { transform: rotate(360deg); } }
+
+  .proof {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--ink-soft);
+    margin-bottom: 16px;
+  }
+  .proof .stars { color: var(--yellow); letter-spacing: 1px; text-shadow: 0 1px 0 rgba(26,63,53,0.15); }
+  .offer-strip { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .offer-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: rgba(46,207,181,0.08);
+    border-radius: 14px;
+    padding: 10px 12px;
+  }
+  .offer-item .ic {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    background: var(--teal); color: var(--white); font-weight: 900; font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .offer-item p { font-size: 13px; font-weight: 700; color: var(--dark); line-height: 1.35; }
+  .offer-item p b { color: var(--pink-dark); }
 </style>
 </head>
 <body>
@@ -132,9 +160,22 @@
   </div>
 
   <div class="card">
-    <span class="kicker">Wi-Fi da Clínica</span>
-    <h1>Bem-vindo(a) à FaçaAmigos!</h1>
-    <p class="sub">Enquanto você espera, conecte-se e descubra um jeito diferente de aproveitar Belém com a família.</p>
+    <span class="kicker">Cupom exclusivo + Wi-Fi grátis</span>
+    <h1>Garanta sua vantagem antes de entrar</h1>
+    <p class="sub">Cadastre-se em 20 segundos e libere o Wi-Fi com um cupom real para o Playground e o Circuito no Parque Shopping.</p>
+
+    <div class="proof"><span class="stars">★★★★★</span> +1.100 famílias · 7.500 visitas</div>
+
+    <div class="offer-strip">
+      <div class="offer-item">
+        <div class="ic">♥</div>
+        <p>Meia inclusiva <b>fixa em R$ 50</b> no Playground, todo dia</p>
+      </div>
+      <div class="offer-item">
+        <div class="ic">+5</div>
+        <p><b>+5 min grátis</b> no Circuito, de segunda a sexta</p>
+      </div>
+    </div>
 
     <div class="server-error" id="serverError">$(error)</div>
 
@@ -168,12 +209,12 @@
       </div>
 
       <button type="submit" class="btn" id="submitBtn">
-        <span id="btnLabel">Liberar meu Wi-Fi</span>
+        <span id="btnLabel">Liberar Wi-Fi e receber meu cupom</span>
         <div class="spinner" id="btnSpinner"></div>
       </button>
     </form>
 
-    <p class="foot-note">Sessão de 1 hora · Rede exclusiva para visitantes</p>
+    <p class="foot-note">Cupom válido por 15 dias · Sessão de 1 hora · Rede exclusiva para visitantes</p>
   </div>
 </div>
 

@@ -81,6 +81,41 @@ function generateCouponCode(): string {
 
 const COUPON_VALIDITY_DAYS = 15;
 
+// Unidade "FaçaAmigos Circuito (Parque Shopping)" no banco do kiosk (mesmo
+// projeto Supabase). Usada para criar o cupom nativo de +5 min — ver
+// syncKioskCoupon() abaixo. Se a unidade for recriada algum dia, atualizar
+// este id (confirmar com: select id from fa_kiosk_units where name ilike
+// '%circuito%').
+const CIRCUITO_UNIT_ID = "e43ba7a8-bd5f-47ad-b81d-dae7ea19d504";
+const CIRCUITO_BONUS_MINUTES = 5;
+
+// Cria, no MESMO código do cupom "ESPERA-XXXX", um cupom nativo do kiosk
+// (fa_kiosk_coupons, kind=MINUTOS_EXTRA) com max_uses=1. O check-in do
+// Circuito já aceita p_coupon_code — ao digitar o código, o kiosk aplica os
+// minutos extras e bloqueia qualquer segunda tentativa com o mesmo código,
+// em qualquer unidade ou dia. Isso resolve o risco de a família reusar ou
+// repassar o código adiante: o bloqueio é feito pelo próprio banco do
+// kiosk, não depende do atendente lembrar de checar nada.
+//
+// Best-effort: se isso falhar, o cadastro do Wi-Fi e o e-mail do cupom
+// seguem normalmente — só o benefício automático no Circuito fica
+// indisponível (o atendente ainda pode aplicar manualmente).
+async function syncKioskCoupon(
+  admin: ReturnType<typeof createClient>,
+  params: { couponCode: string; guardianName: string },
+): Promise<{ synced: boolean; error?: string }> {
+  const { error } = await admin.from("fa_kiosk_coupons").insert({
+    unit_id: CIRCUITO_UNIT_ID,
+    code: params.couponCode,
+    kind: "MINUTOS_EXTRA",
+    value: CIRCUITO_BONUS_MINUTES,
+    max_uses: 1,
+    description: `Wi-Fi da clínica — ${params.guardianName}`,
+  });
+  if (error) return { synced: false, error: error.message ?? "erro desconhecido" };
+  return { synced: true };
+}
+
 async function sendCouponEmail(params: {
   guardianName: string;
   guardianEmail: string;
@@ -125,7 +160,6 @@ async function sendCouponEmail(params: {
           <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 6px 0;font-weight:800;">Apresente na recepção do Playground ou do quiosque do Circuito, no Parque Shopping, e escolha <strong>um</strong> destes benefícios:</p>
           <ul style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#3A4258;margin:0 0 8px 0;padding-left:20px;">
             <li>Meia inclusiva (R$ 50 na entrada) para crianças com laudo ou CIPTEA — todo dia</li>
-            <li>Seu cartão fidelidade já sai com 2 dos 10 carimbos — todo dia</li>
             <li>+5 minutos grátis no Circuito, em qualquer plano — de segunda a sexta</li>
           </ul>
           <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 20px 0;font-style:italic;">Use um benefício por visita — Playground ou Circuito, nunca os dois na mesma vinda.</p>
@@ -286,6 +320,18 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "falha ao registrar cadastro" }, 500);
   }
 
+  // Sincroniza o cupom no kiosk (best-effort: nunca falha o cadastro).
+  // Aguardamos aqui — em edge functions, uma promise não aguardada pode ser
+  // cancelada assim que a resposta é enviada, então "dispara e esquece" não
+  // é seguro neste ambiente.
+  const kioskResult = await syncKioskCoupon(admin, { couponCode, guardianName }).catch((err) => ({
+    synced: false,
+    error: err instanceof Error ? err.message : "erro desconhecido",
+  }));
+  if (!kioskResult.synced) {
+    console.error("Erro ao sincronizar cupom no kiosk:", kioskResult.error);
+  }
+
   const emailResult = await sendCouponEmail({
     guardianName,
     guardianEmail,
@@ -295,11 +341,14 @@ Deno.serve(async (req) => {
 
   await admin
     .from("fa_wifi_leads")
-    .update(
-      emailResult.sent
+    .update({
+      ...(emailResult.sent
         ? { email_sent_at: new Date().toISOString() }
-        : { email_error: emailResult.error ?? "falha desconhecida" },
-    )
+        : { email_error: emailResult.error ?? "falha desconhecida" }),
+      ...(kioskResult.synced
+        ? { kiosk_coupon_synced_at: new Date().toISOString() }
+        : { kiosk_coupon_error: kioskResult.error ?? "falha desconhecida" }),
+    })
     .eq("id", data.id);
 
   return jsonResponse({ ok: true, coupon_code: couponCode, email_sent: emailResult.sent });
