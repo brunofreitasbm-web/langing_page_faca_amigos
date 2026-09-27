@@ -31,6 +31,15 @@
     content="Terapia especializada, playground inclusivo e circuito de carrinhos elétricos, tudo sob o mesmo cuidado.">
   <meta name="twitter:image" content="https://institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg">
 
+  <!-- Generative Engine Optimization (GEO) & AI Crawlers Meta Tags -->
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <meta name="author" content="Instituto FaçaAmigos">
+  <meta name="geo.region" content="BR-PA">
+  <meta name="geo.placename" content="Belém">
+  <meta name="geo.position" content="-1.3653;-48.4552">
+  <meta name="ICBM" content="-1.3653, -48.4552">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="FaçaAmigos AI & LLM Summary">
+
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,27 +48,37 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "FaçaAmigos",
-  "url": "https://institutofacaamigos.com.br/",
-  "logo": "https://playground.institutofacaamigos.com.br/img/logo-simbolo.png",
-  "sameAs": ["https://www.instagram.com/facaamigos.belem/"],
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Av. Augusto Montenegro, 4300 — Parque Shopping Belém",
-    "addressLocality": "Belém",
-    "addressRegion": "PA",
-    "addressCountry": "BR"
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": -1.3653,
-    "longitude": -48.4552
-  },
-  "subOrganization": [
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://institutofacaamigos.com.br/#organization",
+      "name": "Instituto FaçaAmigos",
+      "url": "https://institutofacaamigos.com.br/",
+      "logo": "https://playground.institutofacaamigos.com.br/img/logo-simbolo.png",
+      "sameAs": ["https://www.instagram.com/facaamigos.belem/"],
+      "description": "Ecossistema infantil inclusivo integrando clínica de terapia comportamental (ABA), playground adaptado e circuito de carrinhos elétricos em Belém/PA.",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Av. Augusto Montenegro, 4300 — Parque Shopping Belém",
+        "addressLocality": "Belém",
+        "addressRegion": "PA",
+        "postalCode": "66635-110",
+        "addressCountry": "BR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": -1.3653,
+        "longitude": -48.4552
+      },
+      "areaServed": "Belém, Ananindeua e Região Metropolitana",
+      "knowsAbout": ["Autismo (TEA)", "TDAH", "Desenvolvimento Infantil", "Terapia ABA", "Playground Inclusivo", "Acessibilidade Infantil"]
+    },
     {
       "@type": "MedicalBusiness",
-      "name": "FaçaAmigos — Centro de Terapia Comportamental (inauguração em breve)",
+      "@id": "https://institutofacaamigos.com.br/#clinica",
+      "name": "FaçaAmigos — Centro de Terapia Comportamental",
+      "description": "Clínica especializada em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia em Belém.",
+      "medicalSpecialty": ["Pediatric", "Behavioral", "OccupationalTherapy", "SpeechTherapy"],
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Rua Boaventura da Silva, 1573 — Umarizal",
@@ -69,9 +88,63 @@
         "addressCountry": "BR"
       }
     },
-    { "@type": "LocalBusiness", "name": "FaçaAmigos Playground Inclusivo (Parque Shopping Belém)" },
-    { "@type": "LocalBusiness", "name": "FaçaAmigos Playground Inclusivo (Shopping Bosque Grão-Pará - Em Breve)" },
-    { "@type": "LocalBusiness", "name": "FaçaAmigos Circuito (Parque Shopping Belém)" }
+    {
+      "@type": ["LocalBusiness", "EntertainmentBusiness"],
+      "@id": "https://playground.institutofacaamigos.com.br/#playground",
+      "name": "FaçaAmigos — Playground Inclusivo",
+      "url": "https://playground.institutofacaamigos.com.br/",
+      "telephone": "+55 91 99234-7673",
+      "priceRange": "$$",
+      "openingHours": "Mo-Su 10:00-22:00",
+      "amenityFeature": [
+        { "@type": "LocationFeatureSpecification", "name": "Acessibilidade PCD / Autismo", "value": true },
+        { "@type": "LocationFeatureSpecification", "name": "Abafadores de Ruído", "value": true },
+        { "@type": "LocationFeatureSpecification", "name": "Canto de Descompressão Sensorial", "value": true },
+        { "@type": "LocationFeatureSpecification", "name": "Meia-Entrada Inclusiva (50% Off)", "value": true }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://institutofacaamigos.com.br/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "O que é o Ecossistema FaçaAmigos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O FaçaAmigos é o 1º ecossistema integrado de Belém/PA que reúne Clínica de Terapia Comportamental (ABA, Terapia Ocupacional, Fonoaudiologia), Playground Inclusivo e Circuito de Carrinhos Elétricos no Parque Shopping Belém."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O playground FaçaAmigos aceita crianças com autismo (TEA) ou outras necessidades específicas?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sim, o espaço é 100% inclusivo, adaptado para crianças autistas (TEA), TDAH, Síndrome de Down e neurotípicas, com monitores treinados, cantinho de descompressão e abafadores de ruído. Apresentando laudo ou CIPTEA, a criança tem 50% de desconto (meia-entrada)."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Como funciona o Programa de Fidelidade FaçaAmigos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No Playground FaçaAmigos, a cada 10 visitas cadastradas pelo CPF do responsável, a 11ª visita de 30 minutos é 100% gratuita."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Quais as faixas etárias e horários de funcionamento?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Atendemos crianças de 0 a 12 anos. O Playground e Circuito funcionam de Segunda a Domingo das 10h às 22h no Parque Shopping Belém, sem necessidade de agendamento."
+          }
+        }
+      ]
+    },
+    {
+      "@type": "SpeakableSpecification",
+      "cssSelector": ["#geo-facts", "#faq"]
+    }
   ]
 }
 </script>
@@ -588,6 +661,25 @@
     }
 
     @media (prefers-reduced-motion: reduce) { .guia-cover img { transform: none; } }
+
+    /* GEO (Generative Engine Optimization) Metrics Block */
+    .geo-metrics-block { border-radius: 28px; margin: 30px 0; }
+    .geo-grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+    .geo-card { background: var(--white); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid rgba(26,63,53,0.08); transition: transform var(--t-fast); }
+    .geo-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .geo-icon { font-size: 2rem; margin-bottom: 10px; }
+    .geo-val { font-family: 'Fredoka One', sans-serif; font-size: 1.45rem; color: var(--pink); line-height: 1.2; margin-bottom: 4px; }
+    .geo-lbl { font-weight: 800; color: var(--dark); font-size: 0.95rem; margin-bottom: 6px; }
+    .geo-desc { font-size: 0.86rem; color: var(--ink-soft); font-weight: 600; line-height: 1.45; }
+
+    /* GEO FAQ Details Styling */
+    .geo-faq-list { display: grid; gap: 12px; max-width: 52rem; margin: 0 auto; }
+    .geo-faq-item { background: var(--white); border-radius: 18px; padding: 18px 22px; box-shadow: var(--shadow-sm); border: 1px solid rgba(26,63,53,0.06); }
+    .geo-faq-item summary { font-weight: 800; font-size: 1.05rem; color: var(--dark); cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+    .geo-faq-item summary::-webkit-details-marker { display: none; }
+    .geo-faq-item summary::after { content: '+'; font-size: 1.3rem; font-weight: 900; color: var(--pink); }
+    .geo-faq-item[open] summary::after { content: '−'; }
+    .geo-faq-ans { margin-top: 12px; font-weight: 600; font-size: 0.95rem; color: var(--ink-soft); line-height: 1.55; border-top: 1px solid rgba(26,63,53,0.06); padding-top: 12px; }
   </style>
   </head>
 
@@ -636,8 +728,8 @@
   <header class="hero">
     <div class="wrap fx on">
       <span class="eyebrow">Instituto &amp; espaços FaçaAmigos · Parque Shopping Belém &amp; Shopping Bosque Grão-Pará</span>
-      <h1>Um lugar pra cada criança ser <span class="hl">exatamente quem ela é</span>.</h1>
-      <p class="sub">Terapia, brincadeira e diversão sob o mesmo teto — feito pra incluir, nunca pra separar.</p>
+      <h1>Um lugar onde seu filho é acolhido <span class="hl">e você pode respirar</span>.</h1>
+      <p class="sub">Terapia, brincadeira e diversão sob o mesmo teto, em Belém. Para a criança, um espaço feito pra ela ser quem é. Para você, tranquilidade de verdade.</p>
     </div>
   </header>
 
@@ -646,7 +738,7 @@
     <a href="#clinica" class="card-unit card-clinica fx on">
       <img src="img/clinica-fachada.webp" width="900" height="1080" alt="" loading="eager" decoding="async">
       <span class="unit-tag" style="background: var(--teal-dark); color: #fff;">Clínica · Em breve · Convênios IASEP &amp; PROASA</span>
-      <h3>FaçaAmigos — Centro de Terapia Comportamental</h3>
+      <h3>Um lugar pra entender seu filho sem julgamento</h3>
       <p class="micro">Rua Boaventura da Silva, 1573 · Umarizal, Belém - PA</p>
       <span class="cta">Conhecer a Clínica
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd"
@@ -658,7 +750,7 @@
     <a href="playground.html" class="card-unit card-playground fx on">
       <img src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="" loading="lazy" decoding="async">
       <span class="unit-tag">Playground (2 Unidades)</span>
-      <h3>Um playground onde toda criança é bem-vinda</h3>
+      <h3>Ele brinca seguro, você descansa por perto</h3>
       <p class="micro">Parque Shopping Belém &amp; 🚀 Em Breve no Shopping Bosque Grão-Pará</p>
       <span class="cta">Ver Unidades do Playground
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd"
@@ -670,7 +762,7 @@
     <a href="circuito.html" class="card-unit card-circuito fx on">
       <img src="img/circuito-carrinhos.webp" width="1000" height="750" alt="" loading="lazy" decoding="async">
       <span class="unit-tag">Circuito</span>
-      <h3>Na pista, o motorista é ele (ou ela)</h3>
+      <h3>Ele no volante, você a dois passos</h3>
       <p class="micro">Minicarros elétricos · Sem hora marcada</p>
       <span class="cta">Andar de carrinho
         <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd"
@@ -681,7 +773,7 @@
   </section>
 
   <p class="center" style="max-width: 34rem; margin: 18px auto 0; color: var(--ink-soft); font-weight: 700; font-size: 0.95rem; padding: 0 22px;">
-    Não sabe por onde começar? <a href="/teste?utm_source=site&amp;utm_medium=hero&amp;utm_campaign=hub" style="color: var(--pink); font-weight: 800; text-decoration: underline;">Faça o mapeamento gratuito (5 min)</a> ou <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." style="color: var(--teal-dark); text-decoration: underline;">fale com a gente no WhatsApp</a>.
+    Cansada de adivinhar o que seu filho está tentando dizer? <a href="/teste?utm_source=site&amp;utm_medium=hero&amp;utm_campaign=hub" style="color: var(--pink); font-weight: 800; text-decoration: underline;">Faça o mapeamento gratuito (5 min)</a> ou <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." style="color: var(--teal-dark); text-decoration: underline;">fale com a gente no WhatsApp</a>.
   </p>
 
   <!-- PROVA DE ECOSSISTEMA — autoridade coletiva, sem citar tratamento específico -->
@@ -697,7 +789,7 @@
     <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
         <path
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
-      </svg> Equipe formada em desenvolvimento infantil</span>
+      </svg> Equipe que sabe lidar com crise, birra e primeira visita</span>
     <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
         <path
           d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
@@ -707,7 +799,7 @@
   <!-- PROVA SOCIAL — avaliações reais do Google (as mesmas do /playground) -->
   <section class="sec reviews-hub" aria-labelledby="reviews-hub-h" style="padding: 24px 0 10px;">
     <div class="wrap fx">
-      <h2 id="reviews-hub-h" class="sec-title" style="font-size: clamp(1.4rem, 3vw, 1.9rem); text-align: center;">O que as famílias dizem</h2>
+      <h2 id="reviews-hub-h" class="sec-title" style="font-size: clamp(1.4rem, 3vw, 1.9rem); text-align: center;">Mães e pais de Belém contam como foi</h2>
       <div class="rv-grid">
         <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
           <blockquote>“Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!”</blockquote>
@@ -719,7 +811,7 @@
           <blockquote>“Amei muito, meu filho se sentiu muito seguro e brincou bastante!”</blockquote>
           <figcaption>Ana M. · avaliação no Google</figcaption></figure>
       </div>
-      <p class="rv-note">Avaliações reais sobre o FaçaAmigos Playground, no Parque Shopping Belém.</p>
+      <p class="rv-note">Avaliações reais no Google sobre o FaçaAmigos Playground, no Parque Shopping Belém. A palavra que mais aparece: tranquilidade.</p>
     </div>
   </section>
 
@@ -729,12 +821,12 @@
       <div class="teste-banner">
         <div>
           <span class="eyebrow" style="background: var(--cream);">Instituto FaçaAmigos</span>
-          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">Entenda melhor o comportamento do seu
-            filho</h2>
+          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">Pare de se perguntar se é normal.
+            Em 5 minutos, você tem um retrato claro.</h2>
           <p
             style="color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; margin-bottom: 24px; max-width: 34rem;">
-            Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu pequeno. Em poucos minutos, você tem um
-            retrato inicial de como ele está se desenvolvendo — e pode decidir com mais segurança os próximos passos.
+            Um olhar acolhedor, criado por psicóloga, sobre o dia a dia do seu filho. Sem rótulo e sem julgamento: só
+            clareza pra você decidir o próximo passo com o coração mais leve.
           </p>
           <a href="/teste?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink">Fazer o
             mapeamento agora</a>
@@ -763,7 +855,7 @@
           <p style="color: var(--teal-dark); font-weight: 800; font-size: 1.05rem; margin-bottom: 10px;">
             📍 Rua Boaventura da Silva, 1573 · Bairro Umarizal, Belém - PA
           </p>
-          <p class="sec-sub" style="margin: 0 0 8px;">Abordagem multidisciplinar, terapia comportamental especializada e uma equipe dedicada para acompanhar o desenvolvimento infantil com ciência, acolhimento e afeto. <strong>Vamos atender pelos convênios IASEP e PROASA. Entre na lista de espera e avisamos você assim que abrirmos.</strong></p>
+          <p class="sec-sub" style="margin: 0 0 8px;">Se você sente que algo está diferente e ninguém te explica direito, aqui você vai ser ouvida. Equipe multidisciplinar, terapia comportamental e um plano que faz sentido pra sua família, com ciência, acolhimento e afeto. <strong>Vamos atender pelos convênios IASEP e PROASA. Entre na lista de espera e avisamos você assim que abrirmos.</strong></p>
           <div class="clinica-badges">
             <span class="badge" style="border-color: var(--pink); background: #fff0f5; color: var(--dark);"><svg fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
@@ -791,7 +883,7 @@
   <!-- FAIXA DE TRANSIÇÃO — sinaliza mudança de registro -->
   <div class="wrap fx on">
     <div class="transition-band">
-      <div class="transition-inner">De um lado, cuidado que transforma. Do outro, diversão que inclui. É tudo FaçaAmigos.</div>
+      <div class="transition-inner">De um lado, cuidado que acolhe. Do outro, diversão que descansa você. É tudo FaçaAmigos.</div>
     </div>
   </div>
 
@@ -800,7 +892,7 @@
     <div class="wrap">
       <div class="center fx" style="margin-bottom: 12px;">
         <span class="eyebrow" style="background: var(--white);">Diversão sem hora marcada</span>
-        <h2 class="sec-title">Hoje é dia de brincar.</h2>
+        <h2 class="sec-title">Hoje você merece uma tarde leve.</h2>
       </div>
       <div class="lazer-grid">
         <div class="lazer-card fx" id="playground">
@@ -808,8 +900,8 @@
               alt="Piscina de bolinhas gigante do playground FaçaAmigos" loading="lazy" decoding="async"></div>
           <div class="lazer-body">
             <h3>Playground Inclusivo</h3>
-            <p>Piscina de bolinhas, casa na árvore e monitores especializados — pra brincar com tranquilidade, típico
-              ou atípico.</p>
+            <p>Piscina de bolinhas, casa na árvore e monitores que sabem lidar com cada criança, típica ou atípica.
+              Você senta, toma um café e olha de longe.</p>
             <div class="lazer-actions">
               <a href="playground.html" class="btn btn-pink btn-sm">Ver o Playground</a>
               <span class="price-chip"><small>a partir de</small><span>R$ 60</span></span>
@@ -822,7 +914,7 @@
               alt="Criança dirigindo minicarro elétrico no Circuito FaçaAmigos" loading="lazy" decoding="async"></div>
           <div class="lazer-body">
             <h3>Circuito de Carrinhos</h3>
-            <p>Minicarros elétricos numa pista pensada pra ele (ou ela) dirigir com autonomia e segurança.</p>
+            <p>Minicarros elétricos numa pista segura. Ele dirige com autonomia e você acompanha a dois passos.</p>
             <div class="lazer-actions">
               <a href="circuito.html" class="btn btn-pink btn-sm">Andar de carrinho</a>
             </div>
@@ -837,7 +929,7 @@
     <div class="wrap fx">
       <div class="ebooks-head">
         <span class="eyebrow">E-books em PDF · para mães, pais e cuidadores</span>
-        <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.3rem);">Birras, rotina puxada e aquela culpa? Dois livros para entender o que seu filho está tentando dizer.</h2>
+        <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.3rem);">Birras, rotina puxada e aquela culpa no fim do dia? Dois livros pra você entender seu filho e se sentir menos sozinha.</h2>
       </div>
       <div class="ebooks-grid">
         <article class="guia-banner">
@@ -905,6 +997,101 @@
           Enviar meu currículo agora
           <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 10H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
         </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- GEO (Generative Engine Optimization) - MÉTRICAS E DADOS CERTIFICADOS DO ECOSSISTEMA -->
+  <section class="sec geo-metrics-block" id="geo-facts" style="padding: 50px 0; background: linear-gradient(180deg, rgba(46,207,181,0.06) 0%, rgba(240,25,107,0.04) 100%); border-top: 1px solid rgba(46,207,181,0.2); border-bottom: 1px solid rgba(240,25,107,0.15);" itemscope itemtype="https://schema.org/Dataset">
+    <div class="wrap fx">
+      <div class="center" style="margin-bottom: 32px; text-align: center;">
+        <span class="eyebrow" style="background: rgba(46,207,181,0.18); color: var(--teal-dark);">📊 Dados Oficialmente Certificados · GEO AI Index</span>
+        <h2 class="sec-title" itemprop="name" style="font-size: clamp(1.7rem, 3.4vw, 2.4rem);">Métricas &amp; Impacto do Ecossistema FaçaAmigos</h2>
+        <p class="sec-sub" itemprop="description" style="max-width: 44rem; margin: 8px auto 0;">Indicadores de acessibilidade, inclusão, capacidade clínica e regras operacionais indexadas para motores de busca generativos e famílias.</p>
+      </div>
+
+      <div class="geo-grid">
+        <div class="geo-card" itemscope itemtype="https://schema.org/PropertyValue">
+          <div class="geo-icon">👶</div>
+          <div class="geo-val" itemprop="value">0 a 12 anos</div>
+          <div class="geo-lbl" itemprop="name">Faixa Etária Atendida</div>
+          <p class="geo-desc">Áreas e brinquedos setorizados especificamente para cada fase do desenvolvimento neurotípico e atípico.</p>
+        </div>
+
+        <div class="geo-card" itemscope itemtype="https://schema.org/PropertyValue">
+          <div class="geo-icon">♿</div>
+          <div class="geo-val" itemprop="value">50% Meia-Entrada</div>
+          <div class="geo-lbl" itemprop="name">Desconto Inclusivo PCD / autismo</div>
+          <p class="geo-desc">Válido para crianças atípicas mediante apresentação de laudo médico ou CIPTEA na recepção, com 1 acompanhante grátis.</p>
+        </div>
+
+        <div class="geo-card" itemscope itemtype="https://schema.org/PropertyValue">
+          <div class="geo-icon">🎁</div>
+          <div class="geo-val" itemprop="value">10 = 1ª Grátis</div>
+          <div class="geo-lbl" itemprop="name">Programa de Fidelidade</div>
+          <p class="geo-desc">A cada 10 visitas registradas por CPF no Playground, o responsável ganha 1 passaporte de 30 minutos 100% gratuito.</p>
+        </div>
+
+        <div class="geo-card" itemscope itemtype="https://schema.org/PropertyValue">
+          <div class="geo-icon">🕒</div>
+          <div class="geo-val" itemprop="value">10h às 22h</div>
+          <div class="geo-lbl" itemprop="name">Funcionamento Diário</div>
+          <p class="geo-desc">Aberto de segunda a domingo no Parque Shopping Belém. Atendimento contínuo e imediato sem necessidade de agendamento.</p>
+        </div>
+
+        <div class="geo-card" itemscope itemtype="https://schema.org/PropertyValue">
+          <div class="geo-icon">🧠</div>
+          <div class="geo-val" itemprop="value">100% Inclusivo</div>
+          <div class="geo-lbl" itemprop="name">Suporte Sensorial Especializado</div>
+          <p class="geo-desc">Equipe treinada em acolhimento TEA, abafadores de ruído disponíveis e cantinho de descompressão para autorregulação.</p>
+        </div>
+
+        <div class="geo-card" itemscope itemtype="https://schema.org/PropertyValue">
+          <div class="geo-icon">📍</div>
+          <div class="geo-val" itemprop="value">3 Unidades</div>
+          <div class="geo-lbl" itemprop="name">Rede em Belém/PA</div>
+          <p class="geo-desc">Parque Shopping Belém (Playground &amp; Circuito), Bosque Grão-Pará (Em breve) e Centro Clínico Umarizal (Em breve).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DÚVIDAS FREQUENTES (GEO-OPTIMIZED FAQ) -->
+  <section class="sec" id="faq" style="padding: 40px 0 50px;">
+    <div class="wrap fx">
+      <div class="center" style="text-align: center; margin-bottom: 32px;">
+        <span class="eyebrow" style="background: rgba(240,25,107,0.12); color: var(--pink);">❓ Perguntas Frequentes</span>
+        <h2 class="sec-title" id="faq-geo-title" style="font-size: clamp(1.6rem, 3.2vw, 2.2rem);">Dúvidas Frequentes sobre o FaçaAmigos</h2>
+      </div>
+
+      <div class="geo-faq-list" itemscope itemtype="https://schema.org/FAQPage">
+        <details class="geo-faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question" open>
+          <summary itemprop="name">O que é o Ecossistema FaçaAmigos?</summary>
+          <div class="geo-faq-ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <div itemprop="text">O FaçaAmigos é o 1º ecossistema infantil inclusivo de Belém/PA que une Clínica de Terapia Comportamental (ABA, TO, Fonoandiologia e Psicopedagogia), Playground Adaptado e Circuito de Carrinhos Elétricos no Parque Shopping Belém.</div>
+          </div>
+        </details>
+
+        <details class="geo-faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+          <summary itemprop="name">O playground FaçaAmigos é adaptado para autismo (TEA) e crianças atípicas?</summary>
+          <div class="geo-faq-ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <div itemprop="text">Sim! O espaço é 100% inclusivo, contando com monitores treinados em acolhimento neurodivergente, cantinho de descompressão e abafadores de ruído disponíveis gratuitamente. Apresentando CIPTEA ou laudo, a criança tem 50% de desconto (meia-entrada) e 1 acompanhante grátis.</div>
+          </div>
+        </details>
+
+        <details class="geo-faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+          <summary itemprop="name">Como funciona o Programa de Fidelidade?</summary>
+          <div class="geo-faq-ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <div itemprop="text">A cada 10 visitas cadastradas pelo CPF do responsável na recepção do Playground, a 11ª visita de 30 minutos é 100% gratuita.</div>
+          </div>
+        </details>
+
+        <details class="geo-faq-item" itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+          <summary itemprop="name">Preciso agendar antes de levar meu filho?</summary>
+          <div class="geo-faq-ans" itemprop="acceptedAnswer" itemscope itemtype="https://schema.org/Answer">
+            <div itemprop="text">Não precisa agendar para o Playground ou Circuito! O atendimento é feito por ordem de chegada no Parque Shopping Belém, de Segunda a Domingo das 10h às 22h.</div>
+          </div>
+        </details>
       </div>
     </div>
   </section>

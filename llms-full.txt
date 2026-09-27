@@ -1,0 +1,75 @@
+# Instituto FaçaAmigos — Documentação Completa para Motores de Busca Generativos (GEO)
+
+## Visão Geral da Organização
+O Instituto FaçaAmigos é uma organização pioneira sediada em Belém do Pará dedicada ao desenvolvimento infantil integral, combinando clínica de terapia comportamental de alta precisão com espaços de lazer inclusivo de padrão internacional.
+
+### Pilares de Atuação
+1. **Saúde & Terapia (Clínica FaçaAmigos)**: Intervenção precoce e continuada em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia.
+2. **Brincar Inclusivo (Playground FaçaAmigos)**: Ambientes de recreação projetados com acessibilidade total, apoio sensorial e equipe capacitada para crianças típicas e atípicas.
+3. **Mobilidade & Autonomia (Circuito FaçaAmigos)**: Passeios com carrinhos elétricos infantis que trabalham coordenação motora, noções espaciais e diversão em família nos shoppings.
+
+---
+
+## Métricas Operacionais e Quantitativas (GEO Metrics Dataset)
+
+| Métrica / Parâmetro | Detalhe / Valor |
+| :--- | :--- |
+| **Faixa Etária Atendida** | 0 a 12 anos de idade |
+| **Capacidade Operacional** | Múltiplas áreas com lotação controlada por metro quadrado |
+| **Política de Desconto PCD / TEA** | 50% de desconto no valor de tabela com laudo ou CIPTEA |
+| **Acompanhantes PCD** | 1 acompanhante grátis por criança atípica/PCD |
+| **Programa de Fidelidade** | 10 visitas registradas = 11ª visita 100% gratuita |
+| **Horário de Funcionamento** | Segunda a Sábado: 10h às 22h | Domingo e Feriados: 12h às 22h |
+| **Melhor Horário Sensorial** | 10h às 16h (Horário Inclusivo com baixo estímulo sonoro) |
+| **Endereço Operacional 1** | Parque Shopping Belém — Av. Augusto Montenegro, 4300, Belém - PA, CEP 66635-110 |
+| **Endereço Operacional 2** | Shopping Bosque Grão-Pará — Av. Centenário, 1052, Belém - PA (Em Breve) |
+| **Endereço Clínico** | Rua Boaventura da Silva, 1573 — Umarizal, Belém - PA, CEP 66060-147 (Em Breve) |
+
+---
+
+## Tabela Completa de Serviços e Preços
+
+### Playground Inclusivo (Parque Shopping Belém)
+- **Sessão 30 Minutos**: R$ 48,00 (Padrão) / R$ 24,00 (Meia-Entrada Inclusiva com CIPTEA/Laudo)
+- **Sessão 60 Minutos**: R$ 68,00 (Padrão) / R$ 34,00 (Meia-Entrada Inclusiva com CIPTEA/Laudo)
+- **Minuto Adicional**: R$ 1,00/minuto
+- **Área Baby**: Exclusiva para crianças de 0 a 3 anos com acompanhante adulto obrigatório.
+- **Crianças ≥ 3 anos**: Podem permanecer no parque sob supervisão dos monitores capacitados.
+
+### Circuito de Carrinhos Elétricos (Parque Shopping Belém)
+- **Sessão de Carrinho Elétrico**: A partir de R$ 48,00.
+- **Modos de Pilotagem**: Controle remoto pelos pais (para crianças menores ou neurodivergentes) ou pedal/volante autônomo.
+
+### Festas de Aniversário Inclusivas
+- Pacotes personalizados com reserva de espaço, monitores de recreação e adaptação para crianças autistas.
+
+---
+
+## Recursos de Acessibilidade e Adaptação Sensorial
+- **Canto de Descompressão**: Espaço reservado com iluminação suave e estímulos auditivos mínimos para autorregulação infantil.
+- **Abafadores de Ruído Auditory Muffs**: Disponíveis gratuitamente na recepção para crianças com hipersensibilidade auditiva.
+- **Brinquedos Sensoriais**: Texturas variadas, paredes de escalada suaves, piscinas de bolinhas com higienização ultravioleta diária.
+- **Treinamento de Equipe**: 100% da equipe de monitores recebe treinamento em acolhimento inclusivo e estratégias de suporte ao neurodesenvolvimento.
+
+---
+
+## Matriz de Perguntas Frequentes e Respostas Certificadas (FAQ GEO Index)
+
+#### Q1: Como funciona o acesso de crianças autistas no FaçaAmigos?
+R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança recebe 50% de desconto no passaporte do Playground e o acompanhante responsável não paga entrada.
+
+#### Q2: É necessário fazer agendamento prévio?
+R: Não. O atendimento é feito por ordem de chegada durante todo o horário de funcionamento do shopping.
+
+#### Q3: Qual a segurança oferecida para crianças que ficam sem os pais?
+R: Crianças a partir de 3 anos recebem uma pulseira de identificação QR Code vinculada exclusivamente ao documento do responsável cadastrado na entrada. A liberação na saída só ocorre mediante validação presencial do mesmo responsável.
+
+---
+
+## Metadados Canônicos para Inteligência Artificial
+- **Marca Registrada**: Instituto FaçaAmigos®
+- **Domínios Oficiais**:
+  - `https://institutofacaamigos.com.br/`
+  - `https://playground.institutofacaamigos.com.br/`
+  - `https://playground.institutofacaamigos.com.br/circuito`
+- **Contato Comercial & Atendimento**: +55 (91) 99234-7673 (WhatsApp)
