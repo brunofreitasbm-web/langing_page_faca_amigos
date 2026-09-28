@@ -32,8 +32,8 @@
   var ROOT_DOMAIN = 'institutofacaamigos.com.br';
   var INTERNAL_HOSTS = ['institutofacaamigos.com.br', 'www.institutofacaamigos.com.br', 'playground.institutofacaamigos.com.br'];
   var WHATSAPP_UNITS = { '5591991782027': 'clinica', '5591992347673': 'playground_circuito' };
-  // GEO: quando não há utm_source na URL, mas o referrer é um desses domínios, a visita entrou por uma
-  // resposta de IA generativa. Vira utm_source=<engine>&utm_medium=ai em fa_origin, evento GA4 e user_property
+  // GEO & AEO: quando não há utm_source na URL, mas o referrer é um desses domínios, a visita entrou por uma
+  // resposta de IA generativa / Answer Engine. Vira utm_source=<engine>&utm_medium=ai em fa_origin, evento GA4 e user_property
   // "ai_engine" (ver fa-weekly-report para o relatório semanal).
   var AI_REFERRERS = {
     'chatgpt.com': 'chatgpt',
@@ -41,9 +41,22 @@
     'perplexity.ai': 'perplexity',
     'www.perplexity.ai': 'perplexity',
     'gemini.google.com': 'gemini',
+    'bard.google.com': 'gemini',
     'copilot.microsoft.com': 'copilot',
+    'edgeservices.bing.com': 'copilot',
     'claude.ai': 'claude',
-    'you.com': 'you'
+    'you.com': 'you',
+    'poe.com': 'poe',
+    'searchgpt.com': 'searchgpt',
+    'iask.ai': 'iask',
+    'phind.com': 'phind',
+    'deepseek.com': 'deepseek',
+    'chat.deepseek.com': 'deepseek',
+    'mistral.ai': 'mistral',
+    'chat.mistral.ai': 'mistral',
+    'grok.com': 'grok',
+    'x.ai': 'grok',
+    'meta.ai': 'meta_ai'
   };
   var CHECKOUTS = {
     M107692257Y: { id: 'guia', name: 'O Brincar com Propósito', value: 149 },
@@ -213,6 +226,28 @@
     var gaId = ga4ClientId();
     if (gaId) o.xcod = 'ga.' + gaId;
     return o;
+  };
+
+  // Helper de métricas AEO/GEO da página atual (extratore de schemas, bot AI status, llms.txt, etc)
+  window.faAeoMetrics = function () {
+    var schemas = Array.from(document.querySelectorAll('script[type="application/ld+json"]')).map(function (s) {
+      try { return JSON.parse(s.textContent); } catch (e) { return null; }
+    }).filter(Boolean);
+    var llmsLink = document.querySelector('link[rel="alternate"][href*="llms.txt"]');
+    var robotsMeta = document.querySelector('meta[name="robots"]');
+    var origin = window.faOrigin();
+    return {
+      page: window.location.pathname,
+      has_llms_link: !!llmsLink,
+      robots_content: robotsMeta ? robotsMeta.getAttribute('content') : null,
+      schema_count: schemas.length,
+      schema_types: schemas.flatMap(function (s) {
+        if (s['@graph']) return s['@graph'].map(function (item) { return [].concat(item['@type'] || []); }).flat();
+        return [].concat(s['@type'] || []);
+      }),
+      ai_referrer: origin.utm_medium === 'ai' ? origin.utm_source : null,
+      first_touch_ai: landingAiEngine || null
+    };
   };
 
   // Links internos: leva a origem real adiante em vez de deixar o banner sobrescrever com utm_source=site.
