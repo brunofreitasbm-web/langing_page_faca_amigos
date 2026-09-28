@@ -40,11 +40,12 @@ type Row = Record<string, any>;
 
 // Metadados fixos por unidade enquanto fa_kiosk_units não tem latitude/longitude/slug preenchidos.
 // unit_id -> { slug, city, state, postalCode, complement, lat, lng }
-const UNIT_META: Record<string, { slug: string; city: string; state: string; postalCode: string; complement: string; lat: number | null; lng: number | null }> = {
+const UNIT_META: Record<string, { slug: string; city: string; state: string; street: string; postalCode: string; complement: string; lat: number | null; lng: number | null }> = {
   "11111111-1111-1111-1111-111111111111": {
     slug: "playground-parque",
     city: "Belém",
     state: "PA",
+    street: "Rod. Augusto Montenegro, 4300",
     postalCode: "66635-110",
     complement: "Parque Shopping Belém, Térreo, próximo às Lojas Americanas",
     lat: -1.3653,
@@ -54,6 +55,7 @@ const UNIT_META: Record<string, { slug: string; city: string; state: string; pos
     slug: "circuito-parque",
     city: "Belém",
     state: "PA",
+    street: "Rod. Augusto Montenegro, 4300",
     postalCode: "66635-110",
     complement: "Parque Shopping Belém, Térreo, próximo às Lojas Americanas",
     lat: -1.3653,
@@ -63,6 +65,7 @@ const UNIT_META: Record<string, { slug: string; city: string; state: string; pos
     slug: "playground-bosque",
     city: "Belém",
     state: "PA",
+    street: "Av. Centenário, 1052",
     postalCode: "66635-894",
     complement: "Shopping Bosque Grão-Pará",
     lat: -1.3912,
@@ -133,7 +136,7 @@ Deno.serve(async (req) => {
     for (const s of settings) closingByUnit.set(s.unit_id, publicCloseTime(s.value));
 
     const units = ((unitsQ.data ?? []) as Row[]).map((u) => {
-      const meta = UNIT_META[u.id] ?? { slug: u.id, city: "Belém", state: "PA", postalCode: "", complement: "", lat: null, lng: null };
+      const meta = UNIT_META[u.id] ?? { slug: u.id, city: "Belém", state: "PA", street: "", postalCode: "", complement: "", lat: null, lng: null };
       const disc = discountsByUnit.get(u.id) ?? { geral: null, inclusivo: null };
       const unitPlans = plans.filter((p) => p.unit_id === u.id);
       const unitPackages = packages.filter((p) => p.unit_id === u.id);
@@ -146,7 +149,7 @@ Deno.serve(async (req) => {
         kind: u.kind,
         status: unitPlans.length > 0 ? "aberto" : "em_breve",
         address: {
-          street: "Rod. Augusto Montenegro, 4300",
+          street: meta.street,
           complement: meta.complement,
           city: meta.city,
           state: meta.state,
