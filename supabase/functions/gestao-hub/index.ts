@@ -608,8 +608,23 @@ Deno.serve(async (req) => {
     const generica = (id: string) =>
       jsonResponse(req, { challenge_id: id, mensagem: "Se os dados conferem, enviamos um código para o e-mail cadastrado." });
 
-    const alvo = await acharUsuarioClinica(loginInput);
-    const conta = alvo ? await carregarConta(admin, alvo.email) : null;
+    // Aceita CPF, o e-mail de login da Clínica ou o e-mail real que recebe o código (o Gmail).
+    let conta: Conta | null = null;
+    let alvo: { id: string; email: string } | null = null;
+    if (loginInput.includes("@")) {
+      const q = quoteFilterValue(loginInput);
+      const { data: achadas } = await admin
+        .from("fa_gestao_contas")
+        .select("*")
+        .or(`email.eq.${q},email_codigo.eq.${q}`)
+        .eq("ativo", true)
+        .limit(1);
+      conta = (achadas?.[0] as Conta | undefined) ?? null;
+      alvo = conta ? await acharUsuarioClinica(conta.email) : null;
+    } else {
+      alvo = await acharUsuarioClinica(loginInput);
+      conta = alvo ? await carregarConta(admin, alvo.email) : null;
+    }
     if (!alvo || !conta) {
       await auditar(admin, req, "reset_ignorado", { email: loginInput.toLowerCase() });
       return generica(crypto.randomUUID());
