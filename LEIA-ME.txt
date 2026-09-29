@@ -1,10 +1,11 @@
-ATUALIZAÇÃO 29/09/2026 (2) — cache de /img
--------------------------------------------
-/img/* trocou "max-age=31536000, immutable" por "max-age=86400, stale-while-revalidate=604800" (vercel.json),
-a mesma regra de /assets. Trocar uma foto mantendo o nome agora aparece em até 1 dia (o navegador revalida
-com o servidor e só baixa de novo se o arquivo mudou). LIMITE: quem já visitou antes desta mudança guardou
-as fotos atuais por até 1 ano e continua vendo a versão antiga delas. Para uma troca urgente de uma foto que
-já existe, renomeie o arquivo e atualize as referências. Fotos novas e nomes novos não sofrem disso.
+ATUALIZAÇÃO 29/09/2026 (2) — cache de /img e /video
+----------------------------------------------------
+/img/* e /video/* trocaram "max-age=31536000, immutable" por "max-age=86400, stale-while-revalidate=604800"
+(vercel.json), a mesma regra de /assets. Trocar uma foto ou um vídeo mantendo o nome agora aparece em até
+1 dia (o navegador revalida com o servidor e só baixa de novo se o arquivo mudou; um vídeo inalterado custa
+só uma resposta 304, não os ~5 MB). LIMITE: quem já visitou antes desta mudança guardou os arquivos atuais
+por até 1 ano e continua vendo a versão antiga deles. Para uma troca urgente de um arquivo que já existe,
+renomeie o arquivo e atualize as referências. Arquivos novos e nomes novos não sofrem disso.
 Redes sociais (WhatsApp, Facebook, X) guardam a prévia por conta própria: use o depurador de compartilhamento
 da Meta para atualizar a de um link.
 
@@ -65,8 +66,6 @@ título que pula nível. A falsa acusação de "img sem loading" na imagem LCP (
 
 NÃO FEITO (decisão ou dado que só o dono tem)
 - www -> apex: conferir no painel da Vercel (Domains) se o www redireciona para o domínio raiz.
-- /video/* ainda tem cache "immutable" de 1 ano (mesmo problema que /img tinha): trocar um vídeo mantendo o
-  nome não aparece para quem já visitou. Renomear ao trocar, ou aplicar a mesma regra de /img.
 - "1º ecossistema infantil inclusivo de Belém" (FAQ do hub): superlativo sem comprovação pública. Para IA e
   para o CONAR, vale ter um fato citável (ranking, reportagem) ou trocar por "um dos".
 - Site inteiro usa dois containers GTM (ver aviso no fa-track.js): conferir contagem em dobro.
