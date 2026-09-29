@@ -1,3 +1,20 @@
+ATUALIZAÇÃO 29/09/2026 (3) — módulo "É para todas as crianças"
+---------------------------------------------------------------
+Responde a pergunta mais frequente do Playground: "é só para criança autista, neurodivergente ou atípica?".
+Resposta em todo lugar: não, é para todas as crianças de 0 a 12 anos, com ou sem laudo.
+- /playground: seção nova "É só pra criança autista? Não. É pra todas." (#para-todas) logo abaixo do topo, com
+  dois cartões (sem laudo / com laudo ou CIPTEA). Subtítulo do topo e parágrafo da seção de inclusão reescritos
+  para falar de "todas as crianças" primeiro. Pergunta nova em 1º lugar nas Dúvidas frequentes (visível e
+  JSON-LD). Descrição da página (Google e prévia de link) passou a dizer "para todas as crianças, com ou sem laudo".
+- Guia novo: /aprender/e-para-todas-as-criancas, assinado pela Isabella. Entrou em 1º na lista do /aprender
+  (agora 9 guias), no sitemap e no glossário (termo novo "Inclusão (playground inclusivo)").
+- Hub: a faixa "Para ler em casa" trocou o cartão "Laudo e CIPTEA" pelo cartão desta pergunta.
+- llms.txt e llms-full.txt: pergunta e fato novos, gerados pelos modelos em scripts/geo-templates.
+- conteudo/e-para-todas-kit.md: carrossel de Instagram, roteiro de reel, respostas rápidas de WhatsApp e falas
+  da recepção. A pasta conteudo/ não vai para o site (.vercelignore).
+ANTES DE PUBLICAR: a Isabella precisa ler o guia (sai com o nome e o CRP dela). "Horário Inclusivo 10h–16h"
+continua sem confirmação da operação e o guia novo cita esse horário.
+
 ATUALIZAÇÃO 29/09/2026 (2) — cache de /img e /video
 ----------------------------------------------------
 /img/* e /video/* trocaram "max-age=31536000, immutable" por "max-age=86400, stale-while-revalidate=604800"
@@ -705,7 +722,7 @@ CONTEÚDO ALINHADO AO BANCO DE DADOS (Supabase)
   é cheio mesmo — nenhum dos 158 passeios registrados usou cupom.
 - Day Use descrito como "10 horas no mesmo dia" (é o que o pacote
   cadastrado entrega, não tempo livre).
-- Programa de fidelidade (a cada 10 visitas a próxima é cortesia)
+- Programa de fidelidade (a cada 10 visitas, a 10ª entrada é cortesia)
   passou a aparecer no site e na política de privacidade — está ativo
   no sistema para Playground e Circuito.
 - Prova social passou a usar número real: mais de 1.100 famílias e

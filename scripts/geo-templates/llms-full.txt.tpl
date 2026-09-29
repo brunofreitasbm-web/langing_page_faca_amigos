@@ -88,6 +88,9 @@ R: O Playground e o Circuito funcionam no Parque Shopping Belém ({{ENDERECO_PAR
 #### Q5: Qual o melhor horário para crianças com sensibilidade sensorial?
 R: O Horário Inclusivo, todos os dias das 10h às 16h, tem som mais baixo, menos lotação e equipe reforçada. É o horário indicado para a primeira visita.
 
+#### Q6: O Playground FaçaAmigos é só para crianças autistas ou neurodivergentes?
+R: Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laudo. Crianças típicas e atípicas brincam juntas no mesmo espaço, sem ala separada. O Horário Inclusivo também é aberto a qualquer família. A estrutura inclusiva (monitores treinados, abafadores de ruído, canto de descompressão) deixa o ambiente mais seguro e tranquilo para qualquer criança. Guia completo: `https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas`
+
 ---
 
 ## Endereços Canônicos e Contato

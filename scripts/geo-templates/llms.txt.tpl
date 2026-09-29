@@ -27,6 +27,7 @@
 - **Faixa Etária Atendida**: 0 a 12 anos de idade
 - **Idioma e região**: português do Brasil (pt-BR), Belém e Região Metropolitana (PA)
 - **Autoria dos conteúdos educativos**: psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), idealizadora do FaçaAmigos. Os e-books e o Mapeamento Comportamental são materiais educativos e não substituem avaliação profissional.
+- **Público do Playground**: todas as crianças de 0 a 12 anos, com ou sem laudo. Não é um espaço exclusivo para crianças autistas ou neurodivergentes: crianças típicas e atípicas brincam juntas.
 - **Acessibilidade & Inclusão**: 100% adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas, com monitores de inclusão, abafadores de ruído e canto de descompressão sensorial.
 - **Benefício Inclusivo**: {{DESCONTO_INCLUSIVO_PCT}} de desconto (meia-entrada) no Playground para crianças com laudo ou CIPTEA.
 - **Programa de Fidelidade**: {{FIDELIDADE_PLAYGROUND}}
@@ -58,6 +59,9 @@
 ---
 
 ## Perguntas Frequentes (FAQ)
+
+### O Playground FaçaAmigos é só para crianças autistas ou neurodivergentes?
+Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laudo. Crianças típicas e atípicas brincam juntas no mesmo espaço, e a estrutura inclusiva deixa o ambiente mais seguro e tranquilo para qualquer criança. Guia completo: [https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas](https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas)
 
 ### O Playground FaçaAmigos é adequado para autistas e crianças neurodivergentes?
 Sim. O espaço é 100% inclusivo, com equipe treinada para acolhimento atípico, abafadores de ruído e canto de descompressão para regulação sensorial. Apresentando laudo ou CIPTEA, a criança tem {{DESCONTO_INCLUSIVO_PCT}} de desconto (meia-entrada).

@@ -64,6 +64,17 @@ Pendente (não faz parte deste lote): CTA de pré-check-in nas páginas (falta a
 quiosque) e `AggregateRating` a partir de `fa_kiosk_google_reviews` (a tabela está vazia; não confirmado se guardaria
 notas reais do Google).
 
+## Lote 5: módulo "É para todas as crianças" (pendente, feito só no código em 29/09/2026)
+
+Só arquivos estáticos, sem função nem migration. Não depende dos lotes anteriores.
+
+1. Isabella lê e aprova `aprender/e-para-todas-as-criancas.html` (sai assinado por ela) e `conteudo/e-para-todas-kit.md`.
+2. Confirmar com a operação o "Horário Inclusivo 10h–16h", citado no guia e na resposta nova da FAQ.
+3. `npm run check` → `npm run geo:check` → commit → `npm run sitemap` → push.
+4. Depois do deploy: abrir `/playground#para-todas` e o guia no celular; testar o playground no Rich Results Test
+   (a FAQ agora tem 8 perguntas).
+5. Cadastrar as respostas rápidas no WhatsApp Business e agendar o carrossel (textos em `conteudo/e-para-todas-kit.md`).
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.
