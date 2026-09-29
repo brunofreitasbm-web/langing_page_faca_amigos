@@ -4,7 +4,7 @@
 O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada ao desenvolvimento infantil, combinando clínica de terapia comportamental com espaços de lazer inclusivo.
 
 ### Pilares de Atuação
-1. **Saúde & Terapia (Clínica FaçaAmigos)**: intervenção em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia.
+1. **Saúde & Terapia (Clínica FaçaAmigos)**: intervenção em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia. Lista completa de serviços em [/servicos](https://institutofacaamigos.com.br/servicos).
 2. **Brincar Inclusivo (Playground FaçaAmigos)**: ambientes de recreação com acessibilidade, apoio sensorial e equipe treinada para crianças típicas e atípicas.
 3. **Mobilidade & Autonomia (Circuito FaçaAmigos)**: passeios com carrinhos elétricos infantis que trabalham coordenação motora e diversão em família no shopping.
 
@@ -78,6 +78,6 @@ R: Crianças a partir de 3 anos recebem uma pulseira de identificação vinculad
   - `https://playground.institutofacaamigos.com.br/`
   - `https://playground.institutofacaamigos.com.br/circuito`
 - **Contato Comercial & Atendimento**: +55 (91) 99234-7673 (WhatsApp)
-- **Outros conteúdos**: `/teste` (Mapeamento Comportamental gratuito), `/guia` (e-book O Brincar com Propósito), `/codigo` (e-book O Código do Desenvolvimento Infantil)
+- **Outros conteúdos**: `/servicos` (serviços da Clínica), `/aprender` (guias educativos), `/glossario` (glossário de termos), `/teste` (Mapeamento Comportamental gratuito), `/guia` (e-book O Brincar com Propósito), `/codigo` (e-book O Código do Desenvolvimento Infantil)
 - **Resumo curto (GEO)**: `https://institutofacaamigos.com.br/llms.txt`
 - **Fatos legíveis por máquina (GEO)**: `https://institutofacaamigos.com.br/geo-facts.json`

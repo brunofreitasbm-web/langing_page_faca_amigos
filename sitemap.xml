@@ -3,7 +3,7 @@
   <!-- Hub Principal FaçaAmigos -->
   <url>
     <loc>https://institutofacaamigos.com.br/</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -24,13 +24,13 @@
   <!-- GEO LLM Standard Summary Files -->
   <url>
     <loc>https://institutofacaamigos.com.br/llms.txt</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://institutofacaamigos.com.br/llms-full.txt</loc>
-    <lastmod>2026-09-27</lastmod>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -58,6 +58,75 @@
   <url>
     <loc>https://institutofacaamigos.com.br/teste</loc>
     <lastmod>2026-09-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <!-- Serviços da Clínica -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/servicos</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- Área Aprender (guias educativos) -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/birra-ou-crise</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/sinais-para-observar</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/primeira-vez-no-playground</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/rotina-visual-em-casa</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/como-e-a-terapia-comportamental</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/laudo-e-ciptea</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/conversar-com-a-escola</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://institutofacaamigos.com.br/aprender/brincar-com-proposito-10-minutos</loc>
+    <lastmod>2026-09-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- Glossário -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/glossario</loc>
+    <lastmod>2026-09-28</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>

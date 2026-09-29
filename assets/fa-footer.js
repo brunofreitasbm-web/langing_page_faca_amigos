@@ -1,6 +1,6 @@
 /*
- * FaçaAmigos: rodapé único (conteúdo) para hub, /playground, /circuito e /teste.
- * Marque o rodapé de cada página com  <footer data-fa-footer="hub|playground|circuito|teste">
+ * FaçaAmigos: rodapé único (conteúdo) para hub, /playground, /circuito, /teste, /servicos, /aprender e /glossario.
+ * Marque o rodapé de cada página com  <footer data-fa-footer="hub|playground|circuito|teste|servicos|aprender|glossario">
  * e inclua  <script src="/assets/fa-footer.js" defer></script>.
  * Sem JavaScript, continua valendo o rodapé estático da própria página (mesmo conteúdo, mantido em sincronia).
  *
@@ -21,7 +21,10 @@
     hub: { n: WA_CLINICA, t: 'Olá! Gostaria de informações sobre o FaçaAmigos - Centro de Terapia Comportamental.' },
     teste: { n: WA_CLINICA, t: 'Oi! Vim pelo site e gostaria de tirar uma dúvida.' },
     playground: { n: WA_LAZER, t: 'Oi! Vim pelo site e gostaria de tirar uma dúvida.' },
-    circuito: { n: WA_LAZER, t: 'Oi! Vim pelo site e gostaria de tirar uma dúvida sobre o Circuito.' }
+    circuito: { n: WA_LAZER, t: 'Oi! Vim pelo site e gostaria de tirar uma dúvida sobre o Circuito.' },
+    servicos: { n: WA_CLINICA, t: 'Olá! Quero entrar na lista de espera da Clínica FaçaAmigos - Centro de Terapia Comportamental (vim pelo site).' },
+    aprender: { n: WA_CLINICA, t: 'Oi! Vim pelo site (Aprender) e gostaria de tirar uma dúvida.' },
+    glossario: { n: WA_CLINICA, t: 'Oi! Vim pelo site (Glossário) e gostaria de tirar uma dúvida.' }
   };
 
   var footer = document.querySelector('footer[data-fa-footer]');
@@ -35,9 +38,12 @@
 
   var nav = [
     link('/', 'Início'),
+    link('/servicos', 'Serviços'),
     link('/playground', 'Playground'),
     link('/circuito', 'Circuito'),
     link('/teste?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'Mapeamento gratuito'),
+    link('/aprender', 'Aprender'),
+    link('/glossario', 'Glossário'),
     link('/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'O Brincar com Propósito'),
     link('/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'O Código do Desenvolvimento Infantil')
   ].join(' · ');

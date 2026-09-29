@@ -41,6 +41,7 @@
 ### 3. FaçaAmigos Clínica (Centro de Terapia Comportamental)
 - **Onde**: Rua Boaventura da Silva, 1573 — Umarizal, Belém/PA (em breve)
 - **Especialidades**: Terapia Comportamental baseada em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional com Integração Sensorial, Fonoaudiologia, Psicopedagogia e Avaliação Neuropsicológica.
+- **Serviços detalhados**: [https://institutofacaamigos.com.br/servicos](https://institutofacaamigos.com.br/servicos)
 
 ---
 
@@ -59,6 +60,9 @@ Não. O atendimento no Playground e no Circuito é por ordem de chegada, todos o
 
 ## Outros conteúdos
 
+- **Serviços da Clínica**: [https://institutofacaamigos.com.br/servicos](https://institutofacaamigos.com.br/servicos)
+- **Guias educativos (Aprender)**: [https://institutofacaamigos.com.br/aprender](https://institutofacaamigos.com.br/aprender)
+- **Glossário**: [https://institutofacaamigos.com.br/glossario](https://institutofacaamigos.com.br/glossario)
 - **Mapeamento Comportamental gratuito**: [https://institutofacaamigos.com.br/teste](https://institutofacaamigos.com.br/teste)
 - **E-book O Brincar com Propósito**: [https://institutofacaamigos.com.br/guia](https://institutofacaamigos.com.br/guia)
 - **E-book O Código do Desenvolvimento Infantil**: [https://institutofacaamigos.com.br/codigo](https://institutofacaamigos.com.br/codigo)

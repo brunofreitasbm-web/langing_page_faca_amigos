@@ -15,9 +15,19 @@ const SITE_HOSTS = new Set([
 const EXCLUIDAS = (f) => f === 'admin.html' || f === 'descadastrar.html' || /^google.*\.html$/i.test(f);
 
 const read = (p) => readFileSync(join(root, p), 'utf8');
-const paginas = readdirSync(root)
-  .filter((f) => f.endsWith('.html') && !EXCLUIDAS(f) && statSync(join(root, f)).isFile())
-  .sort();
+// HTML da raiz + subpastas de conteúdo (hoje só aprender/), sempre com "/" no nome (Windows e CI/Linux iguais).
+const CONTEUDO_SUBPASTAS = ['aprender'];
+function htmlEm(dir) {
+  const abs = join(root, dir || '.');
+  if (dir && !existsSync(abs)) return [];
+  return readdirSync(abs)
+    .filter((f) => f.endsWith('.html') && statSync(join(abs, f)).isFile())
+    .map((f) => (dir ? `${dir}/${f}` : f));
+}
+const paginas = [
+  ...htmlEm('').filter((f) => !EXCLUIDAS(f)),
+  ...CONTEUDO_SUBPASTAS.flatMap((d) => htmlEm(d)),
+].sort();
 
 let totalErros = 0;
 let totalAvisos = 0;
@@ -88,7 +98,7 @@ function existeNoSite(rel) {
   if (rel === '') return existsSync(join(root, 'index.html'));
   const p = join(root, rel);
   if (existsSync(p) && statSync(p).isFile()) return true;
-  if (existsSync(p) && statSync(p).isDirectory()) return existsSync(join(p, 'index.html'));
+  if (existsSync(p) && statSync(p).isDirectory() && existsSync(join(p, 'index.html'))) return true;
   if (!extname(rel) || rel.endsWith('/')) {
     const limpo = rel.replace(/\/+$/, '');
     if (limpo === '') return existsSync(join(root, 'index.html'));

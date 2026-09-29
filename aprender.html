@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aprender — Guias sobre desenvolvimento infantil e inclusão | FaçaAmigos</title>
+  <meta name="description"
+    content="Guias curtos escritos por uma psicóloga infantil sobre birra e crise, rotina visual, laudo e CIPTEA, primeira visita ao playground e mais. Sem jargão, sem julgamento.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://institutofacaamigos.com.br/aprender">
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#065264">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FaçaAmigos — Centro de Terapia Comportamental">
+  <meta property="og:title" content="Aprender — Guias sobre desenvolvimento infantil e inclusão">
+  <meta property="og:description"
+    content="Guias curtos escritos por uma psicóloga infantil, sem jargão e sem julgamento.">
+  <meta property="og:url" content="https://institutofacaamigos.com.br/aprender">
+  <meta property="og:image" content="https://institutofacaamigos.com.br/img/guia/og-guia.jpg">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Aprender — Guias sobre desenvolvimento infantil e inclusão">
+  <meta name="twitter:image" content="https://institutofacaamigos.com.br/img/guia/og-guia.jpg">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --yellow: #FDC51D; --teal: #07C5C8; --pink: #FB3D6A; --petrol: #065264; --ice: #F4FAFB;
+      --gray: #7A8A90; --black: #0B1416; --teal-10: #E2F8F8; --yellow-20: #FFF3D2; --pink-10: #FFECF0;
+      --shadow: 0 1px 2px rgba(6, 82, 100, .10), 0 4px 14px rgba(6, 82, 100, .10);
+      --shadow-lg: 0 2px 4px rgba(6, 82, 100, .10), 0 14px 38px rgba(6, 82, 100, .18);
+      --shadow-btn: 0 2px 4px rgba(251, 61, 106, .25), 0 8px 20px rgba(251, 61, 106, .30);
+      --gutter: 16px; --font-display: 'Fredoka', 'Nunito', system-ui, sans-serif;
+      --font-body: 'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: clip; -webkit-text-size-adjust: 100%; }
+    body { margin: 0; font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.6; color: var(--petrol); background: #fff; overflow-x: clip; }
+    img { max-width: 100%; height: auto; display: block; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.15; margin: 0; letter-spacing: -.005em; }
+    p { margin: 0; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 8px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: var(--petrol); padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 100; }
+    .skip:focus { top: 8px; }
+
+    .wrap { width: 100%; max-width: 1120px; margin: 0 auto; padding: 0 var(--gutter); position: relative; z-index: 1; }
+    section { position: relative; overflow: hidden; padding: 60px 0; }
+    .bg-petrol { background: var(--petrol); color: #fff; }
+    .bg-ice { background: var(--ice); }
+    .center { text-align: center; }
+
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
+    .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--pink); }
+    .bg-petrol .eyebrow { color: #fff; }
+    h2.title { font-size: clamp(1.7rem, 5.6vw, 2.5rem); margin-bottom: 14px; }
+    .lead { font-size: 1.12rem; max-width: 640px; }
+    .center .lead { margin-left: auto; margin-right: auto; }
+
+    .dots { display: inline-flex; gap: 8px; align-items: center; }
+    .dots i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+    .dots i:nth-child(1) { background: var(--yellow); }
+    .dots i:nth-child(2) { background: var(--teal); }
+    .dots i:nth-child(3) { background: var(--pink); }
+
+    .circ { position: absolute; border-radius: 50%; z-index: 0; pointer-events: none; }
+
+    .btn-buy { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 56px; padding: 14px 30px; border-radius: 999px; background: var(--pink); color: #fff; text-decoration: none; font-family: var(--font-body); font-weight: 800; font-size: 1.1rem; box-shadow: var(--shadow-btn); border: 0; cursor: pointer; transition: transform .18s ease; }
+    .btn-buy:hover { transform: translateY(-2px) scale(1.015); }
+    .btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 24px; border-radius: 999px; background: #fff; color: var(--petrol); text-decoration: none; font-weight: 800; font-size: 1rem; border: 2px solid var(--petrol); }
+
+    /* Topbar */
+    .topbar { position: sticky; top: 0; z-index: 50; background: var(--petrol); border-bottom: 1px solid rgba(255, 255, 255, .12); }
+    .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; height: 64px; flex-wrap: wrap; }
+    .topbar img { width: 150px; height: auto; }
+    .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; }
+    .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
+
+    /* Hero */
+    .hero { padding: 44px 0 56px; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 6.4vw, 2.9rem); margin-bottom: 16px; }
+    .hero .sub { font-size: 1.12rem; color: rgba(255, 255, 255, .92); max-width: 640px; margin: 0 auto; }
+
+    /* Cards dos guias */
+    .guides-grid { display: grid; gap: 18px; margin-top: 36px; }
+    .guide-card { display: block; background: #fff; border-radius: 22px; box-shadow: var(--shadow); overflow: hidden; text-decoration: none; color: var(--petrol); transition: transform .18s ease, box-shadow .18s ease; }
+    .guide-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .guide-card .ph { aspect-ratio: 16/9; overflow: hidden; }
+    .guide-card .ph img { width: 100%; height: 100%; object-fit: cover; }
+    .guide-card .body { padding: 18px 20px 22px; }
+    .guide-card .tag { font-size: .76rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--pink); margin-bottom: 8px; display: block; }
+    .guide-card h3 { font-size: 1.12rem; margin-bottom: 8px; line-height: 1.25; }
+    .guide-card p { font-size: .92rem; opacity: .85; }
+
+    /* Glossário strip */
+    .strip { background: var(--teal-10); border-radius: 28px; padding: 32px 28px; display: grid; gap: 18px; align-items: center; margin-top: 8px; }
+    .strip h2 { font-size: 1.5rem; margin-bottom: 8px; }
+
+    /* E-books */
+    .ebooks { display: grid; gap: 16px; margin-top: 30px; }
+    .ebook-card { display: flex; gap: 16px; align-items: center; background: #fff; border-radius: 20px; padding: 18px; box-shadow: var(--shadow); text-decoration: none; color: var(--petrol); }
+    .ebook-card img { width: 64px; border-radius: 4px 8px 8px 4px; box-shadow: 0 4px 10px rgba(6,82,100,.25); flex: none; }
+    .ebook-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
+    .ebook-card p { font-size: .88rem; opacity: .8; }
+
+    footer { background: var(--petrol); color: #fff; padding: 44px 0 34px; border-top: 1px solid rgba(255, 255, 255, .14); }
+    footer img { width: 190px; }
+    footer p { margin: 0 0 10px; font-size: .95rem; }
+    footer a { text-decoration: none; font-weight: 700; }
+    footer a:hover { text-decoration: underline; }
+    footer .legal { font-size: .84rem; line-height: 1.55; opacity: .82; max-width: 820px; margin-top: 14px; }
+    footer .dots { margin-top: 24px; }
+
+    @media (min-width: 640px) {
+      .guides-grid { grid-template-columns: repeat(2, 1fr); }
+      .ebooks { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 980px) {
+      section { padding: 84px 0; }
+      .guides-grid { grid-template-columns: repeat(4, 1fr); }
+      .strip { grid-template-columns: 1.4fr auto; text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "CollectionPage",
+        "@id": "https://institutofacaamigos.com.br/aprender#colecao",
+        "name": "Aprender — Guias sobre desenvolvimento infantil e inclusão",
+        "description": "Guias curtos escritos por uma psicóloga infantil sobre birra e crise, rotina visual, laudo e CIPTEA, primeira visita ao playground e mais.",
+        "url": "https://institutofacaamigos.com.br/aprender",
+        "isPartOf": { "@id": "https://institutofacaamigos.com.br/#organization" },
+        "inLanguage": "pt-BR",
+        "hasPart": [
+          { "@type": "Article", "headline": "Birra ou crise? Como diferenciar e o que fazer na hora", "url": "https://institutofacaamigos.com.br/aprender/birra-ou-crise" },
+          { "@type": "Article", "headline": "\"Será que é normal?\": sinais que valem um olhar mais de perto", "url": "https://institutofacaamigos.com.br/aprender/sinais-para-observar" },
+          { "@type": "Article", "headline": "Primeira vez no playground com uma criança sensível: como preparar", "url": "https://institutofacaamigos.com.br/aprender/primeira-vez-no-playground" },
+          { "@type": "Article", "headline": "Rotina visual em casa: um passo a passo de 20 minutos", "url": "https://institutofacaamigos.com.br/aprender/rotina-visual-em-casa" },
+          { "@type": "Article", "headline": "O que acontece numa sessão de terapia comportamental (sem jargão)", "url": "https://institutofacaamigos.com.br/aprender/como-e-a-terapia-comportamental" },
+          { "@type": "Article", "headline": "Laudo e CIPTEA: o que são e onde valem em Belém", "url": "https://institutofacaamigos.com.br/aprender/laudo-e-ciptea" },
+          { "@type": "Article", "headline": "Como conversar com a escola sem sair da reunião com culpa", "url": "https://institutofacaamigos.com.br/aprender/conversar-com-a-escola" },
+          { "@type": "Article", "headline": "5 brincadeiras de 10 minutos que ensinam sem parecer aula", "url": "https://institutofacaamigos.com.br/aprender/brincar-com-proposito-10-minutos" }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://institutofacaamigos.com.br/" },
+          { "@type": "ListItem", "position": 2, "name": "Aprender", "item": "https://institutofacaamigos.com.br/aprender" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <div class="topbar">
+    <div class="wrap">
+      <a href="/"><img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="150" height="26" loading="eager"></a>
+      <nav class="tnav" aria-label="Áreas do site">
+        <a href="/servicos">Serviços</a>
+        <a href="/aprender" aria-current="page">Aprender</a>
+        <a href="/glossario">Glossário</a>
+      </nav>
+    </div>
+  </div>
+
+  <main id="conteudo">
+    <header class="bg-petrol hero">
+      <span class="circ" style="width:280px;height:280px;right:-140px;top:-100px;background:var(--teal);opacity:.18"></span>
+      <span class="circ" style="width:140px;height:140px;left:-70px;bottom:-40px;background:var(--yellow);opacity:.16"></span>
+      <div class="wrap">
+        <span class="eyebrow">Aprender FaçaAmigos</span>
+        <h1>Entender seu filho não deveria depender de sorte.</h1>
+        <p class="sub">Guias curtos, escritos por uma psicóloga infantil, sem jargão e sem julgamento. Leia o que faz sentido pra sua família agora.</p>
+      </div>
+    </header>
+
+    <section aria-labelledby="guias-h">
+      <div class="wrap">
+        <div class="center" style="margin-bottom: 8px;">
+          <span class="eyebrow">8 guias</span>
+          <h2 class="title" id="guias-h">Comece por aqui</h2>
+        </div>
+        <div class="guides-grid">
+          <a class="guide-card" href="/aprender/birra-ou-crise">
+            <div class="ph"><img src="img/codigo/og-codigo.jpg" alt="" width="1200" height="630" loading="lazy"></div>
+            <div class="body"><span class="tag">6 min · Comportamento</span><h3>Birra ou crise? Como diferenciar e o que fazer na hora</h3><p>A diferença entre as duas e três sinais pra reconhecer na hora.</p></div>
+          </a>
+          <a class="guide-card" href="/aprender/sinais-para-observar">
+            <div class="ph"><img src="img/guia/og-guia.jpg" alt="" width="1200" height="630" loading="lazy"></div>
+            <div class="body"><span class="tag">5 min · Desenvolvimento</span><h3>"Será que é normal?": sinais que valem um olhar mais de perto</h3><p>Cinco áreas do dia a dia pra observar, sem alarme e sem rótulo.</p></div>
+          </a>
+          <a class="guide-card" href="/aprender/primeira-vez-no-playground">
+            <div class="ph"><img src="img/hero-piscina-bolinhas.jpg" alt="" width="784" height="803" loading="lazy"></div>
+            <div class="body"><span class="tag">5 min · Passeio</span><h3>Primeira vez no playground com uma criança sensível</h3><p>Como preparar a saída de casa e o que fazer se a crise chegar lá.</p></div>
+          </a>
+          <a class="guide-card" href="/aprender/rotina-visual-em-casa">
+            <div class="ph"><img src="img/inclusao-cantinho-leitura.jpg" alt="" width="819" height="1024" loading="lazy"></div>
+            <div class="body"><span class="tag">6 min · Rotina</span><h3>Rotina visual em casa: um passo a passo de 20 minutos</h3><p>Monte a primeira rotina visual da sua casa ainda hoje.</p></div>
+          </a>
+          <a class="guide-card" href="/aprender/como-e-a-terapia-comportamental">
+            <div class="ph"><img src="img/clinica-fachada.jpg" alt="" width="900" height="1080" loading="lazy"></div>
+            <div class="body"><span class="tag">6 min · Terapia</span><h3>O que acontece numa sessão de terapia comportamental</h3><p>Sem jargão: da avaliação inicial ao papel da família em casa.</p></div>
+          </a>
+          <a class="guide-card" href="/aprender/laudo-e-ciptea">
+            <div class="ph"><img src="img/galeria-oficinas.jpg" alt="" width="768" height="1024" loading="lazy"></div>
+            <div class="body"><span class="tag">6 min · Direitos</span><h3>Laudo e CIPTEA: o que são e onde valem em Belém</h3><p>A diferença entre os dois documentos, sem juridiquês.</p></div>
+          </a>
+          <a class="guide-card" href="/aprender/conversar-com-a-escola">
+            <div class="ph"><img src="img/idealizadora.jpg" alt="" width="700" height="936" loading="lazy"></div>
+            <div class="body"><span class="tag">6 min · Escola</span><h3>Como conversar com a escola sem sair com culpa</h3><p>O que levar pra reunião, e frases prontas pra usar.</p></div>
+          </a>
+          <a class="guide-card" href="/aprender/brincar-com-proposito-10-minutos">
+            <div class="ph"><img src="img/isabella-2.jpg" alt="" width="700" height="935" loading="lazy"></div>
+            <div class="body"><span class="tag">5 min · Brincar</span><h3>5 brincadeiras de 10 minutos que ensinam sem parecer aula</h3><p>Ideias rápidas pra hoje, com o que cada uma trabalha.</p></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-ice" aria-labelledby="glossario-h">
+      <div class="wrap">
+        <div class="strip">
+          <div>
+            <span class="eyebrow">Palavras explicadas</span>
+            <h2 id="glossario-h">TEA, ABA, CIPTEA, laudo... o glossário traduz tudo isso pra você.</h2>
+            <p class="lead">Cerca de 40 termos, em linguagem simples, ligados aos guias e aos serviços da Clínica.</p>
+          </div>
+          <a class="btn-ghost" href="/glossario">Abrir o glossário</a>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="ebooks-h">
+      <div class="wrap">
+        <div class="center" style="margin-bottom: 8px;">
+          <span class="eyebrow">Pra ir mais fundo</span>
+          <h2 class="title" id="ebooks-h">E-books em PDF</h2>
+        </div>
+        <div class="ebooks">
+          <a class="ebook-card" href="/guia?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=ebooks">
+            <img src="img/guia/capa.webp" alt="" width="760" height="1077" loading="lazy">
+            <div><h3>O Brincar com Propósito</h3><p>11 capítulos, Plano de 30 dias e 7 materiais para imprimir.</p></div>
+          </a>
+          <a class="ebook-card" href="/codigo?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=ebooks">
+            <img src="img/codigo/capa.webp" alt="" width="760" height="1077" loading="lazy">
+            <div><h3>O Código do Desenvolvimento Infantil</h3><p>Um e-book curto pra entender que o comportamento tem lógica.</p></div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-petrol center" aria-labelledby="cta-h">
+      <div class="wrap">
+        <span class="eyebrow">Ainda com dúvida?</span>
+        <h2 class="title" id="cta-h">Em 5 minutos, um primeiro retrato do seu filho</h2>
+        <p class="lead" style="color: rgba(255,255,255,.9); margin-bottom: 8px;">O Mapeamento Comportamental é gratuito, sem rótulo e sem julgamento.</p>
+        <div style="margin-top: 24px;">
+          <a class="btn-buy" href="/teste?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=indice" data-cta="indice_final">Fazer o mapeamento grátis</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer data-fa-footer="aprender">
+    <div class="wrap">
+      <img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
+      <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
+      <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground - Em Breve)</p>
+      <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA)</p>
+      <p>Todos os dias, das 10h às 22h (Playground e Circuito) · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a></p>
+      <p style="margin-top: 18px;"><a href="https://wa.me/5591991782027?text=Oi!%20Vim%20pelo%20site%20(Aprender)%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">Fale conosco</a> · <a href="/politica-privacidade">Política de privacidade</a> · <a href="/termos">Termos de uso e de compra</a></p>
+      <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA<br>Conteúdo educativo. Não substitui avaliação e acompanhamento de profissionais de saúde.</p>
+      <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+  </footer>
+
+  <a class="wa-float sr-only" href="https://wa.me/5591991782027?text=Oi!%20Vim%20pelo%20site%20(Aprender)%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp"></a>
+  <script src="/assets/fa-cta.js" defer data-label="Fazer o mapeamento grátis" data-href="/teste?utm_source=site&amp;utm_medium=barra&amp;utm_campaign=aprender" data-event="mapeamento"></script>
+  <script src="/assets/fa-footer.js" defer></script>
+  <script>
+    (function () {
+      function push(o) { try { (window.dataLayer = window.dataLayer || []).push(o); } catch (e) { } }
+      document.querySelectorAll('[data-cta]').forEach(function (a) {
+        var where = a.getAttribute('data-cta');
+        a.addEventListener('click', function () { push({ event: 'aprender_cta_click', cta_location: where }); });
+      });
+    })();
+  </script>
+</body>
+
+</html>
