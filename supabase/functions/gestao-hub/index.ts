@@ -256,6 +256,33 @@ async function verificarSenhaClinica(
   return { ok: true, email };
 }
 
+// Localiza o usuário da Clínica por CPF ou e-mail (para redefinir a senha). Usa a service role do projeto da Clínica.
+function clinicaAdmin(): SupabaseClient | null {
+  const url = Deno.env.get("CLINICA_SUPABASE_URL");
+  const key = Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+}
+
+async function acharUsuarioClinica(identifier: string): Promise<{ id: string; email: string } | null> {
+  const b = clinicaAdmin();
+  if (!b) return null;
+  const filters: string[] = [];
+  if (identifier.includes("@")) {
+    filters.push(`email.eq.${quoteFilterValue(identifier.toLowerCase())}`);
+  } else {
+    const digits = identifier.replace(/\D/g, "");
+    filters.push(`cpf.eq.${quoteFilterValue(identifier)}`);
+    if (digits && digits !== identifier) {
+      filters.push(`cpf.eq.${quoteFilterValue(digits)}`);
+      filters.push(`cpf_clean.eq.${quoteFilterValue(digits)}`);
+    }
+  }
+  const { data, error } = await b.from("profiles").select("id, email").or(filters.join(",")).limit(1);
+  if (error || !data?.[0]?.id || !data[0].email) return null;
+  return { id: String(data[0].id), email: String(data[0].email).toLowerCase() };
+}
+
 // ---------------------------------------------------------------------
 // E-mail do código (Brevo)
 // ---------------------------------------------------------------------
@@ -273,7 +300,7 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-async function enviarCodigo(email: string, nome: string, code: string): Promise<boolean> {
+async function enviarCodigo(email: string, nome: string, code: string, finalidade: "login" | "reset" = "login"): Promise<boolean> {
   const apiKey = Deno.env.get("BREVO_API_KEY");
   const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <nao-responder@institutofacaamigos.com.br>";
   if (!apiKey) {
@@ -289,9 +316,9 @@ async function enviarCodigo(email: string, nome: string, code: string): Promise<
   </div>
   <div style="background:#fff;border-radius:24px;padding:28px 24px;text-align:center;border:1px solid #edf1ef;">
     <p style="margin:0 0 12px;font-size:15px;">Olá, ${escapeHtml(nome)}!</p>
-    <p style="margin:0 0 18px;font-size:14px;color:#4C6B62;">Seu código para entrar no Hub de Gestão:</p>
+    <p style="margin:0 0 18px;font-size:14px;color:#4C6B62;">${finalidade === "reset" ? "Seu código para redefinir a senha do Hub de Gestão e do Sistema da Clínica:" : "Seu código para entrar no Hub de Gestão:"}</p>
     <div style="font-size:34px;font-weight:900;letter-spacing:10px;color:#1a3f35;background:#FFF9F1;border-radius:16px;padding:16px 0;">${code}</div>
-    <p style="margin:18px 0 0;font-size:12px;color:#8B9A94;">Vale por 10 minutos. Se não foi você, troque a senha do Sistema da Clínica agora.</p>
+    <p style="margin:18px 0 0;font-size:12px;color:#8B9A94;">Vale por 10 minutos. ${finalidade === "reset" ? "Se não foi você, ignore este e-mail: a senha só muda com este código." : "Se não foi você, troque a senha do Sistema da Clínica agora."}</p>
   </div>
 </div>`.trim();
 
@@ -302,7 +329,7 @@ async function enviarCodigo(email: string, nome: string, code: string): Promise<
       body: JSON.stringify({
         sender: parseSenderAddress(fromRaw),
         to: [{ email, name: nome }],
-        subject: `${code} é o seu código do Hub de Gestão`,
+        subject: finalidade === "reset" ? `${code} é o código para redefinir sua senha` : `${code} é o seu código do Hub de Gestão`,
         htmlContent: html,
       }),
     });
@@ -377,6 +404,70 @@ async function exigirSessao(admin: Admin, req: Request): Promise<{ tokenHash: st
   const conta = await carregarConta(admin, data.email);
   if (!conta) return null;
   return { tokenHash, conta };
+}
+
+type Desafio = {
+  id: string;
+  email: string;
+  code_hash: string;
+  tentativas: number;
+  expires_at: string;
+  usado_em: string | null;
+  finalidade: string;
+  alvo_id: string | null;
+};
+
+// Confere o código de um desafio (mesmas regras para entrar e para redefinir a senha) e o marca como usado.
+async function conferirCodigo(
+  admin: Admin,
+  req: Request,
+  challengeId: string,
+  code: string,
+  finalidade: "login" | "reset",
+): Promise<{ ok: true; desafio: Desafio } | { ok: false; resp: Response }> {
+  if (!/^[0-9a-f-]{36}$/.test(challengeId) || code.length !== 6) {
+    return { ok: false, resp: jsonResponse(req, { error: "código inválido" }, 400) };
+  }
+  const { data } = await admin
+    .from("fa_gestao_desafios")
+    .select("id, email, code_hash, tentativas, expires_at, usado_em, finalidade, alvo_id")
+    .eq("id", challengeId)
+    .maybeSingle();
+  const desafio = data as Desafio | null;
+  if (!desafio || desafio.finalidade !== finalidade || desafio.usado_em || new Date(desafio.expires_at).getTime() < Date.now()) {
+    return { ok: false, resp: jsonResponse(req, { error: "código expirado, comece de novo", reiniciar: true }, 401) };
+  }
+  if (desafio.tentativas >= CODE_MAX_TRIES) {
+    return { ok: false, resp: jsonResponse(req, { error: "tentativas esgotadas, comece de novo", reiniciar: true }, 401) };
+  }
+  const confere = (await sha256Hex(`${challengeId}:${code}`)) === desafio.code_hash;
+  if (!confere) {
+    const tentativas = desafio.tentativas + 1;
+    await admin.from("fa_gestao_desafios").update({ tentativas }).eq("id", challengeId);
+    await auditar(admin, req, "codigo_falhou", { email: desafio.email, detalhe: finalidade });
+    const restam = CODE_MAX_TRIES - tentativas;
+    return {
+      ok: false,
+      resp: jsonResponse(
+        req,
+        restam > 0
+          ? { error: `código incorreto (restam ${restam} tentativa${restam > 1 ? "s" : ""})` }
+          : { error: "tentativas esgotadas, comece de novo", reiniciar: true },
+        401,
+      ),
+    };
+  }
+  // Marca como usado só se ninguém usou antes (dois envios simultâneos).
+  const { data: marcado } = await admin
+    .from("fa_gestao_desafios")
+    .update({ usado_em: new Date().toISOString() })
+    .eq("id", challengeId)
+    .is("usado_em", null)
+    .select("id");
+  if (!marcado?.length) {
+    return { ok: false, resp: jsonResponse(req, { error: "código já usado, comece de novo", reiniciar: true }, 401) };
+  }
+  return { ok: true, desafio };
 }
 
 // ---------------------------------------------------------------------
@@ -472,47 +563,9 @@ Deno.serve(async (req) => {
 
   // --- passo 2: código → sessão ---
   if (action === "verificar") {
-    const challengeId = str(body.challenge_id);
-    const code = str(body.code).replace(/\D/g, "");
-    if (!/^[0-9a-f-]{36}$/.test(challengeId) || code.length !== 6) {
-      return jsonResponse(req, { error: "código inválido" }, 400);
-    }
-
-    const { data: desafio } = await admin
-      .from("fa_gestao_desafios")
-      .select("id, email, code_hash, tentativas, expires_at, usado_em")
-      .eq("id", challengeId)
-      .maybeSingle();
-    if (!desafio || desafio.usado_em || new Date(desafio.expires_at).getTime() < Date.now()) {
-      return jsonResponse(req, { error: "código expirado, entre de novo", reiniciar: true }, 401);
-    }
-    if (desafio.tentativas >= CODE_MAX_TRIES) {
-      return jsonResponse(req, { error: "tentativas esgotadas, entre de novo", reiniciar: true }, 401);
-    }
-
-    const confere = (await sha256Hex(`${challengeId}:${code}`)) === desafio.code_hash;
-    if (!confere) {
-      const tentativas = desafio.tentativas + 1;
-      await admin.from("fa_gestao_desafios").update({ tentativas }).eq("id", challengeId);
-      await auditar(admin, req, "codigo_falhou", { email: desafio.email });
-      const restam = CODE_MAX_TRIES - tentativas;
-      return jsonResponse(
-        req,
-        restam > 0
-          ? { error: `código incorreto (restam ${restam} tentativa${restam > 1 ? "s" : ""})` }
-          : { error: "tentativas esgotadas, entre de novo", reiniciar: true },
-        401,
-      );
-    }
-
-    // Marca como usado só se ninguém usou antes (dois envios simultâneos).
-    const { data: marcado } = await admin
-      .from("fa_gestao_desafios")
-      .update({ usado_em: new Date().toISOString() })
-      .eq("id", challengeId)
-      .is("usado_em", null)
-      .select("id");
-    if (!marcado?.length) return jsonResponse(req, { error: "código já usado, entre de novo", reiniciar: true }, 401);
+    const conf = await conferirCodigo(admin, req, str(body.challenge_id), str(body.code).replace(/\D/g, ""), "login");
+    if (!conf.ok) return conf.resp;
+    const desafio = conf.desafio;
 
     const conta = await carregarConta(admin, desafio.email);
     if (!conta) return jsonResponse(req, { error: "acesso não autorizado" }, 403);
@@ -531,6 +584,91 @@ Deno.serve(async (req) => {
 
     await auditar(admin, req, "codigo_ok", { email: conta.email });
     return jsonResponse(req, { token, expires_at: expiresAt, nome: conta.nome, apps: appsDisponiveis(conta) });
+  }
+
+  // --- esqueci a senha (1/2): pede o código, que vai para o e-mail real cadastrado ---
+  if (action === "esqueci") {
+    const raw = str(body.identifier || body.email);
+    const loginInput = raw.includes("@") ? raw.toLowerCase() : raw;
+    if (!loginInput) return jsonResponse(req, { error: "informe e-mail ou CPF" }, 400);
+
+    const ip = clientIp(req);
+    const since = new Date(Date.now() - LOGIN_WINDOW_MS).toISOString();
+    const { count: pedidosIp } = await admin
+      .from("fa_gestao_desafios")
+      .select("id", { count: "exact", head: true })
+      .eq("finalidade", "reset")
+      .eq("ip", ip)
+      .gte("created_at", since);
+    if ((pedidosIp ?? 0) >= CODES_MAX_PER_WINDOW) {
+      return jsonResponse(req, { error: "muitos pedidos, aguarde 15 minutos" }, 429);
+    }
+
+    // Resposta igual para quem tem e para quem não tem acesso: não revela quem está na lista.
+    const generica = (id: string) =>
+      jsonResponse(req, { challenge_id: id, mensagem: "Se os dados conferem, enviamos um código para o e-mail cadastrado." });
+
+    const alvo = await acharUsuarioClinica(loginInput);
+    const conta = alvo ? await carregarConta(admin, alvo.email) : null;
+    if (!alvo || !conta) {
+      await auditar(admin, req, "reset_ignorado", { email: loginInput.toLowerCase() });
+      return generica(crypto.randomUUID());
+    }
+
+    const { count: pedidosConta } = await admin
+      .from("fa_gestao_desafios")
+      .select("id", { count: "exact", head: true })
+      .eq("finalidade", "reset")
+      .eq("email", conta.email)
+      .gte("created_at", since);
+    if ((pedidosConta ?? 0) >= CODES_MAX_PER_WINDOW) return generica(crypto.randomUUID());
+
+    const code = randomCode();
+    const challengeId = crypto.randomUUID();
+    const { error: insErr } = await admin.from("fa_gestao_desafios").insert({
+      id: challengeId,
+      email: conta.email,
+      code_hash: await sha256Hex(`${challengeId}:${code}`),
+      ip,
+      finalidade: "reset",
+      alvo_id: alvo.id,
+      expires_at: new Date(Date.now() + CODE_TTL_MS).toISOString(),
+    });
+    if (insErr) {
+      console.error("desafio reset:", insErr.message);
+      return jsonResponse(req, { error: "falha ao gerar código" }, 500);
+    }
+    if (!(await enviarCodigo(conta.email_codigo, conta.nome, code, "reset"))) {
+      return jsonResponse(req, { error: "não foi possível enviar o código por e-mail" }, 502);
+    }
+    await auditar(admin, req, "reset_codigo_enviado", { email: conta.email });
+    return generica(challengeId);
+  }
+
+  // --- esqueci a senha (2/2): código certo + senha nova -> troca a senha do Sistema da Clínica ---
+  if (action === "redefinir") {
+    const novaSenha = typeof body.new_password === "string" ? body.new_password : "";
+    if (novaSenha.length < 8 || novaSenha.length > 72) {
+      return jsonResponse(req, { error: "a senha nova precisa ter de 8 a 72 caracteres" }, 400);
+    }
+    const conf = await conferirCodigo(admin, req, str(body.challenge_id), str(body.code).replace(/\D/g, ""), "reset");
+    if (!conf.ok) return conf.resp;
+    const desafio = conf.desafio;
+
+    const conta = await carregarConta(admin, desafio.email);
+    const b = clinicaAdmin();
+    if (!conta || !b || !desafio.alvo_id) return jsonResponse(req, { error: "não foi possível trocar a senha agora" }, 500);
+
+    const { error: updErr } = await b.auth.admin.updateUserById(desafio.alvo_id, { password: novaSenha });
+    if (updErr) {
+      console.error("updateUserById:", updErr.message);
+      await auditar(admin, req, "reset_falhou", { email: conta.email, detalhe: updErr.message.slice(0, 120) });
+      return jsonResponse(req, { error: "a Clínica recusou essa senha. Tente uma mais longa e diferente.", reiniciar: true }, 400);
+    }
+    // Senha nova derruba as sessões abertas do hub.
+    await admin.from("fa_gestao_sessoes").delete().eq("email", conta.email);
+    await auditar(admin, req, "senha_redefinida", { email: conta.email });
+    return jsonResponse(req, { ok: true });
   }
 
   // --- daqui para baixo exige sessão ---

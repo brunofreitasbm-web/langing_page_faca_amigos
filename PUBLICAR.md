@@ -101,6 +101,10 @@ Ordem (cada passo é inofensivo sozinho, só o último abre o hub):
 6. **DNS + site**: CNAME `gestao` → Vercel, adicionar `gestao.institutofacaamigos.com.br` ao projeto
    `facaamigos-site`, `npm run check` → commit → push.
 
+Botão "Esqueci a senha" (já aplicado no Supabase em 29/09/2026: migration `20260930130000_gestao_hub_esqueci_senha.sql` e função `gestao-hub` v5):
+manda o código para o `email_codigo` cadastrado e troca a senha **do Sistema da Clínica** (é a mesma do hub), derrubando as
+sessões abertas do hub. Precisa do secret `CLINICA_SUPABASE_SERVICE_ROLE_KEY`. Só a página `gestao.html` depende do merge.
+
 Teste ponta a ponta: login errado, e-mail fora da lista (mesma mensagem de senha errada), código errado 5×,
 código certo, cada quadrado abre logado, reabrir a mesma URL de entrada tem que falhar, Sair, e conferir
 `fa_gestao_auditoria`.
