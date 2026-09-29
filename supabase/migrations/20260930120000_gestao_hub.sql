@@ -7,7 +7,8 @@
 -- Quem pode entrar no hub e qual é a identidade de cada um em cada sistema.
 -- Uma linha por pessoa; coluna nula = aquele quadrado fica desabilitado.
 create table if not exists public.fa_gestao_contas (
-  email text primary key check (email = lower(email)),  -- e-mail do login na Clínica
+  email text primary key check (email = lower(email)),  -- e-mail do login na Clínica (pode ser interno: equipe_…@staff.facaamigos.local)
+  email_codigo text not null check (email_codigo = lower(email_codigo)),  -- e-mail REAL que recebe o código de 6 dígitos
   nome text not null,
   playground_email text,   -- Supabase Auth do projeto A (app.)
   clinica_email text,      -- Supabase Auth do projeto B (sistema.)

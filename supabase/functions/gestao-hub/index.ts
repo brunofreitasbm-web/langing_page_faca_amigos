@@ -10,7 +10,8 @@
 //   1. `login`: e-mail/CPF + senha do Sistema da Clínica (mesma chamada
 //      grant_type=password de behavior-test-admin). Só entra quem está em
 //      fa_gestao_contas com ativo = true. Se a senha confere, manda um código
-//      de 6 dígitos por e-mail (Brevo) e devolve o id do desafio.
+//      de 6 dígitos por e-mail (Brevo) para `email_codigo` (o login da Clínica
+//      pode ser um e-mail interno sem caixa de entrada) e devolve o id do desafio.
 //   2. `verificar`: código certo → token de sessão opaco (7 dias). No banco
 //      fica só o SHA-256 do token.
 //
@@ -106,6 +107,7 @@ function maskEmail(email: string): string {
 
 type Conta = {
   email: string;
+  email_codigo: string;
   nome: string;
   playground_email: string | null;
   clinica_email: string | null;
@@ -460,12 +462,12 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "falha ao gerar código" }, 500);
     }
 
-    if (!(await enviarCodigo(conta.email, conta.nome, code))) {
+    if (!(await enviarCodigo(conta.email_codigo, conta.nome, code))) {
       return jsonResponse(req, { error: "não foi possível enviar o código por e-mail" }, 502);
     }
 
     await auditar(admin, req, "login_senha_ok", { email: conta.email });
-    return jsonResponse(req, { challenge_id: challengeId, email_mascarado: maskEmail(conta.email) });
+    return jsonResponse(req, { challenge_id: challengeId, email_mascarado: maskEmail(conta.email_codigo) });
   }
 
   // --- passo 2: código → sessão ---
