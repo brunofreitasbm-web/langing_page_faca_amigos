@@ -1,3 +1,66 @@
+ATUALIZAÇÃO 29/09/2026 — revisão técnica de SEO, AEO, GEO, AIO e SXO
+--------------------------------------------------------------------
+Nada de layout novo. Ajustes de marcação, dados estruturados e arquivos para buscadores e IAs.
+
+SEO (buscador clássico)
+- Títulos e descrições de hub, /playground e /circuito reescritos com "Belém" e sem promessa de unidade que
+  ainda não abriu (Bosque). /guia e /codigo: títulos encurtados (passavam de 80 caracteres e eram cortados).
+- Links internos apontam direto para a URL final. Antes, "playground.html", "circuito.html", "termos.html" e
+  "politica-privacidade.html" davam redirecionamento 308 (cleanUrls) e o hub abria /playground no domínio raiz,
+  uma cópia do playground. Agora o hub e o circuito linkam a URL canônica no subdomínio playground.
+- robots: todas as páginas indexáveis com max-image-preview:large e max-snippet:-1 (guia, codigo, termos,
+  politica e teste estavam sem).
+- OG/Twitter: og:image:width/height/type/alt e twitter:image:alt em todas as páginas; termos e política
+  ganharam Twitter Card. og:image do hub, playground e teste continua quadrado/retrato (784x803, 700x936):
+  para prévia perfeita no WhatsApp/Facebook falta uma arte 1200x630 para cada uma.
+- Fontes do Google agora carregam sem bloquear a primeira pintura (preload + noscript).
+- Hero do playground e do circuito servem WebP (jpg de 235 KB caía para 65 KB) com jpg de reserva.
+
+AEO / AIO (respostas diretas)
+- FAQ do hub: de 4 para 9 perguntas (onde ficam, horário, quanto custa, horário sensorial, quem criou).
+  Playground: +2 (onde fica, quanto custa). Circuito: +1 (onde fica). O texto visível e o JSON-LD saem do
+  mesmo texto; o scripts/check.mjs reprova se divergirem.
+  ATENÇÃO: as respostas "quanto custa" repetem o preço "a partir de R$ 60" / "R$ 48". Se a tabela mudar,
+  troque também nessas respostas e na meta description do playground (o check só compara o llms*.txt).
+- Bloco "GEO" do hub perdeu o vocabulário dirigido a robô ("Dados Oficialmente Certificados · GEO AI Index").
+  Continua o mesmo resumo de fatos, agora escrito para a família.
+
+GEO (dados estruturados e llms.txt)
+- Hub: WebSite, WebPage (com "speakable" na propriedade certa; antes era um nó solto que não valia nada),
+  Organization com legalName, CNPJ, contactPoint (os dois WhatsApps) e fundadora, Person (Isabella, CRP
+  10/4727), clínica com telefone e imagem, playground e circuito com endereço, horário e mapa.
+- O playground tinha dois @id diferentes para o mesmo negócio (#playground no hub, #parqueshopping na página).
+  Agora é só #parqueshopping.
+- Playground e circuito: WebPage, paymentAccepted, hasMap, e cada Offer com url e availability.
+- guia, codigo e teste: autora com @id único e nó WebPage. Livros com isAccessibleForFree=false.
+- NÃO foi adicionado AggregateRating/Review: não há nota média confirmada (ver PUBLICAR.md) e marcar nota
+  que a pessoa não pode conferir no Google viola a diretriz de dados estruturados.
+- llms.txt e llms-full.txt: lista "Páginas principais" no formato llmstxt.org, autoria (CRP), 2 perguntas
+  novas no completo e sem "certificado". Regerados por scripts/geo-build.mjs a partir dos templates.
+- robots.txt: adicionados OAI-SearchBot, Claude-SearchBot, Claude-User, Perplexity-User, Applebot, Bingbot,
+  DuckAssistBot, Amazonbot, MistralAI-User e Meta-ExternalFetcher ao grupo de IA (todos liberados).
+- vercel.json: Content-Language pt-BR e Content-Type/Cache-Control explícitos para llms*.txt, geo-facts.json,
+  sitemap.xml e robots.txt (geo-facts.json também com CORS aberto).
+
+SXO (experiência)
+- <main> e link "Ir para o conteúdo" em hub, playground, circuito, teste, termos e política (só guia e
+  codigo tinham). Cartões do hub passam de h3 para h2 (o h1 pulava direto para h3).
+
+Guardas novas em scripts/check.mjs (rodam na CI): 1 <h1> por página; og:url igual ao canonical; canonical
+dentro dos dois hosts do site; link interno para .html; @id duplicado no JSON-LD; SpeakableSpecification
+solto; canonical fora do sitemap ou noindex dentro dele; robots.txt sem Sitemap ou com "Disallow: /".
+Avisos: título >70, description fora de 70-175, og:image sem dimensões/alt, sem <main>, sem skip link,
+título que pula nível. A falsa acusação de "img sem loading" na imagem LCP (fetchpriority=high) foi removida.
+
+NÃO FEITO (decisão ou dado que só o dono tem)
+- Arte 1200x630 para og:image (hub, playground, circuito, teste).
+- www -> apex: conferir no painel da Vercel (Domains) se o www redireciona para o domínio raiz.
+- /img/* tem cache "immutable" de 1 ano sem nome com hash: trocar uma foto mantendo o nome não aparece
+  para quem já visitou. Renomear ao trocar, ou reduzir o max-age.
+- "1º ecossistema infantil inclusivo de Belém" (FAQ do hub): superlativo sem comprovação pública. Para IA e
+  para o CONAR, vale ter um fato citável (ranking, reportagem) ou trocar por "um dos".
+- Site inteiro usa dois containers GTM (ver aviso no fa-track.js): conferir contagem em dobro.
+
 ATUALIZAÇÃO 22/09/2026 (4) — Clarity e Contentsquare removidos
 ------------------------------------------------------------------
 Pedido explícito: tirar as duas ferramentas de gravação de sessão de todas as páginas. Ficam só os dois

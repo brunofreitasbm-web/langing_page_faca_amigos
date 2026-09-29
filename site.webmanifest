@@ -1,8 +1,10 @@
 {
+  "id": "/",
   "name": "FaçaAmigos",
   "short_name": "FaçaAmigos",
   "description": "Instituto Faça Amigos: playground inclusivo, circuito de carrinhos, mapeamento comportamental e e-books para famílias, em Belém/PA.",
   "lang": "pt-BR",
+  "categories": ["kids", "health", "lifestyle"],
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

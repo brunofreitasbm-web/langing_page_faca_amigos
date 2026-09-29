@@ -5,7 +5,7 @@
   <script src="/assets/fa-track.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FaçaAmigos Circuito — Carrinhos Elétricos no Parque Shopping Belém</title>
+  <title>Circuito de Carrinhos Elétricos em Belém | FaçaAmigos</title>
   <meta name="description"
     content="Carrinhos elétricos a partir de R$ 48, direto no piso do Parque Shopping Belém. Seu filho dirige, a equipe FaçaAmigos acompanha de perto. Sem agendamento, todos os dias.">
   <link rel="canonical" href="https://playground.institutofacaamigos.com.br/circuito">
@@ -18,19 +18,24 @@
   <!-- Open Graph / redes sociais (Instagram, WhatsApp, Facebook, Meta Ads) -->
   <meta property="og:type" content="business.business">
   <meta property="og:site_name" content="FaçaAmigos">
-  <meta property="og:title" content="FaçaAmigos Circuito — Carrinhos Elétricos no Parque Shopping Belém">
+  <meta property="og:title" content="Circuito de Carrinhos Elétricos em Belém | FaçaAmigos">
   <meta property="og:description"
     content="Carrinhos elétricos a partir de R$ 48, direto no piso do Parque Shopping Belém. Seu filho dirige, a equipe FaçaAmigos acompanha de perto.">
   <meta property="og:url" content="https://playground.institutofacaamigos.com.br/circuito">
   <meta property="og:image" content="https://playground.institutofacaamigos.com.br/img/circuito-carrinhos.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="900">
+  <meta property="og:image:alt" content="Carrinhos elétricos Range Rover e Lamborghini Urus do FaçaAmigos Circuito">
   <meta property="og:locale" content="pt_BR">
 
   <!-- Twitter/X Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="FaçaAmigos Circuito — Carrinhos Elétricos no Parque Shopping Belém">
+  <meta name="twitter:title" content="Circuito de Carrinhos Elétricos em Belém | FaçaAmigos">
   <meta name="twitter:description"
     content="Carrinhos elétricos a partir de R$ 48, direto no piso do Parque Shopping Belém. Seu filho dirige, a equipe FaçaAmigos acompanha de perto.">
   <meta name="twitter:image" content="https://playground.institutofacaamigos.com.br/img/circuito-carrinhos.jpg">
+  <meta name="twitter:image:alt" content="Carrinhos elétricos Range Rover e Lamborghini Urus do FaçaAmigos Circuito">
 
   <!-- Generative Engine Optimization (GEO) & AI Crawlers Meta Tags -->
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
@@ -44,7 +49,8 @@
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"></noscript>
 
   <!-- Dados estruturados (Schema.org) -->
   <script type="application/ld+json">
@@ -52,14 +58,39 @@
   "@context": "https://schema.org",
   "@graph": [
     {
-      "@type": ["LocalBusiness", "EntertainmentBusiness"],
+      "@type": "WebPage",
+      "@id": "https://playground.institutofacaamigos.com.br/circuito#webpage",
+      "url": "https://playground.institutofacaamigos.com.br/circuito",
+      "name": "Circuito de Carrinhos Elétricos em Belém | FaçaAmigos",
+      "description": "Carrinhos elétricos a partir de R$ 48, direto no piso do Parque Shopping Belém. Seu filho dirige, a equipe FaçaAmigos acompanha de perto. Sem agendamento, todos os dias.",
+      "inLanguage": "pt-BR",
+      "isPartOf": {
+        "@id": "https://institutofacaamigos.com.br/#website"
+      },
+      "about": {
+        "@id": "https://playground.institutofacaamigos.com.br/circuito#circuito"
+      },
+      "primaryImageOfPage": {
+        "@type": "ImageObject",
+        "url": "https://playground.institutofacaamigos.com.br/img/circuito-carrinhos.jpg",
+        "width": 1200,
+        "height": 900
+      }
+    },
+    {
+      "@type": [
+        "LocalBusiness",
+        "EntertainmentBusiness"
+      ],
       "@id": "https://playground.institutofacaamigos.com.br/circuito#circuito",
       "name": "FaçaAmigos Circuito",
       "image": "https://playground.institutofacaamigos.com.br/img/circuito-carrinhos.jpg",
       "url": "https://playground.institutofacaamigos.com.br/circuito",
       "telephone": "+55 91 99234-7673",
       "priceRange": "$$",
-      "parentOrganization": { "@id": "https://institutofacaamigos.com.br/#organization" },
+      "parentOrganization": {
+        "@id": "https://institutofacaamigos.com.br/#organization"
+      },
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Rod. Augusto Montenegro, 4300 — Parque Shopping Belém, Térreo, próximo às Lojas Americanas",
@@ -75,7 +106,15 @@
       },
       "openingHoursSpecification": {
         "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "dayOfWeek": [
+          "Monday",
+          "Tuesday",
+          "Wednesday",
+          "Thursday",
+          "Friday",
+          "Saturday",
+          "Sunday"
+        ],
         "opens": "10:00",
         "closes": "22:00"
       },
@@ -93,8 +132,14 @@
             "price": "48.00",
             "priceCurrency": "BRL",
             "unitCode": "MIN",
-            "referenceQuantity": { "@type": "QuantitativeValue", "value": 20, "unitCode": "MIN" }
-          }
+            "referenceQuantity": {
+              "@type": "QuantitativeValue",
+              "value": 20,
+              "unitCode": "MIN"
+            }
+          },
+          "url": "https://playground.institutofacaamigos.com.br/circuito#precos",
+          "availability": "https://schema.org/InStock"
         },
         {
           "@type": "Offer",
@@ -106,10 +151,19 @@
             "price": "48.00",
             "priceCurrency": "BRL",
             "unitCode": "MIN",
-            "referenceQuantity": { "@type": "QuantitativeValue", "value": 30, "unitCode": "MIN" }
-          }
+            "referenceQuantity": {
+              "@type": "QuantitativeValue",
+              "value": 30,
+              "unitCode": "MIN"
+            }
+          },
+          "url": "https://playground.institutofacaamigos.com.br/circuito#precos",
+          "availability": "https://schema.org/InStock"
         }
-      ]
+      ],
+      "description": "Carrinhos elétricos infantis no piso do Parque Shopping Belém. A criança dirige e a equipe FaçaAmigos acompanha de perto. Sem agendamento, todos os dias.",
+      "hasMap": "https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m",
+      "logo": "https://institutofacaamigos.com.br/img/logo-simbolo.png"
     },
     {
       "@type": "FAQPage",
@@ -145,6 +199,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Não — o Circuito roda no piso do Parque Shopping Belém, como uma experiência à parte, mas com a mesma equipe e o mesmo cuidado do FaçaAmigos."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Onde fica o FaçaAmigos Circuito?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No piso do Parque Shopping Belém, na Rod. Augusto Montenegro, 4300, em um quiosque próprio. Funciona todos os dias, das 10h às 22h."
           }
         }
       ]
@@ -1208,10 +1270,14 @@
         display: none;
       }
     }
+      .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: #1A3F35; padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 1000; }
+    .skip:focus { top: 8px; }
+    picture { display: contents; }
   </style>
 </head>
 
 <body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -1225,11 +1291,11 @@
 
   <nav class="navbar">
     <div class="wrap">
-      <a class="logo" href="playground.html"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
+      <a class="logo" href="https://playground.institutofacaamigos.com.br/"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
           alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span class="txt">Faça<span
             class="amigos">Amigos</span><span class="sub">Circuito</span></span></a>
       <div class="nav-actions">
-        <a href="playground.html" class="btn btn-ghost btn-sm">Conhecer o Playground</a>
+        <a href="https://playground.institutofacaamigos.com.br/" class="btn btn-ghost btn-sm">Conhecer o Playground</a>
         <a href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20quero%20saber%20mais%20sobre%20o%20Fa%C3%A7aAmigos%20Circuito!"
           target="_blank" rel="noopener" class="btn btn-wa btn-sm">
           <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1241,6 +1307,7 @@
       </div>
     </div>
   </nav>
+  <main id="conteudo">
 
   <!-- HERO -->
   <header class="hero">
@@ -1279,9 +1346,9 @@
         </div>
       </div>
       <div class="hero-photo fx on">
-        <div class="frame"><img src="img/circuito-carrinhos.jpg" width="1200" height="900"
+        <div class="frame"><picture><source srcset="img/circuito-carrinhos.webp" type="image/webp"><img src="img/circuito-carrinhos.jpg" width="1200" height="900"
             alt="Carrinhos elétricos Range Rover e Lamborghini Urus do FaçaAmigos Circuito" loading="eager"
-            fetchpriority="high" decoding="async"></div>
+            fetchpriority="high" decoding="async"></picture></div>
         <div class="stamp">rodando todos os dias!</div>
       </div>
     </div>
@@ -1390,9 +1457,9 @@
             alt="Quiosque interativo do FaçaAmigos Circuito" loading="lazy" decoding="async">
           <figcaption>Quiosque no piso do shopping</figcaption>
         </figure>
-        <figure style="aspect-ratio: 4/3;"><img src="img/circuito-carrinhos.jpg" width="1200" height="900"
+        <figure style="aspect-ratio: 4/3;"><picture><source srcset="img/circuito-carrinhos.webp" type="image/webp"><img src="img/circuito-carrinhos.jpg" width="1200" height="900"
             alt="Carrinhos elétricos Range Rover e Lamborghini Urus do FaçaAmigos Circuito" loading="lazy"
-            decoding="async">
+            decoding="async"></picture>
           <figcaption>Nossos carrinhos elétricos</figcaption>
         </figure>
       </div>
@@ -1510,6 +1577,10 @@
           <div class="ans">Não — o Circuito roda no piso do Parque Shopping Belém, como uma experiência à parte, mas
             com a mesma equipe e o mesmo cuidado do FaçaAmigos.</div>
         </details>
+      <details>
+        <summary>Onde fica o FaçaAmigos Circuito?</summary>
+        <div class="ans">No piso do Parque Shopping Belém, na Rod. Augusto Montenegro, 4300, em um quiosque próprio. Funciona todos os dias, das 10h às 22h.</div>
+      </details>
       </div>
     </div>
   </section>
@@ -1534,6 +1605,8 @@
     </div>
   </div>
 
+  </main>
+
   <footer data-fa-footer="circuito">
     <img src="img/logo-simbolo.png" width="460" height="416" alt=""
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
@@ -1543,9 +1616,9 @@
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica - Em Breve)</p>
     <p>Todos os dias, das 10h às 22h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank"
         rel="noopener">@facaamigos.belem</a></p>
-    <p style="margin-top: 18px;"><a href="playground.html">Conhecer o FaçaAmigos Playground</a> · <a
+    <p style="margin-top: 18px;"><a href="https://playground.institutofacaamigos.com.br/">Conhecer o FaçaAmigos Playground</a> · <a
         href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida%20sobre%20o%20Circuito."
-        target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;">Venha fazer parte do nosso time</a> · <a href="politica-privacidade.html">Política de
+        target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;">Venha fazer parte do nosso time</a> · <a href="/politica-privacidade">Política de
         privacidade</a></p>
     <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>
   </footer>
@@ -1663,7 +1736,7 @@
           <input type="file" id="job-curriculo" class="form-control" accept="application/pdf" required>
         </div>
         <p style="font-size: 0.78rem; font-weight: 700; color: var(--ink-soft, #556b63); margin-bottom: 14px;">Ao enviar, você
-          concorda com o uso dos seus dados para o processo seletivo, conforme a <a href="politica-privacidade.html"
+          concorda com o uso dos seus dados para o processo seletivo, conforme a <a href="/politica-privacidade"
             target="_blank" style="color: var(--teal-dark, #1f917f);">Política de Privacidade</a>.</p>
         <div id="job-form-error" class="form-error"></div>
         <button type="submit" id="job-form-submit" class="btn btn-pink" style="width: 100%;">Enviar candidatura</button>
