@@ -257,6 +257,9 @@ async function verificarSenhaClinica(
 }
 
 // Localiza o usuário da Clínica por CPF ou e-mail (para redefinir a senha). Usa a service role do projeto da Clínica.
+// Motivo da última falha ao achar o usuário da Clínica (vai para a auditoria, nunca para o cliente).
+let ultimoErroClinica = "";
+
 function clinicaAdmin(): SupabaseClient | null {
   const url = Deno.env.get("CLINICA_SUPABASE_URL");
   const key = Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
@@ -266,7 +269,10 @@ function clinicaAdmin(): SupabaseClient | null {
 
 async function acharUsuarioClinica(identifier: string): Promise<{ id: string; email: string } | null> {
   const b = clinicaAdmin();
-  if (!b) return null;
+  if (!b) {
+    ultimoErroClinica = "secret_ausente";
+    return null;
+  }
   const filters: string[] = [];
   if (identifier.includes("@")) {
     filters.push(`email.eq.${quoteFilterValue(identifier.toLowerCase())}`);
@@ -279,7 +285,14 @@ async function acharUsuarioClinica(identifier: string): Promise<{ id: string; em
     }
   }
   const { data, error } = await b.from("profiles").select("id, email").or(filters.join(",")).limit(1);
-  if (error || !data?.[0]?.id || !data[0].email) return null;
+  if (error) {
+    ultimoErroClinica = `consulta: ${error.message}`.slice(0, 120);
+    return null;
+  }
+  if (!data?.[0]?.id || !data[0].email) {
+    ultimoErroClinica = "perfil_nao_encontrado";
+    return null;
+  }
   return { id: String(data[0].id), email: String(data[0].email).toLowerCase() };
 }
 
@@ -626,7 +639,10 @@ Deno.serve(async (req) => {
       conta = alvo ? await carregarConta(admin, alvo.email) : null;
     }
     if (!alvo || !conta) {
-      await auditar(admin, req, "reset_ignorado", { email: loginInput.toLowerCase() });
+      await auditar(admin, req, "reset_ignorado", {
+        email: loginInput.toLowerCase(),
+        detalhe: conta ? ultimoErroClinica || "sem_alvo" : "conta_nao_achada",
+      });
       return generica(crypto.randomUUID());
     }
 
