@@ -23,6 +23,8 @@ let totalErros = 0;
 let totalAvisos = 0;
 const resumo = [];
 const nomesOrganization = new Map(); // name -> Set(arquivo)
+const canonicais = new Map(); // arquivo -> canonical (páginas indexáveis)
+const noindexCanonicals = [];
 
 // ---------- utilidades ----------
 // Remove comentários, o corpo de <script> e <style> (mantém as tags de abertura, com seus atributos).
@@ -198,6 +200,9 @@ for (const arq of paginas) {
       if (vistos.has(rel)) continue;
       vistos.add(rel);
       if (!existeNoSite(rel)) erros.push(`link interno quebrado: ${c}`);
+      else if (/\.html$/i.test(rel) && ['a', 'link', 'area'].includes(tag)) {
+        erros.push(`link interno para .html (redireciona com cleanUrls; use o caminho limpo): ${c}`);
+      }
     }
   }
 
@@ -212,11 +217,50 @@ for (const arq of paginas) {
     primeira = false;
     if (!('width' in a) || !('height' in a)) semDim++;
     if (!('alt' in a)) semAlt++;
-    if (!ehPrimeira && !('loading' in a)) semLoading++;
+    if (!ehPrimeira && !('loading' in a) && a.fetchpriority !== 'high') semLoading++;
   }
   if (semDim) avisos.push(`${semDim} <img> sem width/height`);
   if (semAlt) avisos.push(`${semAlt} <img> sem alt`);
   if (semLoading) avisos.push(`${semLoading} <img> sem loading (exceto a primeira)`);
+
+  // ---------- SEO / AEO / SXO (só páginas indexáveis)
+  const canonTag = [...limpo.matchAll(/<link\b[^>]*>/gi)].map((m) => attrs(m[0])).find((a) => /(?:^|\s)canonical(?:\s|$)/i.test(a.rel ?? ''));
+  const canonicalHref = canonTag?.href?.trim() ?? '';
+  if (noindex) {
+    if (canonicalHref) noindexCanonicals.push(canonicalHref);
+  } else {
+    if (canonicalHref) canonicais.set(arq, canonicalHref);
+    if (canonicalHref && !/^https:\/\/(?:institutofacaamigos\.com\.br|playground\.institutofacaamigos\.com\.br)(?:\/|$)/.test(canonicalHref)) {
+      erros.push(`canonical fora dos hosts do site: ${canonicalHref}`);
+    }
+    const h1s = [...limpo.matchAll(/<h1\b/gi)].length;
+    if (h1s !== 1) erros.push(`esperado exatamente 1 <h1>, achei ${h1s}`);
+    if (title) {
+      const t = textoVisivel(title[1]);
+      if (t.length > 70) avisos.push(`<title> com ${t.length} caracteres (ideal até ~65)`);
+    }
+    const dm = /<meta\s+[^>]*name=["']description["'][^>]*>/i.exec(limpo);
+    if (dm) {
+      const d = decodeHtml(attrs(dm[0]).content ?? '');
+      if (d.length < 70 || d.length > 175) avisos.push(`meta description com ${d.length} caracteres (ideal 70–160)`);
+    }
+    const metas = [...limpo.matchAll(/<meta\s+[^>]*>/gi)].map((m) => attrs(m[0]));
+    const meta = (nome) => metas.find((a) => (a.property ?? a.name ?? '').toLowerCase() === nome)?.content?.trim();
+    if (meta('og:url') !== canonicalHref) erros.push(`og:url (${meta('og:url') ?? 'ausente'}) diferente do canonical (${canonicalHref})`);
+    for (const k of ['og:title', 'og:description', 'og:image', 'og:locale']) if (!meta(k)) avisos.push(`falta ${k}`);
+    for (const k of ['og:image:width', 'og:image:height', 'og:image:alt', 'twitter:image:alt']) if (!meta(k)) avisos.push(`falta ${k}`);
+    if (!meta('twitter:card')) avisos.push('falta twitter:card');
+    if (!/max-image-preview:\s*large/i.test(meta('robots') ?? '')) avisos.push('meta robots sem max-image-preview:large');
+    if (!/<main\b|role=["']main["']/i.test(limpo)) avisos.push('sem landmark <main>');
+    if (!/class=["'][^"']*\bskip\b/i.test(limpo)) avisos.push('sem link "Ir para o conteúdo"');
+    let anterior = 0; let pulou = false;
+    for (const m of limpo.matchAll(/<h([1-6])\b/gi)) {
+      const n = Number(m[1]);
+      if (anterior && n > anterior + 1) pulou = true;
+      anterior = n;
+    }
+    if (pulou) avisos.push('hierarquia de títulos pula nível (ex.: h1 -> h3)');
+  }
 
   // JSON-LD
   let nLd = 0;
@@ -226,6 +270,15 @@ for (const arq of paginas) {
     let doc;
     try { doc = JSON.parse(m[1]); } catch (e) { erros.push(`JSON-LD #${nLd} não parseia: ${e.message}`); continue; }
     nosLd.push(...noJsonLd(doc));
+  }
+
+  {
+    const ids = new Map();
+    for (const no of nosLd) {
+      if (no?.['@id'] && Object.keys(no).length > 1) ids.set(no['@id'], (ids.get(no['@id']) ?? 0) + 1);
+      if (tipos(no).includes('SpeakableSpecification')) erros.push('SpeakableSpecification solto no @graph (use a propriedade "speakable" de um WebPage)');
+    }
+    for (const [id, n] of ids) if (n > 1) erros.push(`JSON-LD: "@id" duplicado (${n}x): ${id}`);
   }
 
   // Organization / LocalBusiness: precisam de "@id" (para o parentOrganization de outras páginas linkar)
@@ -301,6 +354,29 @@ if (nomesOrganization.size > 1) {
     if (faltando.length) {
       globais.erros.push(`${arqLlm}: preço(s) ${faltando.join(', ')} não aparece(m) em nenhuma página do site.`);
     }
+  }
+}
+
+// ---------- verificação global: sitemap.xml e robots.txt ----------
+{
+  const sitemapPath = join(root, 'sitemap.xml');
+  if (!existsSync(sitemapPath)) {
+    globais.erros.push('sitemap.xml não existe.');
+  } else {
+    const locs = new Set([...read('sitemap.xml').matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map((m) => m[1]));
+    for (const [arq, canon] of canonicais) {
+      if (!locs.has(canon)) globais.erros.push(`${arq}: canonical ${canon} não está no sitemap.xml.`);
+    }
+    for (const canon of noindexCanonicals) {
+      if (locs.has(canon)) globais.erros.push(`sitemap.xml lista ${canon}, que é noindex.`);
+    }
+  }
+  if (!existsSync(join(root, 'robots.txt'))) {
+    globais.erros.push('robots.txt não existe.');
+  } else {
+    const robotsTxt = read('robots.txt');
+    if (/^\s*Disallow:\s*\/\s*$/im.test(robotsTxt)) globais.erros.push('robots.txt bloqueia o site inteiro (Disallow: /).');
+    if (!/^\s*Sitemap:\s*https:\/\//im.test(robotsTxt)) globais.erros.push('robots.txt sem linha "Sitemap:".');
   }
 }
 

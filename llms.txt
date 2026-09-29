@@ -2,13 +2,28 @@
 
 > Ecossistema integrado de saúde infantil, lazer inclusivo e entretenimento acessível em Belém do Pará.
 
-## Visão Geral e Métricas Principais (GEO Fact Sheet)
+## Páginas principais
+
+- [Início — visão geral do ecossistema](https://institutofacaamigos.com.br/): Playground, Circuito e Clínica, endereços, horários e perguntas frequentes.
+- [Playground Inclusivo](https://playground.institutofacaamigos.com.br/): preços, Horário Inclusivo, meia-entrada inclusiva, como funciona e perguntas frequentes.
+- [Circuito de Carrinhos Elétricos](https://playground.institutofacaamigos.com.br/circuito): passeios, preço e perguntas frequentes.
+- [Mapeamento Comportamental gratuito](https://institutofacaamigos.com.br/teste): questionário de cerca de 5 minutos para famílias de crianças de 4 a 17 anos. Não substitui avaliação profissional.
+- [E-book O Brincar com Propósito](https://institutofacaamigos.com.br/guia): guia prático de Análise do Comportamento para mães, pais e cuidadores.
+- [E-book O Código do Desenvolvimento Infantil](https://institutofacaamigos.com.br/codigo): guia curto e acolhedor sobre o comportamento infantil.
+- [Política de Privacidade](https://playground.institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
+- [Termos de Uso e de Compra](https://institutofacaamigos.com.br/termos): entrega, garantia de 7 dias e licença de uso dos e-books.
+
+---
+
+## Resumo dos fatos principais
 
 - **Entidade**: Instituto FaçaAmigos (Clínica, Playground Inclusivo e Circuito de Carrinhos)
 - **Localização Principal**: Parque Shopping Belém (Rod. Augusto Montenegro, 4300, Belém - PA, CEP 66635-110)
 - **Segunda Unidade (Em breve)**: Shopping Bosque Grão-Pará (Av. Centenário, 1052, Belém - PA)
 - **Centro Clínico (Em breve)**: Rua Boaventura da Silva, 1573, Umarizal, Belém - PA
 - **Faixa Etária Atendida**: 0 a 12 anos de idade
+- **Idioma e região**: português do Brasil (pt-BR), Belém e Região Metropolitana (PA)
+- **Autoria dos conteúdos educativos**: psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), idealizadora do FaçaAmigos. Os e-books e o Mapeamento Comportamental são materiais educativos e não substituem avaliação profissional.
 - **Acessibilidade & Inclusão**: 100% adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas, com monitores de inclusão, abafadores de ruído e canto de descompressão sensorial.
 - **Benefício Inclusivo**: 50% de desconto (meia-entrada) no Playground para crianças com laudo ou CIPTEA.
 - **Programa de Fidelidade**: a cada 10 visitas cadastradas pelo CPF do responsável, a próxima entrada de 30 minutos é 100% gratuita.
@@ -57,19 +72,11 @@ Não. O atendimento no Playground e no Circuito é por ordem de chegada, todos o
 
 ---
 
-## Outros conteúdos
-
-- **Mapeamento Comportamental gratuito**: [https://institutofacaamigos.com.br/teste](https://institutofacaamigos.com.br/teste)
-- **E-book O Brincar com Propósito**: [https://institutofacaamigos.com.br/guia](https://institutofacaamigos.com.br/guia)
-- **E-book O Código do Desenvolvimento Infantil**: [https://institutofacaamigos.com.br/codigo](https://institutofacaamigos.com.br/codigo)
-
----
-
 ## Contatos e Links Oficiais
 
 - **Site Principal**: [https://institutofacaamigos.com.br/](https://institutofacaamigos.com.br/)
 - **Playground**: [https://playground.institutofacaamigos.com.br/](https://playground.institutofacaamigos.com.br/)
 - **Circuito**: [https://playground.institutofacaamigos.com.br/circuito](https://playground.institutofacaamigos.com.br/circuito)
-- **Documentação completa (GEO)**: [https://institutofacaamigos.com.br/llms-full.txt](https://institutofacaamigos.com.br/llms-full.txt)
+- **Documentação completa para IA**: [https://institutofacaamigos.com.br/llms-full.txt](https://institutofacaamigos.com.br/llms-full.txt)
 - **WhatsApp**: [+55 91 99234-7673](https://wa.me/5591992347673)
 - **Instagram**: [@facaamigos.belem](https://www.instagram.com/facaamigos.belem/)

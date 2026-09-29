@@ -7,8 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapeamento Comportamental Infantil Gratuito | Instituto FaçaAmigos</title>
   <meta name="description"
-    content="Faça gratuitamente o Mapeamento Comportamental do Instituto FaçaAmigos e receba, em poucos minutos, um retrato inicial de como seu filho está se desenvolvendo. Não substitui avaliação profissional. Para crianças de 4 a 17 anos.">
+    content="Mapeamento Comportamental gratuito para crianças de 4 a 17 anos: em cerca de 5 minutos, um retrato inicial do desenvolvimento. Não substitui avaliação profissional.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/teste">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -23,7 +24,12 @@
     content="Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu filho. Em poucos minutos, você recebe um retrato inicial do desenvolvimento dele.">
   <meta property="og:url" content="https://institutofacaamigos.com.br/teste">
   <meta property="og:image" content="https://institutofacaamigos.com.br/img/idealizadora.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="700">
+  <meta property="og:image:height" content="936">
+  <meta property="og:image:alt" content="Isabella Gonçalves Freitas, idealizadora do FaçaAmigos e criadora do Mapeamento Comportamental">
   <meta property="og:locale" content="pt_BR">
+  <link rel="alternate" type="text/plain" href="/llms.txt" title="FaçaAmigos AI &amp; LLM Summary">
 
   <!-- Twitter/X Card -->
   <meta name="twitter:card" content="summary_large_image">
@@ -31,11 +37,13 @@
   <meta name="twitter:description"
     content="Um olhar acolhedor e baseado em ciência sobre o dia a dia do seu filho. Gratuito e leva cerca de 5 minutos.">
   <meta name="twitter:image" content="https://institutofacaamigos.com.br/img/idealizadora.jpg">
+  <meta name="twitter:image:alt" content="Isabella Gonçalves Freitas, idealizadora do FaçaAmigos e criadora do Mapeamento Comportamental">
 
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"></noscript>
 
   <style>
     :root {
@@ -859,6 +867,9 @@
       text-align: center;
       margin-top: 20px;
     }
+      .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: #1A3F35; padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 1000; }
+    .skip:focus { top: 8px; }
+    picture { display: contents; }
   </style>
   <script type="application/ld+json">
 {
@@ -873,18 +884,35 @@
     "@type": "Person",
     "name": "Isabella Gonçalves Freitas",
     "jobTitle": "Psicóloga infantil",
-    "identifier": "CRP 10/4727"
+    "identifier": "CRP 10/4727",
+    "@id": "https://institutofacaamigos.com.br/#isabella"
   },
   "publisher": {
     "@type": "Organization",
     "name": "Instituto FaçaAmigos",
     "url": "https://institutofacaamigos.com.br/"
+  },
+  "@id": "https://institutofacaamigos.com.br/teste#webpage",
+  "isPartOf": {
+    "@id": "https://institutofacaamigos.com.br/#website"
+  },
+  "primaryImageOfPage": {
+    "@type": "ImageObject",
+    "url": "https://institutofacaamigos.com.br/img/idealizadora.jpg",
+    "width": 700,
+    "height": 936
+  },
+  "audience": {
+    "@type": "ParentAudience",
+    "childMinAge": 4,
+    "childMaxAge": 17
   }
 }
-  </script>
+</script>
 </head>
 
 <body>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
   <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR"
       height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -910,7 +938,7 @@
     </div>
   </nav>
 
-  <main class="sec">
+  <main class="sec" id="conteudo">
     <div class="quiz-wrap fx on">
 
       <!-- PASSO 0 — LANDING -->

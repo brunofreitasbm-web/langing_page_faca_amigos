@@ -1,4 +1,6 @@
-# Robots.txt — Instituto FaçaAmigos & GEO Configuration
+# Robots.txt — Instituto FaçaAmigos
+# Hub: https://institutofacaamigos.com.br · Playground e Circuito: https://playground.institutofacaamigos.com.br
+# O mesmo arquivo é servido nos dois hosts.
 
 User-agent: *
 Allow: /
@@ -9,21 +11,33 @@ Disallow: /wifi
 Disallow: /wifi.html
 Disallow: /hotspot
 
-# Generative Engine Optimization (GEO) & AI Crawlers Access
-# Um único grupo para todos os crawlers de IA: cada User-agent herda as mesmas regras abaixo
-# (um grupo com só "Allow: /" ignora os Disallow do grupo "*").
+# Buscadores e assistentes de IA (respostas generativas, GEO/AEO): liberados de propósito.
+# Um único grupo para todos: cada User-agent herda as mesmas regras abaixo
+# (um grupo com só "Allow: /" ignoraria os Disallow do grupo "*").
 User-agent: GPTBot
+User-agent: OAI-SearchBot
 User-agent: ChatGPT-User
 User-agent: PerplexityBot
+User-agent: Perplexity-User
 User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
 User-agent: Claude-Web
+User-agent: anthropic-ai
 User-agent: Google-Extended
+User-agent: Applebot
 User-agent: Applebot-Extended
+User-agent: Bingbot
+User-agent: DuckAssistBot
+User-agent: Amazonbot
+User-agent: MistralAI-User
 User-agent: Meta-ExternalAgent
+User-agent: Meta-ExternalFetcher
 User-agent: Cohere-ai
 Allow: /
 Allow: /llms.txt
 Allow: /llms-full.txt
+Allow: /geo-facts.json
 Disallow: /admin
 Disallow: /admin.html
 Disallow: /teste-perguntas.json
@@ -31,9 +45,10 @@ Disallow: /wifi
 Disallow: /wifi.html
 Disallow: /hotspot
 
-# GEO LLM Summary Files
-# LLM Text File: https://institutofacaamigos.com.br/llms.txt
-# LLM Full File: https://institutofacaamigos.com.br/llms-full.txt
+# Resumos para modelos de linguagem (llms.txt)
+# Resumo:   https://institutofacaamigos.com.br/llms.txt
+# Completo: https://institutofacaamigos.com.br/llms-full.txt
+# Fatos em JSON: https://institutofacaamigos.com.br/geo-facts.json
 
 Sitemap: https://institutofacaamigos.com.br/sitemap.xml
 Sitemap: https://playground.institutofacaamigos.com.br/sitemap.xml
