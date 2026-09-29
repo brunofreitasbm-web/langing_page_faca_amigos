@@ -109,7 +109,7 @@ Ordem (cada passo é inofensivo sozinho, só o último abre o hub):
    O `email` da linha é o do login na **Clínica** (a senha do hub é a da Clínica). Cada usuário precisa já
    existir no Auth do sistema correspondente e ter perfil de dono/gestor lá; no Financeiro o e-mail também
    precisa estar em `lib/auth.ts`; no Cacau Show, `Bruno` precisa existir em `colaboradores` com papel `owner`.
-   O e-mail da Isabella aparece de dois jeitos no projeto (`isabella.vgoncalves@` e `isabella.goncalves@`): confirmar.
+   O e-mail da Isabella é `isabella.vgoncalves@gmail.com` (confirmado por ela; o `isabella.goncalves@` do LEIA-ME.txt está errado).
 6. **DNS + site**: CNAME `gestao` → Vercel, adicionar `gestao.institutofacaamigos.com.br` ao projeto
    `facaamigos-site`, `npm run check` → commit → push.
 
