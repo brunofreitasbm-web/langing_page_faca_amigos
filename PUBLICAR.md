@@ -75,6 +75,48 @@ Só arquivos estáticos, sem função nem migration. Não depende dos lotes ante
    (a FAQ agora tem 8 perguntas).
 5. Cadastrar as respostas rápidas no WhatsApp Business e agendar o carrossel (textos em `conteudo/e-para-todas-kit.md`).
 
+## Lote 6: Hub de Gestão, gestao.institutofacaamigos.com.br (pendente, feito só no código em 29/09/2026)
+
+Login único (senha da Clínica + código de 6 dígitos por e-mail) e 5 quadrados que abrem cada sistema já logado.
+Como nenhum sistema compartilha sessão com outro, o hub gera um ticket de uso único e cada sistema tem uma
+porta de entrada. **Nada disto está no ar.** Código em: `gestao.html`, `supabase/functions/gestao-hub/`,
+`supabase/migrations/20260930120000_gestao_hub.sql`, `middleware.js`, e uma branch `feat/sso-gestao` em cada
+sistema (Clínica, Simulador Financeiro, Playground, Gestão de Pessoas, HubOperacoes).
+
+Ordem (cada passo é inofensivo sozinho, só o último abre o hub):
+
+1. **Migration** `20260930120000_gestao_hub.sql` (5 tabelas com RLS ligado e sem policy + limpeza diária).
+2. **Secrets** (Supabase `ivjvpdzsfjdpyabbzzuj`): `CLINICA_SUPABASE_SERVICE_ROLE_KEY` (service role do projeto
+   `vththexblpxwocbowhsv`), `GESTAO_SSO_SECRET_CACAU` (string aleatória longa). `CLINICA_SUPABASE_URL`,
+   `CLINICA_SUPABASE_ANON_KEY` e `BREVO_*` já existem. Opcionais (têm padrão): `GESTAO_URL_PLAYGROUND`,
+   `_CLINICA`, `_FINANCEIRO`, `_RH`, `_CACAU`. Na **Vercel do hub-operacoes**: o mesmo `GESTAO_SSO_SECRET_CACAU`.
+3. **Função** `gestao-hub` com `verify_jwt = false` (o Bearer é o token do hub, igual a `behavior-test-admin`).
+4. **Portas de entrada** (merge + deploy de cada branch `feat/sso-gestao`): Clínica `/auth/sso`, Financeiro
+   `/auth/sso`, Playground `/sso`, Gestão de Pessoas `/sso`, HubOperacoes `POST /api/auth/sso` + `#sso=`.
+   A Clínica e o Playground fazem deploy na Vercel; o Simulador e o hub-operacoes também.
+5. **Contas**: preencher `fa_gestao_contas` (uma linha por pessoa; coluna vazia = quadrado desabilitado):
+
+   ```sql
+   insert into public.fa_gestao_contas
+     (email, nome, playground_email, clinica_email, financeiro_email, rh_email, cacau_usuario)
+   values
+     ('brunofreitasbm@gmail.com', 'Bruno', '<email no Auth A>', '<email no Auth B>',
+      'brunofreitasbm@gmail.com', '<email no Auth B>', 'Bruno'),
+     ('isabella.vgoncalves@gmail.com', 'Isabella', '<...>', '<...>',
+      'isabella.vgoncalves@gmail.com', '<...>', 'Isabella');
+   ```
+
+   O `email` da linha é o do login na **Clínica** (a senha do hub é a da Clínica). Cada usuário precisa já
+   existir no Auth do sistema correspondente e ter perfil de dono/gestor lá; no Financeiro o e-mail também
+   precisa estar em `lib/auth.ts`; no Cacau Show, `Bruno` precisa existir em `colaboradores` com papel `owner`.
+   O e-mail da Isabella aparece de dois jeitos no projeto (`isabella.vgoncalves@` e `isabella.goncalves@`): confirmar.
+6. **DNS + site**: CNAME `gestao` → Vercel, adicionar `gestao.institutofacaamigos.com.br` ao projeto
+   `facaamigos-site`, `npm run check` → commit → push.
+
+Teste ponta a ponta: login errado, e-mail fora da lista (mesma mensagem de senha errada), código errado 5×,
+código certo, cada quadrado abre logado, reabrir a mesma URL de entrada tem que falhar, Sair, e conferir
+`fa_gestao_auditoria`.
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.

@@ -6,6 +6,8 @@ User-agent: *
 Allow: /
 Disallow: /admin
 Disallow: /admin.html
+Disallow: /gestao
+Disallow: /gestao.html
 Disallow: /teste-perguntas.json
 Disallow: /wifi
 Disallow: /wifi.html
@@ -40,6 +42,8 @@ Allow: /llms-full.txt
 Allow: /geo-facts.json
 Disallow: /admin
 Disallow: /admin.html
+Disallow: /gestao
+Disallow: /gestao.html
 Disallow: /teste-perguntas.json
 Disallow: /wifi
 Disallow: /wifi.html

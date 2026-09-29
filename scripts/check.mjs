@@ -12,7 +12,7 @@ const SITE_HOSTS = new Set([
   'www.institutofacaamigos.com.br',
   'playground.institutofacaamigos.com.br',
 ]);
-const EXCLUIDAS = (f) => f === 'admin.html' || f === 'descadastrar.html' || /^google.*\.html$/i.test(f);
+const EXCLUIDAS = (f) => f === 'admin.html' || f === 'gestao.html' || f === 'descadastrar.html' || /^google.*\.html$/i.test(f);
 
 const read = (p) => readFileSync(join(root, p), 'utf8');
 // HTML da raiz + subpastas de conteúdo (hoje só aprender/), sempre com "/" no nome (Windows e CI/Linux iguais).

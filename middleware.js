@@ -9,8 +9,8 @@
 // Decisão de risco: index.html agora É o hub (o domínio mais importante,
 // institutofacaamigos.com.br, não depende de nenhuma lógica condicional —
 // é o comportamento padrão da Vercel, funciona mesmo se este middleware
-// quebrar). Só o subdomínio secundário (playground.) precisa de uma regra
-// ativa para servir playground.html em vez do índice padrão.
+// quebrar). Só os subdomínios secundários (playground. e gestao.) precisam
+// de uma regra ativa para servir a página deles em vez do índice padrão.
 import { rewrite, next } from "@vercel/functions";
 
 export const config = {
@@ -21,6 +21,10 @@ export default function middleware(request) {
   const host = request.headers.get("host") || "";
   if (host === "playground.institutofacaamigos.com.br") {
     return rewrite(new URL("/playground", request.url));
+  }
+  // Hub de Gestão (privado, Bruno e Isabella) — ver gestao.html.
+  if (host === "gestao.institutofacaamigos.com.br") {
+    return rewrite(new URL("/gestao", request.url));
   }
   return next();
 }
