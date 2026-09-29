@@ -1,7 +1,25 @@
-# Instituto FaçaAmigos — Documentação Completa para Motores de Busca Generativos (GEO)
+# Instituto FaçaAmigos — Documentação Completa para Assistentes de IA e Mecanismos de Busca
+
+## Páginas principais
+
+- [Início — visão geral do ecossistema](https://institutofacaamigos.com.br/): Playground, Circuito e Clínica, endereços, horários e perguntas frequentes.
+- [Playground Inclusivo](https://playground.institutofacaamigos.com.br/): preços, Horário Inclusivo, meia-entrada inclusiva, como funciona e perguntas frequentes.
+- [Circuito de Carrinhos Elétricos](https://playground.institutofacaamigos.com.br/circuito): passeios, preço e perguntas frequentes.
+- [Serviços da Clínica](https://institutofacaamigos.com.br/servicos): avaliação inicial, psicologia e terapia comportamental, fonoaudiologia, terapia ocupacional, psicopedagogia, avaliação neuropsicológica e orientação a pais e escola.
+- [Aprender — guias educativos](https://institutofacaamigos.com.br/aprender): guias curtos sobre birra e crise, rotina visual, laudo e CIPTEA e mais, escritos pela psicóloga Isabella Gonçalves Freitas.
+- [Glossário](https://institutofacaamigos.com.br/glossario): cerca de 40 termos de desenvolvimento infantil e inclusão (TEA, ABA, CIPTEA, integração sensorial...) explicados em linguagem simples.
+- [Mapeamento Comportamental gratuito](https://institutofacaamigos.com.br/teste): questionário de cerca de 5 minutos para famílias de crianças de 4 a 17 anos. Não substitui avaliação profissional.
+- [E-book O Brincar com Propósito](https://institutofacaamigos.com.br/guia): guia prático de Análise do Comportamento para mães, pais e cuidadores.
+- [E-book O Código do Desenvolvimento Infantil](https://institutofacaamigos.com.br/codigo): guia curto e acolhedor sobre o comportamento infantil.
+- [Política de Privacidade](https://playground.institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
+- [Termos de Uso e de Compra](https://institutofacaamigos.com.br/termos): entrega, garantia de 7 dias e licença de uso dos e-books.
+
+---
 
 ## Visão Geral da Organização
 O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada ao desenvolvimento infantil, combinando clínica de terapia comportamental com espaços de lazer inclusivo.
+
+**Autoria e responsabilidade técnica**: os conteúdos educativos (Mapeamento Comportamental e e-books) foram criados pela psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), idealizadora do FaçaAmigos. São materiais educativos e não substituem avaliação e acompanhamento profissional.
 
 ### Pilares de Atuação
 1. **Saúde & Terapia (Clínica FaçaAmigos)**: intervenção em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia. Lista completa de serviços em [/servicos](https://institutofacaamigos.com.br/servicos).
@@ -10,7 +28,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 
 ---
 
-## Métricas Operacionais e Quantitativas (GEO Metrics Dataset)
+## Dados Operacionais
 
 | Métrica / Parâmetro | Detalhe / Valor |
 | :--- | :--- |
@@ -59,7 +77,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 
 ---
 
-## Matriz de Perguntas Frequentes e Respostas Certificadas (FAQ GEO Index)
+## Perguntas Frequentes e Respostas
 
 #### Q1: Como funciona o acesso de crianças autistas no FaçaAmigos?
 R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança recebe 50% de desconto no Playground.
@@ -70,14 +88,20 @@ R: Não. O atendimento no Playground e no Circuito é feito por ordem de chegada
 #### Q3: Qual a segurança oferecida para crianças que ficam sem os pais?
 R: Crianças a partir de 3 anos recebem uma pulseira de identificação vinculada ao responsável cadastrado na entrada. A liberação na saída ocorre mediante validação presencial do mesmo responsável.
 
+#### Q4: Onde ficam as unidades e qual o horário?
+R: O Playground e o Circuito funcionam no Parque Shopping Belém (Rod. Augusto Montenegro, 4300, Belém - PA, CEP 66635-110), Térreo, próximo às Lojas Americanas, todos os dias das 10h às 22h. O Playground também abrirá no Shopping Bosque Grão-Pará (Av. Centenário, 1052, Belém - PA) e a Clínica ficará na Rua Boaventura da Silva, 1573, Umarizal. As duas últimas unidades estão em breve.
+
+#### Q5: Qual o melhor horário para crianças com sensibilidade sensorial?
+R: O Horário Inclusivo, todos os dias das 10h às 16h, tem som mais baixo, menos lotação e equipe reforçada. É o horário indicado para a primeira visita.
+
 ---
 
-## Metadados Canônicos para Inteligência Artificial
+## Endereços Canônicos e Contato
 - **Domínios Oficiais**:
   - `https://institutofacaamigos.com.br/`
   - `https://playground.institutofacaamigos.com.br/`
   - `https://playground.institutofacaamigos.com.br/circuito`
 - **Contato Comercial & Atendimento**: +55 (91) 99234-7673 (WhatsApp)
 - **Outros conteúdos**: `/servicos` (serviços da Clínica), `/aprender` (guias educativos), `/glossario` (glossário de termos), `/teste` (Mapeamento Comportamental gratuito), `/guia` (e-book O Brincar com Propósito), `/codigo` (e-book O Código do Desenvolvimento Infantil)
-- **Resumo curto (GEO)**: `https://institutofacaamigos.com.br/llms.txt`
-- **Fatos legíveis por máquina (GEO)**: `https://institutofacaamigos.com.br/geo-facts.json`
+- **Resumo curto**: `https://institutofacaamigos.com.br/llms.txt`
+- **Fatos legíveis por máquina**: `https://institutofacaamigos.com.br/geo-facts.json`
