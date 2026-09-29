@@ -190,6 +190,7 @@
       <p class="sub" id="loginSub">Exclusivo Owner</p>
 
       <form id="senhaForm" novalidate>
+        <div id="loginNotice" class="form-notice" role="status"></div>
         <div id="senhaError" class="form-error" role="alert"></div>
         <div class="form-group">
           <label for="login-id" class="form-label">E-mail ou CPF</label>
@@ -200,6 +201,37 @@
           <input type="password" id="login-senha" class="form-control" autocomplete="current-password" required>
         </div>
         <button type="submit" id="senhaSubmit" class="btn btn-pink" style="width:100%;">Continuar</button>
+        <p class="login-footer"><button type="button" class="btn-link" id="esqueciBtn">Esqueci a senha</button></p>
+      </form>
+
+      <form id="esqueciForm" novalidate hidden>
+        <div id="esqueciError" class="form-error" role="alert"></div>
+        <p class="sub" style="margin-bottom:16px;">Enviamos um código para o e-mail cadastrado. Com ele você escolhe uma senha nova (vale também para o Sistema da Clínica).</p>
+        <div class="form-group">
+          <label for="esqueci-id" class="form-label">E-mail ou CPF</label>
+          <input type="text" id="esqueci-id" class="form-control" autocomplete="username" required>
+        </div>
+        <button type="submit" id="esqueciSubmit" class="btn btn-pink" style="width:100%;">Enviar código</button>
+        <p class="login-footer"><button type="button" class="btn-link" id="esqueciVoltar">Voltar ao login</button></p>
+      </form>
+
+      <form id="redefinirForm" novalidate hidden>
+        <div id="redefinirNotice" class="form-notice" role="status"></div>
+        <div id="redefinirError" class="form-error" role="alert"></div>
+        <div class="form-group">
+          <label for="reset-codigo" class="form-label">Código de 6 dígitos</label>
+          <input type="text" id="reset-codigo" class="form-control code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+        </div>
+        <div class="form-group">
+          <label for="reset-senha" class="form-label">Senha nova (mínimo 8 caracteres)</label>
+          <input type="password" id="reset-senha" class="form-control" autocomplete="new-password" minlength="8" required>
+        </div>
+        <div class="form-group">
+          <label for="reset-senha2" class="form-label">Repita a senha nova</label>
+          <input type="password" id="reset-senha2" class="form-control" autocomplete="new-password" minlength="8" required>
+        </div>
+        <button type="submit" id="redefinirSubmit" class="btn btn-pink" style="width:100%;">Trocar senha</button>
+        <p class="login-footer"><button type="button" class="btn-link" id="redefinirVoltar">Cancelar</button></p>
       </form>
 
       <form id="codigoForm" novalidate hidden>
@@ -297,7 +329,18 @@
       var hubError = document.getElementById('hubError');
       var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
 
+      var loginNotice = document.getElementById('loginNotice');
+      var esqueciForm = document.getElementById('esqueciForm');
+      var esqueciError = document.getElementById('esqueciError');
+      var esqueciSubmit = document.getElementById('esqueciSubmit');
+      var redefinirForm = document.getElementById('redefinirForm');
+      var redefinirNotice = document.getElementById('redefinirNotice');
+      var redefinirError = document.getElementById('redefinirError');
+      var redefinirSubmit = document.getElementById('redefinirSubmit');
+      var resetCodigo = document.getElementById('reset-codigo');
+
       var challengeId = null;
+      var resetChallengeId = null;
 
       // ---------- sessão ----------
       function getToken() {
@@ -347,10 +390,13 @@
       function showLogin(step) {
         hubScreen.hidden = true;
         loginScreen.hidden = false;
-        var codigo = step === 'codigo';
-        senhaForm.hidden = codigo;
-        codigoForm.hidden = !codigo;
-        (codigo ? codigoInput : document.getElementById('login-id')).focus();
+        senhaForm.hidden = step !== 'senha';
+        codigoForm.hidden = step !== 'codigo';
+        esqueciForm.hidden = step !== 'esqueci';
+        redefinirForm.hidden = step !== 'redefinir';
+        var foco = { senha: 'login-id', codigo: 'login-codigo', esqueci: 'esqueci-id', redefinir: 'reset-codigo' }[step];
+        var el = foco && document.getElementById(foco);
+        if (el) el.focus();
       }
 
       function showHub(nome, apps) {
@@ -378,6 +424,7 @@
         var senha = document.getElementById('login-senha').value;
         if (!id || !senha) { showMsg(senhaError, 'Informe e-mail/CPF e senha.'); return; }
         showMsg(senhaError, '');
+        showMsg(loginNotice, '');
         senhaSubmit.disabled = true;
         senhaSubmit.textContent = 'Verificando…';
         api('login', { identifier: id, password: senha }).then(function (r) {
@@ -429,6 +476,76 @@
         challengeId = null;
         showMsg(senhaError, '');
         showLogin('senha');
+      });
+
+      // ---------- esqueci a senha ----------
+      document.getElementById('esqueciBtn').addEventListener('click', function () {
+        document.getElementById('esqueci-id').value = document.getElementById('login-id').value;
+        showMsg(esqueciError, '');
+        showLogin('esqueci');
+      });
+      document.getElementById('esqueciVoltar').addEventListener('click', function () { showLogin('senha'); });
+      document.getElementById('redefinirVoltar').addEventListener('click', function () {
+        resetChallengeId = null;
+        showLogin('senha');
+      });
+
+      esqueciForm.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var id = document.getElementById('esqueci-id').value.trim();
+        if (!id) { showMsg(esqueciError, 'Informe seu e-mail ou CPF.'); return; }
+        showMsg(esqueciError, '');
+        esqueciSubmit.disabled = true;
+        esqueciSubmit.textContent = 'Enviando…';
+        api('esqueci', { identifier: id }).then(function (r) {
+          esqueciSubmit.disabled = false;
+          esqueciSubmit.textContent = 'Enviar código';
+          if (!r.ok) { showMsg(esqueciError, r.data.error || 'Não foi possível enviar o código.'); return; }
+          resetChallengeId = r.data.challenge_id;
+          resetCodigo.value = '';
+          document.getElementById('reset-senha').value = '';
+          document.getElementById('reset-senha2').value = '';
+          showMsg(redefinirError, '');
+          showMsg(redefinirNotice, r.data.mensagem || 'Enviamos um código para o e-mail cadastrado.');
+          showLogin('redefinir');
+        });
+      });
+
+      resetCodigo.addEventListener('input', function () {
+        resetCodigo.value = resetCodigo.value.replace(/\D/g, '').slice(0, 6);
+      });
+
+      redefinirForm.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var code = resetCodigo.value.trim();
+        var s1 = document.getElementById('reset-senha').value;
+        var s2 = document.getElementById('reset-senha2').value;
+        if (code.length !== 6) { showMsg(redefinirError, 'Digite o código de 6 dígitos.'); return; }
+        if (s1.length < 8) { showMsg(redefinirError, 'A senha nova precisa ter pelo menos 8 caracteres.'); return; }
+        if (s1 !== s2) { showMsg(redefinirError, 'As duas senhas não são iguais.'); return; }
+        showMsg(redefinirError, '');
+        redefinirSubmit.disabled = true;
+        redefinirSubmit.textContent = 'Trocando…';
+        api('redefinir', { challenge_id: resetChallengeId, code: code, new_password: s1 }).then(function (r) {
+          redefinirSubmit.disabled = false;
+          redefinirSubmit.textContent = 'Trocar senha';
+          if (!r.ok) {
+            if (r.data.reiniciar) {
+              resetChallengeId = null;
+              showMsg(esqueciError, r.data.error);
+              showLogin('esqueci');
+            } else {
+              showMsg(redefinirError, r.data.error || 'Não foi possível trocar a senha.');
+            }
+            return;
+          }
+          resetChallengeId = null;
+          clearSession();
+          document.getElementById('login-senha').value = '';
+          showMsg(senhaError, '');
+          showLogin('senha');
+          showMsg(loginNotice, 'Senha trocada! Entre com a senha nova.');
+        });
       });
 
       // ---------- quadrados ----------
