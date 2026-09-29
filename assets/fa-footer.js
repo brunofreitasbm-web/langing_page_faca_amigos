@@ -1,11 +1,9 @@
 /*
- * FaçaAmigos: rodapé único (conteúdo) para hub, /playground, /circuito, /teste, /servicos, /aprender e /glossario.
+ * FaçaAmigos: rodapé único (conteúdo e visual otimizado) para hub, /playground, /circuito, /teste, /servicos, /aprender e /glossario.
  * Marque o rodapé de cada página com  <footer data-fa-footer="hub|playground|circuito|teste|servicos|aprender|glossario">
  * e inclua  <script src="/assets/fa-footer.js" defer></script>.
- * Sem JavaScript, continua valendo o rodapé estático da própria página (mesmo conteúdo, mantido em sincronia).
  *
- * Só o CONTEÚDO é compartilhado; o visual continua sendo o CSS de cada página (footer p, footer a, .legal).
- * Status das unidades e CNPJs ficam nas constantes abaixo: virar "aberta" é uma edição só.
+ * Reorganiza o bloco denso de texto em 3 colunas elegantes (Unidades, Navegação, Conteúdos/Contato) + Sub-footer discreto.
  */
 (function () {
   'use strict';
@@ -36,39 +34,90 @@
   function link(href, text, extra) { return '<a href="' + href + '"' + (extra || '') + '>' + text + '</a>'; }
   var EXT = ' target="_blank" rel="noopener"';
 
-  var nav = [
-    link('/', 'Início'),
-    link('/servicos', 'Serviços'),
-    link('/playground', 'Playground'),
-    link('/circuito', 'Circuito'),
-    link('/teste?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'Mapeamento gratuito'),
-    link('/aprender', 'Aprender'),
-    link('/glossario', 'Glossário'),
-    link('/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'O Brincar com Propósito'),
-    link('/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'O Código do Desenvolvimento Infantil')
-  ].join(' · ');
+  // Injetar estilos limpos e responsivos para o rodapé otimizado
+  if (!document.getElementById('fa-footer-styles')) {
+    var style = document.createElement('style');
+    style.id = 'fa-footer-styles';
+    style.textContent = [
+      'footer[data-fa-footer] { box-sizing: border-box; }',
+      'footer[data-fa-footer] .fa-footer-wrap { width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; text-align: left; }',
+      'footer[data-fa-footer] .fa-footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 32px 40px; margin-top: 24px; margin-bottom: 32px; }',
+      'footer[data-fa-footer] .fa-footer-col { font-size: 0.9rem; }',
+      'footer[data-fa-footer] .fa-footer-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; margin: 0 0 14px 0; color: inherit; }',
+      'footer[data-fa-footer] .fa-footer-list { list-style: none; padding: 0; margin: 0; }',
+      'footer[data-fa-footer] .fa-footer-list li { margin-bottom: 12px; line-height: 1.5; font-size: 0.88rem; }',
+      'footer[data-fa-footer] .fa-footer-list li strong { display: block; font-weight: 700; opacity: 0.95; }',
+      'footer[data-fa-footer] .fa-footer-list li span { display: block; opacity: 0.75; font-size: 0.82rem; margin-top: 2px; }',
+      'footer[data-fa-footer] .fa-footer-col a { color: inherit; text-decoration: none; font-weight: 600; opacity: 0.88; transition: opacity 0.2s, text-decoration 0.2s; }',
+      'footer[data-fa-footer] .fa-footer-col a:hover { opacity: 1; text-decoration: underline; }',
+      'footer[data-fa-footer] .fa-footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.14); padding-top: 20px; margin-top: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; font-size: 0.8rem; opacity: 0.75; }',
+      'footer[data-fa-footer] .fa-footer-bottom p { margin: 0; line-height: 1.5; }',
+      '@media (max-width: 640px) {',
+      '  footer[data-fa-footer] .fa-footer-wrap { text-align: center; }',
+      '  footer[data-fa-footer] .fa-footer-grid { grid-template-columns: 1fr; gap: 24px; text-align: center; }',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
 
-  var contact = [
-    link('https://wa.me/' + wa.n + '?text=' + encodeURIComponent(wa.t), 'Fale conosco', EXT),
-    hasJobs ? '<a href="#" data-fa-jobs>Venha fazer parte do nosso time</a>' : '',
-    link('/politica-privacidade', 'Política de privacidade'),
-    link('/termos', 'Termos de uso e de compra')
-  ].filter(Boolean).join(' · ');
-
-  var html = [
-    '<p><b>Parque Shopping Belém:</b> Av. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>',
-    '<p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (' + GRAOPARA_STATUS + ')</p>',
-    '<p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (' + CLINICA_STATUS + ')</p>',
-    '<p>Todos os dias, das 10h às 22h (Playground e Circuito) · ' + link('https://www.instagram.com/facaamigos.belem/', '@facaamigos.belem', EXT) + '</p>',
-    '<p style="margin-top: 18px;">' + nav + '</p>',
-    '<p>' + contact + '</p>',
-    '<p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>' +
-    'Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>'
+  var colUnidades = [
+    '<div class="fa-footer-col">',
+    '  <h4 class="fa-footer-title">Unidades &amp; Locais</h4>',
+    '  <ul class="fa-footer-list">',
+    '    <li><strong>Parque Shopping Belém</strong><span>Av. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</span></li>',
+    '    <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (' + GRAOPARA_STATUS + ')</span></li>',
+    '    <li><strong>Centro de Terapia Comportamental</strong><span>Rua Boaventura da Silva, 1573 · Umarizal (' + CLINICA_STATUS + ')</span></li>',
+    '    <li><strong>Funcionamento</strong><span>Todos os dias, 10h às 22h (Playground e Circuito) · ' + link('https://www.instagram.com/facaamigos.belem/', '@facaamigos.belem', EXT) + '</span></li>',
+    '  </ul>',
+    '</div>'
   ].join('\n');
 
-  // Mantém a logo (img + .logo) e o link de cookies; troca só os parágrafos.
+  var colNavegacao = [
+    '<div class="fa-footer-col">',
+    '  <h4 class="fa-footer-title">Navegação</h4>',
+    '  <ul class="fa-footer-list">',
+    '    <li>' + link('/', 'Início') + '</li>',
+    '    <li>' + link('/servicos', 'Serviços da Clínica') + '</li>',
+    '    <li>' + link('/playground', 'Playground Inclusivo') + '</li>',
+    '    <li>' + link('/circuito', 'Circuito de Carrinhos') + '</li>',
+    '    <li>' + link('/teste?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'Mapeamento Gratuito') + '</li>',
+    '    <li>' + link('/aprender', 'Aprender (Artigos &amp; Guias)') + '</li>',
+    '    <li>' + link('/glossario', 'Glossário Comportamental') + '</li>',
+    '  </ul>',
+    '</div>'
+  ].join('\n');
+
+  var colInstitucional = [
+    '<div class="fa-footer-col">',
+    '  <h4 class="fa-footer-title">Conteúdos &amp; Contato</h4>',
+    '  <ul class="fa-footer-list">',
+    '    <li>' + link('/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'E-book: O Brincar com Propósito') + '</li>',
+    '    <li>' + link('/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'E-book: O Código do Desenvolvimento Infantil') + '</li>',
+    '    <li>' + link('https://wa.me/' + wa.n + '?text=' + encodeURIComponent(wa.t), 'Fale conosco no WhatsApp', EXT) + '</li>',
+    hasJobs ? '    <li><a href="#" data-fa-jobs>Venha fazer parte do nosso time</a></li>' : '',
+    '    <li>' + link('/politica-privacidade', 'Política de Privacidade') + '</li>',
+    '    <li>' + link('/termos', 'Termos de Uso e de Compra') + '</li>',
+    '  </ul>',
+    '</div>'
+  ].join('\n');
+
+  var htmlGrid = [
+    '<div class="fa-footer-wrap">',
+    '  <div class="fa-footer-grid">',
+    colUnidades,
+    colNavegacao,
+    colInstitucional,
+    '  </div>',
+    '  <div class="fa-footer-bottom">',
+    '    <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)</p>',
+    '    <p class="legal">Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>',
+    '  </div>',
+    '</div>'
+  ].join('\n');
+
+  // Mantém a logo / ícone original do topo do footer se existir, remove os parágrafos antigos
   Array.prototype.slice.call(footer.querySelectorAll(':scope > p')).forEach(function (p) { p.remove(); });
-  footer.insertAdjacentHTML('beforeend', html);
+  footer.insertAdjacentHTML('beforeend', htmlGrid);
 
   var jobs = footer.querySelector('[data-fa-jobs]');
   if (jobs) {
@@ -78,7 +127,8 @@
     });
   }
 
-  // O link de preferências de cookies (fa-track.js) vai por último, dentro do rodapé.
+  // O link de preferências de cookies (fa-track.js) vai por último, no sub-footer.
   var cookies = footer.querySelector('[data-fa-cookies]');
-  if (cookies) footer.appendChild(cookies);
+  var bottom = footer.querySelector('.fa-footer-bottom');
+  if (cookies && bottom) bottom.appendChild(cookies);
 })();
