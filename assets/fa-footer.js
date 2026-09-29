@@ -115,8 +115,8 @@
     '</div>'
   ].join('\n');
 
-  // Mantém a logo / ícone original do topo do footer se existir, remove os parágrafos antigos
-  Array.prototype.slice.call(footer.querySelectorAll(':scope > p')).forEach(function (p) { p.remove(); });
+  // Mantém a logo / ícone original do topo do footer se existir, remove parágrafos e wraps antigos para evitar duplicação
+  Array.prototype.slice.call(footer.querySelectorAll(':scope > p, :scope > .fa-footer-wrap')).forEach(function (el) { el.remove(); });
   footer.insertAdjacentHTML('beforeend', htmlGrid);
 
   var jobs = footer.querySelector('[data-fa-jobs]');
