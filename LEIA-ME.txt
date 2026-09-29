@@ -11,8 +11,9 @@ SEO (buscador clássico)
 - robots: todas as páginas indexáveis com max-image-preview:large e max-snippet:-1 (guia, codigo, termos,
   politica e teste estavam sem).
 - OG/Twitter: og:image:width/height/type/alt e twitter:image:alt em todas as páginas; termos e política
-  ganharam Twitter Card. og:image do hub, playground e teste continua quadrado/retrato (784x803, 700x936):
-  para prévia perfeita no WhatsApp/Facebook falta uma arte 1200x630 para cada uma.
+  ganharam Twitter Card. Artes 1200x630 (img/og/og-hub, og-playground, og-circuito, og-teste .jpg, ~110 KB)
+  para a prévia no WhatsApp/Facebook/X; guia e codigo já tinham a sua. Para trocar o texto de uma arte, é só
+  pedir: elas saem de um modelo HTML com as fotos do site e as fontes da marca.
 - Fontes do Google agora carregam sem bloquear a primeira pintura (preload + noscript).
 - Hero do playground e do circuito servem WebP (jpg de 235 KB caía para 65 KB) com jpg de reserva.
 
@@ -53,7 +54,6 @@ Avisos: título >70, description fora de 70-175, og:image sem dimensões/alt, se
 título que pula nível. A falsa acusação de "img sem loading" na imagem LCP (fetchpriority=high) foi removida.
 
 NÃO FEITO (decisão ou dado que só o dono tem)
-- Arte 1200x630 para og:image (hub, playground, circuito, teste).
 - www -> apex: conferir no painel da Vercel (Domains) se o www redireciona para o domínio raiz.
 - /img/* tem cache "immutable" de 1 ano sem nome com hash: trocar uma foto mantendo o nome não aparece
   para quem já visitou. Renomear ao trocar, ou reduzir o max-age.
