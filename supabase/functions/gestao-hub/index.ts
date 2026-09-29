@@ -4,7 +4,7 @@
 // Pessoas/Grupo IB e Hub de Operações Cacau Show). Tudo numa única função,
 // roteada por `action` no corpo JSON — mesmo motivo de CORS/JSON inline das
 // demais funções deste projeto (import relativo de ../_shared quebra no
-// deploy via MCP).
+// deploy via MCP). O import é npm: (o jsr: falha no deploy via MCP).
 //
 // Login (2 passos):
 //   1. `login`: e-mail/CPF + senha do Sistema da Clínica (mesma chamada
@@ -30,7 +30,7 @@
 // Deploy com verify_jwt = false (o Bearer é o token de sessão do hub, não um
 // JWT do Supabase) — igual a behavior-test-admin.
 
-import { createClient, type SupabaseClient } from "jsr:@supabase/supabase-js@2";
+import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 const LOGO_URL = "https://institutofacaamigos.com.br/img/logo-simbolo.png";
 
@@ -98,7 +98,7 @@ function maskEmail(email: string): string {
   const [user, domain] = email.split("@");
   if (!domain) return email;
   const visible = user.slice(0, 2);
-  return `${visible}${"•".repeat(Math.max(user.length - 2, 3))}@${domain}`;
+  return `${visible}${"*".repeat(Math.max(user.length - 2, 3))}@${domain}`;
 }
 
 // ---------------------------------------------------------------------
