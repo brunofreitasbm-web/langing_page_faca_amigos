@@ -20,12 +20,12 @@
 (function () {
   'use strict';
 
-  // ATENÇÃO — dois containers GTM carregam em todas as páginas (gtm e gtm2). Isso NÃO foi verificado no painel
-  // do GTM: se os dois tiverem a mesma tag de GA4/Meta/Ads, todo evento é contado em dobro (sessões, conversões
-  // e custo por conversão saem errados). Antes de mexer, conferir em tagmanager.google.com quais tags existem em
-  // cada um; se um estiver vazio ou for legado, remover daqui E do noscript das páginas (grep pelo ID). Enquanto
-  // a checagem não acontecer, os dois ficam como estão — remover às cegas apaga disparo de conversão em produção.
-  var IDS = { gtm: 'GTM-PN5D2BTS', gtm2: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG' };
+  // GTM: um container só. Até 29/09/2026 carregavam dois (GTM-PN5D2BTS e GTM-NPDJ58XR). Os dois estavam com a
+  // versão publicada vazia (0 tags, 0 acionadores, 0 regras), então nada era contado em dobro, mas cada página
+  // baixava ~330 KB de gtm.js à toa por container. Ficou o GTM-PN5D2BTS (o do primeiro commit, o do PUBLICAR.md e o
+  // do portal Wi-Fi). Ao criar tags no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o
+  // gtag direto abaixo (page_view em dobro). O scripts/check.mjs reprova a volta de um segundo container.
+  var IDS = { gtm: 'GTM-PN5D2BTS', ga4: 'G-37G5XLBXKG' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
@@ -160,7 +160,6 @@
   // ---------- GTM + GA4 (sempre, em modo sem cookies até o aceite) ----------
   window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
   loadScript('https://www.googletagmanager.com/gtm.js?id=' + IDS.gtm);
-  loadScript('https://www.googletagmanager.com/gtm.js?id=' + IDS.gtm2);
   loadScript('https://www.googletagmanager.com/gtag/js?id=' + IDS.ga4);
   gtag('js', new Date());
   // linker: sem isso o GA4 abre sessão nova no salto hub -> playground e registra o próprio subdomínio como
