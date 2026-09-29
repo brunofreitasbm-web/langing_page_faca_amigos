@@ -9,6 +9,21 @@ renomeie o arquivo e atualize as referências. Arquivos novos e nomes novos não
 Redes sociais (WhatsApp, Facebook, X) guardam a prévia por conta própria: use o depurador de compartilhamento
 da Meta para atualizar a de um link.
 
+UM CONTAINER GTM SÓ — 29/09/2026
+--------------------------------
+O site carregava dois containers em todas as páginas (GTM-PN5D2BTS e GTM-NPDJ58XR). Baixei o código publicado
+dos dois (https://www.googletagmanager.com/gtm.js?id=...): os DOIS estão com a versão publicada vazia (0 tags,
+0 acionadores, 0 regras). Ou seja, nada era contado em dobro e nada era medido pelo GTM; só custava um download de
+~330 KB de gtm.js a mais por página. Ficou o GTM-PN5D2BTS: é o do primeiro commit (11/09), o que o PUBLICAR.md manda
+usar e o único do portal Wi-Fi. O GTM-NPDJ58XR saiu do assets/fa-track.js e do <noscript> das 21 páginas (nas 13
+páginas que só tinham ele, o <noscript> passou a apontar para o PN5D2BTS). Contagem de GA4 e Meta: sem mudança,
+porque o GA4 vem do gtag direto do fa-track.js e o Meta não passa pelo GTM.
+SE VOCÊ TINHA TAGS EM RASCUNHO (não publicadas) NO GTM-NPDJ58XR, elas não sumiram do painel, mas o site não
+carrega mais esse container. Diga, e a troca se inverte com uma linha.
+Ao criar tags no GTM: só no GTM-PN5D2BTS, conferir que a tag GA4 não duplica o gtag direto (page_view em
+dobro) e exigir consentimento (ad_storage) nas tags de anúncio. O scripts/check.mjs agora reprova um segundo
+container e <noscript> que aponte para container diferente do declarado no fa-track.js.
+
 REMOVIDO 29/09/2026 — "o 1º ecossistema infantil inclusivo de Belém"
 --------------------------------------------------------------------
 A frase estava na 1ª pergunta do FAQ do hub (texto visível e JSON-LD) e não tinha base em lugar nenhum, nem
@@ -80,7 +95,6 @@ Avisos: título >70, description fora de 70-175, og:image sem dimensões/alt, se
 título que pula nível. A falsa acusação de "img sem loading" na imagem LCP (fetchpriority=high) foi removida.
 
 NÃO FEITO (decisão ou dado que só o dono tem)
-- Site inteiro usa dois containers GTM (ver aviso no fa-track.js): conferir contagem em dobro.
 
 ATUALIZAÇÃO 22/09/2026 (4) — Clarity e Contentsquare removidos
 ------------------------------------------------------------------

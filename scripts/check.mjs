@@ -367,6 +367,26 @@ if (nomesOrganization.size > 1) {
   }
 }
 
+// ---------- verificação global: um único container GTM ----------
+// Dois containers com a mesma tag de GA4/Meta/Ads contam todo evento em dobro. Por isso: o fa-track.js declara um
+// único GTM-XXXX e todo <noscript> das páginas aponta para ele.
+{
+  const track = read('assets/fa-track.js');
+  const idsLinha = /var IDS = \{[^}]*\}/.exec(track)?.[0] ?? '';
+  const declarados = [...new Set(idsLinha.match(/GTM-[A-Z0-9]+/g) ?? [])];
+  if (declarados.length !== 1) {
+    globais.erros.push(`assets/fa-track.js declara ${declarados.length} containers GTM (${declarados.join(', ') || 'nenhum'}); deve ser exatamente 1.`);
+  } else {
+    const gtm = declarados[0];
+    for (const arq of paginas) {
+      const ids = [...read(arq).matchAll(/googletagmanager\.com\/ns\.html\?id=(GTM-[A-Z0-9]+)/g)].map((m) => m[1]);
+      const outros = [...new Set(ids.filter((i) => i !== gtm))];
+      if (outros.length) globais.erros.push(`${arq}: <noscript> do GTM aponta para ${outros.join(', ')}; o container do site é ${gtm}.`);
+      else if (!ids.length && arq !== 'wifi.html') globais.avisos.push(`${arq}: sem <noscript> do GTM (${gtm}).`);
+    }
+  }
+}
+
 // ---------- verificação global: sitemap.xml e robots.txt ----------
 {
   const sitemapPath = join(root, 'sitemap.xml');
