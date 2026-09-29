@@ -224,22 +224,11 @@ async function verificarSenhaClinica(
 
   let emailToUse = identifier;
 
-  // Sem '@': tenta como CPF (mesma busca de behavior-test-admin).
+  // Sem '@': é CPF. A busca precisa da service role (a chave anon não lê profiles: RLS) —
+  // é o mesmo que o login da própria Clínica faz (app/login/actions.ts).
   if (!emailToUse.includes("@")) {
-    const cleanDigits = emailToUse.replace(/\D/g, "");
-    const filters = [`cpf.eq.${quoteFilterValue(emailToUse)}`];
-    if (cleanDigits && cleanDigits !== emailToUse) {
-      filters.push(`cpf.eq.${quoteFilterValue(cleanDigits)}`);
-      filters.push(`cpf_clean.eq.${quoteFilterValue(cleanDigits)}`);
-    }
-    const lookupRes = await fetch(
-      `${clinicaUrl}/rest/v1/profiles?select=email&or=(${filters.join(",")})&limit=1`,
-      { headers: { apikey: clinicaAnonKey } },
-    ).catch(() => null);
-    if (lookupRes && lookupRes.ok) {
-      const found = await lookupRes.json().catch(() => []);
-      if (Array.isArray(found) && found[0]?.email) emailToUse = found[0].email;
-    }
+    const achado = await acharUsuarioClinica(emailToUse);
+    if (achado) emailToUse = achado.email;
   }
 
   const tokenRes = await fetch(`${clinicaUrl}/auth/v1/token?grant_type=password`, {
@@ -273,18 +262,18 @@ async function acharUsuarioClinica(identifier: string): Promise<{ id: string; em
     ultimoErroClinica = "secret_ausente";
     return null;
   }
-  const filters: string[] = [];
+  let consulta = b.from("profiles").select("id, email");
   if (identifier.includes("@")) {
-    filters.push(`email.eq.${quoteFilterValue(identifier.toLowerCase())}`);
+    consulta = consulta.eq("email", identifier.toLowerCase());
   } else {
     const digits = identifier.replace(/\D/g, "");
-    filters.push(`cpf.eq.${quoteFilterValue(identifier)}`);
-    if (digits && digits !== identifier) {
-      filters.push(`cpf.eq.${quoteFilterValue(digits)}`);
-      filters.push(`cpf_clean.eq.${quoteFilterValue(digits)}`);
+    if (digits.length !== 11) {
+      ultimoErroClinica = "cpf_invalido";
+      return null;
     }
+    consulta = consulta.eq("cpf", digits);
   }
-  const { data, error } = await b.from("profiles").select("id, email").or(filters.join(",")).limit(1);
+  const { data, error } = await consulta.limit(1);
   if (error) {
     ultimoErroClinica = `consulta: ${error.message}`.slice(0, 120);
     return null;
