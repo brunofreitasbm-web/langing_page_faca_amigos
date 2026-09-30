@@ -1,0 +1,33 @@
+name: Publicar automaticamente (branches auto/*)
+on:
+  push:
+    branches:
+      - 'auto/**'
+permissions:
+  contents: write
+concurrency:
+  group: auto-publicar
+  cancel-in-progress: false
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Verificar páginas, links e JSON-LD
+        run: node scripts/check.mjs
+      - name: Verificar llms.txt contra o snapshot do quiosque
+        run: node scripts/geo-build.mjs --check
+      - name: Publicar na main (somente fast-forward)
+        run: |
+          git fetch origin main
+          if git merge-base --is-ancestor origin/main HEAD; then
+            git push origin HEAD:main
+          else
+            echo "::error::A main andou. Atualize a branch e envie de novo."
+            exit 1
+          fi
