@@ -137,6 +137,11 @@ Ordem (cada passo é inofensivo sozinho; o site só mostra eventos quando houver
    de gravar qualquer coisa (listar e detalhe continuam funcionando).
 5. **Funções**, todas com `--no-verify-jwt`: `eventos-dispatch` primeiro (as outras chamam ela), depois `eventos-public`,
    `eventos-admin` e a versão nova de `hotmart-webhook`.
+   **Estado em 30/09/2026**: migrações, `eventos-dispatch`, `eventos-public` e `eventos-admin` já estão em produção.
+   `hotmart-webhook` NÃO foi implantado: a versão em produção é a de 21/09 e o repositório tem, além do ramo de ingresso,
+   o envio da compra ao GA4/Meta (commits de 22/09, ainda não publicados). Implantar essa função só quando for cadastrar
+   o primeiro ingresso pago (ela é inerte sem tipo pago) e sabendo que leva o GA4/Meta junto (dormente sem `GA4_API_SECRET`
+   e `META_CAPI_TOKEN`).
    Depois de `OPS_KEY` e `eventos-dispatch` no ar, rodar `supabase/ops/agendar-eventos.sql` (troca `<chave>` pela MESMA
    chave do `OPS_KEY`): grava `ops_key` no Vault e liga o cron. Testar com `?dry=1` antes de esperar o primeiro disparo.
 6. **Site**: `npm run check` → commit → `npm run sitemap` → push. Conferir `/eventos` (agenda vazia mostra o convite ao

@@ -11,7 +11,7 @@
 // se duas execuções concorrerem, só uma envia. Se o Brevo falhar, a reserva fica com status 'erro' e o
 // admin pode reenviar. voucher_reenvio é a exceção: pode repetir.
 //
-// Secrets: OPS_KEY (já existe), EVENTOS_SECRET (HMAC dos links do ingresso), BREVO_API_KEY, BREVO_FROM,
+// Secrets: OPS_KEY (chave do cabeçalho x-ops-key; criar, ver PUBLICAR.md Lote 7), EVENTOS_SECRET (HMAC dos links do ingresso), BREVO_API_KEY, BREVO_FROM,
 // BREVO_REPLY_TO, BREVO_LIST_EVENTOS_FAMILIAS, BREVO_LIST_EVENTOS_PROFISSIONAIS (ids das listas),
 // COMUNIDADE_WHATSAPP_FAMILIAS / COMUNIDADE_WHATSAPP_PROFISSIONAIS (link padrão da Comunidade por trilha,
 // usado quando o evento não tem o próprio), SITE_URL (padrão https://institutofacaamigos.com.br).
