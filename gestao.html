@@ -142,6 +142,7 @@
       font: inherit; cursor: pointer;
       transition: transform var(--t-fast), box-shadow var(--t-fast), border-color 0.15s;
     }
+    a.tile { text-decoration: none; }
     .tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
     .tile:active { transform: scale(0.97); }
     .tile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
@@ -300,6 +301,12 @@
             <span class="desc">Hub de operações: caixa, envelopes e equipe das lojas</span>
             <span class="host">hub-operacoes</span>
           </button>
+          <a class="tile tile-link" href="/admin#eventos" target="_blank" rel="noopener">
+            <span class="icon" aria-hidden="true">🎟️</span>
+            <span class="name">Eventos</span>
+            <span class="desc">Criar eventos e ingressos, ver inscritos e fazer check-in</span>
+            <span class="host">painel do site · login próprio</span>
+          </a>
         </div>
 
         <p class="hub-foot">Cada clique fica registrado. A sessão do hub vale 7 dias neste aparelho.</p>
@@ -327,7 +334,7 @@
       var codigoInput = document.getElementById('login-codigo');
       var helloTitle = document.getElementById('helloTitle');
       var hubError = document.getElementById('hubError');
-      var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
+      var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile:not(.tile-link)'));
 
       var loginNotice = document.getElementById('loginNotice');
       var esqueciForm = document.getElementById('esqueciForm');

@@ -1140,6 +1140,8 @@
         dashScreen.hidden = false;
         adminEmailLabel.textContent = getEmail();
         loadLeads();
+        // Link direto do Hub de Gestão: /admin#eventos abre a aba Eventos.
+        if (window.location.hash === '#eventos') document.getElementById('tabEventosBtn').click();
       }
 
       function sessionExpired(msg) {
