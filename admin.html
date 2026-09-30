@@ -542,6 +542,10 @@
 
     /* ---------- Tabs ---------- */
     body.escopo-equipe .owner-only { display: none !important; }
+    .wifi-bars { display: flex; align-items: flex-end; gap: 4px; height: 64px; margin: 4px 0 18px; }
+    .wifi-bars .bar { flex: 1; min-width: 6px; background: var(--teal); border-radius: 4px 4px 0 0; position: relative; min-height: 2px; }
+    .wifi-bars .bar[data-n="0"] { background: rgba(26,63,53,0.12); }
+    .wifi-bars-legend { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--ink-soft); margin-top: -14px; margin-bottom: 14px; }
 
     .tab-bar {
       display: flex;
@@ -760,11 +764,25 @@
       </div>
 
       <div id="wifiView" hidden>
+        <div class="owner-only" id="wifiResumo">
+          <div class="ev-kpis" id="wifiKpis"></div>
+          <div class="guardian-meta" style="margin:10px 0 2px;">Cadastros por dia (últimos 14 dias)</div>
+          <div class="wifi-bars" id="wifiBars" aria-hidden="true"></div>
+          <div class="wifi-bars-legend"><span id="wifiBarsIni"></span><span id="wifiBarsFim"></span></div>
+        </div>
         <div class="toolbar">
           <div class="form-group search-group">
             <label for="wifiSearchInput" class="form-label">Buscar cupom</label>
             <input type="search" id="wifiSearchInput" class="form-control"
               placeholder="Código, telefone, e-mail ou nome">
+          </div>
+          <div class="form-group status-group owner-only">
+            <label for="wifiOptin" class="form-label">Contato</label>
+            <select id="wifiOptin" class="form-control">
+              <option value="">Todos os cadastros</option>
+              <option value="whatsapp">Aceitaram WhatsApp</option>
+              <option value="email">Aceitaram e-mail</option>
+            </select>
           </div>
           <span class="count" id="wifiCount"></span>
         </div>
@@ -781,7 +799,7 @@
                 <tr>
                   <th>Código</th>
                   <th>Nome</th>
-                  <th>Telefone</th>
+                  <th class="owner-only">Telefone</th>
                   <th>Validade</th>
                   <th>Status</th>
                   <th>Visitas</th>
@@ -1787,6 +1805,7 @@
       var wifiTbody = document.getElementById('wifiTbody');
       var wifiCards = document.getElementById('wifiCards');
       var wifiDebounce = null;
+      var wifiOptin = document.getElementById('wifiOptin');
       var OP_LABEL = { playground: 'Playground', circuito: 'Circuito' };
 
       function formatDay(iso) {
@@ -1797,13 +1816,25 @@
       }
 
       function wifiStatusBadge(c) {
+        if (c.used_at_register) return '<span class="badge badge-blue">Usado no caixa (' + escapeHtml(OP_LABEL[c.used_at_register] || c.used_at_register) + ')</span>';
         if (c.expired) return '<span class="badge badge-gray">Expirado</span>';
         if (c.redeemed_today) return '<span class="badge badge-blue">Resgatado hoje' + (OP_LABEL[c.coupon_operation] ? ' (' + OP_LABEL[c.coupon_operation] + ')' : '') + '</span>';
         return '<span class="badge badge-teal">Disponível hoje</span>';
       }
 
+      // Só o dono recebe estes campos. Aceite de contato é o que autoriza usar o telefone/e-mail para marketing.
+      function contactBadges(c) {
+        if (c.marketing_opt_in_whatsapp === undefined) return '';
+        var b = [];
+        if (c.marketing_opt_in_whatsapp) b.push('<span class="badge badge-teal">aceita WhatsApp</span>');
+        if (c.marketing_opt_in_email) b.push('<span class="badge badge-teal">aceita e-mail</span>');
+        if (!c.marketing_opt_in_whatsapp && !c.marketing_opt_in_email) b.push('<span class="badge badge-gray">sem contato de marketing</span>');
+        if (c.register_sync_ok === false) b.push('<span class="badge badge-pink" title="O cupom não foi criado em uma das unidades do caixa">cupom não chegou ao caixa</span>');
+        return '<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;">' + b.join('') + '</div>';
+      }
+
       function wifiButtons(c) {
-        var off = (c.expired || c.redeemed_today) ? ' disabled' : '';
+        var off = (c.expired || c.redeemed_today || c.used_at_register) ? ' disabled' : '';
         var code = escapeHtml(c.coupon_code);
         return '<div class="wifi-actions">' +
           '<button type="button" class="btn btn-teal btn-sm" data-wifi-code="' + code + '" data-wifi-op="playground"' + off + '>Resgatar no Playground</button>' +
@@ -1826,6 +1857,8 @@
         var payload = { action: 'wifi_list_coupons' };
         var q = wifiSearchInput.value.trim();
         if (q) payload.q = q;
+        if (!isEquipe() && wifiOptin.value) payload.optin = wifiOptin.value;
+        if (!isEquipe()) loadWifiResumo();
 
         apiRequest(payload).then(function (data) {
           renderWifi((data && data.coupons) || []);
@@ -1834,6 +1867,41 @@
           wifiState.hidden = false;
           wifiState.textContent = err.message || 'Não foi possível carregar os cupons.';
         });
+      }
+
+      // Resumo do portal Wi-Fi (só o dono). Apenas apresenta: nada é enviado a ninguém.
+      function loadWifiResumo() {
+        apiRequest({ action: 'wifi_resumo' }).then(function (r) { renderWifiResumo(r || {}); }).catch(function (err) {
+          if (err.handled) return;
+          document.getElementById('wifiKpis').innerHTML = '';
+        });
+      }
+
+      function renderWifiResumo(r) {
+        var pct = function (n) { return r.cadastros ? ' (' + Math.round((n / r.cadastros) * 100) + '%)' : ''; };
+        var kpis = [
+          ['Cadastros', r.cadastros || 0, false, 'hoje ' + (r.hoje || 0) + ' · 7 dias ' + (r.ultimos_7_dias || 0) + ' · 30 dias ' + (r.ultimos_30_dias || 0)],
+          ['Aceitaram WhatsApp', (r.optin_whatsapp || 0) + pct(r.optin_whatsapp || 0), false, ''],
+          ['Aceitaram e-mail', (r.optin_email || 0) + pct(r.optin_email || 0), false, ''],
+          ['Cupons usados', (r.resgatados || 0) + ' (' + (r.taxa_resgate || 0) + '%)', false,
+            'Playground ' + ((r.resgate_aba_playground || 0) + (r.resgate_caixa_playground || 0)) + ' · Circuito ' + ((r.resgate_aba_circuito || 0) + (r.resgate_caixa_circuito || 0))],
+          ['Vigentes, sem uso', r.vigentes || 0, false, (r.vencem_em_3_dias || 0) + ' vencem em 3 dias'],
+          ['Venceram sem uso', r.vencidos_sem_uso || 0, false, ''],
+          ['Voltaram ao Wi-Fi', r.voltaram || 0, false, ''],
+          ['Falha ao criar cupom no caixa', r.falhas_caixa || 0, (r.falhas_caixa || 0) > 0, (r.falhas_email || 0) ? (r.falhas_email + ' e-mail(s) não enviado(s)') : '']
+        ];
+        document.getElementById('wifiKpis').innerHTML = kpis.map(function (k) {
+          return '<div class="ev-kpi' + (k[2] ? ' warn' : '') + '"><div class="label">' + escapeHtml(k[0]) + '</div><div class="value">' + escapeHtml(k[1]) + '</div>' +
+            (k[3] ? '<div class="guardian-meta">' + escapeHtml(k[3]) + '</div>' : '') + '</div>';
+        }).join('');
+        var dias = r.por_dia || [];
+        var max = dias.reduce(function (m, d) { return Math.max(m, d.total); }, 1);
+        document.getElementById('wifiBars').innerHTML = dias.map(function (d) {
+          var h = d.total ? Math.max(8, Math.round((d.total / max) * 100)) : 4;
+          return '<div class="bar" data-n="' + d.total + '" style="height:' + h + '%" title="' + escapeHtml(d.data.split('-').reverse().join('/')) + ': ' + d.total + '"></div>';
+        }).join('');
+        document.getElementById('wifiBarsIni').textContent = dias.length ? dias[0].data.split('-').reverse().join('/') : '';
+        document.getElementById('wifiBarsFim').textContent = dias.length ? dias[dias.length - 1].data.split('-').reverse().join('/') : '';
       }
 
       function renderWifi(coupons) {
@@ -1867,8 +1935,8 @@
           rowsHtml += '<tr>' +
             '<td><div class="code">' + escapeHtml(c.coupon_code) + '</div></td>' +
             '<td><div class="guardian-name">' + escapeHtml(c.guardian_name || '—') + '</div>' +
-              (c.guardian_email ? '<div class="guardian-meta">' + escapeHtml(c.guardian_email) + '</div>' : '') + '</td>' +
-            '<td>' + phoneHtml + '</td>' +
+              (c.guardian_email ? '<div class="guardian-meta">' + escapeHtml(c.guardian_email) + '</div>' : '') + contactBadges(c) + '</td>' +
+            '<td class="owner-only">' + phoneHtml + '</td>' +
             '<td>' + valid + '</td>' +
             '<td>' + wifiStatusBadge(c) + '</td>' +
             '<td>' + visits + '</td>' +
@@ -1879,8 +1947,8 @@
           cardsHtml += '<div class="lead-card">' +
             '<div class="row"><div><div class="child-name code">' + escapeHtml(c.coupon_code) + '</div>' +
               '<div class="guardian-name">' + escapeHtml(c.guardian_name || '—') + '</div></div>' + wifiStatusBadge(c) + '</div>' +
-            '<div class="guardian-meta">' + phoneHtml + '</div>' +
-            (c.guardian_email ? '<div class="guardian-meta">' + escapeHtml(c.guardian_email) + '</div>' : '') +
+            (c.guardian_phone ? '<div class="guardian-meta owner-only">' + phoneHtml + '</div>' : '') +
+            (c.guardian_email ? '<div class="guardian-meta">' + escapeHtml(c.guardian_email) + '</div>' : '') + contactBadges(c) +
             '<div class="guardian-meta" style="margin-top:6px;">Validade: ' + valid + ' · Visitas: ' + visits + '</div>' +
             '<div class="guardian-meta">Último resgate: ' + lastRedeem + '</div>' +
             '<div class="actions">' + wifiButtons(c) + '</div>' +
@@ -1918,6 +1986,8 @@
         if (!btn || btn.disabled) return;
         redeemWifi(btn.getAttribute('data-wifi-code'), btn.getAttribute('data-wifi-op'), btn);
       });
+
+      wifiOptin.addEventListener('change', function () { loadWifi(); });
 
       wifiSearchInput.addEventListener('input', function () {
         clearTimeout(wifiDebounce);

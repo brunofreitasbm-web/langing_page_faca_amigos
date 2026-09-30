@@ -186,6 +186,17 @@ Para voltar ao comportamento anterior (login direto do Gestor = painel completo)
 
 Depois da chave em `equipe`, o login direto aceita qualquer perfil da Clínica (não só Gestor), mas só entrega o escopo limitado. Quem precisa de acesso completo entra pelo Hub (conta ativa em `fa_gestao_contas` com `painel_usuario` preenchido). Para tirar o acesso de alguém: `update fa_gestao_contas set ativo = false where email = '...'` (o ticket e a sessão do Hub deixam de valer na hora; a sessão de 12 h do `/admin` já aberta vale até expirar, ou `delete from fa_teste_admin_sessions where admin_email = '...'`).
 
+## Lote 9: cupom Wi-Fi no caixa do Playground e resumo na aba do /admin, 01/10/2026
+
+- **Cupom no caixa do Playground.** `wifi-lead-webhook` já criava, no mesmo código `ESPERA-XXXX`, um cupom de uso único de +5 min no Circuito. Agora cria também o da meia inclusiva no Playground (`DESCONTO_PCT` 50, uso único, unidade `11111111-…`). O atendente digita o código no caixa e o próprio caixa trava o reuso. Se a criação falhar, o cadastro e o e-mail seguem normalmente e o erro fica em `fa_wifi_leads.playground_coupon_error`.
+- **Validade.** O cupom do caixa não tem prazo próprio. Um job diário (`fa-wifi-cupons-vencidos`, 07:20 UTC) desativa no caixa os cupons `ESPERA-%` cujo cadastro passou de 15 dias. Não toca em nenhum outro cupom.
+- **Aba Cupons Wi-Fi (só o owner):** resumo do portal (cadastros por período, aceite de WhatsApp e e-mail, cupons usados por unidade, vigentes, vencidos sem uso, quem voltou ao Wi-Fi, falhas ao criar cupom no caixa) e filtro por aceite de contato. Só apresenta: nada é enviado por e-mail nem para lista.
+- **Equipe:** a aba mostra só código, nome e status. Telefone, e-mail, aceite de contato e resumo ficam fora.
+- **Resgate pela aba** passa a recusar cupom já usado no caixa e, ao resgatar, desativa o cupom nas duas unidades do caixa.
+- **Limite conhecido:** usar o cupom do Circuito e o do Playground no caixa no mesmo dia não é barrado (cada unidade só enxerga o próprio cupom). Só a aba cruza os dois.
+
+Ordem: (1) migração `20261001150000_wifi_cupom_playground.sql`; (2) deploy de `wifi-lead-webhook` e `behavior-test-admin` (`--no-verify-jwt`); (3) site.
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.
