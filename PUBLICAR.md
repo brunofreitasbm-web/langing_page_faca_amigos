@@ -169,7 +169,8 @@ O painel do site (`institutofacaamigos.com.br/admin`) passa a ser um quadrado do
 
 Ordem obrigatória (o login direto continua dando acesso total até o passo 5, então nada trava):
 
-1. Migração `20261001130000_gestao_painel_sso.sql` (aditiva): `painel_usuario` em `fa_gestao_contas` (preenchido com o e-mail das contas ativas), tabela `fa_gestao_painel_tickets`, coluna `escopo` em `fa_teste_admin_sessions` (sessões existentes viram `owner`).
+1. Migração `20261001140000_gestao_painel_sso.sql` (aditiva): `painel_usuario` em `fa_gestao_contas` (preenchido com o e-mail das contas ativas), tabela `fa_gestao_painel_tickets`, coluna `escopo` em `fa_teste_admin_sessions` (sessões existentes viram `owner`).
+(A tabela `fa_gestao_tickets_painel` e a ação `admin_sso` do `gestao-hub`, de uma versão anterior do quadrado Eventos, foram substituídas por este fluxo; a tabela ficou sem uso e pode ser apagada.)
 2. Deploy das funções (`--no-verify-jwt`): `gestao-hub`, `behavior-test-admin`, `eventos-admin`. Sem a chave do passo 5, todas se comportam como antes.
 3. Site (Vercel): `admin.html` e `gestao.html`.
 4. Teste como owner: abrir `gestao.institutofacaamigos.com.br`, clicar em **Painel do Instituto** e conferir que o painel abre já logado, com Leads e Textos. Clicar em **Eventos** e conferir que abre na aba Eventos. Recarregar a URL antiga com o ticket deve cair no login (ticket já usado).

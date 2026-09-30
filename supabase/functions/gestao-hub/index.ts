@@ -575,6 +575,7 @@ Deno.serve(async (req) => {
       .from("fa_gestao_desafios")
       .select("id", { count: "exact", head: true })
       .eq("email", conta.email)
+      .eq("finalidade", "login")
       .gte("created_at", since);
     if ((codigosRecentes ?? 0) >= CODES_MAX_PER_WINDOW) {
       return jsonResponse(req, { error: "muitos códigos pedidos, aguarde 15 minutos" }, 429);
