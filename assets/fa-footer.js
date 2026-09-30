@@ -1,6 +1,6 @@
 /*
  * FaçaAmigos: rodapé único (conteúdo e visual otimizado) para hub, /playground, /circuito, /teste, /servicos, /aprender e /glossario.
- * Marque o rodapé de cada página com  <footer data-fa-footer="hub|playground|circuito|teste|servicos|aprender|glossario">
+ * Marque o rodapé de cada página com  <footer data-fa-footer="hub|playground|circuito|teste|servicos|aprender|glossario|eventos">
  * e inclua  <script src="/assets/fa-footer.js" defer></script>.
  *
  * Reorganiza o bloco denso de texto em 3 colunas elegantes (Unidades, Navegação, Conteúdos/Contato) + Sub-footer discreto.
@@ -22,7 +22,8 @@
     circuito: { n: WA_LAZER, t: 'Oi! Vim pelo site e gostaria de tirar uma dúvida sobre o Circuito.' },
     servicos: { n: WA_CLINICA, t: 'Olá! Quero entrar na lista de espera da Clínica FaçaAmigos - Centro de Terapia Comportamental (vim pelo site).' },
     aprender: { n: WA_CLINICA, t: 'Oi! Vim pelo site (Aprender) e gostaria de tirar uma dúvida.' },
-    glossario: { n: WA_CLINICA, t: 'Oi! Vim pelo site (Glossário) e gostaria de tirar uma dúvida.' }
+    glossario: { n: WA_CLINICA, t: 'Oi! Vim pelo site (Glossário) e gostaria de tirar uma dúvida.' },
+    eventos: { n: WA_CLINICA, t: 'Oi! Vim pela página de eventos do Instituto e gostaria de tirar uma dúvida.' }
   };
 
   var footer = document.querySelector('footer[data-fa-footer]');
@@ -90,6 +91,7 @@
     '    <li>' + link(play('/'), 'Playground Inclusivo') + '</li>',
     '    <li>' + link(play('/circuito'), 'Circuito de Carrinhos') + '</li>',
     '    <li>' + link(hub('/teste?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'Mapeamento Gratuito') + '</li>',
+    '    <li>' + link(hub('/eventos'), 'Eventos (palestras e treinamentos)') + '</li>',
     '    <li>' + link(hub('/aprender'), 'Aprender (Artigos &amp; Guias)') + '</li>',
     '    <li>' + link(hub('/glossario'), 'Glossário Comportamental') + '</li>',
     '  </ul>',

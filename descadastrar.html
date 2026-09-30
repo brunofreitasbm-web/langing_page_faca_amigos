@@ -55,15 +55,23 @@
   </main>
   <script>
     (function () {
-      var q = new URLSearchParams(location.search), u = q.get('u') || '', s = q.get('s') || '';
+      var q = new URLSearchParams(location.search), u = q.get('u') || '', s = q.get('s') || '', e = q.get('e') || '';
       var ask = document.getElementById('ask'), done = document.getElementById('done'), bad = document.getElementById('bad');
-      if (!/^[0-9a-f-]{36}$/i.test(u) || !/^[0-9a-f]{20,}$/i.test(s)) { bad.hidden = false; return; }
+      // ?e=<token> vem dos e-mails de eventos (eventos-dispatch); ?u=&s= dos e-mails do guia (guia-sequence).
+      var eventos = /^[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}$/.test(e);
+      if (!eventos && (!/^[0-9a-f-]{36}$/i.test(u) || !/^[0-9a-f]{20,}$/i.test(s))) { bad.hidden = false; return; }
+      if (eventos) {
+        ask.querySelector('p').textContent = 'Você deixa de receber os avisos de próximos encontros e conteúdos do Instituto. Os e-mails do encontro em que você já está inscrito(a) (voucher e lembretes) continuam chegando.';
+        done.querySelector('p').textContent = 'Você não vai mais receber esses e-mails. Se mudar de ideia, é só marcar a opção de novidades na próxima inscrição.';
+      }
       ask.hidden = false;
       var btn = document.getElementById('go');
       btn.addEventListener('click', function () {
         btn.disabled = true; btn.textContent = 'Enviando...';
-        fetch('https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/guia-sequence', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ u: u, s: s })
+        var url = eventos ? 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/eventos-dispatch' : 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/guia-sequence';
+        var body = eventos ? { action: 'descadastrar', e: e } : { u: u, s: s };
+        fetch(url, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
         }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
           .then(function (r) { ask.hidden = true; (r.ok ? done : bad).hidden = false; })
           .catch(function () { btn.disabled = false; btn.textContent = 'Tentar de novo'; });

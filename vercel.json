@@ -2,6 +2,9 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/eventos/:slug", "destination": "/evento" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -12,7 +15,7 @@
         { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
         { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
         { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
-        { "key": "Content-Security-Policy-Report-Only", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://connect.facebook.net https://*.hotmart.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://ivjvpdzsfjdpyabbzzuj.supabase.co wss://ivjvpdzsfjdpyabbzzuj.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://www.google.com https://connect.facebook.net https://www.facebook.com https://*.hotmart.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://maps.google.com https://www.google.com https://www.googletagmanager.com https://*.doubleclick.net https://*.hotmart.com https://www.facebook.com; object-src 'none'; base-uri 'self'; form-action 'self' https://pay.hotmart.com https://*.hotmart.com https://wa.me https://api.whatsapp.com; frame-ancestors 'self'" }
+        { "key": "Content-Security-Policy-Report-Only", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.googletagmanager.com https://www.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://connect.facebook.net https://*.hotmart.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' blob:; connect-src 'self' https://ivjvpdzsfjdpyabbzzuj.supabase.co wss://ivjvpdzsfjdpyabbzzuj.supabase.co https://www.googletagmanager.com https://www.google-analytics.com https://analytics.google.com https://*.google-analytics.com https://www.googleadservices.com https://googleads.g.doubleclick.net https://*.doubleclick.net https://www.google.com https://connect.facebook.net https://www.facebook.com https://*.hotmart.com; frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://maps.google.com https://www.google.com https://www.googletagmanager.com https://*.doubleclick.net https://*.hotmart.com https://www.facebook.com; object-src 'none'; base-uri 'self'; form-action 'self' https://pay.hotmart.com https://*.hotmart.com https://wa.me https://api.whatsapp.com; frame-ancestors 'self'" }
       ]
     },
     {
@@ -84,6 +87,19 @@
       "source": "/wifi",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, follow" }
+      ]
+    },
+    {
+      "source": "/ingresso",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" },
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/eventos/:slug",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
       ]
     },
     {

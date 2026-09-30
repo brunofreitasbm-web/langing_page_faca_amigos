@@ -15,6 +15,10 @@
 //    base legal e texto).
 //  - Responde 200 quando o evento foi aceito, para a Hotmart não reenviar; erros de processamento ficam
 //    em fa_hotmart_eventos.error e o hotmart-sync reconcilia as compras.
+////  - Ingressos de eventos (fa_eventos_ingresso_tipos.hotmart_product_id): a venda aprovada vira inscrição
+//    confirmada (rpc fa_eventos_confirmar_hotmart) e o voucher sai pelo eventos-dispatch; reembolso/chargeback
+//    cancela a inscrição. Produto que não é e-book nem ingresso fica com error 'evento: ...' para o painel
+//    reprocessar depois (aba Eventos → "Reprocessar Hotmart"). Secret extra: OPS_KEY (chamar o dispatch).
 //
 // Secrets: HOTMART_HOTTOK; HOTMART_PRODUCT_ID (guia, 8560642); HOTMART_CODIGO_PRODUCT_ID (id numérico do
 // "Código", opcional); BREVO_API_KEY, BREVO_FROM, BREVO_REPLY_TO (já existentes).
@@ -207,6 +211,25 @@ async function sendWelcome(email: string, name: string, p: Product): Promise<{ s
   }
 }
 
+// Pede ao eventos-dispatch para enviar um e-mail de evento (voucher, promoção da fila). Best-effort: falha aqui
+// vira processError, e o admin reenvia pelo painel.
+async function dispatchEvento(inscricaoId: string, tipo: string): Promise<string | null> {
+  const key = Deno.env.get("OPS_KEY");
+  if (!key) return "OPS_KEY ausente";
+  const url = `${Deno.env.get("SUPABASE_URL") ?? "https://ivjvpdzsfjdpyabbzzuj.supabase.co"}/functions/v1/eventos-dispatch`;
+  try {
+    const r = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "x-ops-key": key },
+      body: JSON.stringify({ action: "enviar", inscricao_id: inscricaoId, tipo }),
+    });
+    if (!r.ok) return `dispatch ${tipo}: HTTP ${r.status}`;
+    return null;
+  } catch (err) {
+    return `dispatch ${tipo}: ${err instanceof Error ? err.message : "erro"}`;
+  }
+}
+
 Deno.serve(async (req) => {
   if (req.method !== "POST") return json({ error: "método não permitido" }, 405);
 
@@ -245,7 +268,55 @@ Deno.serve(async (req) => {
     const productIdRaw = Number(data?.product?.id);
     const productId = Number.isFinite(productIdRaw) && productIdRaw > 0 ? productIdRaw : null;
 
-    if (BUY_EVENTS.includes(event) && tx && email) {
+    // Ingresso de evento? (produto cadastrado num tipo de ingresso)
+    const { data: tipoIngresso } = productId
+      ? await admin.from("fa_eventos_ingresso_tipos").select("id, evento_id").eq("hotmart_product_id", productId).maybeSingle()
+      : { data: null };
+
+    if (tipoIngresso) {
+      const valor = Number(data?.purchase?.price?.value);
+      if (BUY_EVENTS.includes(event) && tx && email) {
+        const { data: r, error } = await admin.rpc("fa_eventos_confirmar_hotmart", {
+          p_tipo_id: tipoIngresso.id,
+          p_email: email,
+          p_nome: data?.buyer?.name ?? "",
+          p_whatsapp: data?.buyer?.checkout_phone ?? data?.buyer?.phone ?? null,
+          p_transaction: tx,
+          p_valor: Number.isFinite(valor) ? valor : null,
+          p_rastreio: {
+            utm_source: "hotmart",
+            utm_medium: "checkout",
+            utm_content: data?.purchase?.origin?.src ?? null,
+            landing_page: data?.purchase?.origin?.sck ?? null,
+          },
+        });
+        if (error) throw new Error(`evento: ${error.message}`);
+        if (r?.novo) {
+          const erros: string[] = [];
+          const e1 = await dispatchEvento(String(r.inscricao_id), "voucher");
+          if (e1) erros.push(e1);
+          for (const id of (r.promovidas ?? []) as string[]) {
+            const e2 = await dispatchEvento(id, "promocao");
+            if (e2) erros.push(e2);
+          }
+          if (erros.length) processError = `evento: ${erros.join("; ")}`;
+          // Compra no GA4/Meta como item do evento (mesma regra de não duplicar: só quando a inscrição é nova).
+          const { data: ev } = await admin.from("fa_eventos").select("slug, titulo").eq("id", tipoIngresso.evento_id).maybeSingle();
+          const item: Product = { title: ev?.titulo ?? "Ingresso", path: `/eventos/${ev?.slug ?? ""}`, otherTitle: "", otherUrl: "", otherBlurb: "" };
+          const valorNum = Number.isFinite(valor) ? valor : null;
+          await Promise.all([
+            sendGA4Purchase(ga4ClientIdFromXcod(data?.purchase?.origin?.xcod), tx, valorNum, item),
+            sendMetaPurchase(email, tx, valorNum, item),
+          ]);
+        }
+      } else if (LOSS_EVENTS[event] && tx) {
+        const { data: ins } = await admin.from("fa_eventos_inscricoes").select("id").eq("hotmart_transaction", tx).maybeSingle();
+        if (ins) {
+          const { data: r } = await admin.rpc("fa_eventos_cancelar", { p_inscricao_id: ins.id, p_motivo: `hotmart_${LOSS_EVENTS[event]}` });
+          for (const id of (r?.promovidas ?? []) as string[]) await dispatchEvento(id, "promocao");
+        }
+      }
+    } else if (BUY_EVENTS.includes(event) && tx && email) {
       const approvedMs = Number(data?.purchase?.approved_date);
       const valor = Number(data?.purchase?.price?.value);
       const { data: existing } = await admin.from("fa_ebook_compras").select("welcome_sent_at").eq("transaction", tx).maybeSingle();
@@ -306,6 +377,11 @@ Deno.serve(async (req) => {
           product_id: productId,
         });
       }
+    }
+    // Produto que não é e-book conhecido nem ingresso (ex.: ingresso vendido antes de o tipo existir no painel):
+    // a compra fica registrada acima como antes, e a marca 'evento:' deixa o painel reprocessar quando o tipo existir.
+    if (!tipoIngresso && BUY_EVENTS.includes(event) && tx && email && productId && !classify(productId).otherTitle && !processError) {
+      processError = `evento: tipo não encontrado para product ${productId}`;
     }
   } catch (err) {
     processError = err instanceof Error ? err.message : "erro";
