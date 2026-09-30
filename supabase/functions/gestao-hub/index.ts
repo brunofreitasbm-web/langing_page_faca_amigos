@@ -1,6 +1,6 @@
 // Hub de Gestão (gestao.html, servido em gestao.institutofacaamigos.com.br):
 // login único de Bruno e Isabella e "um clique = entra no sistema já logado"
-// nos 5 sistemas (Playground, Clínica, Simulador Financeiro, Gestão de
+// nos sistemas (Playground, Clínica, Simulador Financeiro, Gestão de
 // Pessoas/Grupo IB e Hub de Operações Cacau Show). Tudo numa única função,
 // roteada por `action` no corpo JSON — mesmo motivo de CORS/JSON inline das
 // demais funções deste projeto (import relativo de ../_shared quebra no
@@ -26,6 +26,10 @@
 //   - Cacau Show: ticket HMAC-SHA256 (usuário, expira em 60s, jti de uso
 //     único) com o segredo GESTAO_SSO_SECRET_CACAU, conferido em
 //     POST /api/auth/sso do hub-operacoes.
+//
+//   - Painel do site (/admin, quadrados "Painel do Instituto" e "Eventos"): ticket
+//     aleatório de uso único guardado (SHA-256) em fa_gestao_painel_tickets, 60 s;
+//     a ação `sso` de behavior-test-admin troca por sessão de escopo `owner`.
 //
 // Deploy com verify_jwt = false (o Bearer é o token de sessão do hub, não um
 // JWT do Supabase) — igual a behavior-test-admin.
@@ -114,14 +118,15 @@ type Conta = {
   financeiro_email: string | null;
   rh_email: string | null;
   cacau_usuario: string | null;
+  painel_usuario: string | null;
   ativo: boolean;
 };
 
-type AppId = "playground" | "clinica" | "financeiro" | "rh" | "cacau";
+type AppId = "playground" | "clinica" | "financeiro" | "rh" | "cacau" | "painel" | "eventos";
 
 const APPS: Record<AppId, {
   campo: keyof Conta;
-  tipo: "supabase_a" | "supabase_b" | "cacau";
+  tipo: "supabase_a" | "supabase_b" | "cacau" | "painel";
   baseEnv: string;
   baseDefault: string;
   entrada: (base: string, ticket: string) => string;
@@ -162,6 +167,24 @@ const APPS: Record<AppId, {
     // No fragmento (#): não vai para o servidor nem para logs de acesso.
     entrada: (b, t) => `${b}/#sso=${encodeURIComponent(t)}`,
   },
+  // Painel do site (/admin do institutofacaamigos.com.br): ticket guardado no
+  // banco (fa_gestao_painel_tickets), trocado pela ação `sso` de
+  // behavior-test-admin. Também no fragmento: fora de logs e do Referer.
+  painel: {
+    campo: "painel_usuario",
+    tipo: "painel",
+    baseEnv: "GESTAO_URL_PAINEL",
+    baseDefault: "https://institutofacaamigos.com.br",
+    entrada: (b, t) => `${b}/admin#sso=${encodeURIComponent(t)}`,
+  },
+  // Mesmo painel, já aberto na aba Eventos.
+  eventos: {
+    campo: "painel_usuario",
+    tipo: "painel",
+    baseEnv: "GESTAO_URL_PAINEL",
+    baseDefault: "https://institutofacaamigos.com.br",
+    entrada: (b, t) => `${b}/admin#sso=${encodeURIComponent(t)}&aba=eventos`,
+  },
 };
 
 const APP_IDS = Object.keys(APPS) as AppId[];
@@ -192,6 +215,24 @@ async function ticketCacau(usuario: string): Promise<string | null> {
   );
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payloadB64));
   return `${payloadB64}.${base64url(new Uint8Array(sig))}`;
+}
+
+// Ticket do painel do site: 32 bytes aleatórios; no banco fica só o SHA-256,
+// vale 60 s e só serve uma vez (a troca é feita por behavior-test-admin).
+const PAINEL_TICKET_TTL_MS = 60 * 1000;
+
+async function ticketPainel(admin: Admin, email: string): Promise<string | null> {
+  const ticket = randomHex(32);
+  const { error } = await admin.from("fa_gestao_painel_tickets").insert({
+    token_hash: await sha256Hex(ticket),
+    email,
+    expires_at: new Date(Date.now() + PAINEL_TICKET_TTL_MS).toISOString(),
+  });
+  if (error) {
+    console.error("ticket painel:", error.message);
+    return null;
+  }
+  return ticket;
 }
 
 // hashed_token de magic link (nunca enviado por e-mail) no projeto A ou B.
@@ -698,6 +739,8 @@ Deno.serve(async (req) => {
 
     const ticket = app.tipo === "cacau"
       ? await ticketCacau(identidade)
+      : app.tipo === "painel"
+      ? await ticketPainel(admin, conta.email)
       : await ticketSupabase(app.tipo, identidade);
     if (!ticket) {
       await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: "falhou" });

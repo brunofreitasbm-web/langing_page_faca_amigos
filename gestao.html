@@ -142,7 +142,6 @@
       font: inherit; cursor: pointer;
       transition: transform var(--t-fast), box-shadow var(--t-fast), border-color 0.15s;
     }
-    a.tile { text-decoration: none; }
     .tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); border-color: var(--accent); }
     .tile:active { transform: scale(0.97); }
     .tile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
@@ -162,6 +161,8 @@
     .tile[data-app="financeiro"] { --accent: #BFD8FF; }
     .tile[data-app="rh"] { --accent: #FFC2D8; }
     .tile[data-app="cacau"] { --accent: #E9CBB5; }
+    .tile[data-app="painel"] { --accent: #C9E7DD; }
+    .tile[data-app="eventos"] { --accent: #FFD9A8; }
 
     .hub-error { margin-top: 20px; }
     .hub-foot { margin-top: 32px; color: var(--gray); font-size: 0.85rem; font-weight: 600; }
@@ -301,12 +302,18 @@
             <span class="desc">Hub de operações: caixa, envelopes e equipe das lojas</span>
             <span class="host">hub-operacoes</span>
           </button>
-          <a class="tile tile-link" href="/admin#eventos" target="_blank" rel="noopener">
+          <button type="button" class="tile" data-app="painel">
+            <span class="icon" aria-hidden="true">🧭</span>
+            <span class="name">Painel do Instituto</span>
+            <span class="desc">Leads do Teste, textos do resultado e cupons Wi-Fi</span>
+            <span class="host">institutofacaamigos.com.br/admin</span>
+          </button>
+          <button type="button" class="tile" data-app="eventos">
             <span class="icon" aria-hidden="true">🎟️</span>
             <span class="name">Eventos</span>
             <span class="desc">Criar eventos e ingressos, ver inscritos e fazer check-in</span>
-            <span class="host">painel do site · login próprio</span>
-          </a>
+            <span class="host">institutofacaamigos.com.br/admin</span>
+          </button>
         </div>
 
         <p class="hub-foot">Cada clique fica registrado. A sessão do hub vale 7 dias neste aparelho.</p>
@@ -334,7 +341,7 @@
       var codigoInput = document.getElementById('login-codigo');
       var helloTitle = document.getElementById('helloTitle');
       var hubError = document.getElementById('hubError');
-      var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile:not(.tile-link)'));
+      var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
 
       var loginNotice = document.getElementById('loginNotice');
       var esqueciForm = document.getElementById('esqueciForm');

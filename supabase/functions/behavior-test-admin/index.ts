@@ -22,8 +22,20 @@
 // Continua havendo um token de sessão opaco próprio em
 // fa_teste_admin_sessions (validade 12h) — só para não repetir o login
 // contra a Clínica a cada clique no painel.
+//
+// Dois escopos de sessão (coluna `escopo`):
+//   - owner: painel completo. Entra pelo Hub de Gestão (gestao-hub gera um
+//     ticket de uso único; a ação `sso` daqui troca por sessão) e, enquanto
+//     fa_teste_config.admin_login_direto não for {"escopo":"equipe"}, também
+//     pelo login direto do Gestor (comportamento legado).
+//   - equipe: login direto limitado a ACOES_EQUIPE (cupons Wi-Fi). Com a
+//     chave em "equipe", o login direto aceita qualquer perfil da Clínica,
+//     mas só entrega este escopo.
 
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import { createClient, type SupabaseClient } from "jsr:@supabase/supabase-js@2";
+
+// deno-lint-ignore no-explicit-any
+type Admin = SupabaseClient<any, any, any, any, any>;
 
 const LOGO_URL = "https://institutofacaamigos.com.br/img/logo-simbolo.png";
 
@@ -235,6 +247,7 @@ function toHex(buf: ArrayBuffer): string {
 async function verifyClinicaGestorLogin(
   identifier: string,
   password: string,
+  exigirGestor = true,
 ): Promise<{ ok: true; userId: string; email: string } | { ok: false; error: string; status: number }> {
   const clinicaUrl = Deno.env.get("CLINICA_SUPABASE_URL");
   const clinicaAnonKey = Deno.env.get("CLINICA_SUPABASE_ANON_KEY");
@@ -304,7 +317,9 @@ async function verifyClinicaGestorLogin(
   const profiles = await profileRes.json().catch(() => []);
   const profile = Array.isArray(profiles) ? profiles[0] : undefined;
 
-  if (!profile || String(profile.role).toLowerCase() !== "gestor") {
+  // Modo "equipe" (acesso direto limitado): qualquer perfil da Clínica entra,
+  // mas só recebe o escopo restrito (ver ACOES_EQUIPE). Owner só pelo Hub.
+  if (!profile || (exigirGestor && String(profile.role).toLowerCase() !== "gestor")) {
     return { ok: false, error: "apenas o Gestor da Clínica pode acessar este painel", status: 403 };
   }
 
@@ -326,14 +341,20 @@ function newSessionToken(): string {
   return toHex(arr.buffer);
 }
 
-async function requireSession(admin: ReturnType<typeof createClient>, req: Request) {
+type Escopo = "owner" | "equipe";
+
+// Escopo 'equipe' (login direto): só cupons Wi-Fi e sair. Todo o resto é do owner,
+// que entra pelo Hub de Gestão. Lista de permissão: ação nova nasce negada.
+const ACOES_EQUIPE = new Set(["wifi_list_coupons", "wifi_redeem", "logout"]);
+
+async function requireSession(admin: Admin, req: Request) {
   const authHeader = req.headers.get("authorization") ?? "";
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
   if (!token) return null;
 
   const { data, error } = await admin
     .from("fa_teste_admin_sessions")
-    .select("token, clinica_user_id, admin_email, expires_at")
+    .select("token, clinica_user_id, admin_email, expires_at, escopo")
     .eq("token", token)
     .maybeSingle();
 
@@ -342,7 +363,25 @@ async function requireSession(admin: ReturnType<typeof createClient>, req: Reque
     await admin.from("fa_teste_admin_sessions").delete().eq("token", token);
     return null;
   }
-  return { token, userId: data.clinica_user_id as string, email: data.admin_email as string };
+  return {
+    token,
+    userId: data.clinica_user_id as string,
+    email: data.admin_email as string,
+    escopo: (data.escopo === "equipe" ? "equipe" : "owner") as Escopo,
+  };
+}
+
+// O que o login direto (e-mail + senha em /admin) entrega. Sem a chave, vale o
+// comportamento legado: Gestor da Clínica = owner. Depois que o Hub está no ar,
+// grava-se {"escopo":"equipe"} em fa_teste_config (chave admin_login_direto) e o
+// login direto passa a dar só o escopo limitado; o owner entra pelo Hub.
+async function escopoLoginDireto(admin: Admin): Promise<Escopo> {
+  const { data } = await admin.from("fa_teste_config").select("value").eq("key", "admin_login_direto").maybeSingle();
+  return (data?.value as { escopo?: string } | null)?.escopo === "equipe" ? "equipe" : "owner";
+}
+
+async function sha256Hex(s: string): Promise<string> {
+  return toHex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
 }
 
 // ---------------------------------------------------------------------
@@ -584,7 +623,8 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "muitas tentativas, aguarde 15 minutos" }, 429);
     }
 
-    const check = await verifyClinicaGestorLogin(loginInput, password);
+    const escopo = await escopoLoginDireto(admin);
+    const check = await verifyClinicaGestorLogin(loginInput, password, escopo === "owner");
     if (!check.ok) {
       // Só senha errada conta; erro de serviço (5xx) não pune o gestor.
       if (check.status < 500) {
@@ -597,18 +637,61 @@ Deno.serve(async (req) => {
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
     const { error: sessionError } = await admin
       .from("fa_teste_admin_sessions")
-      .insert({ token, clinica_user_id: check.userId, admin_email: check.email, expires_at: expiresAt });
+      .insert({ token, clinica_user_id: check.userId, admin_email: check.email, expires_at: expiresAt, escopo });
     if (sessionError) {
       console.error("Erro ao criar sessão:", sessionError);
       return jsonResponse(req, { error: "falha ao autenticar" }, 500);
     }
 
-    return jsonResponse(req, { token, expires_at: expiresAt, email: check.email });
+    return jsonResponse(req, { token, expires_at: expiresAt, email: check.email, escopo });
+  }
+
+  // --- entrada do owner pelo Hub de Gestão: troca o ticket de uso único por sessão completa ---
+  if (action === "sso") {
+    const ticket = str(body.ticket);
+    if (!/^[0-9a-f]{64}$/.test(ticket)) return jsonResponse(req, { error: "ticket inválido ou expirado" }, 401);
+
+    // Consumo atômico: só uma requisição leva o ticket, e só dentro dos 60 s.
+    const { data: usado, error: usoErr } = await admin
+      .from("fa_gestao_painel_tickets")
+      .update({ used_at: new Date().toISOString() })
+      .eq("token_hash", await sha256Hex(ticket))
+      .is("used_at", null)
+      .gt("expires_at", new Date().toISOString())
+      .select("email");
+    const email = usado?.[0]?.email as string | undefined;
+    if (usoErr || !email) return jsonResponse(req, { error: "ticket inválido ou expirado" }, 401);
+
+    // Conta desativada no Hub não entra, mesmo com ticket válido.
+    const { data: conta } = await admin
+      .from("fa_gestao_contas")
+      .select("ativo, painel_usuario")
+      .eq("email", email)
+      .maybeSingle();
+    if (!conta?.ativo || !conta.painel_usuario) return jsonResponse(req, { error: "acesso não autorizado" }, 403);
+
+    const token = newSessionToken();
+    const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
+    const { error: sessionError } = await admin.from("fa_teste_admin_sessions").insert({
+      token,
+      clinica_user_id: `hub:${email}`,
+      admin_email: conta.painel_usuario,
+      expires_at: expiresAt,
+      escopo: "owner",
+    });
+    if (sessionError) {
+      console.error("Erro ao criar sessão (sso):", sessionError);
+      return jsonResponse(req, { error: "falha ao autenticar" }, 500);
+    }
+    return jsonResponse(req, { token, expires_at: expiresAt, email: conta.painel_usuario, escopo: "owner" });
   }
 
   // --- todas as ações abaixo exigem sessão válida ---
   const session = await requireSession(admin, req);
   if (!session) return jsonResponse(req, { error: "sessão inválida ou expirada" }, 401);
+  if (session.escopo === "equipe" && !ACOES_EQUIPE.has(action)) {
+    return jsonResponse(req, { error: "sem permissão para esta ação" }, 403);
+  }
 
   if (action === "logout") {
     await admin.from("fa_teste_admin_sessions").delete().eq("token", session.token);
