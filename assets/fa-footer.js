@@ -31,6 +31,14 @@
   var wa = WA[kind] || WA.hub;
   var hasJobs = typeof window.openJobModal === 'function' || !!document.getElementById('jobModalOverlay');
 
+  // Links entre páginas sempre apontam para o domínio "dono" da página (hub ou playground.), para
+  // o visitante não trocar de host sem perceber. Em localhost/preview ficam relativos.
+  var HUB = 'https://institutofacaamigos.com.br';
+  var PLAY = 'https://playground.institutofacaamigos.com.br';
+  var isProd = /(^|\.)institutofacaamigos\.com\.br$/.test(location.hostname);
+  function hub(p) { return (isProd ? HUB : '') + p; }
+  function play(p) { return (isProd ? PLAY : '') + p; }
+
   function link(href, text, extra) { return '<a href="' + href + '"' + (extra || '') + '>' + text + '</a>'; }
   var EXT = ' target="_blank" rel="noopener"';
 
@@ -76,13 +84,14 @@
     '<div class="fa-footer-col">',
     '  <h4 class="fa-footer-title">Navegação</h4>',
     '  <ul class="fa-footer-list">',
-    '    <li>' + link('/', 'Início') + '</li>',
-    '    <li>' + link('/servicos', 'Serviços da Clínica') + '</li>',
-    '    <li>' + link('/playground', 'Playground Inclusivo') + '</li>',
-    '    <li>' + link('/circuito', 'Circuito de Carrinhos') + '</li>',
-    '    <li>' + link('/teste?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'Mapeamento Gratuito') + '</li>',
-    '    <li>' + link('/aprender', 'Aprender (Artigos &amp; Guias)') + '</li>',
-    '    <li>' + link('/glossario', 'Glossário Comportamental') + '</li>',
+    '    <li>' + link(hub('/'), 'Início') + '</li>',
+    '    <li>' + link(hub('/servicos'), 'Serviços da Clínica') + '</li>',
+    '    <li>' + link('https://clinica.institutofacaamigos.com.br/?utm_source=hub&amp;utm_medium=site&amp;utm_campaign=rodape_' + kind, 'Site da Clínica') + '</li>',
+    '    <li>' + link(play('/'), 'Playground Inclusivo') + '</li>',
+    '    <li>' + link(play('/circuito'), 'Circuito de Carrinhos') + '</li>',
+    '    <li>' + link(hub('/teste?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'Mapeamento Gratuito') + '</li>',
+    '    <li>' + link(hub('/aprender'), 'Aprender (Artigos &amp; Guias)') + '</li>',
+    '    <li>' + link(hub('/glossario'), 'Glossário Comportamental') + '</li>',
     '  </ul>',
     '</div>'
   ].join('\n');
@@ -91,12 +100,12 @@
     '<div class="fa-footer-col">',
     '  <h4 class="fa-footer-title">Conteúdos &amp; Contato</h4>',
     '  <ul class="fa-footer-list">',
-    '    <li>' + link('/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'E-book: O Brincar com Propósito') + '</li>',
-    '    <li>' + link('/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind, 'E-book: O Código do Desenvolvimento Infantil') + '</li>',
+    '    <li>' + link(hub('/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'E-book: O Brincar com Propósito') + '</li>',
+    '    <li>' + link(hub('/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'E-book: O Código do Desenvolvimento Infantil') + '</li>',
     '    <li>' + link('https://wa.me/' + wa.n + '?text=' + encodeURIComponent(wa.t), 'Fale conosco no WhatsApp', EXT) + '</li>',
     hasJobs ? '    <li><a href="#" data-fa-jobs>Venha fazer parte do nosso time</a></li>' : '',
-    '    <li>' + link('/politica-privacidade', 'Política de Privacidade') + '</li>',
-    '    <li>' + link('/termos', 'Termos de Uso e de Compra') + '</li>',
+    '    <li>' + link(hub('/politica-privacidade'), 'Política de Privacidade') + '</li>',
+    '    <li>' + link(hub('/termos'), 'Termos de Uso e de Compra') + '</li>',
     '  </ul>',
     '</div>'
   ].join('\n');

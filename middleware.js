@@ -27,12 +27,28 @@ export const config = {
 // Hub de Gestão é privado (Bruno e Isabella): nunca deve aparecer em buscadores.
 const NOINDEX = { "X-Robots-Tag": "noindex, nofollow, noarchive, nosnippet, noimageindex" };
 
+const HUB_HOST = "institutofacaamigos.com.br";
+const PLAYGROUND_HOST = "playground.institutofacaamigos.com.br";
+// Arquivos (llms.txt, sitemap.xml, favicon, .well-known...) passam direto em qualquer host.
+const isFile = (path) => /\.[a-z0-9]+$/i.test(path) || path.startsWith("/.well-known/");
+
 export default function middleware(request) {
   try {
     const host = request.headers.get("host") || "";
-    const path = new URL(request.url).pathname;
-    if (host === "playground.institutofacaamigos.com.br") {
+    const url = new URL(request.url);
+    const path = url.pathname;
+    // Cada página tem um domínio "dono" (o do canonical): playground. só serve a home do
+    // playground e o /circuito; tudo o mais é do hub. O outro host redireciona (308), assim não
+    // existem cópias navegáveis das mesmas páginas em dois domínios.
+    if (host === PLAYGROUND_HOST) {
       if (path === "/") return rewrite(new URL("/playground", request.url));
+      if (path === "/playground") return Response.redirect(`https://${PLAYGROUND_HOST}/${url.search}`, 308);
+      if (path === "/circuito" || isFile(path)) return next();
+      return Response.redirect(`https://${HUB_HOST}${path}${url.search}`, 308);
+    }
+    if (host === HUB_HOST) {
+      if (path === "/playground") return Response.redirect(`https://${PLAYGROUND_HOST}/${url.search}`, 308);
+      if (path === "/circuito") return Response.redirect(`https://${PLAYGROUND_HOST}/circuito${url.search}`, 308);
       return next();
     }
     // Hub de Gestão (privado, Bruno e Isabella) — ver gestao.html.
