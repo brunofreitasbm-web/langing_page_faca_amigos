@@ -193,7 +193,7 @@ Depois da chave em `equipe`, o login direto aceita qualquer perfil da Clínica (
 - **Aba Cupons Wi-Fi (só o owner):** resumo do portal (cadastros por período, aceite de WhatsApp e e-mail, cupons usados por unidade, vigentes, vencidos sem uso, quem voltou ao Wi-Fi, falhas ao criar cupom no caixa) e filtro por aceite de contato. Só apresenta: nada é enviado por e-mail nem para lista.
 - **Equipe:** a aba mostra só código, nome e status. Telefone, e-mail, aceite de contato e resumo ficam fora.
 - **Resgate pela aba** passa a recusar cupom já usado no caixa e, ao resgatar, desativa o cupom nas duas unidades do caixa.
-- **Limite conhecido:** usar o cupom do Circuito e o do Playground no caixa no mesmo dia não é barrado (cada unidade só enxerga o próprio cupom). Só a aba cruza os dois.
+- **Um benefício por cupom, no próprio caixa.** Gatilho `fa_kiosk_coupons_espera_um_uso` (migração `20261001160000_wifi_cupom_um_uso_no_caixa.sql`): quando um `ESPERA-%` é usado em uma unidade (`used_count` sobe), o mesmo código é desativado nas outras. Na vez seguinte a outra unidade responde `CUPOM_INVALIDO`; se dois caixas usarem o mesmo código ao mesmo tempo, o segundo recebe `CUPOM_ESGOTADO` (mesma mensagem que o caixa já trata). Só age em `ESPERA-%` e só quando `used_count` aumenta, então nenhum outro cupom é afetado. Para desligar: `drop trigger fa_kiosk_coupons_espera_um_uso on public.fa_kiosk_coupons;`.
 
 Ordem: (1) migração `20261001150000_wifi_cupom_playground.sql`; (2) deploy de `wifi-lead-webhook` e `behavior-test-admin` (`--no-verify-jwt`); (3) site.
 
