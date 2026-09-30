@@ -125,6 +125,7 @@ Ordem (cada passo é inofensivo sozinho; o site só mostra eventos quando houver
 1. **Migration** `20261001120000_fa_eventos.sql` (4 tabelas com RLS ligado e sem policy, view `fa_eventos_publicos`,
    funções `fa_eventos_*`). Ela só agenda o cron `fa-eventos-dispatch` se o segredo `ops_key` já existir no Vault; se
    não existir (caso do projeto em 30/09/2026), avisa e segue: o cron é ligado no passo 5 com `supabase/ops/agendar-eventos.sql`.
+   Em seguida `20261001120100_fa_eventos_revoke_execute.sql` (só a service role executa as funções `fa_eventos_*`).
 2. **Brevo**: criar duas listas ("Eventos · Famílias" e "Eventos · Profissionais") e anotar os ids. Criar os atributos de
    contato `WHATSAPP`, `TRILHA`, `ULTIMO_EVENTO` (texto) — sem eles a função ainda sincroniza, só com `NOME`.
 3. **WhatsApp**: criar a Comunidade (canal de avisos) de cada trilha e copiar o link de convite.
