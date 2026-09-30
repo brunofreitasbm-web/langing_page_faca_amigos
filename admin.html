@@ -2683,7 +2683,28 @@
       });
 
       // ---------- Boot ----------
-      if (isSessionValid()) {
+      // Entrada pelo Hub de Gestão: /admin#sso=<ticket de 60s> vira sessão do painel (e o ticket sai da URL).
+      var ssoMatch = /^#sso=([0-9a-f]{64})$/.exec(window.location.hash);
+      if (ssoMatch) {
+        try { history.replaceState(null, '', window.location.pathname + '#eventos'); } catch (e) { /* ignora */ }
+        clearSession();
+        fetch('https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/gestao-hub', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'admin_sso', ticket: ssoMatch[1] })
+        }).then(function (r) {
+          return r.json().then(function (d) { return { ok: r.ok, d: d || {} }; });
+        }).then(function (x) {
+          if (x.ok && x.d.token) {
+            saveSession(x.d.token, x.d.expires_at, x.d.email);
+            showDashboard();
+          } else {
+            showLogin(x.d.error || 'Não foi possível entrar pelo Hub. Use o seu login.');
+          }
+        }).catch(function () {
+          showLogin('Não foi possível entrar pelo Hub. Use o seu login.');
+        });
+      } else if (isSessionValid()) {
         showDashboard();
       } else {
         clearSession();
