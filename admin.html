@@ -651,10 +651,17 @@
     #qrReader video { width: 100% !important; }
     .checkin-log { text-align: left; margin-top: 16px; font-size: 0.84rem; color: var(--ink-soft); max-height: 160px; overflow-y: auto; }
     .checkin-log div { padding: 4px 0; border-bottom: 1px solid rgba(26,63,53,0.06); }
+    /* Entrada pelo Hub de Gestão (#sso=...): esconde o login enquanto o ticket é trocado, sem piscar a tela de senha. */
+    html.sso-pending .login-screen { display: none !important; }
+    html.sso-pending body::before {
+      content: 'Entrando pelo Hub de Gestão…'; display: grid; place-items: center; min-height: 100vh;
+      font-family: 'Nunito', system-ui, sans-serif; font-weight: 800; color: #1A3F35;
+    }
   </style>
 </head>
 
 <body>
+  <script>if (/^#sso=[0-9a-f]{64}$/.test(location.hash)) document.documentElement.classList.add('sso-pending');</script>
 
   <!-- ================= LOGIN ================= -->
   <div class="login-screen" id="loginScreen">
@@ -2695,6 +2702,7 @@
         }).then(function (r) {
           return r.json().then(function (d) { return { ok: r.ok, d: d || {} }; });
         }).then(function (x) {
+          document.documentElement.classList.remove('sso-pending');
           if (x.ok && x.d.token) {
             saveSession(x.d.token, x.d.expires_at, x.d.email);
             showDashboard();
@@ -2702,6 +2710,7 @@
             showLogin(x.d.error || 'Não foi possível entrar pelo Hub. Use o seu login.');
           }
         }).catch(function () {
+          document.documentElement.classList.remove('sso-pending');
           showLogin('Não foi possível entrar pelo Hub. Use o seu login.');
         });
       } else if (isSessionValid()) {
