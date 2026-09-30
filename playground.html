@@ -161,6 +161,7 @@
         {
           "@type": "Offer",
           "name": "1 hora — público geral",
+          "description": "Inclui o relatório da sessão, enviado ao responsável por WhatsApp.",
           "price": "108.00",
           "priceCurrency": "BRL",
           "priceSpecification": {
@@ -180,6 +181,7 @@
         {
           "@type": "Offer",
           "name": "1 hora — meia-entrada inclusiva",
+          "description": "Inclui o relatório da sessão, enviado ao responsável por WhatsApp.",
           "eligibleCustomerType": "https://schema.org/DisabledPerson",
           "price": "90.00",
           "priceCurrency": "BRL",
@@ -403,6 +405,14 @@
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "A partir de R$ 60 por 30 minutos no público geral e R$ 50 na meia-entrada inclusiva. Também há 1 hora, 2 horas, Day Use e Passaporte mensal, todos na tabela de preços desta página. Pagamento na recepção por Pix, cartão ou dinheiro."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "O que é o relatório da sessão?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O relatório da sessão é um resumo das observações da equipe de mediação sobre a brincadeira da criança: coordenação, interação com outras crianças, atenção, comunicação e como ela lida com espera e frustração. É cortesia nos planos a partir de 1 hora e chega ao responsável por WhatsApp depois da saída. São observações da equipe durante a brincadeira, não uma avaliação clínica nem um diagnóstico."
           }
         }
       ]
@@ -1931,6 +1941,21 @@
       .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: #1A3F35; padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 1000; }
     .skip:focus { top: 8px; }
     picture { display: contents; }
+  
+    /* Oferta: 1 hora + relatório da sessão */
+    .rel-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; align-items: center; }
+    .rel-list { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 12px; }
+    .rel-list li { display: flex; gap: 12px; align-items: flex-start; color: var(--dark); font-weight: 700; }
+    .rel-list li > div > span { color: var(--ink-soft); font-weight: 600; display: block; }
+    .rel-list .ic { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--yellow); display: grid; place-items: center; font-size: 17px; }
+    .rel-math { background: var(--white); border: 3px solid var(--pink); border-radius: var(--r-card); padding: 24px; box-shadow: var(--shadow-lg); }
+    .rel-math .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 0; color: var(--ink-soft); font-weight: 700; }
+    .rel-math .row s { color: var(--ink-soft); }
+    .rel-math .row.win { color: var(--dark); border-top: 2px dashed var(--teal); margin-top: 6px; padding-top: 14px; font-weight: 900; }
+    .rel-math .row.win .v { color: var(--pink); font-size: 34px; line-height: 1; }
+    .rel-math .row .v { font-size: 22px; font-weight: 900; white-space: nowrap; }
+    .rel-legal { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
+    @media (max-width: 760px) { .rel-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 
@@ -2229,6 +2254,32 @@
     </div>
   </section>
 
+  <!-- OFERTA: 1 hora + relatório da sessão (destino dos anúncios: #relatorio) -->
+  <section class="sec" id="relatorio" style="background: var(--cream);">
+    <div class="wrap fx">
+      <div class="rel-grid">
+        <div>
+          <span class="eyebrow">Só no plano de 1 hora ou mais</span>
+          <h2 class="sec-title" style="text-align: left;">Na de 1 hora, você leva o relatório da tarde dele.</h2>
+          <p class="sec-sub" style="text-align: left;">Nos planos a partir de 1 hora, a nossa equipe de mediação observa a brincadeira e envia no seu WhatsApp o relatório da sessão. Cortesia, sem custo a mais.</p>
+          <ul class="rel-list">
+            <li><span class="ic" aria-hidden="true">👀</span><div>O que a equipe observa<span>Coordenação, equilíbrio, interação com outras crianças, atenção, comunicação e como lidou com a espera e com o "não".</span></div></li>
+            <li><span class="ic" aria-hidden="true">💬</span><div>Quando chega<span>No seu WhatsApp, logo depois da saída. Sem instalar nada e sem preencher nada.</span></div></li>
+            <li><span class="ic" aria-hidden="true">🏡</span><div>Para que serve<span>Para conversar em casa e com a escola sobre o que ele já faz sozinho e onde ainda precisa de apoio.</span></div></li>
+          </ul>
+          <p class="rel-legal">São observações da equipe durante a brincadeira. Não é avaliação clínica, laudo nem diagnóstico. Enviado ao responsável cadastrado que autorizou o contato por WhatsApp.</p>
+        </div>
+        <div class="rel-math">
+          <div class="label" style="font-weight: 900; color: var(--dark); margin-bottom: 6px;">A conta que a maioria das famílias faz</div>
+          <div class="row"><span>30 minutos e ele pede mais 30</span><span class="v">R$ 114</span></div>
+          <div class="row win"><span>1 hora + relatório</span><span class="v">R$ 108</span></div>
+          <p style="margin: 14px 0 18px; color: var(--ink-soft); font-size: 14px;">Público geral. Na meia-entrada inclusiva: R$ 95 nos 30 minutos com mais 30, contra R$ 90 na hora cheia.</p>
+          <a href="https://wa.me/5591992347673?text=Oi!%20Quero%20o%20plano%20de%201%20hora%20com%20o%20relat%C3%B3rio%20da%20sess%C3%A3o!" target="_blank" rel="noopener" class="btn btn-pink" style="width: 100%; justify-content: center;">Quero a hora + relatório</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- PREÇOS — simples, sem âncora riscada, sem pisca -->
   <section class="sec" id="precos" style="background: var(--white);">
     <div class="wrap fx">
@@ -2269,12 +2320,12 @@
                 <td>R$ 50</td>
               </tr>
               <tr>
-                <td>1 hora</td>
+                <td>1 hora<span class="note">com relatório da sessão grátis</span></td>
                 <td>R$ 108</td>
                 <td>R$ 90</td>
               </tr>
               <tr class="best">
-                <td>2 horas<span class="note">melhor custo por minuto</span></td>
+                <td>2 horas<span class="note">melhor custo por minuto · com relatório da sessão</span></td>
                 <td>R$ 192</td>
                 <td>R$ 160</td>
               </tr>
@@ -2458,6 +2509,10 @@
       <details>
         <summary>Quanto custa brincar no FaçaAmigos Playground?</summary>
         <div class="ans">A partir de R$ 60 por 30 minutos no público geral e R$ 50 na meia-entrada inclusiva. Também há 1 hora, 2 horas, Day Use e Passaporte mensal, todos na tabela de preços desta página. Pagamento na recepção por Pix, cartão ou dinheiro.</div>
+      </details>
+      <details>
+        <summary>O que é o relatório da sessão?</summary>
+        <div class="ans">O relatório da sessão é um resumo das observações da equipe de mediação sobre a brincadeira da criança: coordenação, interação com outras crianças, atenção, comunicação e como ela lida com espera e frustração. É cortesia nos planos a partir de 1 hora e chega ao responsável por WhatsApp depois da saída. São observações da equipe durante a brincadeira, não uma avaliação clínica nem um diagnóstico.</div>
       </details>
       </div>
     </div>
