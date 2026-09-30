@@ -1,0 +1,3 @@
+# Hub de Gestão: área privada. Não indexar.
+User-agent: *
+Disallow: /
