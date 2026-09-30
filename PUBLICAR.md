@@ -123,17 +123,21 @@ N <= 30% das vagas; acima disso, "Vagas abertas"; lotado mostra o tamanho real d
 Ordem (cada passo é inofensivo sozinho; o site só mostra eventos quando houver um `published`):
 
 1. **Migration** `20261001120000_fa_eventos.sql` (4 tabelas com RLS ligado e sem policy, view `fa_eventos_publicos`,
-   funções `fa_eventos_*` e o cron `fa-eventos-dispatch` a cada 30 min, que lê `ops_key` do Vault — já existe desde o
-   Lote de rotinas; se não existir, rodar antes `supabase/ops/agendar-rotinas.sql`).
+   funções `fa_eventos_*`). Ela só agenda o cron `fa-eventos-dispatch` se o segredo `ops_key` já existir no Vault; se
+   não existir (caso do projeto em 30/09/2026), avisa e segue: o cron é ligado no passo 5 com `supabase/ops/agendar-eventos.sql`.
 2. **Brevo**: criar duas listas ("Eventos · Famílias" e "Eventos · Profissionais") e anotar os ids. Criar os atributos de
    contato `WHATSAPP`, `TRILHA`, `ULTIMO_EVENTO` (texto) — sem eles a função ainda sincroniza, só com `NOME`.
 3. **WhatsApp**: criar a Comunidade (canal de avisos) de cada trilha e copiar o link de convite.
 4. **Secrets** (`supabase secrets set ... --project-ref ivjvpdzsfjdpyabbzzuj`): `EVENTOS_SECRET` (`openssl rand -hex 32`;
-   assina os links do ingresso — trocar invalida todos os links já enviados), `BREVO_LIST_EVENTOS_FAMILIAS`,
-   `BREVO_LIST_EVENTOS_PROFISSIONAIS`, `COMUNIDADE_WHATSAPP_FAMILIAS`, `COMUNIDADE_WHATSAPP_PROFISSIONAIS` (opcionais: o
-   evento pode ter o próprio link). `OPS_KEY` e `BREVO_*` já existem.
+   assina os links do ingresso — trocar invalida todos os links já enviados), **`OPS_KEY`** (chave longa; NÃO existia em
+   produção em 30/09/2026), `BREVO_LIST_EVENTOS_FAMILIAS`, `BREVO_LIST_EVENTOS_PROFISSIONAIS`,
+   `COMUNIDADE_WHATSAPP_FAMILIAS`, `COMUNIDADE_WHATSAPP_PROFISSIONAIS` (opcionais: o evento pode ter o próprio link).
+   `BREVO_*` já existem. Enquanto `EVENTOS_SECRET` ou `OPS_KEY` faltarem, `eventos-public` recusa inscrição com 503 antes
+   de gravar qualquer coisa (listar e detalhe continuam funcionando).
 5. **Funções**, todas com `--no-verify-jwt`: `eventos-dispatch` primeiro (as outras chamam ela), depois `eventos-public`,
    `eventos-admin` e a versão nova de `hotmart-webhook`.
+   Depois de `OPS_KEY` e `eventos-dispatch` no ar, rodar `supabase/ops/agendar-eventos.sql` (troca `<chave>` pela MESMA
+   chave do `OPS_KEY`): grava `ops_key` no Vault e liga o cron. Testar com `?dry=1` antes de esperar o primeiro disparo.
 6. **Site**: `npm run check` → commit → `npm run sitemap` → push. Conferir `/eventos` (agenda vazia mostra o convite ao
    mapeamento), `/eventos/qualquer-coisa` (mensagem "não está mais disponível") e `/ingresso` sem token ("link não é válido").
 7. **Primeiro evento**: no painel (`/admin`, aba Eventos) criar o evento como rascunho, adicionar ao menos um tipo de

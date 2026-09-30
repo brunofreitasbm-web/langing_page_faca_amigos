@@ -677,23 +677,31 @@ $$;
 
 -- ---------------------------------------------------------------------------------------------
 -- Cron: a cada 30 min o eventos-dispatch expira promoções, drena a fila e manda os lembretes.
--- Lê a chave x-ops-key do Vault (secret 'ops_key', criado por supabase/ops/agendar-rotinas.sql).
+-- Lê a chave x-ops-key do Vault (secret 'ops_key'). Se o segredo ainda não existir, NÃO agenda (o job
+-- chamaria a função sem chave e tomaria 401 a cada 30 min): rode supabase/ops/agendar-eventos.sql depois
+-- de criar o ops_key e o secret OPS_KEY com o mesmo valor.
 -- ---------------------------------------------------------------------------------------------
 
-select cron.unschedule(jobid) from cron.job where jobname = 'fa-eventos-dispatch';
-
-select cron.schedule(
-  'fa-eventos-dispatch',
-  '*/30 * * * *',
-  $$
-    select net.http_post(
-      url := 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/eventos-dispatch',
-      headers := jsonb_build_object(
-        'Content-Type', 'application/json',
-        'x-ops-key', (select decrypted_secret from vault.decrypted_secrets where name = 'ops_key')
-      ),
-      body := '{"action":"run"}'::jsonb,
-      timeout_milliseconds := 60000
+do $$
+begin
+  perform cron.unschedule(jobid) from cron.job where jobname = 'fa-eventos-dispatch';
+  if exists (select 1 from vault.secrets where name = 'ops_key') then
+    perform cron.schedule(
+      'fa-eventos-dispatch',
+      '*/30 * * * *',
+      $job$
+        select net.http_post(
+          url := 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/eventos-dispatch',
+          headers := jsonb_build_object(
+            'Content-Type', 'application/json',
+            'x-ops-key', (select decrypted_secret from vault.decrypted_secrets where name = 'ops_key')
+          ),
+          body := '{"action":"run"}'::jsonb,
+          timeout_milliseconds := 60000
+        );
+      $job$
     );
-  $$
-);
+  else
+    raise notice 'ops_key ausente no Vault: cron fa-eventos-dispatch NAO agendado (rode supabase/ops/agendar-eventos.sql).';
+  end if;
+end $$;

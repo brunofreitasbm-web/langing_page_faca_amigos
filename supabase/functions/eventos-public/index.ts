@@ -247,6 +247,15 @@ Deno.serve(async (req) => {
   if (!supabaseUrl || !serviceRoleKey) return json(req, { error: "serviço indisponível" }, 500);
   const admin: Admin = createClient(supabaseUrl, serviceRoleKey);
 
+  // Sem EVENTOS_SECRET (links do ingresso) ou OPS_KEY (envio de e-mail) uma inscrição gravaria e depois falharia
+  // ao entregar o voucher. Enquanto o Lote 7 do PUBLICAR.md não estiver completo, essas ações são recusadas
+  // ANTES de gravar qualquer coisa. Listar e detalhe seguem funcionando.
+  if (["inscrever", "ingresso", "cancelar", "confirmar_promocao"].includes(action) &&
+      (!Deno.env.get("EVENTOS_SECRET") || !Deno.env.get("OPS_KEY"))) {
+    console.error("eventos-public: EVENTOS_SECRET/OPS_KEY ausentes, ação recusada:", action);
+    return json(req, { error: "inscrições temporariamente indisponíveis, tente novamente em instantes" }, 503);
+  }
+
   // --- listar ---
   if (action === "listar") {
     const publico = str(body.publico);
