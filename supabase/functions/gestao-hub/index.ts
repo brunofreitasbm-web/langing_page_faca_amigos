@@ -27,7 +27,7 @@
 //     único) com o segredo GESTAO_SSO_SECRET_CACAU, conferido em
 //     POST /api/auth/sso do hub-operacoes.
 //
-//   - Painel do site (/admin, quadrados "Painel do Instituto" e "Eventos"): ticket
+//   - Painel do site (/admin, quadrados "Mapeamento Comportamental" e "Eventos"): ticket
 //     aleatório de uso único guardado (SHA-256) em fa_gestao_painel_tickets, 60 s;
 //     a ação `sso` de behavior-test-admin troca por sessão de escopo `owner`.
 //
