@@ -70,8 +70,8 @@ function buildVars(facts) {
   const horario = `${hora(parque.hours.open)} às ${hora(parque.hours.close)}`;
   const descontoInclusivo = `${parque.discounts.inclusivo_pct}%`;
 
-  const fidelidadePlayground = `a cada ${parque.loyalty.trigger_visits} visitas cadastradas pelo CPF do responsável, a ${parque.loyalty.trigger_visits}ª entrada de 30 minutos é 100% gratuita.`;
-  const fidelidadeCircuito = `a cada ${circuito.loyalty.trigger_visits} passeios cadastrados, o ${circuito.loyalty.trigger_visits}º é 100% gratuito.`;
+  const fidelidadePlayground = `a cada ${parque.loyalty.trigger_visits} visitas registradas pelo CPF do responsável, a ${parque.loyalty.trigger_visits}ª entrada de 30 minutos é 100% gratuita. Vale no Playground e no Circuito.`;
+  const fidelidadeCircuito = fidelidadePlayground;
 
   const parquePlans = parque.plans.filter((p) => !p.asset_kind); // exclui itens avulsos que não são o passaporte padrão
   const linhasListaPlayground = [
