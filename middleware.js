@@ -52,7 +52,7 @@ export default function middleware(request) {
       return next();
     }
     // Hub de Gestão (privado, Bruno e Isabella) — ver gestao.html.
-    if (host === "gestao.institutofacaamigos.com.br") {
+    if (host === "gestao.institutofacaamigos.com.br" || host === "clinica.institutofacaamigos.com.br") {
       if (path === "/robots.txt") return rewrite(new URL("/robots-gestao.txt", request.url), { headers: NOINDEX });
       if (path === "/") return rewrite(new URL("/gestao", request.url), { headers: NOINDEX });
       return next({ headers: NOINDEX });

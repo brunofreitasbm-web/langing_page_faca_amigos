@@ -601,6 +601,11 @@
       });
 
       // ---------- início ----------
+      var loginSubEl = document.getElementById('loginSub');
+      if (loginSubEl && (window.location.hostname === 'clinica.institutofacaamigos.com.br' || window.location.hostname.indexOf('clinica') !== -1)) {
+        loginSubEl.textContent = 'Centro de Terapia comportamental';
+      }
+
       if (!memToken) {
         showLogin('senha');
       } else {
