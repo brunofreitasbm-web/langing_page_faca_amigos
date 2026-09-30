@@ -541,6 +541,8 @@
     }
 
     /* ---------- Tabs ---------- */
+    body.escopo-equipe .owner-only { display: none !important; }
+
     .tab-bar {
       display: flex;
       gap: 8px;
@@ -661,14 +663,14 @@
 </head>
 
 <body>
-  <script>if (/^#sso=[0-9a-f]{64}$/.test(location.hash)) document.documentElement.classList.add('sso-pending');</script>
+  <script>if (/^#sso=[0-9a-f]{64}(&aba=eventos)?$/.test(location.hash)) document.documentElement.classList.add('sso-pending');</script>
 
   <!-- ================= LOGIN ================= -->
   <div class="login-screen" id="loginScreen">
     <div class="login-card">
       <img src="img/logo-simbolo.png" alt="" class="logo-simbolo" loading="lazy" decoding="async">
       <h1>Mapa Comportamental</h1>
-      <p class="sub">Leads do Teste, Cupons Wi-Fi e Eventos</p>
+      <p class="sub">Acesso da equipe: cupons Wi-Fi e check-in dos eventos</p>
       <form class="login-form" id="loginForm" novalidate>
         <div id="loginNotice" class="form-notice"></div>
         <div id="loginError" class="form-error" role="alert"></div>
@@ -682,7 +684,7 @@
         </div>
         <button type="submit" id="loginSubmit" class="btn btn-pink" style="width:100%;">Entrar</button>
       </form>
-      <p class="login-footer"><a href="https://institutofacaamigos.com.br/">← Voltar para o site</a></p>
+      <p class="login-footer">Gestão completa (owner): <a href="https://gestao.institutofacaamigos.com.br/">entre pelo Hub de Gestão</a><br><a href="https://institutofacaamigos.com.br/">← Voltar para o site</a></p>
     </div>
   </div>
 
@@ -704,8 +706,8 @@
 
     <main class="dash-main">
       <div class="tab-bar">
-        <button type="button" class="tab-btn active" id="tabLeadsBtn">Leads</button>
-        <button type="button" class="tab-btn" id="tabConfigBtn">Textos do resultado</button>
+        <button type="button" class="tab-btn active owner-only" id="tabLeadsBtn">Leads</button>
+        <button type="button" class="tab-btn owner-only" id="tabConfigBtn">Textos do resultado</button>
         <button type="button" class="tab-btn" id="tabWifiBtn">Cupons Wi-Fi</button>
         <button type="button" class="tab-btn" id="tabEventosBtn">Eventos</button>
       </div>
@@ -808,8 +810,8 @@
             </select>
           </div>
           <span class="count" id="evCount"></span>
-          <button type="button" class="btn btn-ghost btn-sm" id="evHotmartBtn" title="Vendas da Hotmart que chegaram antes do tipo de ingresso existir">Reprocessar Hotmart</button>
-          <button type="button" class="btn btn-pink btn-sm btn-export" id="evNovoBtn">+ Novo evento</button>
+          <button type="button" class="btn btn-ghost btn-sm owner-only" id="evHotmartBtn" title="Vendas da Hotmart que chegaram antes do tipo de ingresso existir">Reprocessar Hotmart</button>
+          <button type="button" class="btn btn-pink btn-sm btn-export owner-only" id="evNovoBtn">+ Novo evento</button>
         </div>
         <div id="evError" class="form-error" role="alert"></div>
         <div id="evNotice" class="form-notice" role="status"></div>
@@ -825,16 +827,16 @@
             </div>
             <div class="actions">
               <a class="btn btn-ghost btn-sm" id="evVerBtn" href="#" target="_blank" rel="noopener">Ver página</a>
-              <button type="button" class="btn btn-ghost btn-sm" id="evEditarBtn">Editar</button>
+              <button type="button" class="btn btn-ghost btn-sm owner-only" id="evEditarBtn">Editar</button>
               <button type="button" class="btn btn-teal btn-sm" id="evCheckinBtn">Check-in</button>
-              <button type="button" class="btn btn-ghost btn-sm" id="evCsvBtn">Exportar CSV</button>
-              <button type="button" class="btn btn-ghost btn-sm" id="evCancelarBtn" style="color: var(--pink-dark); border-color: var(--pink-dark);">Cancelar evento</button>
+              <button type="button" class="btn btn-ghost btn-sm owner-only" id="evCsvBtn">Exportar CSV</button>
+              <button type="button" class="btn btn-ghost btn-sm owner-only" id="evCancelarBtn" style="color: var(--pink-dark); border-color: var(--pink-dark);">Cancelar evento</button>
               <button type="button" class="btn btn-ghost btn-sm" id="evFecharBtn" aria-label="Fechar painel">✕</button>
             </div>
           </div>
           <div class="ev-kpis" id="evKpis"></div>
 
-          <div class="config-area">
+          <div class="config-area owner-only">
             <h3>Tipos de ingresso</h3>
             <div id="evTiposError" class="form-error" role="alert"></div>
             <div style="overflow-x:auto;">
@@ -863,7 +865,7 @@
               </select>
             </div>
             <span class="count" id="insCount"></span>
-            <button type="button" class="btn btn-ghost btn-sm btn-export" id="insAddBtn">+ Inscrever manualmente</button>
+            <button type="button" class="btn btn-ghost btn-sm btn-export owner-only" id="insAddBtn">+ Inscrever manualmente</button>
           </div>
           <div id="insError" class="form-error" role="alert"></div>
           <div id="insNotice" class="form-notice" role="status"></div>
@@ -1057,6 +1059,9 @@
       var TOKEN_KEY = 'fa_admin_token';
       var EXPIRES_KEY = 'fa_admin_token_expires';
       var EMAIL_KEY = 'fa_admin_email';
+      var ESCOPO_KEY = 'fa_admin_escopo';
+      // Aba a abrir depois de entrar (vem do Hub: /admin#sso=...&aba=eventos; #eventos é o formato antigo).
+      var abaInicial = '';
 
       var loginScreen = document.getElementById('loginScreen');
       var dashScreen = document.getElementById('dashScreen');
@@ -1101,11 +1106,18 @@
 
       function getEmail() { return localStorage.getItem(EMAIL_KEY) || ''; }
 
-      function saveSession(token, expiresAt, email) {
+      // 'owner' (Hub de Gestão) ou 'equipe' (login direto limitado). Só esconde botões: quem barra é o servidor.
+      function getEscopo() {
+        try { return localStorage.getItem(ESCOPO_KEY) === 'equipe' ? 'equipe' : 'owner'; } catch (e) { return 'owner'; }
+      }
+      function isEquipe() { return getEscopo() === 'equipe'; }
+
+      function saveSession(token, expiresAt, email, escopo) {
         try {
           localStorage.setItem(TOKEN_KEY, token);
           localStorage.setItem(EXPIRES_KEY, expiresAt || '');
           localStorage.setItem(EMAIL_KEY, email || '');
+          localStorage.setItem(ESCOPO_KEY, escopo === 'equipe' ? 'equipe' : 'owner');
         } catch (e) { /* localStorage indisponível (modo privado etc.) — segue sem persistir */ }
       }
 
@@ -1114,6 +1126,7 @@
           localStorage.removeItem(TOKEN_KEY);
           localStorage.removeItem(EXPIRES_KEY);
           localStorage.removeItem(EMAIL_KEY);
+          localStorage.removeItem(ESCOPO_KEY);
         } catch (e) { /* ignora */ }
       }
 
@@ -1145,10 +1158,16 @@
       function showDashboard() {
         loginScreen.style.display = 'none';
         dashScreen.hidden = false;
-        adminEmailLabel.textContent = getEmail();
+        adminEmailLabel.textContent = getEmail() + (isEquipe() ? ' · equipe' : '');
+        document.body.classList.toggle('escopo-equipe', isEquipe());
+        insSearch.placeholder = isEquipe() ? 'Nome ou código' : 'Nome, e-mail, código ou WhatsApp';
+        if (isEquipe()) {
+          // Equipe não tem Leads nem Textos: abre direto nos cupons Wi-Fi (ou no check-in, se veio pedir).
+          (abaInicial === 'eventos' ? document.getElementById('tabEventosBtn') : document.getElementById('tabWifiBtn')).click();
+          return;
+        }
         loadLeads();
-        // Link direto do Hub de Gestão: /admin#eventos abre a aba Eventos.
-        if (window.location.hash === '#eventos') document.getElementById('tabEventosBtn').click();
+        if (abaInicial === 'eventos') document.getElementById('tabEventosBtn').click();
       }
 
       function sessionExpired(msg) {
@@ -1232,7 +1251,7 @@
               return;
             }
             var data = result.data;
-            saveSession(data.token, data.expires_at, data.email || email);
+            saveSession(data.token, data.expires_at, data.email || email, data.escopo);
             loginForm.reset();
             showDashboard();
           });
@@ -2197,7 +2216,7 @@
         msg(insError, ''); msg(insNotice, ''); msg(evTiposError, '');
         insSearch.value = '';
         insStatusFilter.value = '';
-        loadTipos();
+        if (!isEquipe()) loadTipos();
         loadInscricoes();
         evPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
@@ -2211,6 +2230,12 @@
         document.getElementById('evVerBtn').href = SITE_URL + '/eventos/' + encodeURIComponent(e.slug);
         document.getElementById('evCancelarBtn').disabled = e.status === 'cancelled';
         document.getElementById('evEditarBtn').disabled = e.status === 'cancelled';
+        if (isEquipe()) {
+          evKpis.innerHTML = [['Confirmadas', c.confirmadas || 0], ['Já entraram', c.checkins || 0]].map(function (k) {
+            return '<div class="ev-kpi"><div class="label">' + escapeHtml(k[0]) + '</div><div class="value">' + escapeHtml(k[1]) + '</div></div>';
+          }).join('');
+          return;
+        }
         var ocupadas = (c.confirmadas || 0) + (c.promovidas || 0);
         var over = e.vagas_gratuitas && ocupadas > e.vagas_gratuitas;
         evKpis.innerHTML = [
@@ -2460,6 +2485,10 @@
 
       function insActions(i) {
         var b = [];
+        if (isEquipe()) {
+          if (i.status === 'confirmada' && !i.checkin_at) b.push('<button type="button" class="btn btn-teal btn-sm" data-ins-act="checkin" data-ins-code="' + escapeHtml(i.codigo) + '">Check-in</button>');
+          return '<div class="ev-inline-actions">' + b.join('') + '</div>';
+        }
         if (i.status === 'lista_espera' || i.status === 'promovida' || i.status === 'expirada') b.push('<button type="button" class="btn btn-teal btn-sm" data-ins-act="confirmar" data-ins-id="' + escapeHtml(i.id) + '">Confirmar vaga</button>');
         if (i.status === 'confirmada' && !i.checkin_at) b.push('<button type="button" class="btn btn-teal btn-sm" data-ins-act="checkin" data-ins-code="' + escapeHtml(i.codigo) + '">Check-in</button>');
         if (i.status === 'confirmada' || i.status === 'promovida' || i.status === 'lista_espera') b.push('<button type="button" class="btn btn-ghost btn-sm" data-ins-act="reenviar" data-ins-id="' + escapeHtml(i.id) + '">Reenviar e-mail</button>');
@@ -2485,8 +2514,8 @@
             (i.status === 'lista_espera' && i.posicao ? ' <span class="guardian-meta">' + i.posicao + 'º na fila</span>' : '') +
             (i.status === 'promovida' && i.promocao_prazo ? '<div class="guardian-meta">até ' + escapeHtml(fmtBelem(i.promocao_prazo)) + '</div>' : '') +
             (i.checkin_at ? '<div class="guardian-meta">✓ entrou ' + escapeHtml(fmtBelem(i.checkin_at)) + '</div>' : '');
-          var origem = escapeHtml(i.origem === 'hotmart' ? 'Hotmart' + (i.valor_pago ? ' · R$ ' + Number(i.valor_pago).toFixed(2).replace('.', ',') : '') : (i.origem === 'admin' ? 'Manual' : (i.utm_source || 'direto')));
-          var nomeCell = '<div class="guardian-name">' + escapeHtml(i.nome) + '</div><div class="guardian-meta">' + escapeHtml(i.email) + '</div>' + (phone ? '<div class="guardian-meta">' + phone + '</div>' : '') + (i.perfil ? '<div class="guardian-meta">' + escapeHtml(PERFIL[i.perfil] || i.perfil) + '</div>' : '');
+          var origem = isEquipe() ? '' : escapeHtml(i.origem === 'hotmart' ? 'Hotmart' + (i.valor_pago ? ' · R$ ' + Number(i.valor_pago).toFixed(2).replace('.', ',') : '') : (i.origem === 'admin' ? 'Manual' : (i.utm_source || 'direto')));
+          var nomeCell = '<div class="guardian-name">' + escapeHtml(i.nome) + '</div>' + (isEquipe() ? '' : '<div class="guardian-meta">' + escapeHtml(i.email) + '</div>' + (phone ? '<div class="guardian-meta">' + phone + '</div>' : '') + (i.perfil ? '<div class="guardian-meta">' + escapeHtml(PERFIL[i.perfil] || i.perfil) + '</div>' : ''));
           rows += '<tr><td>' + nomeCell + '</td><td>' + escapeHtml(i.tipo ? i.tipo.nome : '—') + '</td><td>' + st + '</td><td><div class="code">' + escapeHtml(i.codigo) + '</div></td><td>' + origem + '</td><td>' + escapeHtml(fmtBelem(i.created_at)) + '</td><td>' + insActions(i) + '</td></tr>';
           cards += '<div class="lead-card"><div class="row"><div>' + nomeCell + '</div>' + badge(INS_STATUS, i.status) + '</div>' +
             '<div class="guardian-meta">' + escapeHtml(i.tipo ? i.tipo.nome : '—') + ' · <span class="code">' + escapeHtml(i.codigo) + '</span> · ' + origem + '</div>' +
@@ -2690,28 +2719,39 @@
       });
 
       // ---------- Boot ----------
-      // Entrada pelo Hub de Gestão: /admin#sso=<ticket de 60s> vira sessão do painel (e o ticket sai da URL).
-      var ssoMatch = /^#sso=([0-9a-f]{64})$/.exec(window.location.hash);
-      if (ssoMatch) {
-        try { history.replaceState(null, '', window.location.pathname + '#eventos'); } catch (e) { /* ignora */ }
-        clearSession();
-        fetch('https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/gestao-hub', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ action: 'admin_sso', ticket: ssoMatch[1] })
-        }).then(function (r) {
-          return r.json().then(function (d) { return { ok: r.ok, d: d || {} }; });
-        }).then(function (x) {
-          document.documentElement.classList.remove('sso-pending');
-          if (x.ok && x.d.token) {
-            saveSession(x.d.token, x.d.expires_at, x.d.email);
-            showDashboard();
-          } else {
-            showLogin(x.d.error || 'Não foi possível entrar pelo Hub. Use o seu login.');
+      // Entrada do owner pelo Hub de Gestão: /admin#sso=<ticket de uso único>[&aba=eventos]. O ticket vem no
+      // fragmento (não vai para o servidor nem para o Referer) e é apagado da barra de endereço antes de tudo.
+      function lerHash() {
+        var out = {};
+        var h = String(window.location.hash || '').replace(/^#/, '');
+        if (h === 'eventos') { out.aba = 'eventos'; return out; } // formato antigo do link do Hub
+        h.split('&').forEach(function (par) {
+          var i = par.indexOf('=');
+          if (i > 0) {
+            try { out[par.slice(0, i)] = decodeURIComponent(par.slice(i + 1)); } catch (e) { /* ignora */ }
           }
-        }).catch(function () {
+        });
+        return out;
+      }
+
+      var hashParams = lerHash();
+      if (hashParams.aba === 'eventos') abaInicial = 'eventos';
+
+      if (hashParams.sso) {
+        try { window.history.replaceState(null, '', window.location.pathname + window.location.search); } catch (e) { /* ignora */ }
+        // A tela de senha fica escondida (html.sso-pending) enquanto o ticket é trocado, sem piscar.
+        callApi({ action: 'sso', ticket: hashParams.sso }, { skipAuth: true }).then(function (result) {
           document.documentElement.classList.remove('sso-pending');
-          showLogin('Não foi possível entrar pelo Hub. Use o seu login.');
+          if (result.ok && result.data && result.data.token) {
+            saveSession(result.data.token, result.data.expires_at, result.data.email, result.data.escopo);
+            showDashboard();
+            return;
+          }
+          if (isSessionValid()) { showDashboard(); return; }
+          clearSession();
+          showLogin(result.networkError
+            ? 'Não foi possível conectar. Tente abrir de novo pelo Hub de Gestão.'
+            : 'Esse link de acesso expirou ou já foi usado. Abra o painel de novo pelo Hub de Gestão.');
         });
       } else if (isSessionValid()) {
         showDashboard();

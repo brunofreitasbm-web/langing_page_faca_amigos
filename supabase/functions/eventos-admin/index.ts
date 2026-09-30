@@ -93,13 +93,30 @@ async function requireSession(admin: Admin, req: Request) {
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
   if (!token) return null;
   const { data, error } = await admin.from("fa_teste_admin_sessions")
-    .select("token, clinica_user_id, admin_email, expires_at").eq("token", token).maybeSingle();
+    .select("token, clinica_user_id, admin_email, expires_at, escopo").eq("token", token).maybeSingle();
   if (error || !data) return null;
   if (new Date(data.expires_at).getTime() < Date.now()) {
     await admin.from("fa_teste_admin_sessions").delete().eq("token", token);
     return null;
   }
-  return { token, userId: data.clinica_user_id as string, email: data.admin_email as string };
+  return {
+    token,
+    userId: data.clinica_user_id as string,
+    email: data.admin_email as string,
+    escopo: data.escopo === "equipe" ? "equipe" as const : "owner" as const,
+  };
+}
+
+// Escopo 'equipe' (login direto limitado): só a porta do evento. Lista de permissão: ação nova nasce
+// negada. Quem edita evento, vê e-mail/WhatsApp, exporta ou cancela entra pelo Hub de Gestão (owner).
+const ACOES_EQUIPE = new Set(["eventos_listar", "inscricoes_listar", "checkin"]);
+const EVENTO_COLS_EQUIPE = ["id", "slug", "titulo", "categoria", "publico", "formato", "inicio", "fim", "status", "local_nome", "contagens"];
+const INS_COLS_EQUIPE = ["id", "nome", "status", "codigo", "tipo", "checkin_at", "created_at", "posicao"];
+
+function pick(row: Record<string, unknown>, cols: string[]): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const c of cols) if (c in row) out[c] = row[c];
+  return out;
 }
 
 // ---------------------------------------------------------------------------------------------
@@ -265,6 +282,8 @@ Deno.serve(async (req) => {
 
   const session = await requireSession(admin, req);
   if (!session) return jsonResponse(req, { error: "sessão inválida ou expirada" }, 401);
+  const equipe = session.escopo === "equipe";
+  if (equipe && !ACOES_EQUIPE.has(action)) return jsonResponse(req, { error: "sem permissão para esta ação" }, 403);
 
   // --- eventos ---
   if (action === "eventos_listar") {
@@ -294,13 +313,19 @@ Deno.serve(async (req) => {
     const vagasPorEvento: Record<string, number> = {};
     for (const t of tipos ?? []) if (t.ativo && t.tipo === "gratuito") vagasPorEvento[t.evento_id] = (vagasPorEvento[t.evento_id] ?? 0) + t.vagas;
 
-    return jsonResponse(req, {
-      eventos: (eventos ?? []).map((e) => ({
-        ...e,
-        contagens: contagens[e.id] ?? { confirmadas: 0, lista_espera: 0, promovidas: 0, canceladas: 0, checkins: 0, vendidos: 0, receita: 0 },
-        vagas_gratuitas: vagasPorEvento[e.id] ?? 0,
-      })),
-    });
+    const completos = (eventos ?? []).map((e) => ({
+      ...e,
+      contagens: contagens[e.id] ?? { confirmadas: 0, lista_espera: 0, promovidas: 0, canceladas: 0, checkins: 0, vendidos: 0, receita: 0 },
+      vagas_gratuitas: vagasPorEvento[e.id] ?? 0,
+    }));
+    if (equipe) {
+      // Sem receita, sem link online, sem rascunhos/cancelados: a equipe só precisa dos eventos que vão acontecer.
+      return jsonResponse(req, {
+        eventos: completos.filter((e) => e.status === "published" || e.status === "closed")
+          .map((e) => pick({ ...e, contagens: { confirmadas: e.contagens.confirmadas, checkins: e.contagens.checkins } }, EVENTO_COLS_EQUIPE)),
+      });
+    }
+    return jsonResponse(req, { eventos: completos });
   }
 
   if (action === "evento_salvar") {
@@ -426,9 +451,10 @@ Deno.serve(async (req) => {
     if (isUuid(tipoId)) query = query.eq("tipo_id", tipoId);
     if (q) {
       const like = quoteFilterValue(`%${q.replace(/[%_]/g, "")}%`);
-      const conds = [`nome.ilike.${like}`, `email.ilike.${like}`, `codigo.ilike.${like}`];
+      // A equipe busca só por nome e código: buscar por e-mail/WhatsApp revelaria quem está inscrito.
+      const conds = equipe ? [`nome.ilike.${like}`, `codigo.ilike.${like}`] : [`nome.ilike.${like}`, `email.ilike.${like}`, `codigo.ilike.${like}`];
       const digits = q.replace(/\D/g, "");
-      if (digits.length >= 3) conds.push(`whatsapp.ilike.${quoteFilterValue(`%${digits}%`)}`);
+      if (!equipe && digits.length >= 3) conds.push(`whatsapp.ilike.${quoteFilterValue(`%${digits}%`)}`);
       query = query.or(conds.join(","));
     }
     const { data, error, count } = await query;
@@ -443,8 +469,9 @@ Deno.serve(async (req) => {
 
     // deno-lint-ignore no-explicit-any
     const rows = (data ?? []) as any[];
+    const comPosicao = rows.map((i) => ({ ...i, posicao: posicao[i.id] ?? null }));
     return jsonResponse(req, {
-      inscricoes: rows.map((i) => ({ ...i, posicao: posicao[i.id] ?? null })),
+      inscricoes: equipe ? comPosicao.map((i) => pick(i, INS_COLS_EQUIPE)) : comPosicao,
       total: count ?? 0, page, page_size: pageSize,
     });
   }

@@ -1,6 +1,6 @@
 // Hub de Gestão (gestao.html, servido em gestao.institutofacaamigos.com.br):
 // login único de Bruno e Isabella e "um clique = entra no sistema já logado"
-// nos 5 sistemas (Playground, Clínica, Simulador Financeiro, Gestão de
+// nos sistemas (Playground, Clínica, Simulador Financeiro, Gestão de
 // Pessoas/Grupo IB e Hub de Operações Cacau Show). Tudo numa única função,
 // roteada por `action` no corpo JSON — mesmo motivo de CORS/JSON inline das
 // demais funções deste projeto (import relativo de ../_shared quebra no
@@ -27,6 +27,10 @@
 //     único) com o segredo GESTAO_SSO_SECRET_CACAU, conferido em
 //     POST /api/auth/sso do hub-operacoes.
 //
+//   - Painel do site (/admin, quadrados "Painel do Instituto" e "Eventos"): ticket
+//     aleatório de uso único guardado (SHA-256) em fa_gestao_painel_tickets, 60 s;
+//     a ação `sso` de behavior-test-admin troca por sessão de escopo `owner`.
+//
 // Deploy com verify_jwt = false (o Bearer é o token de sessão do hub, não um
 // JWT do Supabase) — igual a behavior-test-admin.
 
@@ -36,9 +40,6 @@ const LOGO_URL = "https://institutofacaamigos.com.br/img/logo-simbolo.png";
 
 const ALLOWED_ORIGINS = [
   "https://gestao.institutofacaamigos.com.br",
-  // O painel /admin (site principal) chama `admin_sso` para trocar o ticket do quadrado Eventos.
-  "https://institutofacaamigos.com.br",
-  "https://www.institutofacaamigos.com.br",
   "http://127.0.0.1:5500",
   "http://localhost:5500",
   "http://localhost:3000",
@@ -117,14 +118,15 @@ type Conta = {
   financeiro_email: string | null;
   rh_email: string | null;
   cacau_usuario: string | null;
+  painel_usuario: string | null;
   ativo: boolean;
 };
 
-type AppId = "playground" | "clinica" | "financeiro" | "rh" | "cacau";
+type AppId = "playground" | "clinica" | "financeiro" | "rh" | "cacau" | "painel" | "eventos";
 
 const APPS: Record<AppId, {
   campo: keyof Conta;
-  tipo: "supabase_a" | "supabase_b" | "cacau";
+  tipo: "supabase_a" | "supabase_b" | "cacau" | "painel";
   baseEnv: string;
   baseDefault: string;
   entrada: (base: string, ticket: string) => string;
@@ -165,6 +167,24 @@ const APPS: Record<AppId, {
     // No fragmento (#): não vai para o servidor nem para logs de acesso.
     entrada: (b, t) => `${b}/#sso=${encodeURIComponent(t)}`,
   },
+  // Painel do site (/admin do institutofacaamigos.com.br): ticket guardado no
+  // banco (fa_gestao_painel_tickets), trocado pela ação `sso` de
+  // behavior-test-admin. Também no fragmento: fora de logs e do Referer.
+  painel: {
+    campo: "painel_usuario",
+    tipo: "painel",
+    baseEnv: "GESTAO_URL_PAINEL",
+    baseDefault: "https://institutofacaamigos.com.br",
+    entrada: (b, t) => `${b}/admin#sso=${encodeURIComponent(t)}`,
+  },
+  // Mesmo painel, já aberto na aba Eventos.
+  eventos: {
+    campo: "painel_usuario",
+    tipo: "painel",
+    baseEnv: "GESTAO_URL_PAINEL",
+    baseDefault: "https://institutofacaamigos.com.br",
+    entrada: (b, t) => `${b}/admin#sso=${encodeURIComponent(t)}&aba=eventos`,
+  },
 };
 
 const APP_IDS = Object.keys(APPS) as AppId[];
@@ -195,6 +215,24 @@ async function ticketCacau(usuario: string): Promise<string | null> {
   );
   const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payloadB64));
   return `${payloadB64}.${base64url(new Uint8Array(sig))}`;
+}
+
+// Ticket do painel do site: 32 bytes aleatórios; no banco fica só o SHA-256,
+// vale 60 s e só serve uma vez (a troca é feita por behavior-test-admin).
+const PAINEL_TICKET_TTL_MS = 60 * 1000;
+
+async function ticketPainel(admin: Admin, email: string): Promise<string | null> {
+  const ticket = randomHex(32);
+  const { error } = await admin.from("fa_gestao_painel_tickets").insert({
+    token_hash: await sha256Hex(ticket),
+    email,
+    expires_at: new Date(Date.now() + PAINEL_TICKET_TTL_MS).toISOString(),
+  });
+  if (error) {
+    console.error("ticket painel:", error.message);
+    return null;
+  }
+  return ticket;
 }
 
 // hashed_token de magic link (nunca enviado por e-mail) no projeto A ou B.
@@ -352,8 +390,6 @@ async function enviarCodigo(email: string, nome: string, code: string, finalidad
 // ---------------------------------------------------------------------
 
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 dias
-const ADMIN_SESSION_TTL_MS = 12 * 60 * 60 * 1000; // 12h, igual ao login do painel (behavior-test-admin)
-const TICKET_PAINEL_TTL_MS = 60 * 1000; // ticket do quadrado Eventos
 const CODE_TTL_MS = 10 * 60 * 1000;
 const CODE_MAX_TRIES = 5;
 const LOGIN_WINDOW_MS = 15 * 60 * 1000;
@@ -677,43 +713,6 @@ Deno.serve(async (req) => {
     return jsonResponse(req, { ok: true });
   }
 
-  // --- painel /admin: troca o ticket do quadrado Eventos por uma sessão do painel ---
-  // Sem Bearer do hub: quem chama é o admin.html com o ticket que veio no fragmento da URL.
-  if (action === "admin_sso") {
-    const ticket = str(body.ticket);
-    if (!/^[0-9a-f]{64}$/.test(ticket)) return jsonResponse(req, { error: "ticket inválido" }, 400);
-    const agora = new Date().toISOString();
-    // Marca como usado só se ninguém usou antes e ainda não venceu.
-    const { data: marcado } = await admin
-      .from("fa_gestao_tickets_painel")
-      .update({ usado_em: agora })
-      .eq("ticket_hash", await sha256Hex(ticket))
-      .is("usado_em", null)
-      .gt("expires_at", agora)
-      .select("email");
-    if (!marcado?.length) {
-      await auditar(admin, req, "admin_sso_falhou", { app: "eventos", detalhe: "ticket_invalido_ou_usado" });
-      return jsonResponse(req, { error: "Link expirado ou já usado. Abra Eventos de novo pelo Hub." }, 401);
-    }
-    const contaPainel = await carregarConta(admin, marcado[0].email as string);
-    if (!contaPainel) return jsonResponse(req, { error: "acesso não autorizado" }, 403);
-
-    const token = randomHex(32);
-    const expiresAt = new Date(Date.now() + ADMIN_SESSION_TTL_MS).toISOString();
-    const { error: sessErr } = await admin.from("fa_teste_admin_sessions").insert({
-      token,
-      // clinica_user_id (uuid, aceita nulo): esta sessão nasce do Hub, não do login da Clínica.
-      admin_email: contaPainel.email,
-      expires_at: expiresAt,
-    });
-    if (sessErr) {
-      console.error("sessão do painel:", sessErr.message);
-      return jsonResponse(req, { error: "falha ao entrar no painel" }, 500);
-    }
-    await auditar(admin, req, "admin_sso", { email: contaPainel.email, app: "eventos" });
-    return jsonResponse(req, { token, expires_at: expiresAt, email: contaPainel.email });
-  }
-
   // --- daqui para baixo exige sessão ---
   const sessao = await exigirSessao(admin, req);
   if (!sessao) return jsonResponse(req, { error: "sessão inválida ou expirada" }, 401);
@@ -730,27 +729,6 @@ Deno.serve(async (req) => {
   }
 
   if (action === "launch") {
-    // Eventos não é um sistema à parte: é a aba Eventos do painel /admin do próprio site.
-    if (str(body.app) === "eventos") {
-      const ticket = randomHex(32);
-      // Limpa tickets vencidos há mais de 1h (a tabela não cresce).
-      await admin.from("fa_gestao_tickets_painel").delete().lt("expires_at", new Date(Date.now() - 3600_000).toISOString());
-      const { error: tErr } = await admin.from("fa_gestao_tickets_painel").insert({
-        ticket_hash: await sha256Hex(ticket),
-        email: conta.email,
-        expires_at: new Date(Date.now() + TICKET_PAINEL_TTL_MS).toISOString(),
-      });
-      if (tErr) {
-        console.error("ticket do painel:", tErr.message);
-        await auditar(admin, req, "launch", { email: conta.email, app: "eventos", detalhe: "falhou" });
-        return jsonResponse(req, { error: "não foi possível abrir o painel agora" }, 502);
-      }
-      // No fragmento (#): não vai para o servidor nem para logs de acesso.
-      const baseEv = (Deno.env.get("GESTAO_URL_EVENTOS") ?? "https://institutofacaamigos.com.br").replace(/\/+$/, "");
-      await auditar(admin, req, "launch", { email: conta.email, app: "eventos" });
-      return jsonResponse(req, { url: `${baseEv}/admin#sso=${ticket}` });
-    }
-
     const appId = str(body.app) as AppId;
     const app = APPS[appId];
     if (!app) return jsonResponse(req, { error: "sistema desconhecido" }, 400);
@@ -762,6 +740,8 @@ Deno.serve(async (req) => {
 
     const ticket = app.tipo === "cacau"
       ? await ticketCacau(identidade)
+      : app.tipo === "painel"
+      ? await ticketPainel(admin, conta.email)
       : await ticketSupabase(app.tipo, identidade);
     if (!ticket) {
       await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: "falhou" });

@@ -163,6 +163,29 @@ Teste ponta a ponta (com um evento de 2 vagas em rascunho publicado só para tes
   e voucher; reenviar o mesmo evento não duplica.
 - `select * from fa_eventos_envios order by created_at desc` mostra cada e-mail uma vez (status `enviado`).
 
+## Lote 8: /admin como subsistema do Hub de Gestão (owner) e acesso limitado da equipe, 01/10/2026
+
+O painel do site (`institutofacaamigos.com.br/admin`) passa a ser um quadrado do Hub: **Painel do Instituto** e **Eventos** (mesmo painel, já na aba Eventos). Bruno e Isabella entram pelo Hub com um ticket de uso único (60 s) e ganham o painel completo. Quem entra pelo login direto de `/admin` recebe só o escopo `equipe`: cupons Wi-Fi e check-in (lista de inscritos sem e-mail/WhatsApp, sem editar, exportar, cancelar nem ver receita). O servidor barra; a tela só esconde.
+
+Ordem obrigatória (o login direto continua dando acesso total até o passo 5, então nada trava):
+
+1. Migração `20261001140000_gestao_painel_sso.sql` (aditiva): `painel_usuario` em `fa_gestao_contas` (preenchido com o e-mail das contas ativas), tabela `fa_gestao_painel_tickets`, coluna `escopo` em `fa_teste_admin_sessions` (sessões existentes viram `owner`).
+(A tabela `fa_gestao_tickets_painel` e a ação `admin_sso` do `gestao-hub`, de uma versão anterior do quadrado Eventos, foram substituídas por este fluxo; a tabela ficou sem uso e pode ser apagada.)
+2. Deploy das funções (`--no-verify-jwt`): `gestao-hub`, `behavior-test-admin`, `eventos-admin`. Sem a chave do passo 5, todas se comportam como antes.
+3. Site (Vercel): `admin.html` e `gestao.html`.
+4. Teste como owner: abrir `gestao.institutofacaamigos.com.br`, clicar em **Painel do Instituto** e conferir que o painel abre já logado, com Leads e Textos. Clicar em **Eventos** e conferir que abre na aba Eventos. Recarregar a URL antiga com o ticket deve cair no login (ticket já usado).
+5. Só depois do passo 4, virar a chave (reversível):
+
+```sql
+insert into public.fa_teste_config (key, value, updated_by)
+values ('admin_login_direto', '{"escopo":"equipe"}'::jsonb, 'hub')
+on conflict (key) do update set value = excluded.value, updated_at = now();
+```
+
+Para voltar ao comportamento anterior (login direto do Gestor = painel completo): `delete from public.fa_teste_config where key = 'admin_login_direto';`.
+
+Depois da chave em `equipe`, o login direto aceita qualquer perfil da Clínica (não só Gestor), mas só entrega o escopo limitado. Quem precisa de acesso completo entra pelo Hub (conta ativa em `fa_gestao_contas` com `painel_usuario` preenchido). Para tirar o acesso de alguém: `update fa_gestao_contas set ativo = false where email = '...'` (o ticket e a sessão do Hub deixam de valer na hora; a sessão de 12 h do `/admin` já aberta vale até expirar, ou `delete from fa_teste_admin_sessions where admin_email = '...'`).
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.
