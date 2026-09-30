@@ -14,7 +14,10 @@
 // e libera o Wi-Fi de qualquer forma. Esta função só perde o registro do
 // lead nesse caso — não há tentativa de retry no cliente.
 
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import { createClient, type SupabaseClient } from "jsr:@supabase/supabase-js@2";
+
+// deno-lint-ignore no-explicit-any
+type Admin = SupabaseClient<any, any, any, any, any>;
 
 const LOGO_URL = "https://institutofacaamigos.com.br/img/logo-simbolo.png";
 
@@ -88,9 +91,16 @@ const COUPON_VALIDITY_DAYS = 15;
 // '%circuito%').
 const CIRCUITO_UNIT_ID = "e43ba7a8-bd5f-47ad-b81d-dae7ea19d504";
 const CIRCUITO_BONUS_MINUTES = 5;
+// Unidade "FaçaAmigos Playground (Parque Shopping)": o cupom equivalente é a meia inclusiva
+// (DESCONTO_PCT 50, o mesmo tipo do cupom "50% MEIA" que o caixa já usa). Confirmar com:
+// select id from fa_kiosk_units where name ilike '%playground (parque%'.
+const PLAYGROUND_UNIT_ID = "11111111-1111-1111-1111-111111111111";
+const PLAYGROUND_DISCOUNT_PCT = 50;
 
 // Cria, no MESMO código do cupom "ESPERA-XXXX", um cupom nativo do kiosk
-// (fa_kiosk_coupons, kind=MINUTOS_EXTRA) com max_uses=1. O check-in do
+// (fa_kiosk_coupons) com max_uses=1: +5 min no Circuito (MINUTOS_EXTRA) e meia
+// inclusiva no Playground (DESCONTO_PCT 50). (Texto abaixo descreve o Circuito; o
+// Playground funciona igual.) O check-in do
 // Circuito já aceita p_coupon_code — ao digitar o código, o kiosk aplica os
 // minutos extras e bloqueia qualquer segunda tentativa com o mesmo código,
 // em qualquer unidade ou dia. Isso resolve o risco de a família reusar ou
@@ -101,16 +111,16 @@ const CIRCUITO_BONUS_MINUTES = 5;
 // seguem normalmente — só o benefício automático no Circuito fica
 // indisponível (o atendente ainda pode aplicar manualmente).
 async function syncKioskCoupon(
-  admin: ReturnType<typeof createClient>,
-  params: { couponCode: string; guardianName: string },
+  admin: Admin,
+  params: { couponCode: string; guardianName: string; unitId: string; kind: "MINUTOS_EXTRA" | "DESCONTO_PCT"; value: number; label: string },
 ): Promise<{ synced: boolean; error?: string }> {
   const { error } = await admin.from("fa_kiosk_coupons").insert({
-    unit_id: CIRCUITO_UNIT_ID,
+    unit_id: params.unitId,
     code: params.couponCode,
-    kind: "MINUTOS_EXTRA",
-    value: CIRCUITO_BONUS_MINUTES,
+    kind: params.kind,
+    value: params.value,
     max_uses: 1,
-    description: `Wi-Fi da clínica — ${params.guardianName}`,
+    description: `Wi-Fi da clínica (${params.label}) — ${params.guardianName}`,
   });
   if (error) return { synced: false, error: error.message ?? "erro desconhecido" };
   return { synced: true };
@@ -324,12 +334,32 @@ Deno.serve(async (req) => {
   // Aguardamos aqui — em edge functions, uma promise não aguardada pode ser
   // cancelada assim que a resposta é enviada, então "dispara e esquece" não
   // é seguro neste ambiente.
-  const kioskResult = await syncKioskCoupon(admin, { couponCode, guardianName }).catch((err) => ({
+  const onError = (err: unknown) => ({
     synced: false,
     error: err instanceof Error ? err.message : "erro desconhecido",
-  }));
+  });
+  const kioskResult = await syncKioskCoupon(admin, {
+    couponCode,
+    guardianName,
+    unitId: CIRCUITO_UNIT_ID,
+    kind: "MINUTOS_EXTRA",
+    value: CIRCUITO_BONUS_MINUTES,
+    label: "+5 min Circuito",
+  }).catch(onError);
   if (!kioskResult.synced) {
     console.error("Erro ao sincronizar cupom no kiosk:", kioskResult.error);
+  }
+  // Mesmo código no Playground (meia inclusiva). Falha aqui também não derruba o cadastro.
+  const playgroundResult = await syncKioskCoupon(admin, {
+    couponCode,
+    guardianName,
+    unitId: PLAYGROUND_UNIT_ID,
+    kind: "DESCONTO_PCT",
+    value: PLAYGROUND_DISCOUNT_PCT,
+    label: "meia inclusiva Playground",
+  }).catch(onError);
+  if (!playgroundResult.synced) {
+    console.error("Erro ao sincronizar cupom do Playground no kiosk:", playgroundResult.error);
   }
 
   const emailResult = await sendCouponEmail({
@@ -348,6 +378,9 @@ Deno.serve(async (req) => {
       ...(kioskResult.synced
         ? { kiosk_coupon_synced_at: new Date().toISOString() }
         : { kiosk_coupon_error: kioskResult.error ?? "falha desconhecida" }),
+      ...(playgroundResult.synced
+        ? { playground_coupon_synced_at: new Date().toISOString() }
+        : { playground_coupon_error: playgroundResult.error ?? "falha desconhecida" }),
     })
     .eq("id", data.id);
 

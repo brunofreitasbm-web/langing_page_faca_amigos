@@ -179,26 +179,22 @@ aqui é a configuração técnica, não uma orientação legal.
   - `WIFI_ADMIN_API_KEY` — segredo fixo usado pelo balcão para consultar/resgatar
     cupons via `wifi-coupon-admin` (`Authorization: Bearer <valor>`).
 
-## Pendência intencional: painel de resgate
+## Resgate do cupom e resumo
 
-`wifi-coupon-admin` é uma API pura (sem tela) — uma solução provisória enquanto não se
-integra uma aba "Wi-Fi" ao `admin.html` existente (que já tem login de gestor via
-`behavior-test-admin`). Até lá, o resgate no balcão pode ser feito com uma chamada
-simples, por exemplo:
+- **Aba "Cupons Wi-Fi" do `/admin`** (entrada pelo Hub de Gestão; a equipe usa o login direto limitado): lista os
+  cadastros, mostra o código, o nome e o status, e resgata no Playground ou no Circuito (um resgate por dia, cupom
+  vencido não resgata). O dono também vê o resumo do portal, o telefone, o e-mail e quem aceitou contato.
+- **Caixa:** o cupom `ESPERA-XXXX` também existe, com o mesmo código, no caixa do Circuito (+5 min) e do Playground
+  (meia inclusiva), de uso único. O atendente pode digitar o código direto no caixa em vez de usar a aba. O uso no
+  caixa aparece na aba como "Usado no caixa".
+- `wifi-coupon-admin` (API com `WIFI_ADMIN_API_KEY`) continua existindo como alternativa por linha de comando, mas a
+  aba é o caminho normal:
 
 ```bash
 # Consultar
 curl -H "Authorization: Bearer $WIFI_ADMIN_API_KEY" \
   "https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/wifi-coupon-admin?code=ESPERA-AB12"
-
-# Resgatar (escolher UMA operação)
-curl -X POST -H "Authorization: Bearer $WIFI_ADMIN_API_KEY" -H "Content-Type: application/json" \
-  -d '{"code":"ESPERA-AB12","operation":"playground"}' \
-  "https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/wifi-coupon-admin"
 ```
-
-Isso é aceitável para operar no dia 1, mas o ideal é uma tela — recomendo abrir isso
-como um pedido separado quando o volume de resgates justificar.
 
 ## Outras pendências
 

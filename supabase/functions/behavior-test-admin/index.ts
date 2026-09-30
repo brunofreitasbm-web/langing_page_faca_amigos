@@ -584,6 +584,33 @@ async function sendInsightEmailToGuardian(params: {
 }
 
 // ---------------------------------------------------------------------
+// Cupons Wi-Fi: uso no caixa (fa_kiosk_coupons)
+// ---------------------------------------------------------------------
+// wifi-lead-webhook cria, no mesmo código ESPERA-XXXX, um cupom de uso único em cada unidade
+// (Circuito: +5 min; Playground: meia inclusiva). Quem lê aqui só consulta o uso (used_count) e,
+// no resgate pela aba, desativa os dois para o código não valer duas vezes.
+const KIOSK_PLAYGROUND_UNIT_ID = "11111111-1111-1111-1111-111111111111";
+const KIOSK_CIRCUITO_UNIT_ID = "e43ba7a8-bd5f-47ad-b81d-dae7ea19d504";
+
+type UsoCaixa = { playground: Set<string>; circuito: Set<string> };
+
+// Códigos ESPERA já usados no caixa, por unidade. Sem lista de códigos = todos.
+async function usoNoCaixa(admin: Admin, codes?: string[]): Promise<UsoCaixa> {
+  const uso: UsoCaixa = { playground: new Set(), circuito: new Set() };
+  let q = admin.from("fa_kiosk_coupons").select("code, unit_id, used_count").like("code", "ESPERA-%").gt("used_count", 0).limit(20000);
+  if (codes) {
+    if (!codes.length) return uso;
+    q = q.in("code", codes);
+  }
+  const { data } = await q;
+  for (const r of (data ?? []) as { code: string; unit_id: string }[]) {
+    if (r.unit_id === KIOSK_PLAYGROUND_UNIT_ID) uso.playground.add(r.code);
+    else if (r.unit_id === KIOSK_CIRCUITO_UNIT_ID) uso.circuito.add(r.code);
+  }
+  return uso;
+}
+
+// ---------------------------------------------------------------------
 // Handler
 // ---------------------------------------------------------------------
 
@@ -888,18 +915,25 @@ Deno.serve(async (req) => {
   // --- aba "Cupons Wi-Fi" (portal Wi-Fi da clínica) ---
   if (action === "wifi_list_coupons") {
     const q = str(body.q);
+    const optin = str(body.optin); // owner: "whatsapp" | "email" mostra só quem aceitou contato
+    const equipe = session.escopo === "equipe";
     let query = admin
       .from("fa_wifi_leads")
       .select(
-        "id, guardian_name, guardian_phone, guardian_email, coupon_code, coupon_status, coupon_operation, coupon_expires_at, last_redeemed_at, redeemed_count, visit_count, created_at",
+        "id, guardian_name, guardian_phone, guardian_email, coupon_code, coupon_status, coupon_operation, coupon_expires_at, last_redeemed_at, redeemed_count, visit_count, created_at, marketing_opt_in_whatsapp, marketing_opt_in_email, kiosk_coupon_synced_at, kiosk_coupon_error, playground_coupon_synced_at, playground_coupon_error",
       )
       .order("created_at", { ascending: false })
       .limit(100);
+    if (!equipe && optin === "whatsapp") query = query.eq("marketing_opt_in_whatsapp", true);
+    if (!equipe && optin === "email") query = query.eq("marketing_opt_in_email", true);
     if (q) {
       const like = quoteFilterValue(`%${q.replace(/[%_]/g, "")}%`);
-      const conds = [`coupon_code.ilike.${like}`, `guardian_email.ilike.${like}`, `guardian_name.ilike.${like}`];
+      // A equipe só precisa achar pelo código ou pelo nome: buscar por telefone/e-mail revelaria quem se cadastrou.
+      const conds = equipe
+        ? [`coupon_code.ilike.${like}`, `guardian_name.ilike.${like}`]
+        : [`coupon_code.ilike.${like}`, `guardian_email.ilike.${like}`, `guardian_name.ilike.${like}`];
       const digits = q.replace(/\D/g, "");
-      if (digits.length >= 3) conds.push(`guardian_phone.ilike.${quoteFilterValue(`%${digits}%`)}`);
+      if (!equipe && digits.length >= 3) conds.push(`guardian_phone.ilike.${quoteFilterValue(`%${digits}%`)}`);
       query = query.or(conds.join(","));
     }
     const { data, error } = await query;
@@ -907,12 +941,105 @@ Deno.serve(async (req) => {
 
     const now = Date.now();
     const todayStart = new Date(startOfTodayBelemIso()).getTime();
-    const coupons = (data ?? []).map((c) => ({
-      ...c,
-      expired: new Date(c.coupon_expires_at).getTime() < now,
-      redeemed_today: !!c.last_redeemed_at && new Date(c.last_redeemed_at).getTime() >= todayStart,
-    }));
+    const uso = await usoNoCaixa(admin, (data ?? []).map((c) => c.coupon_code as string));
+    const coupons = (data ?? []).map((c) => {
+      const usadoNoCaixa = uso.playground.has(c.coupon_code) ? "playground" : uso.circuito.has(c.coupon_code) ? "circuito" : null;
+      const base = {
+        id: c.id,
+        guardian_name: c.guardian_name,
+        coupon_code: c.coupon_code,
+        coupon_status: c.coupon_status,
+        coupon_operation: c.coupon_operation,
+        coupon_expires_at: c.coupon_expires_at,
+        last_redeemed_at: c.last_redeemed_at,
+        redeemed_count: c.redeemed_count,
+        visit_count: c.visit_count,
+        created_at: c.created_at,
+        expired: new Date(c.coupon_expires_at).getTime() < now,
+        redeemed_today: !!c.last_redeemed_at && new Date(c.last_redeemed_at).getTime() >= todayStart,
+        used_at_register: usadoNoCaixa,
+      };
+      if (equipe) return base;
+      return {
+        ...base,
+        guardian_phone: c.guardian_phone,
+        guardian_email: c.guardian_email,
+        marketing_opt_in_whatsapp: !!c.marketing_opt_in_whatsapp,
+        marketing_opt_in_email: !!c.marketing_opt_in_email,
+        // Cupom que não chegou ao caixa não trava reuso nem aplica o benefício sozinho.
+        register_sync_ok: !c.kiosk_coupon_error && !c.playground_coupon_error && !!c.kiosk_coupon_synced_at && !!c.playground_coupon_synced_at,
+      };
+    });
     return jsonResponse(req, { coupons });
+  }
+
+  // Resumo do portal Wi-Fi para o dono: quantos se cadastraram, quantos aceitaram contato, quantos cupons foram usados
+  // (na aba ou direto no caixa) e por onde. Só apresenta; nada é enviado a ninguém. Não está em ACOES_EQUIPE.
+  if (action === "wifi_resumo") {
+    const { data, error } = await admin
+      .from("fa_wifi_leads")
+      .select(
+        "created_at, coupon_code, coupon_expires_at, redeemed_count, coupon_operation, visit_count, marketing_opt_in_whatsapp, marketing_opt_in_email, email_error, kiosk_coupon_error, playground_coupon_error",
+      )
+      .order("created_at", { ascending: false })
+      .limit(20000);
+    if (error) return jsonResponse(req, { error: "falha ao carregar o resumo" }, 500);
+    const leads = (data ?? []) as Array<Record<string, unknown>>;
+    const uso = await usoNoCaixa(admin);
+
+    const now = Date.now();
+    const todayStart = new Date(startOfTodayBelemIso()).getTime();
+    const DAY = 86400_000;
+    const dia = (ms: number) => new Date(ms - 3 * 3600_000).toISOString().slice(0, 10); // dia de Belém (UTC-3)
+    const porDia: Record<string, number> = {};
+    for (let i = 13; i >= 0; i--) porDia[dia(todayStart - i * DAY)] = 0;
+
+    const r = {
+      cadastros: leads.length, hoje: 0, ultimos_7_dias: 0, ultimos_30_dias: 0,
+      optin_whatsapp: 0, optin_email: 0, voltaram: 0,
+      resgatados: 0, resgate_aba_playground: 0, resgate_aba_circuito: 0, resgate_caixa_playground: 0, resgate_caixa_circuito: 0,
+      vigentes: 0, vencem_em_3_dias: 0, vencidos_sem_uso: 0,
+      falhas_caixa: 0, falhas_email: 0,
+    };
+    for (const l of leads) {
+      const criado = new Date(String(l.created_at)).getTime();
+      const code = String(l.coupon_code);
+      if (criado >= todayStart) r.hoje++;
+      if (criado >= now - 7 * DAY) r.ultimos_7_dias++;
+      if (criado >= now - 30 * DAY) r.ultimos_30_dias++;
+      const k = dia(criado);
+      if (k in porDia) porDia[k]++;
+      if (l.marketing_opt_in_whatsapp) r.optin_whatsapp++;
+      if (l.marketing_opt_in_email) r.optin_email++;
+      if (Number(l.visit_count ?? 1) > 1) r.voltaram++;
+
+      const naAba = Number(l.redeemed_count ?? 0) > 0;
+      const noPlay = uso.playground.has(code);
+      const noCirc = uso.circuito.has(code);
+      if (naAba) {
+        if (l.coupon_operation === "playground") r.resgate_aba_playground++;
+        else if (l.coupon_operation === "circuito") r.resgate_aba_circuito++;
+      }
+      if (noPlay) r.resgate_caixa_playground++;
+      if (noCirc) r.resgate_caixa_circuito++;
+      const usado = naAba || noPlay || noCirc;
+      if (usado) r.resgatados++;
+      const vence = new Date(String(l.coupon_expires_at)).getTime();
+      if (!usado) {
+        if (vence < now) r.vencidos_sem_uso++;
+        else {
+          r.vigentes++;
+          if (vence - now <= 3 * DAY) r.vencem_em_3_dias++;
+        }
+      }
+      if (l.kiosk_coupon_error || l.playground_coupon_error) r.falhas_caixa++;
+      if (l.email_error) r.falhas_email++;
+    }
+    return jsonResponse(req, {
+      ...r,
+      taxa_resgate: leads.length ? Math.round((r.resgatados / leads.length) * 100) : 0,
+      por_dia: Object.entries(porDia).map(([data, total]) => ({ data, total })),
+    });
   }
 
   // Mesma regra de negócio e mesmo resgate atômico de wifi-coupon-admin: um benefício por dia (dia de Belém),
@@ -936,6 +1063,12 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "cupom expirado" }, 409);
     }
 
+    // Já usado direto no caixa (Playground ou Circuito): o benefício de hoje acabou, não vale de novo pela aba.
+    const usoCaixa = await usoNoCaixa(admin, [code]);
+    if (usoCaixa.playground.has(code) || usoCaixa.circuito.has(code)) {
+      return jsonResponse(req, { error: "este cupom já foi usado no caixa do " + (usoCaixa.playground.has(code) ? "Playground" : "Circuito") }, 409);
+    }
+
     const todayStart = startOfTodayBelemIso();
     const { data: updated, error: updateError } = await admin
       .from("fa_wifi_leads")
@@ -952,6 +1085,9 @@ Deno.serve(async (req) => {
     if (!updated?.length) {
       return jsonResponse(req, { error: "este cupom já foi resgatado hoje — um benefício por dia" }, 409);
     }
+    // Resgatado pela aba: desativa o cupom nas duas unidades do caixa para o código não valer de novo lá.
+    const { error: caixaErr } = await admin.from("fa_kiosk_coupons").update({ active: false }).eq("code", code).like("code", "ESPERA-%");
+    if (caixaErr) console.error("Erro ao desativar cupom no caixa:", caixaErr.message);
     return jsonResponse(req, { ok: true, coupon_code: code, operation });
   }
 
