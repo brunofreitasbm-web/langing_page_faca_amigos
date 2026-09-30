@@ -95,6 +95,42 @@ function alvoLocal(valor) {
   return v.replace(/^\/+/, '');
 }
 
+// Cada página tem um domínio "dono" (o do canonical). O playground. só serve a home do playground e o
+// /circuito; o resto é do hub (o middleware.js redireciona o que estiver no host errado). Links devem
+// apontar direto para o dono, senão o visitante troca de host sem querer ou passa por um redirect.
+const HUB = 'institutofacaamigos.com.br';
+const PLAY = 'playground.institutofacaamigos.com.br';
+const DONO_PLAYGROUND = new Set(['', 'circuito']);
+function problemaDeDominio(valor, hostDaPagina) {
+  let v = decodeHtml(valor.trim());
+  if (/^\/\//.test(v)) v = 'https:' + v;
+  let host, caminho;
+  if (/^https?:\/\//i.test(v)) {
+    let u;
+    try { u = new URL(v); } catch { return null; }
+    host = u.hostname;
+    caminho = u.pathname;
+  } else if (v.startsWith('/')) {
+    host = hostDaPagina;
+    caminho = v.split('#')[0].split('?')[0];
+  } else return null;
+  if (host !== HUB && host !== PLAY) return null;
+  const rel = caminho.replace(/^\/+|\/+$/g, '');
+  if (/\.[a-z0-9]+$/i.test(rel) && !/\.html$/i.test(rel)) return null; // arquivos (llms.txt, imagens...) passam em qualquer host
+  const donoPlay = DONO_PLAYGROUND.has(rel) || rel === 'playground';
+  if (host === HUB && donoPlay && rel !== '') return `pertence ao playground.; use https://${PLAY}/${rel === 'playground' ? '' : rel}`;
+  if (host === PLAY && !donoPlay) return `pertence ao hub; use https://${HUB}/${rel}`;
+  if (host === PLAY && rel === 'playground') return `use https://${PLAY}/`;
+  return null;
+}
+
+// "guia" -> conteúdo de guia.html (para conferir âncoras entre páginas)
+function htmlDoAlvo(rel) {
+  const limpo = rel.replace(/\/+$/, '');
+  const f = limpo === '' ? 'index.html' : /\.html$/i.test(limpo) ? limpo : limpo + '.html';
+  return existsSync(join(root, f)) ? read(f) : null;
+}
+
 // cleanUrls: "" -> index.html, "guia" -> guia.html
 function existeNoSite(rel) {
   if (rel === '') return existsSync(join(root, 'index.html'));
@@ -195,6 +231,9 @@ for (const arq of paginas) {
 
   // links internos (href/src/poster/srcset de tags reais; JS e comentários ignorados)
   const vistos = new Set();
+  const canonDaPagina = [...limpo.matchAll(/<linkb[^>]*>/gi)].map((m) => attrs(m[0])).find((a) => /(?:^|\s)canonical(?:\s|$)/i.test(a.rel ?? ''))?.href ?? '';
+  let hostDaPagina = HUB;
+  try { hostDaPagina = new URL(canonDaPagina).hostname; } catch { /* sem canonical: assume hub */ }
   for (const m of limpo.matchAll(/<([a-zA-Z][a-zA-Z0-9-]*)\b([^>]*)>/g)) {
     const tag = m[1].toLowerCase();
     const a = attrs(m[2]);
@@ -205,6 +244,19 @@ for (const arq of paginas) {
     if (tag === 'video' && a.poster) cand.push(a.poster);
     if (a.srcset) for (const parte of a.srcset.split(',')) cand.push(parte.trim().split(/\s+/)[0]);
     for (const c of cand) {
+      if (tag === 'a') {
+        const prob = problemaDeDominio(c, hostDaPagina);
+        if (prob) erros.push(`link no domínio errado: ${c} (${prob})`);
+        const hash = decodeHtml(c.trim()).split('#')[1];
+        const alvoRel = alvoLocal(c);
+        if (hash && alvoRel != null) {
+          const alvoHtml = htmlDoAlvo(alvoRel);
+          const idEsc = hash.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+          if (alvoHtml && !new RegExp(`\\bid=["']${idEsc}["']`).test(alvoHtml)) {
+            erros.push(`âncora inexistente: ${c}`);
+          }
+        }
+      }
       const rel = alvoLocal(c);
       if (rel == null) continue;
       if (vistos.has(rel)) continue;
