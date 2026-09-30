@@ -54,7 +54,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 
 - **Crianças ≥ 3 anos**: podem permanecer no parque sob supervisão dos monitores capacitados, com pulseira de identificação vinculada ao responsável cadastrado na entrada.
 
-- **Relatório da Sessão**: nos planos a partir de 1 hora (60 minutos ou mais) o responsável recebe, por WhatsApp, um relatório com as observações da equipe de mediação sobre a brincadeira da criança (coordenação, interação social, atenção, comunicação). Cortesia, sem custo adicional. Não é avaliação clínica nem diagnóstico.
+- **Olhar FaçaAmigos**: nos planos a partir de 1 hora (60 minutos ou mais) o responsável recebe, por WhatsApp, o Olhar FaçaAmigos, um resumo das anotações da equipe sobre a brincadeira da criança (coordenação, interação social, atenção, comunicação). Cortesia, sem custo adicional. Não é avaliação clínica nem diagnóstico.
 
 ### Circuito de Carrinhos Elétricos (Parque Shopping Belém)
 {{PRECOS_CIRCUITO_TABELA}}
