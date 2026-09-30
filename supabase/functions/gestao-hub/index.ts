@@ -265,22 +265,11 @@ async function verificarSenhaClinica(
 
   let emailToUse = identifier;
 
-  // Sem '@': tenta como CPF (mesma busca de behavior-test-admin).
+  // Sem '@': é CPF. A busca usa a service role da Clínica: com a chave anon a RLS de `profiles` (só lê a
+  // própria clínica, logado) devolve vazio e o login por CPF nunca achava o e-mail.
   if (!emailToUse.includes("@")) {
-    const cleanDigits = emailToUse.replace(/\D/g, "");
-    const filters = [`cpf.eq.${quoteFilterValue(emailToUse)}`];
-    if (cleanDigits && cleanDigits !== emailToUse) {
-      filters.push(`cpf.eq.${quoteFilterValue(cleanDigits)}`);
-      filters.push(`cpf_clean.eq.${quoteFilterValue(cleanDigits)}`);
-    }
-    const lookupRes = await fetch(
-      `${clinicaUrl}/rest/v1/profiles?select=email&or=(${filters.join(",")})&limit=1`,
-      { headers: { apikey: clinicaAnonKey } },
-    ).catch(() => null);
-    if (lookupRes && lookupRes.ok) {
-      const found = await lookupRes.json().catch(() => []);
-      if (Array.isArray(found) && found[0]?.email) emailToUse = found[0].email;
-    }
+    const alvo = await acharUsuarioClinica(emailToUse);
+    if (alvo) emailToUse = alvo.email;
   }
 
   const tokenRes = await fetch(`${clinicaUrl}/auth/v1/token?grant_type=password`, {
@@ -312,12 +301,11 @@ async function acharUsuarioClinica(identifier: string): Promise<{ id: string; em
   if (identifier.includes("@")) {
     filters.push(`email.eq.${quoteFilterValue(identifier.toLowerCase())}`);
   } else {
+    // `profiles` só tem a coluna `cpf` (guardada só com dígitos); não existe `cpf_clean`, e uma coluna
+    // inexistente dentro do .or() derruba a consulta inteira.
     const digits = identifier.replace(/\D/g, "");
     filters.push(`cpf.eq.${quoteFilterValue(identifier)}`);
-    if (digits && digits !== identifier) {
-      filters.push(`cpf.eq.${quoteFilterValue(digits)}`);
-      filters.push(`cpf_clean.eq.${quoteFilterValue(digits)}`);
-    }
+    if (digits && digits !== identifier) filters.push(`cpf.eq.${quoteFilterValue(digits)}`);
   }
   const { data, error } = await b.from("profiles").select("id, email").or(filters.join(",")).limit(1);
   if (error || !data?.[0]?.id || !data[0].email) return null;

@@ -257,20 +257,20 @@ async function verifyClinicaGestorLogin(
 
   let emailToUse = identifier.trim();
 
-  // Se não contém '@', assume que pode ser CPF e tenta buscar o e-mail correspondente na Clínica
+  // Se não contém '@', é CPF: acha o e-mail com a service role da Clínica. Com a chave anon a RLS de
+  // `profiles` (só lê a própria clínica, logado) devolve vazio, e `profiles` não tem a coluna `cpf_clean`
+  // (coluna inexistente dentro do .or() derruba a consulta inteira). O CPF é guardado só com dígitos.
   if (!emailToUse.includes("@")) {
+    const clinicaServiceKey = Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
     const cleanDigits = emailToUse.replace(/\D/g, "");
     const filters: string[] = [];
     if (emailToUse) filters.push(`cpf.eq.${quoteFilterValue(emailToUse)}`);
-    if (cleanDigits && cleanDigits !== emailToUse) {
-      filters.push(`cpf.eq.${quoteFilterValue(cleanDigits)}`);
-      filters.push(`cpf_clean.eq.${quoteFilterValue(cleanDigits)}`);
-    }
+    if (cleanDigits && cleanDigits !== emailToUse) filters.push(`cpf.eq.${quoteFilterValue(cleanDigits)}`);
 
-    if (filters.length > 0) {
+    if (clinicaServiceKey && filters.length > 0) {
       const lookupRes = await fetch(
         `${clinicaUrl}/rest/v1/profiles?select=email&or=(${filters.join(",")})&limit=1`,
-        { headers: { apikey: clinicaAnonKey } },
+        { headers: { apikey: clinicaServiceKey, Authorization: `Bearer ${clinicaServiceKey}` } },
       ).catch(() => null);
 
       if (lookupRes && lookupRes.ok) {
