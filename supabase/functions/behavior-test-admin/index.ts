@@ -380,6 +380,9 @@ async function escopoLoginDireto(admin: Admin): Promise<Escopo> {
   return (data?.value as { escopo?: string } | null)?.escopo === "equipe" ? "equipe" : "owner";
 }
 
+// clinica_user_id é uuid NOT NULL; sessão vinda do Hub não tem usuário da Clínica (quem é fica em admin_email).
+const HUB_USER_ID = "00000000-0000-0000-0000-000000000000";
+
 async function sha256Hex(s: string): Promise<string> {
   return toHex(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s)));
 }
@@ -674,7 +677,7 @@ Deno.serve(async (req) => {
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
     const { error: sessionError } = await admin.from("fa_teste_admin_sessions").insert({
       token,
-      clinica_user_id: `hub:${email}`,
+      clinica_user_id: HUB_USER_ID,
       admin_email: conta.painel_usuario,
       expires_at: expiresAt,
       escopo: "owner",
