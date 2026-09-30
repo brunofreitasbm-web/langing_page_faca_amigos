@@ -11,6 +11,8 @@ Disallow: /gestao.html
 Disallow: /teste-perguntas.json
 Disallow: /wifi
 Disallow: /wifi.html
+Disallow: /ingresso
+Disallow: /ingresso.html
 Disallow: /hotspot
 
 # Buscadores e assistentes de IA (respostas generativas, GEO/AEO): liberados de propósito.
@@ -47,6 +49,8 @@ Disallow: /gestao.html
 Disallow: /teste-perguntas.json
 Disallow: /wifi
 Disallow: /wifi.html
+Disallow: /ingresso
+Disallow: /ingresso.html
 Disallow: /hotspot
 
 # Resumos para modelos de linguagem (llms.txt)

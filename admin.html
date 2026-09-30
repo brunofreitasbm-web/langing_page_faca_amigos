@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex, nofollow">
-  <title>Painel Instituto FaçaAmigos — Teste de Comportamento</title>
+  <title>Painel Instituto FaçaAmigos</title>
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
   <link rel="apple-touch-icon" href="img/logo-simbolo.png">
 
@@ -613,6 +613,44 @@
 
     .tab-bar { max-width: 100%; overflow-x: auto; }
     .tab-btn { white-space: nowrap; }
+
+    /* ---------- Eventos ---------- */
+    .ev-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+    .ev-card { background: var(--white); border-radius: 18px; box-shadow: var(--shadow-sm); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; cursor: pointer; border: 2.5px solid transparent; transition: border-color var(--t-fast), transform var(--t-fast); }
+    .ev-card:hover { transform: translateY(-2px); border-color: rgba(46, 207, 181, 0.5); }
+    .ev-card.selected { border-color: var(--teal); }
+    .ev-card h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem; line-height: 1.3; }
+    .ev-card .meta { color: var(--ink-soft); font-size: 0.84rem; font-weight: 700; }
+    .ev-card .nums { display: flex; gap: 12px; flex-wrap: wrap; font-size: 0.82rem; font-weight: 800; color: var(--ink-soft); }
+    .ev-card .nums b { color: var(--dark); font-size: 1rem; }
+    .ev-panel { margin-top: 22px; }
+    .ev-panel-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; flex-wrap: wrap; background: var(--white); border-radius: var(--r-card); box-shadow: var(--shadow-sm); padding: 18px 22px; margin-bottom: 16px; }
+    .ev-panel-head h2 { font-size: 1.3rem; }
+    .ev-panel-head .sub { color: var(--ink-soft); font-weight: 700; font-size: 0.88rem; margin-top: 4px; }
+    .ev-panel-head .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .ev-kpis { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 16px; }
+    .ev-kpi { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-sm); padding: 12px 14px; }
+    .ev-kpi .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gray); font-weight: 800; }
+    .ev-kpi .value { font-size: 1.4rem; font-weight: 900; line-height: 1.2; }
+    .ev-kpi.warn .value { color: var(--pink-dark); }
+    .ev-form-grid { display: grid; gap: 12px 16px; grid-template-columns: 1fr 1fr; }
+    .ev-form-grid .wide { grid-column: 1 / -1; }
+    @media (max-width: 640px) { .ev-form-grid { grid-template-columns: 1fr; } }
+    .ev-help { font-size: 0.78rem; color: var(--ink-soft); font-weight: 600; margin-top: 4px; }
+    .modal.modal-wide { max-width: 860px; }
+    .ev-tipos-table td, .ev-tipos-table th { padding: 10px 12px; }
+    .ev-inline-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .checkin-screen { text-align: center; padding: 10px 0; }
+    .checkin-screen .form-control { font-size: 1.4rem; text-align: center; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 900; }
+    .checkin-result { margin-top: 18px; border-radius: 18px; padding: 22px 18px; font-weight: 800; font-size: 1.15rem; display: none; }
+    .checkin-result.active { display: block; }
+    .checkin-result.ok { background: rgba(46, 207, 181, 0.2); color: var(--teal-dark); }
+    .checkin-result.bad { background: rgba(240, 25, 107, 0.12); color: var(--pink-dark); }
+    .checkin-result .big { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+    #qrReader { width: 100%; max-width: 360px; margin: 14px auto 0; border-radius: 16px; overflow: hidden; }
+    #qrReader video { width: 100% !important; }
+    .checkin-log { text-align: left; margin-top: 16px; font-size: 0.84rem; color: var(--ink-soft); max-height: 160px; overflow-y: auto; }
+    .checkin-log div { padding: 4px 0; border-bottom: 1px solid rgba(26,63,53,0.06); }
   </style>
 </head>
 
@@ -623,7 +661,7 @@
     <div class="login-card">
       <img src="img/logo-simbolo.png" alt="" class="logo-simbolo" loading="lazy" decoding="async">
       <h1>Painel Instituto FaçaAmigos</h1>
-      <p class="sub">Leads do Teste de Comportamento</p>
+      <p class="sub">Leads do Teste, Cupons Wi-Fi e Eventos</p>
       <form class="login-form" id="loginForm" novalidate>
         <div id="loginNotice" class="form-notice"></div>
         <div id="loginError" class="form-error" role="alert"></div>
@@ -647,7 +685,7 @@
       <div class="wrap">
         <div class="brand">
           <img src="img/logo-simbolo.png" alt="" loading="lazy" decoding="async">
-          <h1>Leads — Teste de Comportamento</h1>
+          <h1>Painel Instituto FaçaAmigos</h1>
         </div>
         <div class="who">
           <span id="adminEmailLabel"></span>
@@ -662,6 +700,7 @@
         <button type="button" class="tab-btn active" id="tabLeadsBtn">Leads</button>
         <button type="button" class="tab-btn" id="tabConfigBtn">Textos do resultado</button>
         <button type="button" class="tab-btn" id="tabWifiBtn">Cupons Wi-Fi</button>
+        <button type="button" class="tab-btn" id="tabEventosBtn">Eventos</button>
       </div>
 
       <div id="leadsView">
@@ -749,6 +788,91 @@
         </div>
       </div>
 
+      <div id="eventosView" hidden>
+        <div class="toolbar">
+          <div class="form-group status-group">
+            <label for="evStatusFilter" class="form-label">Status</label>
+            <select id="evStatusFilter" class="form-control">
+              <option value="">Todos</option>
+              <option value="draft">Rascunho</option>
+              <option value="published">Publicado</option>
+              <option value="closed">Encerrado</option>
+              <option value="cancelled">Cancelado</option>
+            </select>
+          </div>
+          <span class="count" id="evCount"></span>
+          <button type="button" class="btn btn-ghost btn-sm" id="evHotmartBtn" title="Vendas da Hotmart que chegaram antes do tipo de ingresso existir">Reprocessar Hotmart</button>
+          <button type="button" class="btn btn-pink btn-sm btn-export" id="evNovoBtn">+ Novo evento</button>
+        </div>
+        <div id="evError" class="form-error" role="alert"></div>
+        <div id="evNotice" class="form-notice" role="status"></div>
+        <div id="evState" class="state-msg">Carregando eventos…</div>
+        <div class="ev-grid" id="evGrid"></div>
+
+        <!-- Painel do evento selecionado -->
+        <div class="ev-panel" id="evPanel" hidden>
+          <div class="ev-panel-head">
+            <div>
+              <h2 id="evPanelTitle"></h2>
+              <div class="sub" id="evPanelSub"></div>
+            </div>
+            <div class="actions">
+              <a class="btn btn-ghost btn-sm" id="evVerBtn" href="#" target="_blank" rel="noopener">Ver página</a>
+              <button type="button" class="btn btn-ghost btn-sm" id="evEditarBtn">Editar</button>
+              <button type="button" class="btn btn-teal btn-sm" id="evCheckinBtn">Check-in</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="evCsvBtn">Exportar CSV</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="evCancelarBtn" style="color: var(--pink-dark); border-color: var(--pink-dark);">Cancelar evento</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="evFecharBtn" aria-label="Fechar painel">✕</button>
+            </div>
+          </div>
+          <div class="ev-kpis" id="evKpis"></div>
+
+          <div class="config-area">
+            <h3>Tipos de ingresso</h3>
+            <div id="evTiposError" class="form-error" role="alert"></div>
+            <div style="overflow-x:auto;">
+              <table class="leads-table ev-tipos-table" id="evTiposTable">
+                <thead><tr><th>Nome</th><th>Tipo</th><th>Vagas</th><th>Ocupadas</th><th>Fila</th><th>Hotmart</th><th></th></tr></thead>
+                <tbody id="evTiposTbody"></tbody>
+              </table>
+            </div>
+            <div class="config-actions"><button type="button" class="btn btn-ghost btn-sm" id="evTipoNovoBtn">+ Adicionar tipo de ingresso</button></div>
+          </div>
+
+          <div class="toolbar">
+            <div class="form-group search-group">
+              <label for="insSearch" class="form-label">Buscar inscrito</label>
+              <input type="search" id="insSearch" class="form-control" placeholder="Nome, e-mail, código ou WhatsApp">
+            </div>
+            <div class="form-group status-group">
+              <label for="insStatusFilter" class="form-label">Status</label>
+              <select id="insStatusFilter" class="form-control">
+                <option value="">Todos</option>
+                <option value="confirmada">Confirmada</option>
+                <option value="promovida">Promovida (aguarda confirmação)</option>
+                <option value="lista_espera">Lista de espera</option>
+                <option value="cancelada">Cancelada</option>
+                <option value="expirada">Expirada</option>
+              </select>
+            </div>
+            <span class="count" id="insCount"></span>
+            <button type="button" class="btn btn-ghost btn-sm btn-export" id="insAddBtn">+ Inscrever manualmente</button>
+          </div>
+          <div id="insError" class="form-error" role="alert"></div>
+          <div id="insNotice" class="form-notice" role="status"></div>
+          <div class="leads-wrap">
+            <div id="insState" class="state-msg">Carregando inscritos…</div>
+            <div style="overflow-x:auto;">
+              <table class="leads-table" id="insTable" hidden>
+                <thead><tr><th>Nome</th><th>Ingresso</th><th>Status</th><th>Código</th><th>Origem</th><th>Inscrito em</th><th>Ações</th></tr></thead>
+                <tbody id="insTbody"></tbody>
+              </table>
+            </div>
+            <div class="leads-cards" id="insCards" hidden></div>
+          </div>
+        </div>
+      </div>
+
       <div id="configView" hidden>
         <div id="configState" class="state-msg">Carregando textos…</div>
         <div id="configError" class="form-error"></div>
@@ -799,6 +923,121 @@
           </div>
           <button type="button" class="btn btn-ghost btn-sm" id="markContactedBtn">Marcar como contatado</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: EVENTO (criar/editar) ================= -->
+  <div class="modal-overlay" id="evModalOverlay">
+    <div class="modal modal-wide" role="dialog" aria-modal="true" aria-labelledby="evModalTitle" id="evModal">
+      <button type="button" class="modal-close" data-close="evModalOverlay" aria-label="Fechar">✕</button>
+      <h3 id="evModalTitle">Novo evento</h3>
+      <p class="sub">Para publicar, o evento precisa de promessa concreta, ao menos 3 benefícios e descrição curta. A escassez mostrada no site é sempre a real (vagas e prazo).</p>
+      <div id="evFormError" class="form-error" role="alert"></div>
+      <form id="evForm" novalidate>
+        <input type="hidden" id="evf-id">
+        <div class="ev-form-grid">
+          <div class="form-group wide"><label class="form-label" for="evf-titulo">Título</label><input class="form-control" id="evf-titulo" required maxlength="140"></div>
+          <div class="form-group"><label class="form-label" for="evf-slug">Endereço (slug)</label><input class="form-control" id="evf-slug" placeholder="gerado do título" maxlength="80"><div class="ev-help">institutofacaamigos.com.br/eventos/<span id="evf-slug-preview">…</span></div></div>
+          <div class="form-group"><label class="form-label" for="evf-status">Status</label>
+            <select class="form-control" id="evf-status"><option value="draft">Rascunho (não aparece no site)</option><option value="published">Publicado</option><option value="closed">Encerrado</option></select></div>
+          <div class="form-group"><label class="form-label" for="evf-categoria">Categoria</label>
+            <select class="form-control" id="evf-categoria"><option value="palestra">Palestra</option><option value="reuniao">Reunião / encontro</option><option value="treinamento">Treinamento</option></select></div>
+          <div class="form-group"><label class="form-label" for="evf-publico">Público (trilha)</label>
+            <select class="form-control" id="evf-publico"><option value="familias">Famílias / responsáveis</option><option value="profissionais">Profissionais</option></select></div>
+          <div class="form-group"><label class="form-label" for="evf-formato">Formato</label>
+            <select class="form-control" id="evf-formato"><option value="presencial">Presencial</option><option value="online">Online</option><option value="hibrido">Híbrido</option></select></div>
+          <div class="form-group"><label class="form-label" for="evf-capa">Imagem de capa (URL)</label><input class="form-control" id="evf-capa" type="url" placeholder="https://institutofacaamigos.com.br/img/..."></div>
+          <div class="form-group"><label class="form-label" for="evf-inicio">Início (horário de Belém)</label><input class="form-control" id="evf-inicio" type="datetime-local" required></div>
+          <div class="form-group"><label class="form-label" for="evf-fim">Fim</label><input class="form-control" id="evf-fim" type="datetime-local" required></div>
+          <div class="form-group"><label class="form-label" for="evf-inscricoes-ate">Inscrições até (opcional)</label><input class="form-control" id="evf-inscricoes-ate" type="datetime-local"><div class="ev-help">Vazio = até o início. Prazo real gera a contagem regressiva na página.</div></div>
+          <div class="form-group"><label class="form-label" for="evf-local-nome">Local (nome)</label><input class="form-control" id="evf-local-nome" placeholder="Ex.: Clínica FaçaAmigos"></div>
+          <div class="form-group"><label class="form-label" for="evf-local-endereco">Endereço</label><input class="form-control" id="evf-local-endereco" placeholder="Rua, número, bairro"></div>
+          <div class="form-group"><label class="form-label" for="evf-online-url">Link online (só quem confirmou vê)</label><input class="form-control" id="evf-online-url" type="url" placeholder="https://meet.google.com/..."></div>
+          <div class="form-group wide"><label class="form-label" for="evf-descricao-curta">Descrição curta (até 300 caracteres)</label><textarea class="form-control" id="evf-descricao-curta" maxlength="300" style="min-height:64px;"></textarea></div>
+          <div class="form-group wide"><label class="form-label" for="evf-promessa">Promessa (o que a pessoa leva ao sair)</label><input class="form-control" id="evf-promessa" maxlength="400" placeholder="Ex.: Você sai com um plano de 3 passos para as birras na hora de sair de casa"></div>
+          <div class="form-group wide"><label class="form-label" for="evf-beneficios">Benefícios (um por linha, 3 a 5)</label><textarea class="form-control" id="evf-beneficios" style="min-height:96px;" placeholder="Entender o que vem antes da birra&#10;Um roteiro para os 10 minutos antes de sair&#10;Como pedir ajuda na escola"></textarea></div>
+          <div class="form-group"><label class="form-label" for="evf-para-quem">Para quem é</label><textarea class="form-control" id="evf-para-quem" style="min-height:64px;"></textarea></div>
+          <div class="form-group"><label class="form-label" for="evf-nao-e-para">Para quem NÃO é</label><textarea class="form-control" id="evf-nao-e-para" style="min-height:64px;"></textarea></div>
+          <div class="form-group wide"><label class="form-label" for="evf-descricao-longa">Descrição completa (parágrafos separados por linha em branco)</label><textarea class="form-control" id="evf-descricao-longa" style="min-height:140px;"></textarea></div>
+          <div class="form-group"><label class="form-label" for="evf-palestrante-nome">Palestrante / condução</label><input class="form-control" id="evf-palestrante-nome"></div>
+          <div class="form-group"><label class="form-label" for="evf-palestrante-foto">Foto do palestrante (URL)</label><input class="form-control" id="evf-palestrante-foto" type="url"></div>
+          <div class="form-group wide"><label class="form-label" for="evf-palestrante-bio">Mini bio</label><textarea class="form-control" id="evf-palestrante-bio" style="min-height:64px;"></textarea></div>
+          <div class="form-group wide"><label class="form-label" for="evf-comunidade">Link da Comunidade WhatsApp (só quem confirmou recebe)</label><input class="form-control" id="evf-comunidade" type="url" placeholder="https://chat.whatsapp.com/..."><div class="ev-help">Vazio = usa o link padrão da trilha (secret COMUNIDADE_WHATSAPP_FAMILIAS / _PROFISSIONAIS).</div></div>
+        </div>
+        <div class="modal-actions" style="margin-top:14px;">
+          <button type="submit" class="btn btn-pink btn-sm" id="evSalvarBtn">Salvar</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close="evModalOverlay">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: TIPO DE INGRESSO ================= -->
+  <div class="modal-overlay" id="tipoModalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="tipoModalTitle" id="tipoModal">
+      <button type="button" class="modal-close" data-close="tipoModalOverlay" aria-label="Fechar">✕</button>
+      <h3 id="tipoModalTitle">Tipo de ingresso</h3>
+      <p class="sub">Gratuito: as vagas são controladas aqui (quem não cabe entra na lista de espera). Pago: o checkout é da Hotmart e a venda aprovada vira inscrição confirmada.</p>
+      <div id="tipoFormError" class="form-error" role="alert"></div>
+      <form id="tipoForm" novalidate>
+        <input type="hidden" id="tpf-id">
+        <div class="ev-form-grid">
+          <div class="form-group"><label class="form-label" for="tpf-nome">Nome</label><input class="form-control" id="tpf-nome" required maxlength="80" placeholder="Ex.: Entrada gratuita"></div>
+          <div class="form-group"><label class="form-label" for="tpf-tipo">Tipo</label><select class="form-control" id="tpf-tipo"><option value="gratuito">Gratuito (com vagas)</option><option value="pago">Pago (Hotmart)</option></select></div>
+          <div class="form-group"><label class="form-label" for="tpf-vagas">Vagas</label><input class="form-control" id="tpf-vagas" type="number" min="0" step="1" value="30"><div class="ev-help">Aumentar vagas puxa gente da fila automaticamente.</div></div>
+          <div class="form-group"><label class="form-label" for="tpf-ordem">Ordem de exibição</label><input class="form-control" id="tpf-ordem" type="number" min="0" step="1" value="0"></div>
+          <div class="form-group" id="tpf-preco-wrap"><label class="form-label" for="tpf-preco">Preço de exibição</label><input class="form-control" id="tpf-preco" maxlength="40" placeholder="R$ 97 ou 3x R$ 33"></div>
+          <div class="form-group" id="tpf-pid-wrap"><label class="form-label" for="tpf-pid">ID do produto na Hotmart</label><input class="form-control" id="tpf-pid" type="number" min="1" step="1"></div>
+          <div class="form-group wide" id="tpf-url-wrap"><label class="form-label" for="tpf-url">Link do checkout (https://pay.hotmart.com/...)</label><input class="form-control" id="tpf-url" type="url"></div>
+          <div class="form-group wide"><label class="consent-row" for="tpf-ativo" style="display:flex;gap:10px;align-items:center;font-weight:700;"><input type="checkbox" id="tpf-ativo" checked> Ativo (aparece no site)</label></div>
+        </div>
+        <div class="modal-actions" style="margin-top:14px;">
+          <button type="submit" class="btn btn-pink btn-sm" id="tipoSalvarBtn">Salvar</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close="tipoModalOverlay">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: INSCREVER MANUALMENTE ================= -->
+  <div class="modal-overlay" id="insModalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="insModalTitle" id="insModal">
+      <button type="button" class="modal-close" data-close="insModalOverlay" aria-label="Fechar">✕</button>
+      <h3 id="insModalTitle">Inscrever manualmente</h3>
+      <p class="sub">Entra na mesma regra de vagas (confirmada ou lista de espera) e recebe o e-mail normalmente. Sem opt-in de marketing.</p>
+      <div id="insFormError" class="form-error" role="alert"></div>
+      <form id="insForm" novalidate>
+        <div class="form-group"><label class="form-label" for="insf-tipo">Tipo de ingresso</label><select class="form-control" id="insf-tipo"></select></div>
+        <div class="form-group"><label class="form-label" for="insf-nome">Nome</label><input class="form-control" id="insf-nome" required></div>
+        <div class="form-group"><label class="form-label" for="insf-email">E-mail</label><input class="form-control" id="insf-email" type="email" required></div>
+        <div class="form-group"><label class="form-label" for="insf-whatsapp">WhatsApp</label><input class="form-control" id="insf-whatsapp" type="tel" inputmode="numeric"></div>
+        <div class="form-group"><label class="form-label" for="insf-perfil">Perfil</label><select class="form-control" id="insf-perfil"><option value="">—</option><option value="mae_pai_responsavel">Mãe / pai / responsável</option><option value="educador">Educador(a)</option><option value="terapeuta">Terapeuta</option><option value="outro">Outro</option></select></div>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-pink btn-sm" id="insSalvarBtn">Inscrever</button>
+          <button type="button" class="btn btn-ghost btn-sm" data-close="insModalOverlay">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= MODAL: CHECK-IN (porta) ================= -->
+  <div class="modal-overlay" id="checkinModalOverlay">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="checkinModalTitle" id="checkinModal">
+      <button type="button" class="modal-close" data-close="checkinModalOverlay" aria-label="Fechar">✕</button>
+      <h3 id="checkinModalTitle">Check-in</h3>
+      <p class="sub" id="checkinModalSub"></p>
+      <div class="checkin-screen">
+        <form id="checkinForm" novalidate>
+          <input class="form-control" id="checkinCode" placeholder="EVT-XXXX-XXXX" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <div class="modal-actions" style="justify-content:center;margin-top:12px;">
+            <button type="submit" class="btn btn-teal btn-sm">Confirmar entrada</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="qrToggleBtn">📷 Ler QR pela câmera</button>
+          </div>
+        </form>
+        <div id="qrReader" hidden></div>
+        <div class="checkin-result" id="checkinResult" role="status"></div>
+        <div class="checkin-log" id="checkinLog"></div>
       </div>
     </div>
   </div>
@@ -918,7 +1157,7 @@
           if (token) headers['Authorization'] = 'Bearer ' + token;
         }
 
-        return fetch(API_URL, {
+        return fetch(opts.url || API_URL, {
           method: 'POST',
           headers: headers,
           body: JSON.stringify(payload)
@@ -931,8 +1170,8 @@
         });
       }
 
-      function apiRequest(payload) {
-        return callApi(payload).then(function (result) {
+      function apiRequest(payload, opts) {
+        return callApi(payload, opts).then(function (result) {
           if (result.networkError) {
             var err = new Error('Não foi possível conectar. Verifique sua internet e tente novamente.');
             err.networkError = true;
@@ -1488,9 +1727,11 @@
         tabLeadsBtn.classList.toggle('active', name === 'leads');
         tabConfigBtn.classList.toggle('active', name === 'config');
         tabWifiBtn.classList.toggle('active', name === 'wifi');
+        document.getElementById('tabEventosBtn').classList.toggle('active', name === 'eventos');
         leadsView.hidden = name !== 'leads';
         configView.hidden = name !== 'config';
         wifiView.hidden = name !== 'wifi';
+        document.getElementById('eventosView').hidden = name !== 'eventos';
       }
 
       tabLeadsBtn.addEventListener('click', function () { showTab('leads'); });
@@ -1777,6 +2018,666 @@
         }).then(function () {
           resetConfigBtn.disabled = false;
         });
+      });
+
+
+      // =====================================================================
+      // Aba "Eventos" — CRUD de eventos, tipos de ingresso, inscritos e check-in.
+      // Backend: supabase/functions/eventos-admin (mesmo token de sessão deste painel).
+      // Todo dado exibido é escapado: nome/e-mail/UTM vêm de terceiros pelo site.
+      // =====================================================================
+      var API_URL_EVENTOS = 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/eventos-admin';
+      var SITE_URL = 'https://institutofacaamigos.com.br';
+      function apiEventos(payload) { return apiRequest(payload, { url: API_URL_EVENTOS }); }
+
+      var tabEventosBtn = document.getElementById('tabEventosBtn');
+      var eventosView = document.getElementById('eventosView');
+      var evStatusFilter = document.getElementById('evStatusFilter');
+      var evCount = document.getElementById('evCount');
+      var evError = document.getElementById('evError');
+      var evNotice = document.getElementById('evNotice');
+      var evState = document.getElementById('evState');
+      var evGrid = document.getElementById('evGrid');
+      var evPanel = document.getElementById('evPanel');
+      var evKpis = document.getElementById('evKpis');
+      var evTiposTbody = document.getElementById('evTiposTbody');
+      var evTiposError = document.getElementById('evTiposError');
+      var insSearch = document.getElementById('insSearch');
+      var insStatusFilter = document.getElementById('insStatusFilter');
+      var insCount = document.getElementById('insCount');
+      var insError = document.getElementById('insError');
+      var insNotice = document.getElementById('insNotice');
+      var insState = document.getElementById('insState');
+      var insTable = document.getElementById('insTable');
+      var insTbody = document.getElementById('insTbody');
+      var insCards = document.getElementById('insCards');
+
+      var eventos = [];
+      var eventoAtual = null;
+      var tiposAtuais = [];
+      var insDebounce = null;
+      var eventosLoaded = false;
+
+      var EV_STATUS = { draft: ['Rascunho', 'badge-gray'], published: ['Publicado', 'badge-teal'], closed: ['Encerrado', 'badge-blue'], cancelled: ['Cancelado', 'badge-pink'] };
+      var INS_STATUS = { confirmada: ['Confirmada', 'badge-teal'], promovida: ['Promovida · aguarda confirmação', 'badge-yellow'], lista_espera: ['Lista de espera', 'badge-gray'], cancelada: ['Cancelada', 'badge-pink'], expirada: ['Expirada', 'badge-gray'] };
+      var PERFIL = { mae_pai_responsavel: 'Mãe/pai/responsável', educador: 'Educador(a)', terapeuta: 'Terapeuta', outro: 'Outro' };
+      var CATEGORIA = { palestra: 'Palestra', reuniao: 'Reunião', treinamento: 'Treinamento' };
+      var PUBLICO = { familias: 'Famílias', profissionais: 'Profissionais' };
+
+      function badge(map, key) {
+        var v = map[key] || [key || '—', 'badge-gray'];
+        return '<span class="badge ' + v[1] + '">' + escapeHtml(v[0]) + '</span>';
+      }
+      function msg(el, text) { el.textContent = text || ''; el.classList.toggle('active', !!text); }
+      function fmtBelem(iso, comHora) {
+        if (!iso) return '—';
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return '—';
+        var o = { timeZone: 'America/Belem', day: '2-digit', month: '2-digit', year: 'numeric' };
+        if (comHora !== false) { o.hour = '2-digit'; o.minute = '2-digit'; }
+        return d.toLocaleString('pt-BR', o);
+      }
+      // ISO → valor de <input type="datetime-local"> em Belém; e o caminho de volta com -03:00.
+      function isoToLocalInput(iso) {
+        if (!iso) return '';
+        var d = new Date(iso);
+        if (isNaN(d.getTime())) return '';
+        var parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Belem', year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(d);
+        var m = {};
+        parts.forEach(function (p) { m[p.type] = p.value; });
+        return m.year + '-' + m.month + '-' + m.day + 'T' + (m.hour === '24' ? '00' : m.hour) + ':' + m.minute;
+      }
+      function localInputToIso(v) {
+        if (!v) return null;
+        var d = new Date(v + ':00-03:00');
+        return isNaN(d.getTime()) ? null : d.toISOString();
+      }
+      function slugify(s) {
+        return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
+      }
+
+      // ---------- modais genéricos (mesmo padrão do modal de lead) ----------
+      function openOverlay(id) {
+        var ov = document.getElementById(id);
+        ov.classList.add('active');
+        var first = ov.querySelector('input:not([type=hidden]), select, textarea, button');
+        if (first) requestAnimationFrame(function () { first.focus(); });
+      }
+      function closeOverlay(id) {
+        var ov = document.getElementById(id);
+        ov.classList.remove('active');
+        if (id === 'checkinModalOverlay') stopQr();
+      }
+      Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function (btn) {
+        btn.addEventListener('click', function () { closeOverlay(btn.getAttribute('data-close')); });
+      });
+      ['evModalOverlay', 'tipoModalOverlay', 'insModalOverlay', 'checkinModalOverlay'].forEach(function (id) {
+        var ov = document.getElementById(id);
+        ov.addEventListener('click', function (e) { if (e.target === ov) closeOverlay(id); });
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Escape') return;
+        ['evModalOverlay', 'tipoModalOverlay', 'insModalOverlay', 'checkinModalOverlay'].forEach(function (id) {
+          if (document.getElementById(id).classList.contains('active')) closeOverlay(id);
+        });
+      });
+
+      // ---------- lista de eventos ----------
+      function loadEventos() {
+        evState.hidden = false;
+        evState.textContent = 'Carregando eventos…';
+        evGrid.innerHTML = '';
+        var payload = { action: 'eventos_listar' };
+        if (evStatusFilter.value) payload.status = evStatusFilter.value;
+        apiEventos(payload).then(function (data) {
+          eventos = (data && data.eventos) || [];
+          eventosLoaded = true;
+          renderEventos();
+          if (eventoAtual) {
+            var ainda = eventos.filter(function (e) { return e.id === eventoAtual.id; })[0];
+            if (ainda) { eventoAtual = ainda; renderPanelHead(); }
+          }
+        }).catch(function (err) {
+          if (err.handled) return;
+          evState.textContent = err.message || 'Não foi possível carregar os eventos.';
+        });
+      }
+
+      function renderEventos() {
+        evCount.textContent = eventos.length + (eventos.length === 1 ? ' evento' : ' eventos');
+        if (!eventos.length) {
+          evState.hidden = false;
+          evState.textContent = 'Nenhum evento ainda. Clique em "Novo evento" para criar o primeiro.';
+          return;
+        }
+        evState.hidden = true;
+        evGrid.innerHTML = eventos.map(function (e) {
+          var c = e.contagens || {};
+          var lot = e.vagas_gratuitas ? Math.round(((c.confirmadas + c.promovidas) / e.vagas_gratuitas) * 100) : null;
+          return '<div class="ev-card' + (eventoAtual && eventoAtual.id === e.id ? ' selected' : '') + '" data-ev-id="' + escapeHtml(e.id) + '" role="button" tabindex="0">' +
+            '<div class="row" style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start;">' + badge(EV_STATUS, e.status) + '<span class="badge badge-gray">' + escapeHtml(PUBLICO[e.publico] || e.publico) + '</span></div>' +
+            '<h3>' + escapeHtml(e.titulo) + '</h3>' +
+            '<div class="meta">' + escapeHtml(CATEGORIA[e.categoria] || e.categoria) + ' · ' + escapeHtml(fmtBelem(e.inicio)) + (e.formato === 'online' ? ' · Online' : (e.local_nome ? ' · ' + escapeHtml(e.local_nome) : '')) + '</div>' +
+            '<div class="nums"><span><b>' + (c.confirmadas || 0) + '</b> confirmadas' + (e.vagas_gratuitas ? ' / ' + e.vagas_gratuitas + (lot !== null ? ' (' + lot + '%)' : '') : '') + '</span>' +
+            '<span><b>' + (c.lista_espera || 0) + '</b> na fila</span>' +
+            (c.promovidas ? '<span><b>' + c.promovidas + '</b> aguardando</span>' : '') +
+            '<span><b>' + (c.checkins || 0) + '</b> check-ins</span>' +
+            (c.vendidos ? '<span><b>' + c.vendidos + '</b> pagos · R$ ' + (c.receita || 0).toFixed(2).replace('.', ',') + '</span>' : '') +
+            '</div></div>';
+        }).join('');
+      }
+
+      evGrid.addEventListener('click', function (e) {
+        var card = e.target.closest ? e.target.closest('[data-ev-id]') : null;
+        if (card) selectEvento(card.getAttribute('data-ev-id'));
+      });
+      evGrid.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        var card = e.target.closest ? e.target.closest('[data-ev-id]') : null;
+        if (card) { e.preventDefault(); selectEvento(card.getAttribute('data-ev-id')); }
+      });
+      evStatusFilter.addEventListener('change', loadEventos);
+
+      // ---------- painel do evento ----------
+      function selectEvento(id) {
+        eventoAtual = eventos.filter(function (e) { return e.id === id; })[0] || null;
+        if (!eventoAtual) return;
+        renderEventos();
+        renderPanelHead();
+        evPanel.hidden = false;
+        msg(insError, ''); msg(insNotice, ''); msg(evTiposError, '');
+        insSearch.value = '';
+        insStatusFilter.value = '';
+        loadTipos();
+        loadInscricoes();
+        evPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      function renderPanelHead() {
+        var e = eventoAtual;
+        var c = e.contagens || {};
+        document.getElementById('evPanelTitle').textContent = e.titulo;
+        document.getElementById('evPanelSub').innerHTML = badge(EV_STATUS, e.status) + ' ' + escapeHtml(fmtBelem(e.inicio)) + ' → ' + escapeHtml(fmtBelem(e.fim)) +
+          ' · inscrições até ' + escapeHtml(fmtBelem(e.inscricoes_ate || e.inicio)) + ' · /eventos/' + escapeHtml(e.slug);
+        document.getElementById('evVerBtn').href = SITE_URL + '/eventos/' + encodeURIComponent(e.slug);
+        document.getElementById('evCancelarBtn').disabled = e.status === 'cancelled';
+        document.getElementById('evEditarBtn').disabled = e.status === 'cancelled';
+        var ocupadas = (c.confirmadas || 0) + (c.promovidas || 0);
+        var over = e.vagas_gratuitas && ocupadas > e.vagas_gratuitas;
+        evKpis.innerHTML = [
+          ['Confirmadas', c.confirmadas || 0, false],
+          ['Vagas gratuitas', e.vagas_gratuitas || '—', over],
+          ['Lista de espera', c.lista_espera || 0, false],
+          ['Aguardando confirmação', c.promovidas || 0, false],
+          ['Check-ins', (c.checkins || 0) + (c.confirmadas ? ' (' + Math.round((c.checkins || 0) / c.confirmadas * 100) + '%)' : ''), false],
+          ['Pagos (Hotmart)', (c.vendidos || 0) + (c.receita ? ' · R$ ' + c.receita.toFixed(2).replace('.', ',') : ''), false],
+          ['Cancel./expiradas', c.canceladas || 0, false]
+        ].map(function (k) {
+          return '<div class="ev-kpi' + (k[2] ? ' warn' : '') + '"><div class="label">' + escapeHtml(k[0]) + (k[2] ? ' · acima das vagas' : '') + '</div><div class="value">' + escapeHtml(k[1]) + '</div></div>';
+        }).join('');
+      }
+
+      document.getElementById('evFecharBtn').addEventListener('click', function () {
+        evPanel.hidden = true; eventoAtual = null; renderEventos();
+      });
+
+      // ---------- tipos de ingresso ----------
+      function loadTipos() {
+        if (!eventoAtual) return;
+        evTiposTbody.innerHTML = '<tr><td colspan="7" class="state-msg">Carregando…</td></tr>';
+        apiEventos({ action: 'tipos_listar', evento_id: eventoAtual.id }).then(function (data) {
+          tiposAtuais = (data && data.tipos) || [];
+          renderTipos();
+        }).catch(function (err) {
+          if (err.handled) return;
+          msg(evTiposError, err.message || 'Não foi possível carregar os tipos.');
+        });
+      }
+
+      function renderTipos() {
+        if (!tiposAtuais.length) {
+          evTiposTbody.innerHTML = '<tr><td colspan="7" class="state-msg">Sem tipos de ingresso. Sem ao menos um tipo ativo, ninguém consegue se inscrever.</td></tr>';
+          return;
+        }
+        evTiposTbody.innerHTML = tiposAtuais.map(function (t) {
+          var restam = t.tipo === 'gratuito' ? Math.max(0, t.vagas - t.ocupadas) : null;
+          return '<tr' + (t.ativo ? '' : ' style="opacity:.55"') + '>' +
+            '<td><div class="guardian-name">' + escapeHtml(t.nome) + '</div>' + (t.ativo ? '' : '<div class="guardian-meta">inativo</div>') + (t.preco_exibicao ? '<div class="guardian-meta">' + escapeHtml(t.preco_exibicao) + '</div>' : '') + '</td>' +
+            '<td>' + (t.tipo === 'pago' ? '<span class="badge badge-yellow">Pago</span>' : '<span class="badge badge-teal">Gratuito</span>') + '</td>' +
+            '<td>' + (t.tipo === 'gratuito' ? escapeHtml(t.vagas) : '—') + '</td>' +
+            '<td>' + escapeHtml(t.ocupadas) + (restam !== null ? '<div class="guardian-meta">restam ' + restam + '</div>' : '') + '</td>' +
+            '<td>' + escapeHtml(t.lista_espera) + '</td>' +
+            '<td>' + (t.hotmart_product_id ? '<div class="guardian-meta">produto ' + escapeHtml(t.hotmart_product_id) + '</div>' : '—') + '</td>' +
+            '<td><div class="ev-inline-actions"><button type="button" class="btn btn-ghost btn-sm" data-tipo-edit="' + escapeHtml(t.id) + '">Editar</button>' +
+            '<button type="button" class="btn btn-ghost btn-sm" data-tipo-del="' + escapeHtml(t.id) + '">' + (t.ativo ? 'Desativar' : 'Remover') + '</button></div></td>' +
+            '</tr>';
+        }).join('');
+      }
+
+      evTiposTbody.addEventListener('click', function (e) {
+        var ed = e.target.closest ? e.target.closest('[data-tipo-edit]') : null;
+        var del = e.target.closest ? e.target.closest('[data-tipo-del]') : null;
+        if (ed) openTipoModal(tiposAtuais.filter(function (t) { return t.id === ed.getAttribute('data-tipo-edit'); })[0]);
+        if (del) {
+          var t = tiposAtuais.filter(function (x) { return x.id === del.getAttribute('data-tipo-del'); })[0];
+          if (!t) return;
+          if (!window.confirm((t.ocupadas || t.lista_espera) ? 'Este tipo tem inscritos: ele será desativado (some do site, inscritos ficam). Continuar?' : 'Remover o tipo "' + t.nome + '"?')) return;
+          apiEventos({ action: 'tipo_desativar', id: t.id }).then(function () { loadTipos(); loadEventos(); }).catch(function (err) {
+            if (!err.handled) msg(evTiposError, err.message);
+          });
+        }
+      });
+
+      document.getElementById('evTipoNovoBtn').addEventListener('click', function () { openTipoModal(null); });
+
+      var tpfTipo = document.getElementById('tpf-tipo');
+      function tipoFieldsVisibility() {
+        var pago = tpfTipo.value === 'pago';
+        document.getElementById('tpf-pid-wrap').style.display = pago ? '' : 'none';
+        document.getElementById('tpf-url-wrap').style.display = pago ? '' : 'none';
+        document.getElementById('tpf-preco-wrap').style.display = pago ? '' : 'none';
+        document.getElementById('tpf-vagas').parentNode.style.display = pago ? 'none' : '';
+      }
+      tpfTipo.addEventListener('change', tipoFieldsVisibility);
+
+      function openTipoModal(t) {
+        msg(document.getElementById('tipoFormError'), '');
+        document.getElementById('tipoModalTitle').textContent = t ? 'Editar tipo de ingresso' : 'Novo tipo de ingresso';
+        document.getElementById('tpf-id').value = t ? t.id : '';
+        document.getElementById('tpf-nome').value = t ? t.nome : '';
+        tpfTipo.value = t ? t.tipo : 'gratuito';
+        document.getElementById('tpf-vagas').value = t ? t.vagas : 30;
+        document.getElementById('tpf-ordem').value = t ? t.ordem : 0;
+        document.getElementById('tpf-preco').value = (t && t.preco_exibicao) || '';
+        document.getElementById('tpf-pid').value = (t && t.hotmart_product_id) || '';
+        document.getElementById('tpf-url').value = (t && t.hotmart_checkout_url) || '';
+        document.getElementById('tpf-ativo').checked = t ? !!t.ativo : true;
+        tipoFieldsVisibility();
+        openOverlay('tipoModalOverlay');
+      }
+
+      document.getElementById('tipoForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!eventoAtual) return;
+        var btn = document.getElementById('tipoSalvarBtn');
+        var errEl = document.getElementById('tipoFormError');
+        msg(errEl, '');
+        btn.disabled = true;
+        var tipo = {
+          id: document.getElementById('tpf-id').value || undefined,
+          evento_id: eventoAtual.id,
+          nome: document.getElementById('tpf-nome').value,
+          tipo: tpfTipo.value,
+          vagas: Number(document.getElementById('tpf-vagas').value),
+          ordem: Number(document.getElementById('tpf-ordem').value),
+          preco_exibicao: document.getElementById('tpf-preco').value,
+          hotmart_product_id: document.getElementById('tpf-pid').value,
+          hotmart_checkout_url: document.getElementById('tpf-url').value,
+          ativo: document.getElementById('tpf-ativo').checked
+        };
+        apiEventos({ action: 'tipo_salvar', tipo: tipo }).then(function (data) {
+          closeOverlay('tipoModalOverlay');
+          if (data.promovidas) msg(insNotice, data.promovidas + ' pessoa(s) da fila promovida(s) e avisada(s) por e-mail.');
+          loadTipos(); loadEventos(); loadInscricoes();
+        }).catch(function (err) {
+          if (!err.handled) msg(errEl, err.message || 'Não foi possível salvar.');
+        }).then(function () { btn.disabled = false; });
+      });
+
+      // ---------- formulário do evento ----------
+      var evfTitulo = document.getElementById('evf-titulo');
+      var evfSlug = document.getElementById('evf-slug');
+      function slugPreview() { document.getElementById('evf-slug-preview').textContent = slugify(evfSlug.value || evfTitulo.value) || '…'; }
+      evfTitulo.addEventListener('input', slugPreview);
+      evfSlug.addEventListener('input', slugPreview);
+
+      function openEventoModal(e) {
+        msg(document.getElementById('evFormError'), '');
+        document.getElementById('evModalTitle').textContent = e ? 'Editar evento' : 'Novo evento';
+        var v = function (id, val) { document.getElementById(id).value = val === null || val === undefined ? '' : val; };
+        v('evf-id', e ? e.id : '');
+        v('evf-titulo', e ? e.titulo : '');
+        v('evf-slug', e ? e.slug : '');
+        v('evf-status', e ? e.status : 'draft');
+        v('evf-categoria', e ? e.categoria : 'palestra');
+        v('evf-publico', e ? e.publico : 'familias');
+        v('evf-formato', e ? e.formato : 'presencial');
+        v('evf-capa', e ? e.capa_url : '');
+        v('evf-inicio', e ? isoToLocalInput(e.inicio) : '');
+        v('evf-fim', e ? isoToLocalInput(e.fim) : '');
+        v('evf-inscricoes-ate', e ? isoToLocalInput(e.inscricoes_ate) : '');
+        v('evf-local-nome', e ? e.local_nome : '');
+        v('evf-local-endereco', e ? e.local_endereco : '');
+        v('evf-online-url', e ? e.online_url : '');
+        v('evf-descricao-curta', e ? e.descricao_curta : '');
+        v('evf-promessa', e ? e.promessa : '');
+        v('evf-beneficios', e && e.beneficios ? e.beneficios.join('\n') : '');
+        v('evf-para-quem', e ? e.para_quem : '');
+        v('evf-nao-e-para', e ? e.nao_e_para : '');
+        v('evf-descricao-longa', e ? e.descricao_longa : '');
+        v('evf-palestrante-nome', e ? e.palestrante_nome : '');
+        v('evf-palestrante-foto', e ? e.palestrante_foto_url : '');
+        v('evf-palestrante-bio', e ? e.palestrante_bio : '');
+        v('evf-comunidade', e ? e.comunidade_whatsapp_url : '');
+        slugPreview();
+        openOverlay('evModalOverlay');
+      }
+
+      document.getElementById('evNovoBtn').addEventListener('click', function () { openEventoModal(null); });
+      document.getElementById('evEditarBtn').addEventListener('click', function () { if (eventoAtual) openEventoModal(eventoAtual); });
+
+      document.getElementById('evForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = document.getElementById('evSalvarBtn');
+        var errEl = document.getElementById('evFormError');
+        msg(errEl, '');
+        var g = function (id) { return document.getElementById(id).value; };
+        var evento = {
+          id: g('evf-id') || undefined,
+          titulo: g('evf-titulo'), slug: g('evf-slug'), status: g('evf-status'),
+          categoria: g('evf-categoria'), publico: g('evf-publico'), formato: g('evf-formato'),
+          capa_url: g('evf-capa'),
+          inicio: localInputToIso(g('evf-inicio')), fim: localInputToIso(g('evf-fim')), inscricoes_ate: localInputToIso(g('evf-inscricoes-ate')),
+          local_nome: g('evf-local-nome'), local_endereco: g('evf-local-endereco'), online_url: g('evf-online-url'),
+          descricao_curta: g('evf-descricao-curta'), promessa: g('evf-promessa'),
+          beneficios: g('evf-beneficios').split('\n').map(function (x) { return x.trim(); }).filter(Boolean),
+          para_quem: g('evf-para-quem'), nao_e_para: g('evf-nao-e-para'), descricao_longa: g('evf-descricao-longa'),
+          palestrante_nome: g('evf-palestrante-nome'), palestrante_foto_url: g('evf-palestrante-foto'), palestrante_bio: g('evf-palestrante-bio'),
+          comunidade_whatsapp_url: g('evf-comunidade')
+        };
+        if (!evento.inicio || !evento.fim) { msg(errEl, 'Informe início e fim.'); return; }
+        btn.disabled = true;
+        apiEventos({ action: 'evento_salvar', evento: evento }).then(function (data) {
+          closeOverlay('evModalOverlay');
+          var novo = !evento.id;
+          loadEventosThen(function () {
+            if (data && data.evento) selectEvento(data.evento.id);
+            if (novo) msg(insNotice, 'Evento criado. Agora adicione ao menos um tipo de ingresso para abrir as inscrições.');
+          });
+        }).catch(function (err) {
+          if (!err.handled) msg(errEl, err.message || 'Não foi possível salvar.');
+        }).then(function () { btn.disabled = false; });
+      });
+
+      function loadEventosThen(cb) {
+        var payload = { action: 'eventos_listar' };
+        if (evStatusFilter.value) payload.status = evStatusFilter.value;
+        apiEventos(payload).then(function (data) {
+          eventos = (data && data.eventos) || [];
+          renderEventos();
+          cb();
+        }).catch(function (err) { if (!err.handled) msg(evError, err.message); });
+      }
+
+      document.getElementById('evCancelarBtn').addEventListener('click', function () {
+        if (!eventoAtual) return;
+        var c = eventoAtual.contagens || {};
+        var ativos = (c.confirmadas || 0) + (c.lista_espera || 0) + (c.promovidas || 0);
+        var mensagem = window.prompt('Cancelar "' + eventoAtual.titulo + '"?\n\n' + ativos + ' pessoa(s) receberão o aviso por e-mail. Escreva abaixo a mensagem para elas (motivo, nova data se houver). Deixe vazio para cancelar a ação.');
+        if (mensagem === null || !mensagem.trim()) return;
+        if (!window.confirm('Confirma o cancelamento? Isso não pode ser desfeito e dispara ' + ativos + ' e-mail(s).')) return;
+        apiEventos({ action: 'evento_cancelar', id: eventoAtual.id, mensagem: mensagem.trim() }).then(function (data) {
+          msg(evNotice, 'Evento cancelado. ' + data.enfileirados + ' aviso(s) na fila de envio' + (data.dispatch_ok ? ' (envio iniciado).' : ' (o envio automático roda em até 30 min).'));
+          loadEventos();
+        }).catch(function (err) { if (!err.handled) msg(evError, err.message); });
+      });
+
+      document.getElementById('evHotmartBtn').addEventListener('click', function () {
+        msg(evError, ''); msg(evNotice, '');
+        apiEventos({ action: 'hotmart_reprocessar' }).then(function (data) {
+          msg(evNotice, 'Hotmart: ' + data.processados + ' venda(s) viraram inscrição; ' + data.pendentes + ' ainda sem tipo de ingresso correspondente.');
+          loadEventos();
+        }).catch(function (err) { if (!err.handled) msg(evError, err.message); });
+      });
+
+      // ---------- inscritos ----------
+      function loadInscricoes(keepMessages) {
+        if (!eventoAtual) return;
+        insState.hidden = false;
+        insState.textContent = 'Carregando inscritos…';
+        insTable.hidden = true;
+        insCards.hidden = true;
+        if (keepMessages !== true) { msg(insError, ''); }
+        var payload = { action: 'inscricoes_listar', evento_id: eventoAtual.id, page_size: 200 };
+        if (insStatusFilter.value) payload.status = insStatusFilter.value;
+        if (insSearch.value.trim()) payload.q = insSearch.value.trim();
+        apiEventos(payload).then(function (data) {
+          renderInscricoes((data && data.inscricoes) || [], data.total || 0);
+        }).catch(function (err) {
+          if (err.handled) return;
+          insState.textContent = err.message || 'Não foi possível carregar os inscritos.';
+        });
+      }
+
+      function insActions(i) {
+        var b = [];
+        if (i.status === 'lista_espera' || i.status === 'promovida' || i.status === 'expirada') b.push('<button type="button" class="btn btn-teal btn-sm" data-ins-act="confirmar" data-ins-id="' + escapeHtml(i.id) + '">Confirmar vaga</button>');
+        if (i.status === 'confirmada' && !i.checkin_at) b.push('<button type="button" class="btn btn-teal btn-sm" data-ins-act="checkin" data-ins-code="' + escapeHtml(i.codigo) + '">Check-in</button>');
+        if (i.status === 'confirmada' || i.status === 'promovida' || i.status === 'lista_espera') b.push('<button type="button" class="btn btn-ghost btn-sm" data-ins-act="reenviar" data-ins-id="' + escapeHtml(i.id) + '">Reenviar e-mail</button>');
+        if (i.status === 'confirmada' || i.status === 'promovida' || i.status === 'lista_espera') b.push('<button type="button" class="btn btn-ghost btn-sm" data-ins-act="cancelar" data-ins-id="' + escapeHtml(i.id) + '" style="color:var(--pink-dark);">Cancelar</button>');
+        return '<div class="ev-inline-actions">' + b.join('') + '</div>';
+      }
+
+      function renderInscricoes(list, total) {
+        insCount.textContent = total + (total === 1 ? ' inscrição' : ' inscrições') + (list.length < total ? ' (mostrando ' + list.length + ')' : '');
+        if (!list.length) {
+          insState.hidden = false;
+          insState.textContent = 'Nenhuma inscrição encontrada.';
+          return;
+        }
+        insState.hidden = true;
+        insTable.hidden = false;
+        insCards.hidden = false;
+        var rows = '', cards = '';
+        list.forEach(function (i) {
+          var wa = waLink(i.whatsapp);
+          var phone = i.whatsapp ? (wa ? '<a class="wa-link" href="' + escapeHtml(wa) + '" target="_blank" rel="noopener">' + escapeHtml(i.whatsapp) + '</a>' : escapeHtml(i.whatsapp)) : '';
+          var st = badge(INS_STATUS, i.status) +
+            (i.status === 'lista_espera' && i.posicao ? ' <span class="guardian-meta">' + i.posicao + 'º na fila</span>' : '') +
+            (i.status === 'promovida' && i.promocao_prazo ? '<div class="guardian-meta">até ' + escapeHtml(fmtBelem(i.promocao_prazo)) + '</div>' : '') +
+            (i.checkin_at ? '<div class="guardian-meta">✓ entrou ' + escapeHtml(fmtBelem(i.checkin_at)) + '</div>' : '');
+          var origem = escapeHtml(i.origem === 'hotmart' ? 'Hotmart' + (i.valor_pago ? ' · R$ ' + Number(i.valor_pago).toFixed(2).replace('.', ',') : '') : (i.origem === 'admin' ? 'Manual' : (i.utm_source || 'direto')));
+          var nomeCell = '<div class="guardian-name">' + escapeHtml(i.nome) + '</div><div class="guardian-meta">' + escapeHtml(i.email) + '</div>' + (phone ? '<div class="guardian-meta">' + phone + '</div>' : '') + (i.perfil ? '<div class="guardian-meta">' + escapeHtml(PERFIL[i.perfil] || i.perfil) + '</div>' : '');
+          rows += '<tr><td>' + nomeCell + '</td><td>' + escapeHtml(i.tipo ? i.tipo.nome : '—') + '</td><td>' + st + '</td><td><div class="code">' + escapeHtml(i.codigo) + '</div></td><td>' + origem + '</td><td>' + escapeHtml(fmtBelem(i.created_at)) + '</td><td>' + insActions(i) + '</td></tr>';
+          cards += '<div class="lead-card"><div class="row"><div>' + nomeCell + '</div>' + badge(INS_STATUS, i.status) + '</div>' +
+            '<div class="guardian-meta">' + escapeHtml(i.tipo ? i.tipo.nome : '—') + ' · <span class="code">' + escapeHtml(i.codigo) + '</span> · ' + origem + '</div>' +
+            '<div class="guardian-meta">' + escapeHtml(fmtBelem(i.created_at)) + (i.checkin_at ? ' · ✓ entrou ' + escapeHtml(fmtBelem(i.checkin_at)) : '') + '</div>' +
+            '<div class="actions">' + insActions(i) + '</div></div>';
+        });
+        insTbody.innerHTML = rows;
+        insCards.innerHTML = cards;
+      }
+
+      function onInsAction(e) {
+        var btn = e.target.closest ? e.target.closest('[data-ins-act]') : null;
+        if (!btn || btn.disabled) return;
+        var act = btn.getAttribute('data-ins-act');
+        var id = btn.getAttribute('data-ins-id');
+        msg(insError, ''); msg(insNotice, '');
+        if (act === 'checkin') {
+          btn.disabled = true;
+          apiEventos({ action: 'checkin', codigo: btn.getAttribute('data-ins-code'), evento_id: eventoAtual.id }).then(function (r) {
+            msg(r.resultado === 'ok' ? insNotice : insError, checkinMessage(r));
+            loadInscricoes(true); loadEventos();
+          }).catch(function (err) { if (!err.handled) msg(insError, err.message); });
+          return;
+        }
+        if (act === 'confirmar') {
+          if (!window.confirm('Confirmar a vaga desta pessoa agora? Se as vagas já estiverem cheias, isso passa do limite (overbooking).')) return;
+          btn.disabled = true;
+          apiEventos({ action: 'inscricao_confirmar', id: id }).then(function () {
+            msg(insNotice, 'Vaga confirmada e voucher enviado.');
+            loadInscricoes(true); loadEventos(); loadTipos();
+          }).catch(function (err) { if (!err.handled) { msg(insError, err.message); btn.disabled = false; } });
+          return;
+        }
+        if (act === 'reenviar') {
+          btn.disabled = true;
+          apiEventos({ action: 'inscricao_reenviar_voucher', id: id }).then(function () {
+            msg(insNotice, 'E-mail reenviado.');
+          }).catch(function (err) { if (!err.handled) msg(insError, err.message); }).then(function () { btn.disabled = false; });
+          return;
+        }
+        if (act === 'cancelar') {
+          var motivo = window.prompt('Cancelar esta inscrição? Se for gratuita, a vaga vai para o próximo da fila automaticamente.\n\nMotivo (opcional):', '');
+          if (motivo === null) return;
+          btn.disabled = true;
+          apiEventos({ action: 'inscricao_cancelar', id: id, motivo: motivo }).then(function (r) {
+            msg(insNotice, 'Inscrição cancelada.' + (r.promovidas ? ' ' + r.promovidas + ' pessoa(s) da fila promovida(s).' : ''));
+            loadInscricoes(true); loadEventos(); loadTipos();
+          }).catch(function (err) { if (!err.handled) { msg(insError, err.message); btn.disabled = false; } });
+        }
+      }
+      insTbody.addEventListener('click', onInsAction);
+      insCards.addEventListener('click', onInsAction);
+      insSearch.addEventListener('input', function () { clearTimeout(insDebounce); insDebounce = setTimeout(loadInscricoes, 400); });
+      insStatusFilter.addEventListener('change', function () { loadInscricoes(); });
+
+      // ---------- inscrever manualmente ----------
+      document.getElementById('insAddBtn').addEventListener('click', function () {
+        if (!eventoAtual) return;
+        var sel = document.getElementById('insf-tipo');
+        sel.innerHTML = tiposAtuais.filter(function (t) { return t.ativo; }).map(function (t) {
+          return '<option value="' + escapeHtml(t.id) + '">' + escapeHtml(t.nome) + (t.tipo === 'pago' ? ' (pago: entra como cortesia)' : ' · restam ' + Math.max(0, t.vagas - t.ocupadas)) + '</option>';
+        }).join('');
+        if (!sel.options.length) { msg(insError, 'Crie um tipo de ingresso antes.'); return; }
+        msg(document.getElementById('insFormError'), '');
+        document.getElementById('insForm').reset();
+        openOverlay('insModalOverlay');
+      });
+      document.getElementById('insForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var btn = document.getElementById('insSalvarBtn');
+        var errEl = document.getElementById('insFormError');
+        msg(errEl, '');
+        btn.disabled = true;
+        apiEventos({
+          action: 'inscricao_adicionar',
+          tipo_id: document.getElementById('insf-tipo').value,
+          nome: document.getElementById('insf-nome').value,
+          email: document.getElementById('insf-email').value,
+          whatsapp: document.getElementById('insf-whatsapp').value,
+          perfil: document.getElementById('insf-perfil').value
+        }).then(function (r) {
+          closeOverlay('insModalOverlay');
+          msg(insNotice, r.resultado === 'confirmada' ? 'Inscrição confirmada (código ' + r.codigo + '). Voucher enviado.' : 'Vagas cheias: entrou na lista de espera na posição ' + r.posicao + '.');
+          loadInscricoes(true); loadEventos(); loadTipos();
+        }).catch(function (err) { if (!err.handled) msg(errEl, err.message); }).then(function () { btn.disabled = false; });
+      });
+
+      // ---------- check-in (porta) ----------
+      var checkinCode = document.getElementById('checkinCode');
+      var checkinResult = document.getElementById('checkinResult');
+      var checkinLog = document.getElementById('checkinLog');
+      var qrScanner = null;
+      var qrBusy = false;
+
+      function checkinMessage(r) {
+        var hora = r.checkin_at ? fmtBelem(r.checkin_at).slice(-5) : '';
+        if (r.resultado === 'ok') return '✓ ' + r.nome + ' · ' + (r.tipo_nome || '') + ' · ' + hora;
+        if (r.resultado === 'ja_fez_checkin') return r.nome + ' já entrou às ' + hora;
+        if (r.resultado === 'nao_confirmada') return r.nome + ': inscrição ' + ((INS_STATUS[r.status] || [r.status])[0]).toLowerCase() + ', não confirmada';
+        if (r.resultado === 'evento_diferente') return r.nome + ': ingresso de outro evento (' + r.evento_titulo + ')';
+        if (r.resultado === 'nao_encontrado') return 'Código não encontrado';
+        return r.error || 'Não foi possível fazer o check-in';
+      }
+
+      function doCheckin(code) {
+        code = String(code || '').toUpperCase().replace(/\s+/g, '').trim();
+        if (!code) return;
+        if (!/^EVT-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(code)) {
+          var m = /EVT-[A-Z0-9]{4}-[A-Z0-9]{4}/.exec(code);
+          if (m) code = m[0];
+        }
+        qrBusy = true;
+        apiEventos({ action: 'checkin', codigo: code, evento_id: eventoAtual ? eventoAtual.id : undefined }).then(function (r) {
+          var ok = r.resultado === 'ok';
+          checkinResult.className = 'checkin-result active ' + (ok ? 'ok' : 'bad');
+          checkinResult.innerHTML = '<span class="big">' + (ok ? '✓ Pode entrar' : '✕ Não') + '</span>' + escapeHtml(checkinMessage(r));
+          var line = document.createElement('div');
+          line.textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) + ' · ' + code + ' · ' + checkinMessage(r);
+          checkinLog.insertBefore(line, checkinLog.firstChild);
+          if (ok) { loadInscricoes(true); loadEventos(); }
+        }).catch(function (err) {
+          if (err.handled) return;
+          checkinResult.className = 'checkin-result active bad';
+          checkinResult.textContent = err.message || 'Falha de conexão';
+        }).then(function () {
+          checkinCode.value = '';
+          checkinCode.focus();
+          setTimeout(function () { qrBusy = false; }, 1500);
+        });
+      }
+
+      document.getElementById('evCheckinBtn').addEventListener('click', function () {
+        if (!eventoAtual) return;
+        document.getElementById('checkinModalSub').textContent = eventoAtual.titulo + ' · digite o código ou leia o QR do ingresso';
+        checkinResult.className = 'checkin-result';
+        checkinLog.innerHTML = '';
+        openOverlay('checkinModalOverlay');
+        checkinCode.focus();
+      });
+      document.getElementById('checkinForm').addEventListener('submit', function (e) { e.preventDefault(); doCheckin(checkinCode.value); });
+
+      function stopQr() {
+        var box = document.getElementById('qrReader');
+        if (qrScanner) { try { qrScanner.stop().catch(function () {}); } catch (e) { /* ignore */ } qrScanner = null; }
+        box.hidden = true;
+        box.innerHTML = '';
+        document.getElementById('qrToggleBtn').textContent = '📷 Ler QR pela câmera';
+      }
+      function startQr() {
+        var box = document.getElementById('qrReader');
+        box.hidden = false;
+        document.getElementById('qrToggleBtn').textContent = 'Parar câmera';
+        function go() {
+          qrScanner = new window.Html5Qrcode('qrReader');
+          qrScanner.start({ facingMode: 'environment' }, { fps: 8, qrbox: { width: 220, height: 220 } }, function (text) {
+            if (qrBusy) return;
+            doCheckin(text);
+          }, function () { /* sem leitura neste frame */ }).catch(function (err) {
+            checkinResult.className = 'checkin-result active bad';
+            checkinResult.textContent = 'Não foi possível abrir a câmera: ' + (err && err.message ? err.message : err);
+            stopQr();
+          });
+        }
+        if (window.Html5Qrcode) { go(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js';
+        s.onload = go;
+        s.onerror = function () {
+          checkinResult.className = 'checkin-result active bad';
+          checkinResult.textContent = 'Não foi possível carregar o leitor de QR. Digite o código.';
+          stopQr();
+        };
+        document.head.appendChild(s);
+      }
+      document.getElementById('qrToggleBtn').addEventListener('click', function () { if (qrScanner) stopQr(); else startQr(); });
+
+      // ---------- CSV ----------
+      document.getElementById('evCsvBtn').addEventListener('click', function () {
+        if (!eventoAtual) return;
+        var headers = { 'Content-Type': 'application/json' };
+        var token = getToken();
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+        var payload = { action: 'inscricoes_csv', evento_id: eventoAtual.id };
+        if (insStatusFilter.value) payload.status = insStatusFilter.value;
+        fetch(API_URL_EVENTOS, { method: 'POST', headers: headers, body: JSON.stringify(payload) }).then(function (res) {
+          if (res.status === 401) { sessionExpired(); throw { handled: true }; }
+          if (!res.ok) return res.json().catch(function () { return {}; }).then(function (d) { throw new Error((d && d.error) || 'Não foi possível exportar.'); });
+          return res.blob();
+        }).then(function (blob) {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url; a.download = 'inscricoes-' + eventoAtual.slug + '.csv';
+          document.body.appendChild(a); a.click(); document.body.removeChild(a);
+          setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+        }).catch(function (err) { if (!err.handled) msg(insError, err.message || 'Não foi possível exportar.'); });
+      });
+
+      tabEventosBtn.addEventListener('click', function () {
+        showTab('eventos');
+        if (!eventosLoaded) loadEventos();
       });
 
       // ---------- Boot ----------

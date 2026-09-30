@@ -109,6 +109,50 @@ Teste ponta a ponta: login errado, e-mail fora da lista (mesma mensagem de senha
 código certo, cada quadrado abre logado, reabrir a mesma URL de entrada tem que falhar, Sair, e conferir
 `fa_gestao_auditoria`.
 
+## Lote 7: Eventos (palestras, encontros e treinamentos) — pendente, feito só no código em 30/09/2026
+
+Inscrição com vagas reais, lista de espera com promoção automática (24h para confirmar), voucher `EVT-XXXX-XXXX`
+com QR, check-in na porta pelo painel, ingresso pago via Hotmart e Comunidade WhatsApp (só avisos) + listas do Brevo.
+Código: `supabase/migrations/20261001120000_fa_eventos.sql`, `supabase/functions/eventos-public|eventos-admin|eventos-dispatch/`,
+`hotmart-webhook` (ramo de ingresso), `eventos.html`, `evento.html` (dinâmica: `/eventos/<slug>` reescreve para ela em
+`vercel.json`), `ingresso.html`, aba "Eventos" em `admin.html`, `descadastrar.html` (`?e=`), `politica-privacidade.html`.
+
+Regra de escassez (decidida em 30/09/2026): o site só mostra número real. "Restam N vagas" aparece quando N <= 10 ou
+N <= 30% das vagas; acima disso, "Vagas abertas"; lotado mostra o tamanho real da fila. Nada é inventado.
+
+Ordem (cada passo é inofensivo sozinho; o site só mostra eventos quando houver um `published`):
+
+1. **Migration** `20261001120000_fa_eventos.sql` (4 tabelas com RLS ligado e sem policy, view `fa_eventos_publicos`,
+   funções `fa_eventos_*` e o cron `fa-eventos-dispatch` a cada 30 min, que lê `ops_key` do Vault — já existe desde o
+   Lote de rotinas; se não existir, rodar antes `supabase/ops/agendar-rotinas.sql`).
+2. **Brevo**: criar duas listas ("Eventos · Famílias" e "Eventos · Profissionais") e anotar os ids. Criar os atributos de
+   contato `WHATSAPP`, `TRILHA`, `ULTIMO_EVENTO` (texto) — sem eles a função ainda sincroniza, só com `NOME`.
+3. **WhatsApp**: criar a Comunidade (canal de avisos) de cada trilha e copiar o link de convite.
+4. **Secrets** (`supabase secrets set ... --project-ref ivjvpdzsfjdpyabbzzuj`): `EVENTOS_SECRET` (`openssl rand -hex 32`;
+   assina os links do ingresso — trocar invalida todos os links já enviados), `BREVO_LIST_EVENTOS_FAMILIAS`,
+   `BREVO_LIST_EVENTOS_PROFISSIONAIS`, `COMUNIDADE_WHATSAPP_FAMILIAS`, `COMUNIDADE_WHATSAPP_PROFISSIONAIS` (opcionais: o
+   evento pode ter o próprio link). `OPS_KEY` e `BREVO_*` já existem.
+5. **Funções**, todas com `--no-verify-jwt`: `eventos-dispatch` primeiro (as outras chamam ela), depois `eventos-public`,
+   `eventos-admin` e a versão nova de `hotmart-webhook`.
+6. **Site**: `npm run check` → commit → `npm run sitemap` → push. Conferir `/eventos` (agenda vazia mostra o convite ao
+   mapeamento), `/eventos/qualquer-coisa` (mensagem "não está mais disponível") e `/ingresso` sem token ("link não é válido").
+7. **Primeiro evento**: no painel (`/admin`, aba Eventos) criar o evento como rascunho, adicionar ao menos um tipo de
+   ingresso gratuito com as vagas reais, preencher promessa e 3 benefícios, publicar. A seção "Próximos encontros" e o
+   link "Eventos" do menu do hub aparecem sozinhos quando existe evento publicado.
+8. **Ingresso pago**: criar o produto na Hotmart, cadastrar o tipo "pago" com o id numérico do produto e o link
+   `https://pay.hotmart.com/...`. O webhook da Hotmart (Lote 3) já entrega a venda aqui. Venda que chegar antes do tipo
+   existir fica marcada em `fa_hotmart_eventos.error = 'evento: ...'`: botão "Reprocessar Hotmart" no painel resolve.
+
+Teste ponta a ponta (com um evento de 2 vagas em rascunho publicado só para teste):
+- 3 inscrições pelo site: 2 confirmadas (voucher no e-mail, QR em `/ingresso?t=`), 1 lista de espera (posição 1).
+- Repetir o e-mail de uma confirmada: resposta "já inscrita" sem código na tela e voucher reenviado por e-mail.
+- Cancelar uma confirmada pelo link do ingresso: a da fila recebe "abriu uma vaga" e confirma pelo botão (ou expira em
+  24h: `POST eventos-dispatch {action:"run"}` com `x-ops-key` e `?dry=1` mostra o que faria).
+- Check-in no painel com o QR e com o código digitado; a segunda leitura diz "já entrou às HH:MM".
+- Hotmart: "enviar teste" de PURCHASE_APPROVED com `product.id` de um tipo pago → inscrição `confirmada` origem `hotmart`
+  e voucher; reenviar o mesmo evento não duplica.
+- `select * from fa_eventos_envios order by created_at desc` mostra cada e-mail uma vez (status `enviado`).
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.

@@ -143,4 +143,11 @@
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
+  <!-- Eventos: palestras, encontros e treinamentos -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/eventos</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
 </urlset>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu ingresso | Instituto FaçaAmigos</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="/img/logo-simbolo.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#065264">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root { --petrol: #065264; --ice: #F4FAFB; --pink: #FB3D6A; --yellow: #FDC51D; --teal: #07C5C8; --teal-10: #E2F8F8; --yellow-20: #FFF3D2; --pink-10: #FFECF0; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: 'Nunito', system-ui, sans-serif; color: var(--petrol); background: var(--ice); line-height: 1.6; font-size: 1.0625rem; }
+    header { background: var(--petrol); padding: 18px 16px; }
+    header img { width: 170px; height: auto; display: block; margin: 0 auto; }
+    main { max-width: 560px; margin: 0 auto; padding: 28px 16px 64px; }
+    .card { background: #fff; border-radius: 24px; padding: 28px 22px; box-shadow: 0 1px 2px rgba(6, 82, 100, .10), 0 4px 14px rgba(6, 82, 100, .10); text-align: center; }
+    h1 { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 1.5rem; line-height: 1.2; margin: 0 0 6px; }
+    h2 { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 1.2rem; margin: 0 0 8px; }
+    p { margin: 0 0 12px; }
+    .status { display: inline-flex; border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: .82rem; background: var(--teal-10); margin-bottom: 14px; }
+    .status.warn { background: var(--yellow-20); }
+    .status.bad { background: var(--pink-10); color: #B0143F; }
+    .meta { text-align: left; background: var(--ice); border-radius: 16px; padding: 14px 16px; margin: 14px 0; font-size: .95rem; font-weight: 700; display: grid; gap: 6px; }
+    .qr { display: grid; place-items: center; margin: 18px auto 8px; width: 232px; height: 232px; background: #fff; border-radius: 16px; border: 2px dashed var(--teal); padding: 10px; }
+    .qr img, .qr canvas { display: block; }
+    .codigo { font-family: 'Courier New', monospace; font-size: 1.6rem; font-weight: 900; letter-spacing: .06em; margin: 6px 0 4px; }
+    .hint { font-size: .84rem; opacity: .8; }
+    .btn { display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 24px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: 800 1.02rem 'Nunito', sans-serif; cursor: pointer; text-decoration: none; box-shadow: 0 2px 4px rgba(251, 61, 106, .25), 0 8px 20px rgba(251, 61, 106, .30); width: 100%; }
+    .btn.wa { background: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, .3); }
+    .btn.ghost { background: #fff; color: var(--petrol); border: 2px solid var(--petrol); box-shadow: none; }
+    .btn.danger { background: #fff; color: #B0143F; border: 2px solid #B0143F; box-shadow: none; }
+    .btn[disabled] { opacity: .6; cursor: default; }
+    .acoes { display: grid; gap: 10px; margin-top: 18px; }
+    .posicao { font-size: 2.6rem; font-weight: 900; font-family: 'Fredoka', sans-serif; line-height: 1; margin: 10px 0 4px; }
+    .comunidade { background: var(--teal-10); border-radius: 18px; padding: 16px 18px; margin-top: 18px; }
+    .comunidade p { font-size: .92rem; }
+    .err { background: var(--pink-10); color: #B0143F; border-radius: 12px; padding: 10px 14px; font-weight: 800; font-size: .9rem; margin-top: 12px; display: none; }
+    .err.active { display: block; }
+    a { color: var(--petrol); font-weight: 800; }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+    .modal { position: fixed; inset: 0; background: rgba(6,82,100,.6); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
+    .modal.active { display: flex; }
+    .modal .box { background: #fff; border-radius: 24px; padding: 24px 22px; max-width: 420px; width: 100%; text-align: center; }
+  </style>
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <header><a href="/eventos"><img src="/img/guia/logo-branca.png" alt="FaçaAmigos — Instituto" width="170" height="29"></a></header>
+  <main id="conteudo">
+    <div class="card" id="loading"><h1>Abrindo seu ingresso…</h1></div>
+
+    <div class="card" id="bad" hidden>
+      <h1>Este link não é válido</h1>
+      <p>Ele pode ter sido copiado incompleto ou expirado. Abra o e-mail da inscrição e clique de novo, ou fale com a gente em <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a>.</p>
+      <div class="acoes"><a class="btn ghost" href="/eventos">Ver a agenda</a></div>
+    </div>
+
+    <div class="card" id="confirmar" hidden>
+      <h1>Abriu uma vaga para você!</h1>
+      <p id="c-texto">Confirme abaixo para garantir a vaga. Se não confirmar dentro do prazo, ela passa para a próxima pessoa da fila.</p>
+      <div class="err" id="c-err" role="alert"></div>
+      <div class="acoes"><button class="btn" id="c-btn" type="button">Confirmar minha vaga</button></div>
+    </div>
+
+    <div class="card" id="ingresso" hidden>
+      <span class="status" id="i-status"></span>
+      <h1 id="i-nome"></h1>
+      <p id="i-evento" style="font-weight:800;"></p>
+      <div class="meta">
+        <span id="i-quando"></span>
+        <span id="i-onde"></span>
+        <span id="i-online" hidden></span>
+        <span id="i-tipo"></span>
+      </div>
+
+      <div id="i-qr-wrap" hidden>
+        <div class="qr" id="i-qr" aria-label="QR code do ingresso"></div>
+        <div class="codigo" id="i-codigo"></div>
+        <p class="hint">Mostre o QR (ou diga o código) na entrada. Cada código entra uma vez.</p>
+      </div>
+
+      <div id="i-fila" hidden>
+        <p>Sua posição na lista de espera:</p>
+        <div class="posicao" id="i-posicao"></div>
+        <p class="hint">Quando abrir vaga, avisamos por e-mail e você terá 24 horas para confirmar.</p>
+      </div>
+
+      <div id="i-promovida" hidden>
+        <p style="font-weight:800;">Abriu uma vaga para você. Confirme até <span id="i-prazo"></span> pelo botão que enviamos por e-mail.</p>
+      </div>
+
+      <div id="i-checkin" hidden><p style="font-weight:800;color:#0a7d5b;">✓ Entrada registrada às <span id="i-checkin-hora"></span>. Bom encontro!</p></div>
+
+      <div class="comunidade" id="i-comunidade" hidden>
+        <h2>Comunidade FaçaAmigos</h2>
+        <p>Canal só de avisos no WhatsApp: próximos encontros, materiais e bastidores. Sem grupo barulhento.</p>
+        <a class="btn wa" id="i-comunidade-btn" href="#" target="_blank" rel="noopener">Entrar na Comunidade</a>
+      </div>
+
+      <div class="acoes">
+        <a class="btn ghost" id="i-agenda" href="#" target="_blank" rel="noopener" hidden>Adicionar ao Google Agenda</a>
+        <a class="btn ghost" id="i-pagina" href="/eventos">Ver outros encontros</a>
+        <button class="btn danger" id="i-cancelar" type="button" hidden>Não vou mais conseguir ir</button>
+      </div>
+      <div class="err" id="i-err" role="alert"></div>
+    </div>
+
+    <div class="card" id="cancelado" hidden>
+      <h1>Vaga liberada</h1>
+      <p>Obrigada por avisar: a sua vaga já foi oferecida para a próxima pessoa da lista de espera.</p>
+      <div class="acoes"><a class="btn ghost" href="/eventos">Ver outros encontros</a></div>
+    </div>
+  </main>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="m-titulo">
+    <div class="box">
+      <h2 id="m-titulo">Liberar sua vaga?</h2>
+      <p>Sua inscrição será cancelada e a vaga vai para a próxima pessoa da fila. Se mudar de ideia depois, terá que se inscrever de novo.</p>
+      <div class="acoes">
+        <button class="btn danger" id="m-sim" type="button">Sim, liberar minha vaga</button>
+        <button class="btn ghost" id="m-nao" type="button">Voltar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var API = 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/eventos-public';
+      var $ = function (id) { return document.getElementById(id); };
+      var q = new URLSearchParams(location.search);
+      var t = q.get('t') || '', tc = q.get('confirmar') || '';
+      var STATUS = { confirmada: ['Vaga confirmada', ''], lista_espera: ['Lista de espera', 'warn'], promovida: ['Vaga aberta · confirme', 'warn'], cancelada: ['Inscrição cancelada', 'bad'], expirada: ['Prazo de confirmação expirado', 'bad'] };
+      var TIPO = { gratuito: 'Gratuito', pago: 'Pago' };
+
+      function show(id, on) { $(id).hidden = !on; }
+      function fmtData(iso) { return new Date(iso).toLocaleDateString('pt-BR', { timeZone: 'America/Belem', weekday: 'long', day: '2-digit', month: 'long' }); }
+      function fmtHora(iso) { return new Date(iso).toLocaleTimeString('pt-BR', { timeZone: 'America/Belem', hour: '2-digit', minute: '2-digit' }); }
+      function post(body) {
+        return fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+          .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { ok: r.ok, status: r.status, d: d }; }); });
+      }
+      function googleCalendar(ev) {
+        var f = function (iso) { return new Date(iso).toISOString().replace(/[-:]|\.\d{3}/g, ''); };
+        var u = new URL('https://calendar.google.com/calendar/render');
+        u.searchParams.set('action', 'TEMPLATE'); u.searchParams.set('text', ev.titulo);
+        u.searchParams.set('dates', f(ev.inicio) + '/' + f(ev.fim));
+        u.searchParams.set('details', 'https://institutofacaamigos.com.br/eventos/' + ev.slug);
+        var local = ev.formato === 'online' ? 'Online' : [ev.local_nome, ev.local_endereco].filter(Boolean).join(' · ');
+        if (local) u.searchParams.set('location', local);
+        return u.toString();
+      }
+      function drawQr(text) {
+        var box = $('i-qr');
+        box.innerHTML = '';
+        function go() { try { new window.QRCode(box, { text: text, width: 208, height: 208, correctLevel: window.QRCode.CorrectLevel.M }); } catch (e) { box.textContent = text; } }
+        if (window.QRCode) return go();
+        var s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+        s.onload = go;
+        s.onerror = function () { box.innerHTML = '<div style="font-weight:800;">' + text + '</div>'; };
+        document.head.appendChild(s);
+      }
+
+      function render(d) {
+        show('loading', false);
+        show('ingresso', true);
+        var st = STATUS[d.status] || [d.status, ''];
+        $('i-status').textContent = st[0]; $('i-status').className = 'status ' + st[1];
+        $('i-nome').textContent = d.nome;
+        $('i-evento').textContent = d.evento.titulo;
+        $('i-quando').textContent = '📅 ' + fmtData(d.evento.inicio) + ', das ' + fmtHora(d.evento.inicio) + ' às ' + fmtHora(d.evento.fim);
+        $('i-onde').textContent = '📍 ' + (d.evento.formato === 'online' ? 'Online' : ([d.evento.local_nome, d.evento.local_endereco].filter(Boolean).join(' · ') || 'Belém/PA'));
+        if (d.evento.online_url) { $('i-online').innerHTML = '🔗 <a href="' + d.evento.online_url.replace(/"/g, '&quot;') + '" target="_blank" rel="noopener">Link de acesso</a>'; show('i-online', true); }
+        $('i-tipo').textContent = '🎟 ' + d.tipo_nome + ' · ' + (TIPO[d.tipo] || '');
+        if (d.status === 'confirmada') { show('i-qr-wrap', true); $('i-codigo').textContent = d.codigo; drawQr(d.codigo); }
+        if (d.status === 'lista_espera') { show('i-fila', true); $('i-posicao').textContent = (d.posicao || '?') + 'º'; }
+        if (d.status === 'promovida') { show('i-promovida', true); $('i-prazo').textContent = fmtData(d.promocao_prazo) + ' às ' + fmtHora(d.promocao_prazo); }
+        if (d.checkin_at) { show('i-checkin', true); $('i-checkin-hora').textContent = fmtHora(d.checkin_at); }
+        if (d.comunidade_whatsapp_url) { $('i-comunidade-btn').href = d.comunidade_whatsapp_url; show('i-comunidade', true); }
+        if (d.status === 'confirmada') { $('i-agenda').href = googleCalendar(d.evento); show('i-agenda', true); }
+        $('i-pagina').href = '/eventos/' + encodeURIComponent(d.evento.slug);
+        $('i-pagina').textContent = 'Ver a página do encontro';
+        show('i-cancelar', !!d.pode_cancelar && !d.checkin_at);
+        if (window.faTrack) window.faTrack('ingresso_view', { slug: d.evento.slug, status: d.status });
+      }
+
+      function carregar() {
+        post({ action: 'ingresso', t: t }).then(function (r) {
+          if (!r.ok) { show('loading', false); show('bad', true); return; }
+          render(r.d);
+        }).catch(function () { $('loading').innerHTML = '<h1>Sem conexão</h1><p>Verifique sua internet e recarregue a página.</p>'; });
+      }
+
+      // Cancelar (liberar a vaga)
+      $('i-cancelar').addEventListener('click', function () { $('modal').classList.add('active'); $('m-nao').focus(); });
+      $('m-nao').addEventListener('click', function () { $('modal').classList.remove('active'); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $('modal').classList.remove('active'); });
+      $('m-sim').addEventListener('click', function () {
+        var b = $('m-sim'); b.disabled = true; b.textContent = 'Liberando…';
+        post({ action: 'cancelar', t: t }).then(function (r) {
+          $('modal').classList.remove('active');
+          b.disabled = false; b.textContent = 'Sim, liberar minha vaga';
+          if (!r.ok) { $('i-err').textContent = (r.d && r.d.error) || 'Não foi possível cancelar agora.'; $('i-err').classList.add('active'); return; }
+          show('ingresso', false); show('cancelado', true);
+          if (window.faTrack) window.faTrack('evento_cancelamento', {});
+        }).catch(function () { b.disabled = false; b.textContent = 'Sim, liberar minha vaga'; });
+      });
+
+      // Confirmação de promoção (link do e-mail "abriu uma vaga")
+      if (tc) {
+        show('loading', false); show('confirmar', true);
+        $('c-btn').addEventListener('click', function () {
+          var b = $('c-btn'); b.disabled = true; b.textContent = 'Confirmando…';
+          post({ action: 'confirmar_promocao', t: tc }).then(function (r) {
+            if (!r.ok) { b.disabled = false; b.textContent = 'Confirmar minha vaga'; $('c-err').textContent = (r.d && r.d.error) || 'Não foi possível confirmar.'; $('c-err').classList.add('active'); return; }
+            if (window.faTrack) window.faTrack('evento_promocao_confirmada', {});
+            if (r.d.ingresso_url) { location.replace(r.d.ingresso_url); return; }
+            show('confirmar', false); show('loading', true);
+            if (t) carregar(); else { $('loading').innerHTML = '<h1>Vaga confirmada!</h1><p>Seu voucher com QR foi enviado por e-mail.</p>'; }
+          }).catch(function () { b.disabled = false; b.textContent = 'Confirmar minha vaga'; });
+        });
+        return;
+      }
+      if (!t) { show('loading', false); show('bad', true); return; }
+      carregar();
+    })();
+  </script>
+</body>
+
+</html>

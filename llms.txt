@@ -8,6 +8,7 @@
 - [Playground Inclusivo](https://playground.institutofacaamigos.com.br/): preços, Horário Inclusivo, meia-entrada inclusiva, como funciona e perguntas frequentes.
 - [Circuito de Carrinhos Elétricos](https://playground.institutofacaamigos.com.br/circuito): passeios, preço e perguntas frequentes.
 - [Serviços da Clínica](https://institutofacaamigos.com.br/servicos): avaliação inicial, psicologia e terapia comportamental, fonoaudiologia, terapia ocupacional, psicopedagogia, avaliação neuropsicológica e orientação a pais e escola.
+- [Eventos — palestras, encontros e treinamentos](https://institutofacaamigos.com.br/eventos): agenda do Instituto para famílias e profissionais em Belém, com inscrição gratuita ou paga, vagas limitadas reais e lista de espera.
 - [Aprender — guias educativos](https://institutofacaamigos.com.br/aprender): guias curtos sobre birra e crise, rotina visual, laudo e CIPTEA e mais, escritos pela psicóloga Isabella Gonçalves Freitas.
 - [Glossário](https://institutofacaamigos.com.br/glossario): cerca de 40 termos de desenvolvimento infantil e inclusão (TEA, ABA, CIPTEA, integração sensorial...) explicados em linguagem simples.
 - [Mapeamento Comportamental gratuito](https://institutofacaamigos.com.br/teste): questionário de cerca de 5 minutos para famílias de crianças de 4 a 17 anos. Não substitui avaliação profissional.
