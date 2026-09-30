@@ -539,6 +539,7 @@ Deno.serve(async (req) => {
       .from("fa_gestao_desafios")
       .select("id", { count: "exact", head: true })
       .eq("email", conta.email)
+      .eq("finalidade", "login")
       .gte("created_at", since);
     if ((codigosRecentes ?? 0) >= CODES_MAX_PER_WINDOW) {
       return jsonResponse(req, { error: "muitos códigos pedidos, aguarde 15 minutos" }, 429);
@@ -701,7 +702,7 @@ Deno.serve(async (req) => {
     const expiresAt = new Date(Date.now() + ADMIN_SESSION_TTL_MS).toISOString();
     const { error: sessErr } = await admin.from("fa_teste_admin_sessions").insert({
       token,
-      clinica_user_id: "gestao-hub",
+      // clinica_user_id (uuid, aceita nulo): esta sessão nasce do Hub, não do login da Clínica.
       admin_email: contaPainel.email,
       expires_at: expiresAt,
     });
