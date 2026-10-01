@@ -748,7 +748,7 @@ CONTEÚDO ALINHADO AO BANCO DE DADOS (Supabase)
   é cheio mesmo — nenhum dos 158 passeios registrados usou cupom.
 - Day Use descrito como "10 horas no mesmo dia" (é o que o pacote
   cadastrado entrega, não tempo livre).
-- Programa de fidelidade (a cada 10 visitas, a 10ª entrada é cortesia)
+- Programa de fidelidade (a cada 10 visitas registradas pelo CPF do responsável, a 10ª entrada de 30 minutos é 100% gratuita; vale no Playground e no Circuito)
   passou a aparecer no site e na política de privacidade — está ativo
   no sistema para Playground e Circuito.
 - Prova social passou a usar número real: mais de 1.100 famílias e

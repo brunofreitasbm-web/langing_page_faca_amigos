@@ -35,8 +35,8 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 | :--- | :--- |
 | **Faixa Etária Atendida** | 0 a 12 anos de idade |
 | **Política de Desconto PCD / TEA** | 50% de desconto no valor de tabela do Playground, com laudo ou CIPTEA |
-| **Programa de Fidelidade — Playground** | a cada 10 visitas cadastradas pelo CPF do responsável, a 10ª entrada de 30 minutos é 100% gratuita. |
-| **Programa de Fidelidade — Circuito** | a cada 10 passeios cadastrados, o 10º é 100% gratuito. |
+| **Programa de Fidelidade — Playground** | a cada 10 visitas registradas pelo CPF do responsável, a 10ª entrada de 30 minutos é 100% gratuita. Vale no Playground e no Circuito. |
+| **Programa de Fidelidade — Circuito** | a cada 10 visitas registradas pelo CPF do responsável, a 10ª entrada de 30 minutos é 100% gratuita. Vale no Playground e no Circuito. |
 | **Horário de Funcionamento** | Todos os dias, das 10h às 22h |
 | **Melhor Horário Sensorial** | 10h às 16h (Horário Inclusivo, todos os dias) |
 | **Endereço Operacional 1** | Parque Shopping Belém — Rod. Augusto Montenegro, 4300, Belém - PA, CEP 66635-110 |
@@ -58,6 +58,8 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 | Minuto adicional | R$ 1,80 | R$ 1,50 |
 
 - **Crianças ≥ 3 anos**: podem permanecer no parque sob supervisão dos monitores capacitados, com pulseira de identificação vinculada ao responsável cadastrado na entrada.
+
+- **Olhar FaçaAmigos**: nos planos a partir de 1 hora (60 minutos ou mais) o responsável recebe, por WhatsApp, o Olhar FaçaAmigos, um resumo das anotações da equipe sobre a brincadeira da criança (coordenação, interação social, atenção, comunicação). Cortesia, sem custo adicional. Não é avaliação clínica nem diagnóstico.
 
 ### Circuito de Carrinhos Elétricos (Parque Shopping Belém)
 - **Carro e moto(30 min)**: R$ 48,00

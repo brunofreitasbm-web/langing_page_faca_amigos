@@ -88,6 +88,8 @@ function alvoLocal(valor) {
     try { u = new URL(v); } catch { return null; }
     if (!/^https?:$/.test(u.protocol) || !SITE_HOSTS.has(u.hostname)) return null;
     v = u.pathname;
+    // No host do playground a home ("/") é servida por playground.html (ver middleware.js), não por index.html.
+    if (u.hostname === PLAY && v === '/') v = '/playground';
   }
   v = v.split('#')[0].split('?')[0];
   if (v === '') return null; // só âncora/query: mesma página

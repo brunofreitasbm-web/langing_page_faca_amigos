@@ -42,6 +42,7 @@
 - **Onde**: Parque Shopping Belém (Térreo, próximo às Lojas Americanas)
 - **Atrações**: piscina de bolinhas gigante inclusiva, brinquedão sensorial, circuitos de agilidade, canto de descompressão sensorial, abafadores de ruído disponíveis.
 - **Segurança**: pulseira de identificação vinculada ao responsável cadastrado. Crianças a partir de 3 anos podem permanecer sob supervisão da equipe.
+- **Olhar FaçaAmigos**: nos planos a partir de 1 hora (60 minutos ou mais) o responsável recebe, por WhatsApp, o Olhar FaçaAmigos, um resumo das anotações da equipe sobre a brincadeira da criança (coordenação, interação social, atenção, comunicação). Cortesia, sem custo adicional. Não é avaliação clínica nem diagnóstico.
 - **Tabela de Preços**:
 {{PRECOS_PLAYGROUND_LISTA}}
 - **Festas de aniversário**: orçamento personalizado via WhatsApp.
