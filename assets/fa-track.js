@@ -5,7 +5,8 @@
  *
  * O que faz
  *  1. Consent Mode v2: tudo começa NEGADO. GTM e GA4 carregam em modo sem cookies até a pessoa aceitar no
- *     banner. (Clarity e Contentsquare, gravação de sessão, foram removidos em 22/09/2026.)
+ *     banner. O Microsoft Clarity (mapas de calor e gravação de sessão) só carrega DEPOIS do aceite — voltou em
+ *     01/10/2026 com o projeto novo yr1no82bvm; o Contentsquare continua removido.)
  *  2. Origem do visitante: guarda a primeira origem (utm_*, gclid, fbclid, src, sck, referrer) e a mais recente,
  *     num cookie do domínio raiz — assim ela sobrevive ao salto entre o hub e o subdomínio do playground.
  *     Links internos deixam de sobrescrever a origem real (ex.: o banner do hub não vira "site").
@@ -25,7 +26,7 @@
   // baixava ~330 KB de gtm.js à toa por container. Ficou o GTM-PN5D2BTS (o do primeiro commit, o do PUBLICAR.md e o
   // do portal Wi-Fi). Ao criar tags no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o
   // gtag direto abaixo (page_view em dobro). O scripts/check.mjs reprova a volta de um segundo container.
-  var IDS = { gtm: 'GTM-PN5D2BTS', ga4: 'G-37G5XLBXKG' };
+  var IDS = { gtm: 'GTM-PN5D2BTS', ga4: 'G-37G5XLBXKG', clarity: 'yr1no82bvm' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
@@ -143,10 +144,22 @@
     for (var k in attrs) s.setAttribute(k, attrs[k]);
     (document.head || document.documentElement).appendChild(s);
   }
-  // Clarity e Contentsquare (gravação de sessão) foram removidos por pedido explícito — não carregam mais
-  // nem com consentimento dado. O Consent Mode continua igual para GTM/GA4/Ads.
+  // Clarity: grava sessão, então só entra com o aceite do banner (nunca em "Só o essencial"). Carrega uma vez só;
+  // se a pessoa aceitar numa página, as seguintes já o carregam pelo consentimento salvo. Contentsquare segue removido.
+  var clarityLoaded = false;
+  function loadClarity() {
+    if (clarityLoaded) return;
+    clarityLoaded = true;
+    (function (c, a) {
+      c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments); };
+    })(window, 'clarity');
+    loadScript('https://www.clarity.ms/tag/' + IDS.clarity);
+  }
   function applyConsent(choice) {
-    if (choice === 'all') gtag('consent', 'update', GRANTED);
+    if (choice === 'all') {
+      gtag('consent', 'update', GRANTED);
+      loadClarity();
+    }
   }
   function setConsent(choice) {
     write(CONSENT_KEY, choice);
