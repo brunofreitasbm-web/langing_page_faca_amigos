@@ -61,9 +61,6 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 - **Minuto adicional**: {{CIRCUITO_MINUTO_ADICIONAL}}
 - **Modos de Pilotagem**: controle remoto pelos pais ou pilotagem autônoma pela criança.
 
-### Festas de Aniversário
-- Orçamento personalizado sob consulta via WhatsApp, com monitores de recreação e adaptação inclusiva.
-
 ---
 
 ## Recursos de Acessibilidade e Adaptação Sensorial
