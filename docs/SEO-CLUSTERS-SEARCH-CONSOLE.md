@@ -159,16 +159,16 @@ Cada cluster tem uma **página pilar** (a que deve ranquear para a busca princip
 
 Ordem por intenção de compra e esforço. Nada disso foi implementado: este documento só mapeia.
 
-1. **Aniversário / festa no Playground e no Circuito.** Zero menções em `playground.html`, `circuito.html` e `index.html`. É a busca local de serviço infantil com maior intenção de compra. Antes de criar página: o FaçaAmigos faz festa ou reserva de horário? Se não faz, a página certa é "comemorar aniversário no playground" (o que dá e o que não dá), não uma promessa.
-2. **Circuito: idade mínima / altura / acompanhante.** Dúvida de quem já decidiu ir; hoje só parcialmente na FAQ.
-3. **Comparação "guia x código: qual escolher".** Quem compara está pronto para comprar e hoje não tem resposta; vale um bloco nas duas páginas ou um artigo em `/aprender`.
-4. **"Teste online x avaliação profissional".** Liga o Teste à Clínica sem prometer diagnóstico.
-5. **"Como escolher um playground para criança atípica".** Responde "melhor playground" com critérios, sem usar "melhor" como promessa.
-6. **Clínica por serviço (fono, TO, ABA).** Só quando a Clínica abrir; antes disso, busca comercial cai em lista de espera e frustra.
+1. **Circuito: idade mínima / altura / acompanhante.** Dúvida de quem já decidiu ir; hoje só parcialmente na FAQ.
+2. **Comparação "guia x código: qual escolher".** Quem compara está pronto para comprar e hoje não tem resposta; vale um bloco nas duas páginas ou um artigo em `/aprender`.
+3. **"Teste online x avaliação profissional".** Liga o Teste à Clínica sem prometer diagnóstico.
+4. **"Como escolher um playground para criança atípica".** Responde "melhor playground" com critérios, sem usar "melhor" como promessa.
+5. **Clínica por serviço (fono, TO, ABA).** Só quando a Clínica abrir; antes disso, busca comercial cai em lista de espera e frustra.
 
 ## 6. Armadilhas
 
 - **Volume baixo**: um mês sem resultado no filtro não prova que a busca não existe; o GSC oculta consultas raras. Some o período antes de concluir.
+- **Aniversário / festa**: o FaçaAmigos **não oferece** (confirmado em 2026-10-05). `anivers|festa` fica no regex de intenção só para medir demanda; não criar página nem citar em FAQ. Se o volume no GSC for alto, é dado para decidir se vale lançar o serviço.
 - **Marca infla o resultado**: "faça amigos preço" é cliente que já conhece. Descoberta é o cluster **sem** marca.
 - **Clínica "em breve"**: medir, mas não empurrar conteúdo comercial antes de abrir.
 - **Preços** vivem em vários lugares (HTML, JSON-LD, `llms*.txt`, `fa-track.js`, `fa-health`). Conteúdo novo que cite preço tem que seguir a tabela da seção 11 do `docs/CODEBASE_MAP.md`.
