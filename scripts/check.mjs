@@ -421,6 +421,18 @@ if (nomesOrganization.size > 1) {
   }
 }
 
+// ---------- verificação global: meia-entrada em R$, nunca em % ----------
+// O "50%" da meia-entrada é sobre uma tabela-base que o cliente não vê (R$ 100 -> R$ 50). Ao lado do preço geral
+// (R$ 60), qualquer leitor, humano ou IA, calcula "50% de 60 = 30" e cita um preço errado. Texto da meia vai em R$.
+{
+  const meiaPct = /meia[- ]entrada[^.<"]{0,60}\d+\s?%|\d+\s?%[^.<"]{0,40}meia[- ]entrada/i;
+  for (const arq of [...paginas, 'llms.txt', 'llms-full.txt']) {
+    if (!existsSync(join(root, arq))) continue;
+    const m = meiaPct.exec(read(arq));
+    if (m) globais.erros.push(`${arq}: meia-entrada descrita em porcentagem ("${m[0].trim()}"). Use o preço em R$.`);
+  }
+}
+
 // ---------- verificação global: um único container GTM ----------
 // Dois containers com a mesma tag de GA4/Meta/Ads contam todo evento em dobro. Por isso: o fa-track.js declara um
 // único GTM-XXXX e todo <noscript> das páginas aponta para ele.

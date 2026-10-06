@@ -8,7 +8,8 @@
   <title>Encontro do Instituto FaçaAmigos</title>
   <meta name="description" content="Página de inscrição de um encontro, palestra ou treinamento do Instituto FaçaAmigos. Vagas reais, lista de espera automática e voucher com QR no e-mail.">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
-  <!-- Página dinâmica (/eventos/<slug> reescreve para cá, ver vercel.json): o canonical aponta para a agenda. -->
+  <!-- Página dinâmica (/eventos/<slug> reescreve para cá, ver vercel.json). O middleware.js troca título, descrição,
+       canonical/og:url (para /eventos/<slug>) e injeta o JSON-LD Event no servidor; sem ele, vale este canonical da agenda. -->
   <link rel="canonical" href="https://institutofacaamigos.com.br/eventos">
   <link rel="icon" type="image/png" href="/img/logo-simbolo.png">
   <link rel="icon" href="/favicon.ico" sizes="any">
@@ -399,19 +400,22 @@
         clearInterval(countdownTimer);
         countdownTimer = setInterval(countdown, 30000);
 
-        // JSON-LD Event (para quem executa JS)
-        var ld = document.createElement('script');
-        ld.type = 'application/ld+json';
-        ld.textContent = JSON.stringify({
-          '@context': 'https://schema.org', '@type': 'Event', name: ev.titulo, startDate: ev.inicio, endDate: ev.fim,
-          eventAttendanceMode: ev.formato === 'online' ? 'https://schema.org/OnlineEventAttendanceMode' : (ev.formato === 'hibrido' ? 'https://schema.org/MixedEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode'),
-          eventStatus: 'https://schema.org/EventScheduled',
-          location: ev.formato === 'online' ? { '@type': 'VirtualLocation', url: 'https://institutofacaamigos.com.br/eventos/' + ev.slug } : { '@type': 'Place', name: ev.local_nome || 'Belém/PA', address: ev.local_endereco || 'Belém, PA' },
-          description: ev.descricao_curta || ev.promessa || '', image: ev.capa_url ? [ev.capa_url] : undefined,
-          organizer: { '@type': 'Organization', name: 'Instituto FaçaAmigos', url: 'https://institutofacaamigos.com.br/' },
-          offers: tipos.map(function (t) { return { '@type': 'Offer', name: t.nome, price: t.tipo === 'gratuito' ? '0' : undefined, priceCurrency: 'BRL', availability: t.escassez.estado === 'esgotado' ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock', url: 'https://institutofacaamigos.com.br/eventos/' + ev.slug }; })
-        });
-        document.head.appendChild(ld);
+        // JSON-LD Event: o middleware.js já injeta no HTML do servidor (data-ssr="evento"); este é só o reserva
+        // para quando a página veio sem ele (falha da API no servidor, preview com proteção).
+        var ld = document.querySelector('script[data-ssr="evento"]') ? null : document.createElement('script');
+        if (ld) {
+          ld.type = 'application/ld+json';
+          ld.textContent = JSON.stringify({
+            '@context': 'https://schema.org', '@type': 'Event', name: ev.titulo, startDate: ev.inicio, endDate: ev.fim,
+            eventAttendanceMode: ev.formato === 'online' ? 'https://schema.org/OnlineEventAttendanceMode' : (ev.formato === 'hibrido' ? 'https://schema.org/MixedEventAttendanceMode' : 'https://schema.org/OfflineEventAttendanceMode'),
+            eventStatus: 'https://schema.org/EventScheduled',
+            location: ev.formato === 'online' ? { '@type': 'VirtualLocation', url: 'https://institutofacaamigos.com.br/eventos/' + ev.slug } : { '@type': 'Place', name: ev.local_nome || 'Belém/PA', address: ev.local_endereco || 'Belém, PA' },
+            description: ev.descricao_curta || ev.promessa || '', image: ev.capa_url ? [ev.capa_url] : undefined,
+            organizer: { '@type': 'Organization', name: 'Instituto FaçaAmigos', url: 'https://institutofacaamigos.com.br/' },
+            offers: tipos.map(function (t) { return { '@type': 'Offer', name: t.nome, price: t.tipo === 'gratuito' ? '0' : undefined, priceCurrency: 'BRL', availability: t.escassez.estado === 'esgotado' ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock', url: 'https://institutofacaamigos.com.br/eventos/' + ev.slug }; })
+          });
+          document.head.appendChild(ld);
+        }
 
         show('loading', false);
         show('evento', true);

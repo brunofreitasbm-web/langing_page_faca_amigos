@@ -15,6 +15,13 @@ o que derruba a confiança de buscador e de IA.
 
 ## 1. Problemas encontrados no código (corrigir primeiro)
 
+> **Status (2026-10-06, mesmo PR):** corrigidos os itens **1** (meia-entrada só em R$, no HTML, JSON-LD, `llms*.txt`
+> via `geo-build.mjs`, e um erro novo no `check.mjs` para não voltar), **2** (nó do Bosque fora do JSON-LD), **3**
+> (`url` da Clínica = `clinica.institutofacaamigos.com.br`, que está no ar e indexável), **4** (eventos montados no
+> servidor pelo `middleware.js`, com canonical próprio, JSON-LD `Event`, 404 real e `/sitemap-eventos.xml`) e **11**.
+> De quebra: o glossário e o artigo de laudo diziam que a meia-entrada valia no Circuito, mas o caixa não tem preço
+> inclusivo para o Circuito (`geo-facts.json`); o texto agora diz só Playground. Os demais itens continuam abertos.
+
 | # | Gravidade | Problema | Onde | Por que importa |
 |---|---|---|---|---|
 | 1 | Alta | **"50% de desconto" vs. R$ 60 → R$ 50.** A tabela-base é R$ 100 (geral tem 40% off, inclusivo 50% off, ver `geo-facts.json`), mas o visitante e a IA só veem R$ 60 e R$ 50 ao lado de "50% Off". Um assistente vai calcular "50% de 60 = 30" e responder errado, ou apontar contradição. | `playground.html` (amenity "Meia-Entrada Inclusiva (50% Off)", textos "meia-entrada inclusiva (50%)"), `index.html` (amenity), `llms.txt` ("50% de desconto sobre a tabela padrão") | Fato contraditório é o que mais faz IA descartar ou distorcer uma fonte. |
