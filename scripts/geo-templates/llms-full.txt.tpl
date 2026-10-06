@@ -12,7 +12,7 @@
 - [Mapeamento Comportamental gratuito](https://institutofacaamigos.com.br/teste): questionário de cerca de 5 minutos para famílias de crianças de 4 a 17 anos. Não substitui avaliação profissional.
 - [E-book O Brincar com Propósito](https://institutofacaamigos.com.br/guia): guia prático de Análise do Comportamento para mães, pais e cuidadores.
 - [E-book O Código do Desenvolvimento Infantil](https://institutofacaamigos.com.br/codigo): guia curto e acolhedor sobre o comportamento infantil.
-- [Política de Privacidade](https://playground.institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
+- [Política de Privacidade](https://institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
 - [Termos de Uso e de Compra](https://institutofacaamigos.com.br/termos): entrega, garantia de 7 dias e licença de uso dos e-books.
 
 ---
@@ -34,7 +34,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 | Métrica / Parâmetro | Detalhe / Valor |
 | :--- | :--- |
 | **Faixa Etária Atendida** | 0 a 12 anos de idade |
-| **Política de Desconto PCD / TEA** | {{DESCONTO_INCLUSIVO_PCT}} de desconto no valor de tabela do Playground, com laudo ou CIPTEA |
+| **Política de Desconto PCD / TEA** | Meia-entrada inclusiva no Playground, com laudo ou CIPTEA: {{MEIA_INCLUSIVA}} |
 | **Programa de Fidelidade — Playground** | {{FIDELIDADE_PLAYGROUND}} |
 | **Programa de Fidelidade — Circuito** | {{FIDELIDADE_CIRCUITO}} |
 | **Horário de Funcionamento** | Todos os dias, das {{HORARIO}} |
@@ -74,7 +74,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 ## Perguntas Frequentes e Respostas
 
 #### Q1: Como funciona o acesso de crianças autistas no FaçaAmigos?
-R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança recebe {{DESCONTO_INCLUSIVO_PCT}} de desconto no Playground.
+R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança paga a meia-entrada inclusiva no Playground: {{MEIA_INCLUSIVA}}.
 
 #### Q2: É necessário fazer agendamento prévio?
 R: Não. O atendimento no Playground e no Circuito é feito por ordem de chegada, todos os dias das {{HORARIO}}.

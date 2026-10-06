@@ -68,7 +68,11 @@ function buildVars(facts) {
   const enderecoParque = `${parque.address.street}, ${parque.address.city} - ${parque.address.state}, CEP ${parque.address.postal_code}`;
   const enderecoBosque = `${bosque.address.street}, ${bosque.address.city} - ${bosque.address.state}`;
   const horario = `${hora(parque.hours.open)} às ${hora(parque.hours.close)}`;
-  const descontoInclusivo = `${parque.discounts.inclusivo_pct}%`;
+  // Meia-entrada em R$, nunca em %: o "50%" é sobre uma tabela-base que o cliente não vê (R$ 100 → R$ 50), e ao lado
+  // do preço geral (R$ 60) faz qualquer leitor, humano ou IA, calcular "50% de 60 = 30".
+  const plano30 = parque.plans.find((p) => !p.asset_kind && p.duration_min === 30);
+  if (!plano30) throw new Error('plano de 30 minutos do Playground não encontrado em geo-facts.json');
+  const meiaInclusiva = `R$ ${brl(plano30.inclusive_brl)} os 30 minutos (público geral: R$ ${brl(plano30.price_brl)})`;
 
   const fidelidadePlayground = `a cada ${parque.loyalty.trigger_visits} visitas registradas pelo CPF do responsável, a ${parque.loyalty.trigger_visits}ª entrada de 30 minutos é 100% gratuita. Vale no Playground e no Circuito.`;
   const fidelidadeCircuito = fidelidadePlayground;
@@ -82,7 +86,7 @@ function buildVars(facts) {
       (p) => `  - ${packageLabel(p)}: R$ ${brl(p.price_brl)} (Público geral) / R$ ${brl(p.inclusive_brl)} (Meia-Entrada Inclusiva)`
     ),
     `  - Minuto adicional: R$ ${brl(parquePlans[0]?.overage_brl)} (Público geral) / R$ ${brl(parquePlans[0]?.overage_inclusive_brl)} (Meia-Entrada Inclusiva)`,
-    `  - Meia-Entrada Inclusiva (PCD/TEA): ${descontoInclusivo} de desconto sobre a tabela padrão, mediante laudo ou CIPTEA.`,
+    `  - Meia-Entrada Inclusiva (PCD/TEA): preços da coluna "Meia-Entrada Inclusiva" acima, mediante laudo ou CIPTEA. Só no Playground; o Circuito tem preço único.`,
   ].join('\n');
 
   const tabelaPlayground = [
@@ -101,7 +105,7 @@ function buildVars(facts) {
     ENDERECO_PARQUE: enderecoParque,
     ENDERECO_BOSQUE: enderecoBosque,
     HORARIO: horario,
-    DESCONTO_INCLUSIVO_PCT: descontoInclusivo,
+    MEIA_INCLUSIVA: meiaInclusiva,
     FIDELIDADE_PLAYGROUND: fidelidadePlayground,
     FIDELIDADE_CIRCUITO: fidelidadeCircuito,
     PRECOS_PLAYGROUND_LISTA: linhasListaPlayground,
