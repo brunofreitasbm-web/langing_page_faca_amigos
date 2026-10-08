@@ -37,8 +37,8 @@ Não. O FaçaAmigos é para todas as crianças de 0 a 12 anos, com ou sem laudo.
 | 3 | "É pra todas as crianças. De 0 a 12 anos, com ou sem laudo." | `img/hero-piscina-bolinhas.jpg` |
 | 4 | "Inclusivo não é um lugar separado. É um lugar onde cabe todo mundo." | `img/inclusao-cantinho-leitura.jpg` |
 | 5 | "Seu filho não tem laudo? Não precisa de nada. É só chegar, cadastrar e brincar." | `img/galeria-oficinas.jpg` |
-| 6 | "Seu filho é atípico? Avise na entrada. Tem meia-entrada inclusiva (R$ 50 os 30 minutos), monitor de inclusão e canto de descompressão." | `img/inclusao-cantinho-leitura.jpg` |
-| 7 | "Som mais baixo, monitor por perto, um canto pra respirar. O que é bom pra quem precisa de mais cuidado é bom pra toda criança." | `img/hero-piscina-bolinhas.jpg` |
+| 6 | "Seu filho é atípico? Avise na entrada. Tem meia-entrada inclusiva (R$ 50 os 30 minutos), mediador de inclusão e canto de descompressão." | `img/inclusao-cantinho-leitura.jpg` |
+| 7 | "Som mais baixo, mediador por perto, um canto pra respirar. O que é bom pra quem precisa de mais cuidado é bom pra toda criança." | `img/hero-piscina-bolinhas.jpg` |
 | 8 (CTA) | "É só chegar. Parque Shopping Belém, todos os dias, das 10h às 22h. Sem agendamento." | Logo + fundo verde-água |
 
 **Legenda:**

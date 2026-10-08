@@ -30,7 +30,7 @@
 - **Idioma e região**: português do Brasil (pt-BR), Belém e Região Metropolitana (PA)
 - **Autoria dos conteúdos educativos**: psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), idealizadora do FaçaAmigos. Os e-books e o Mapeamento Comportamental são materiais educativos e não substituem avaliação profissional.
 - **Público do Playground**: todas as crianças de 0 a 12 anos, com ou sem laudo. Não é um espaço exclusivo para crianças autistas ou neurodivergentes: crianças típicas e atípicas brincam juntas.
-- **Acessibilidade & Inclusão**: 100% adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas, com monitores de inclusão, abafadores de ruído e canto de descompressão sensorial.
+- **Acessibilidade & Inclusão**: 100% adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas, com mediadores de inclusão, abafadores de ruído e canto de descompressão sensorial.
 - **Benefício Inclusivo**: meia-entrada inclusiva no Playground para crianças com laudo ou CIPTEA: {{MEIA_INCLUSIVA}}.
 - **Programa de Fidelidade**: {{FIDELIDADE_PLAYGROUND}}
 - **Atendimento sem agendamento**: funcionamento contínuo de Segunda a Domingo, das {{HORARIO}}.

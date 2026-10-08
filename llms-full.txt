@@ -58,7 +58,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 | Day Use (10h no mesmo dia) | R$ 270,00 | R$ 225,00 |
 | Minuto adicional | R$ 1,80 | R$ 1,50 |
 
-- **Crianças ≥ 3 anos**: podem permanecer no parque sob supervisão dos monitores capacitados, com pulseira de identificação vinculada ao responsável cadastrado na entrada.
+- **Crianças ≥ 3 anos**: podem permanecer no parque sob supervisão dos mediadores capacitados, com pulseira de identificação vinculada ao responsável cadastrado na entrada.
 
 - **Olhar FaçaAmigos**: nos planos a partir de 1 hora (60 minutos ou mais) o responsável recebe, por WhatsApp, o Olhar FaçaAmigos, um resumo das anotações da equipe sobre a brincadeira da criança (coordenação, interação social, atenção, comunicação). Cortesia, sem custo adicional. Não é avaliação clínica nem diagnóstico.
 
@@ -74,7 +74,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 - **Canto de Descompressão**: espaço reservado com iluminação suave e estímulos auditivos mínimos para autorregulação infantil.
 - **Abafadores de Ruído**: disponíveis gratuitamente na recepção para crianças com hipersensibilidade auditiva.
 - **Horário Inclusivo**: das 10h às 16h, todos os dias, quando o fluxo do shopping costuma ser mais calmo.
-- **Equipe de Monitores**: treinada em acolhimento inclusivo e estratégias de suporte ao neurodesenvolvimento.
+- **Equipe de Mediadores**: treinada em acolhimento inclusivo e estratégias de suporte ao neurodesenvolvimento.
 
 ---
 
@@ -96,7 +96,7 @@ R: O Playground e o Circuito funcionam no Parque Shopping Belém (Rod. Augusto M
 R: O Horário Inclusivo, todos os dias das 10h às 16h, tem som mais baixo, menos lotação e equipe reforçada. É o horário indicado para a primeira visita.
 
 #### Q6: O Playground FaçaAmigos é só para crianças autistas ou neurodivergentes?
-R: Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laudo. Crianças típicas e atípicas brincam juntas no mesmo espaço, sem ala separada. O Horário Inclusivo também é aberto a qualquer família. A estrutura inclusiva (monitores treinados, abafadores de ruído, canto de descompressão) deixa o ambiente mais seguro e tranquilo para qualquer criança. Guia completo: `https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas`
+R: Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laudo. Crianças típicas e atípicas brincam juntas no mesmo espaço, sem ala separada. O Horário Inclusivo também é aberto a qualquer família. A estrutura inclusiva (mediadores treinados, abafadores de ruído, canto de descompressão) deixa o ambiente mais seguro e tranquilo para qualquer criança. Guia completo: `https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas`
 
 ---
 
