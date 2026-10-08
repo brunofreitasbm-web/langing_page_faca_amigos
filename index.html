@@ -690,10 +690,14 @@
     .j-card { background: var(--white); border-radius: 20px; padding: 18px; border: 1px solid rgba(26, 63, 53, 0.08); box-shadow: var(--shadow-sm); display: grid; gap: 8px; align-content: start; min-width: 0; }
     .j-tag { font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c); }
     .j-card h3 { font-size: 1.15rem; line-height: 1.25; margin: 0; }
-    .j-card dl { margin: 0; display: grid; gap: 6px; font-size: 0.9rem; }
-    .j-card dl div { display: grid; gap: 1px; }
-    .j-card dt { font-size: 0.66rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
-    .j-card dd { margin: 0; font-weight: 700; min-width: 0; }
+    .j-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 0.92rem; font-weight: 700; }
+    .j-points li { min-width: 0; }
+    .j-proof { color: var(--ink-soft); padding-left: 22px; position: relative; }
+    .j-proof::before {
+      content: ''; position: absolute; left: 0; top: 0.3em; width: 14px; height: 14px; border-radius: 50%;
+      background: var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3.6 7.2l2.1 2.1 4.1-4.4' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat;
+    }
+    .j-deal { color: var(--dark); font-weight: 800; }
     .j-cta {
       display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 18px; margin-top: 4px;
       border-radius: 9999px; background: var(--c); color: #fff; font-weight: 900; font-size: 0.92rem; justify-self: start; text-align: center;
@@ -969,7 +973,7 @@
   </header>
 
   <!-- JORNADA DA FAMÍLIA — explica por que brincar, observar, entender e cuidar estão sob a mesma marca.
-       Cada parada: promessa (título), confiança e oferta. A linha anima uma vez (JS adiciona .anim/.play); sem JS fica desenhada. -->
+       Cada parada: título, uma prova e a oferta (sem rotular os três no visual). A linha anima uma vez (JS adiciona .anim/.play); sem JS fica desenhada. -->
   <section class="jornada" id="jornada" aria-labelledby="jornada-h">
     <div class="wrap">
       <div class="jornada-head">
@@ -1000,10 +1004,10 @@
             <div class="j-card">
               <span class="j-tag">Brincar · Playground e Circuito</span>
               <h3>Ele brinca seguro, você descansa por perto.</h3>
-              <dl>
-                <div><dt>Confiança</dt><dd>Avaliações reais no Google e mediadores que sabem lidar com cada criança</dd></div>
-                <div><dt>Oferta</dt><dd>A partir de R$ 60 · sem hora marcada · 2 shoppings</dd></div>
-              </dl>
+              <ul class="j-points">
+                <li class="j-proof">Avaliações reais no Google e mediadores que sabem lidar com cada criança</li>
+                <li class="j-deal">A partir de R$ 60 · sem hora marcada · 2 shoppings</li>
+              </ul>
               <a class="j-cta" href="https://playground.institutofacaamigos.com.br/" data-cta="jornada" data-destino="playground">Levar para brincar</a>
             </div>
           </li>
@@ -1012,10 +1016,10 @@
             <div class="j-card">
               <span class="j-tag">Observar · Olhar FaçaAmigos</span>
               <h3>Você sai sabendo como foi a tarde dele.</h3>
-              <dl>
-                <div><dt>Confiança</dt><dd>Mediadores treinados em acolhimento neurodivergente acompanham a brincadeira</dd></div>
-                <div><dt>Oferta</dt><dd>Resumo da brincadeira no WhatsApp, cortesia no plano de 1 hora</dd></div>
-              </dl>
+              <ul class="j-points">
+                <li class="j-proof">Mediadores treinados em acolhimento neurodivergente acompanham a brincadeira</li>
+                <li class="j-deal">Resumo da brincadeira no WhatsApp, cortesia no plano de 1 hora</li>
+              </ul>
               <a class="j-cta" href="https://playground.institutofacaamigos.com.br/#olhar" data-cta="jornada" data-destino="olhar">Ver o Olhar</a>
             </div>
           </li>
@@ -1024,10 +1028,10 @@
             <div class="j-card">
               <span class="j-tag">Entender · Mapeamento e guias</span>
               <h3>Pare de se perguntar se é normal.</h3>
-              <dl>
-                <div><dt>Confiança</dt><dd>Criado por psicóloga. Sem rótulo, e não substitui avaliação profissional</dd></div>
-                <div><dt>Oferta</dt><dd>Grátis, em 5 minutos · guias e e-books para ler em casa</dd></div>
-              </dl>
+              <ul class="j-points">
+                <li class="j-proof">Criado por psicóloga. Sem rótulo, e não substitui avaliação profissional</li>
+                <li class="j-deal">Grátis, em 5 minutos · guias e e-books para ler em casa</li>
+              </ul>
               <a class="j-cta" href="/teste?utm_source=site&amp;utm_medium=jornada&amp;utm_campaign=hub" data-cta="jornada" data-destino="mapeamento">Fazer o mapeamento</a>
             </div>
           </li>
@@ -1036,10 +1040,10 @@
             <div class="j-card">
               <span class="j-tag">Cuidar · Clínica (em breve)</span>
               <h3>Um plano que faz sentido pra sua família.</h3>
-              <dl>
-                <div><dt>Confiança</dt><dd>Equipe multidisciplinar e terapia comportamental, com ciência e afeto</dd></div>
-                <div><dt>Oferta</dt><dd>Convênios IASEP e PROASA · lista de espera aberta</dd></div>
-              </dl>
+              <ul class="j-points">
+                <li class="j-proof">Equipe multidisciplinar e terapia comportamental, com ciência e afeto</li>
+                <li class="j-deal">Convênios IASEP e PROASA · lista de espera aberta</li>
+              </ul>
               <a class="j-cta" href="#clinica" data-cta="jornada" data-destino="clinica">Entrar na lista</a>
             </div>
           </li>
