@@ -1659,119 +1659,6 @@
       }
     }
 
-    /* Modal: Trabalhe Conosco */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(26, 63, 53, 0.6);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal {
-      background: var(--white);
-      border-radius: var(--r-card);
-      padding: 36px;
-      max-width: 460px;
-      width: 100%;
-      position: relative;
-      box-shadow: var(--shadow-lg);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal h3 {
-      font-size: 1.35rem;
-      margin-bottom: 6px;
-      padding-right: 36px;
-    }
-
-    .modal>p {
-      color: var(--ink-soft);
-      font-weight: 600;
-      font-size: 0.94rem;
-      margin-bottom: 20px;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      width: 36px;
-      height: 36px;
-      border: none;
-      border-radius: 50%;
-      background: var(--cream);
-      color: var(--dark);
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background var(--t-fast);
-    }
-
-    .modal-close:hover {
-      background: var(--yellow);
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 14px 18px;
-      border: 2.5px solid rgba(26, 63, 53, 0.12);
-      border-radius: 14px;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 0.98rem;
-      color: var(--dark);
-      background: var(--white);
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--teal);
-      box-shadow: 0 0 0 4px rgba(46, 207, 181, 0.18);
-    }
-
-    .form-control optgroup {
-      font-weight: 800;
-      color: var(--teal-dark, #1f917f);
-      background: #f4f8f7;
-      font-style: normal;
-    }
-
-    .form-control option {
-      font-weight: 600;
-      color: var(--dark, #1a3f35);
-      background: #ffffff;
-    }
-
-    .form-label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: var(--ink-soft);
-    }
-
-    .form-error {
-      display: none;
-      color: var(--pink-dark);
-      font-size: 0.88rem;
-      font-weight: 800;
-      margin-bottom: 12px;
-    }
 
     /* Teaser Grão-Pará */
     .grao-teaser {
@@ -1983,8 +1870,8 @@
             class="amigos">Amigos</span><span class="sub">Playground Inclusivo</span></span></a>
       <div class="nav-actions">
         <a href="https://institutofacaamigos.com.br/" class="btn btn-ghost btn-sm">Instituto FaçaAmigos</a>
-        <button type="button" class="btn btn-ghost btn-sm" onclick="openJobModal()">Venha fazer parte do nosso
-          time</button>
+        <a href="https://institutofacaamigos.com.br/trabalhe-conosco" class="btn btn-ghost btn-sm">Venha fazer parte do nosso
+          time</a>
         <a href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20quero%20saber%20mais!" target="_blank"
           rel="noopener" class="btn btn-wa btn-sm">
           <svg viewBox="0 0 24 24" fill="currentColor">
@@ -2551,106 +2438,11 @@
         rel="noopener">@facaamigos.belem</a></p>
     <p style="margin-top: 18px;"><a
         href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida."
-        target="_blank" rel="noopener">Fale conosco</a> · <a href="#" onclick="openJobModal(); return false;">Venha
+        target="_blank" rel="noopener">Fale conosco</a> · <a href="https://institutofacaamigos.com.br/trabalhe-conosco">Venha
         fazer parte do nosso time</a> · <a href="https://institutofacaamigos.com.br/politica-privacidade">Política de privacidade</a></p>
     <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>
   </footer>
 
-  <!-- Modal: Venha Fazer Parte do Nosso Time -->
-  <div class="modal-overlay" id="jobModalOverlay" onclick="if(event.target===this) closeJobModal()">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
-      <button type="button" class="modal-close" onclick="closeJobModal()" aria-label="Fechar">✕</button>
-      <h3 id="jobModalTitle">Venha fazer parte do nosso time</h3>
-      <p>Preencha seus dados e envie seu currículo em PDF. Nosso time de RH vai analisar sua candidatura.</p>
-      <form id="job-form">
-        <div class="form-group"><input type="text" id="job-nome" class="form-control" placeholder="Nome completo"
-            required></div>
-        <div class="form-group"><input type="email" id="job-email" class="form-control" placeholder="E-mail" required>
-        </div>
-        <div class="form-group"><input type="tel" id="job-telefone" class="form-control" placeholder="WhatsApp"
-            required></div>
-        <div class="form-group">
-          <input type="text" id="job-curso" class="form-control" list="job-curso-sugestoes"
-            placeholder="Curso / Formação (ex: Psicologia, Terapia Ocupacional...)">
-          <datalist id="job-curso-sugestoes">
-            <option value="Psicologia">
-            <option value="Terapia Ocupacional">
-            <option value="Fisioterapia">
-            <option value="Nutrição">
-            <option value="Fonoaudiologia">
-            <option value="Psicopedagogia">
-            <option value="Pedagogia">
-            <option value="Musicoterapia">
-            <option value="Neuropsicologia">
-            <option value="Educação Física">
-            <option value="Enfermagem">
-            <option value="Técnico(a) de Enfermagem">
-            <option value="Administração">
-            <option value="Recursos Humanos">
-            <option value="Marketing / Comunicação">
-            <option value="Serviço Social">
-            <option value="Medicina / Psiquiatria">
-          </datalist>
-        </div>
-        <div class="form-group">
-          <select id="job-area" class="form-control" required>
-            <option value="" disabled selected>Área pretendida / Função</option>
-            <optgroup label="Saúde & Terapias (Clínica)">
-              <option value="PSICOLOGIA">Psicologia / Aplicador(a) ABA</option>
-              <option value="TERAPIA_OCUPACIONAL">Terapia Ocupacional</option>
-              <option value="FONOAUDIOLOGIA">Fonoaudiologia</option>
-              <option value="FISIOTERAPIA">Fisioterapia</option>
-              <option value="NUTRICAO">Nutrição</option>
-              <option value="PSICOPEDAGOGIA">Psicopedagogia / Pedagogia</option>
-              <option value="MUSICOTERAPIA">Musicoterapia</option>
-              <option value="ENFERMAGEM">Enfermagem / Técnico(a)</option>
-              <option value="SUPERVISAO_CLINICA">Coordenação / Supervisão Clínica</option>
-            </optgroup>
-            <optgroup label="Operacional (Playground / Circuito / Recepção)">
-              <option value="RECEPCAO">Recepção / Atendimento ao Cliente</option>
-              <option value="MONITOR">Monitor(a) de Brincadeiras / Recreação</option>
-              <option value="VENDEDOR">Vendedor(a) / Comercial</option>
-              <option value="CAIXA">Operador(a) de Caixa</option>
-              <option value="SERVICOS_GERAIS">Serviços Gerais / Limpeza</option>
-              <option value="LIDERANCA">Liderança / Supervisão Operacional</option>
-            </optgroup>
-            <optgroup label="Corporativo & Administrativo">
-              <option value="RH">Recursos Humanos</option>
-              <option value="ADMINISTRATIVO">Administração / Financeiro</option>
-              <option value="MARKETING">Marketing / Design</option>
-            </optgroup>
-            <option value="OUTRA">Outra Área / Função</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <select id="job-unidade" class="form-control" required>
-            <option value="" disabled selected>Unidade de preferência</option>
-            <option value="PARQUE_SHOPPING">Parque Shopping Belém (Playground/Circuito)</option>
-            <option value="BOSQUE_GRAO_PARA">Shopping Bosque Grão-Pará (Playground)</option>
-            <option value="CLINICA_FATIMA">Centro de Terapia Comportamental (Clínica Umarizal - Inauguração)</option>
-            <option value="AMBAS">Qualquer unidade / Sem preferência</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <select id="job-tipo" class="form-control" required>
-            <option value="" disabled selected>Tipo de oportunidade</option>
-            <option value="REMUNERADO">CLT</option>
-            <option value="PJ">Prestador de Serviço (PJ)</option>
-            <option value="ESTAGIO">Estágio</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="job-curriculo" class="form-label">Currículo (PDF, até 5MB)</label>
-          <input type="file" id="job-curriculo" class="form-control" accept="application/pdf" required>
-        </div>
-        <p style="font-size: 0.78rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 14px;">Ao enviar, você
-          concorda com o uso dos seus dados para o processo seletivo, conforme a <a href="https://institutofacaamigos.com.br/politica-privacidade"
-            target="_blank" style="color: var(--teal-dark);">Política de Privacidade</a>.</p>
-        <div id="job-form-error" class="form-error"></div>
-        <button type="submit" id="job-form-submit" class="btn btn-pink" style="width: 100%;">Enviar candidatura</button>
-      </form>
-    </div>
-  </div>
 
   <a class="wa-float"
     href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida."
@@ -2676,81 +2468,7 @@
       }, { threshold: 0.12 });
       els.forEach(function (el) { io.observe(el); });
     })();
-
-    // Modal: Venha Fazer Parte do Nosso Time
-    function openJobModal() { document.getElementById('jobModalOverlay').classList.add('active'); }
-    function closeJobModal() { document.getElementById('jobModalOverlay').classList.remove('active'); }
-
-    (function () {
-      var jobForm = document.getElementById('job-form');
-      if (!jobForm) return;
-      jobForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var errorBox = document.getElementById('job-form-error');
-        var submitBtn = document.getElementById('job-form-submit');
-        var resumeInput = document.getElementById('job-curriculo');
-        errorBox.style.display = 'none';
-
-        var resumeFile = resumeInput.files[0];
-        if (!resumeFile || resumeFile.type !== 'application/pdf') {
-          errorBox.textContent = 'Selecione um currículo em PDF.';
-          errorBox.style.display = 'block';
-          return;
-        }
-        if (resumeFile.size > 5 * 1024 * 1024) {
-          errorBox.textContent = 'O currículo deve ter até 5MB.';
-          errorBox.style.display = 'block';
-          return;
-        }
-
-        var formData = new FormData();
-        formData.append('full_name', document.getElementById('job-nome').value);
-        formData.append('email', document.getElementById('job-email').value);
-        formData.append('phone', document.getElementById('job-telefone').value);
-        formData.append('course', document.getElementById('job-curso').value);
-        formData.append('preferred_unit', document.getElementById('job-unidade') ? document.getElementById('job-unidade').value : '');
-        formData.append('desired_area', document.getElementById('job-area').value);
-        formData.append('opportunity_type', document.getElementById('job-tipo').value);
-        formData.append('resume', resumeFile);
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-
-        var supabaseKey = (typeof window !== 'undefined' && window.VITE_SUPABASE_PUBLISHABLE_KEY) ? window.VITE_SUPABASE_PUBLISHABLE_KEY : '';
-        fetch('https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/job-application-webhook', {
-          method: 'POST',
-          headers: supabaseKey ? { 'Authorization': 'Bearer ' + supabaseKey } : {},
-          body: formData
-        })
-          .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
-          .then(function (r) {
-            if (!r.ok) throw new Error(r.data.error || 'Falha ao enviar candidatura');
-            if (window.faTrack) window.faTrack('job_application_submit', { pagina: location.pathname });
-            var sentEmail = document.getElementById('job-email').value.trim();
-            jobForm.innerHTML = '<div style="text-align:center; padding: 10px 0;">' +
-              '<h4 style="color:var(--dark); margin-bottom:12px; font-family:\'Fredoka One\',sans-serif; font-size:1.3rem;">Currículo enviado com sucesso!</h4>' +
-              '<p style="color:var(--ink-soft); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Agradecemos por querer fazer parte do Instituto Faça Amigos. Recebemos sua candidatura.</p>' +
-              '<p style="color:var(--ink-soft); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Fique atento(a) ao seu e-mail <strong id="job-sent-email" style="word-break:break-all;"></strong>: em alguns minutos você vai receber o link do nosso <strong>teste de perfil comportamental</strong>. Responda em até 7 dias para seguir no processo seletivo.</p>' +
-              '<p style="color:var(--ink-soft); font-size:0.85rem;">Não encontrou? Confira as pastas de spam e promoções.</p></div>';
-            // textContent, não innerHTML: o e-mail vem do campo digitado.
-            document.getElementById('job-sent-email').textContent = sentEmail;
-          })
-          .catch(function (err) {
-            var errorMsg = err.message || '';
-            if (errorMsg.toLowerCase().includes('failed to fetch')) {
-              errorMsg = 'Não foi possível enviar seu currículo no momento. Verifique sua conexão e tente novamente.';
-            } else {
-              errorMsg = errorMsg || 'Não foi possível enviar sua candidatura. Tente novamente.';
-            }
-            errorBox.textContent = errorMsg;
-            errorBox.style.display = 'block';
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Enviar candidatura';
-          });
-      });
-    })();
   </script>
-  <script src="/assets/fa-modal.js" defer></script>
   <script src="/assets/fa-footer.js" defer></script>
   <script src="/assets/fa-cta.js" defer data-label="Ver preços" data-href="#precos" data-event="ver_precos"></script>
 </body>

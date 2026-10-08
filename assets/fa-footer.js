@@ -30,7 +30,6 @@
   if (!footer) return;
   var kind = footer.getAttribute('data-fa-footer') || 'hub';
   var wa = WA[kind] || WA.hub;
-  var hasJobs = typeof window.openJobModal === 'function' || !!document.getElementById('jobModalOverlay');
 
   // Links entre páginas sempre apontam para o domínio "dono" da página (hub ou playground.), para
   // o visitante não trocar de host sem perceber. Em localhost/preview ficam relativos.
@@ -105,7 +104,7 @@
     '    <li>' + link(hub('/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'E-book: O Brincar com Propósito') + '</li>',
     '    <li>' + link(hub('/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'E-book: O Código do Desenvolvimento Infantil') + '</li>',
     '    <li>' + link('https://wa.me/' + wa.n + '?text=' + encodeURIComponent(wa.t), 'Fale conosco no WhatsApp', EXT) + '</li>',
-    hasJobs ? '    <li><a href="#" data-fa-jobs>Venha fazer parte do nosso time</a></li>' : '',
+    '    <li>' + link(hub('/trabalhe-conosco'), 'Trabalhe Conosco') + '</li>',
     '    <li>' + link(hub('/politica-privacidade'), 'Política de Privacidade') + '</li>',
     '    <li>' + link(hub('/termos'), 'Termos de Uso e de Compra') + '</li>',
     '  </ul>',
@@ -129,14 +128,6 @@
   // Mantém a logo / ícone original do topo do footer se existir, remove parágrafos e wraps antigos para evitar duplicação
   Array.prototype.slice.call(footer.querySelectorAll(':scope > p, :scope > .fa-footer-wrap')).forEach(function (el) { el.remove(); });
   footer.insertAdjacentHTML('beforeend', htmlGrid);
-
-  var jobs = footer.querySelector('[data-fa-jobs]');
-  if (jobs) {
-    jobs.addEventListener('click', function (e) {
-      e.preventDefault();
-      if (typeof window.openJobModal === 'function') window.openJobModal();
-    });
-  }
 
   // O link de preferências de cookies (fa-track.js) vai por último, no sub-footer.
   var cookies = footer.querySelector('[data-fa-cookies]');

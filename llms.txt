@@ -16,6 +16,7 @@
 - [E-book O Código do Desenvolvimento Infantil](https://institutofacaamigos.com.br/codigo): guia curto e acolhedor sobre o comportamento infantil.
 - [Política de Privacidade](https://institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
 - [Termos de Uso e de Compra](https://institutofacaamigos.com.br/termos): entrega, garantia de 7 dias e licença de uso dos e-books.
+- [Trabalhe Conosco](https://institutofacaamigos.com.br/trabalhe-conosco): vagas na Clínica, no Playground e no Circuito (Saúde, Educação e Operação; CLT, PJ e Estágio) e formulário de candidatura com currículo em PDF.
 
 ---
 

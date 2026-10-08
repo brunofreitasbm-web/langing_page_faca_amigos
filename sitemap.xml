@@ -150,4 +150,11 @@
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
+  <!-- Trabalhe Conosco (candidatura com currículo) -->
+  <url>
+    <loc>https://institutofacaamigos.com.br/trabalhe-conosco</loc>
+    <lastmod>2026-10-08</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
 </urlset>
