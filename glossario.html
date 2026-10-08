@@ -81,8 +81,13 @@
     .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; height: 64px; flex-wrap: wrap; max-width: 1120px; }
     .topbar img { width: 150px; height: auto; }
     .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
-    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; }
+    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; }
     .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
+    @media (max-width: 640px) {
+      .topbar .wrap { height: auto; min-height: 0; padding-top: 8px; padding-bottom: 0; row-gap: 2px; }
+      .tnav { justify-content: space-between; gap: 0; flex-wrap: nowrap; margin: 0 -8px; width: calc(100% + 16px); }
+      .tnav a { font-size: .88rem; padding: 0 8px; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
+    }
 
     .btn-buy { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 24px; border-radius: 999px; background: var(--pink); color: #fff; text-decoration: none; font-weight: 800; font-size: 1rem; box-shadow: var(--shadow-btn); border: 0; cursor: pointer; }
     .btn-buy.sm { min-height: 40px; padding: 8px 18px; font-size: .92rem; box-shadow: 0 2px 8px rgba(251, 61, 106, .35); }
@@ -187,7 +192,7 @@
           { "@type": "DefinedTerm", "name": "Laudo", "url": "https://institutofacaamigos.com.br/glossario#laudo", "description": "Documento escrito por um profissional (médico ou psicólogo) descrevendo uma condição da criança. Abre porta para benefícios como CIPTEA e meia-entrada, mas não é obrigatório para buscar ajuda." },
           { "@type": "DefinedTerm", "name": "Mapeamento Comportamental", "url": "https://institutofacaamigos.com.br/glossario#mapeamento-comportamental", "description": "Questionário gratuito do FaçaAmigos que dá um primeiro retrato do dia a dia do seu filho, em 5 minutos. Não é diagnóstico." },
           { "@type": "DefinedTerm", "name": "Marcos do desenvolvimento", "url": "https://institutofacaamigos.com.br/glossario#marcos-do-desenvolvimento", "description": "Habilidades esperadas em cada fase, como apontar, falar as primeiras palavras ou brincar com outra criança. Servem de referência, nunca de prazo rígido." },
-          { "@type": "DefinedTerm", "name": "Meia-entrada inclusiva", "url": "https://institutofacaamigos.com.br/glossario#meia-entrada-inclusiva", "description": "Desconto de 50% no Playground e no Circuito FaçaAmigos para crianças com laudo ou CIPTEA." },
+          { "@type": "DefinedTerm", "name": "Meia-entrada inclusiva", "url": "https://institutofacaamigos.com.br/glossario#meia-entrada-inclusiva", "description": "Preço reduzido no Playground FaçaAmigos para crianças com laudo ou CIPTEA: R$ 50 os 30 minutos, contra R$ 60 do público geral." },
           { "@type": "DefinedTerm", "name": "Neurodivergente / neurotípico", "url": "https://institutofacaamigos.com.br/glossario#neurodivergente-neurotipico", "description": "Neurodivergente é quem tem um funcionamento cerebral diferente do padrão mais comum (como no autismo ou no TDAH). Neurotípico é quem segue esse padrão. Nenhum dos dois é melhor." },
           { "@type": "DefinedTerm", "name": "Orientação parental", "url": "https://institutofacaamigos.com.br/glossario#orientacao-parental", "description": "Sessões em que a psicóloga conversa com você, sem a criança, para entender a rotina da família e ajustar estratégias que funcionem em casa." },
           { "@type": "DefinedTerm", "name": "PEI (plano educacional individualizado)", "url": "https://institutofacaamigos.com.br/glossario#pei", "description": "Documento feito com a escola que adapta atividades e avaliações às necessidades da criança, garantindo o direito à inclusão escolar." },
@@ -221,10 +226,10 @@
     <div class="wrap">
       <a href="/"><img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="150" height="26" loading="eager"></a>
       <nav class="tnav" aria-label="Áreas do site">
-        <a href="/servicos">Serviços</a>
-        <a href="/aprender">Aprender</a>
+        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="/servicos">Clínica</a>
+        <a href="/aprender" aria-current="page">Para pais</a>
         <a href="/eventos">Eventos</a>
-        <a href="/glossario" aria-current="page">Glossário</a>
       </nav>
     </div>
   </div>
@@ -343,7 +348,7 @@
           <dl class="terms">
             <div class="term" id="mapeamento-comportamental"><dt>Mapeamento Comportamental <a class="anchor" href="#mapeamento-comportamental">#</a></dt><dd>Questionário gratuito do FaçaAmigos que dá um primeiro retrato do dia a dia do seu filho, em cerca de 5 minutos. Não é diagnóstico. Faça o <a href="/teste?utm_source=site&amp;utm_medium=glossario&amp;utm_campaign=termo">Mapeamento grátis</a>.</dd></div>
             <div class="term" id="marcos-do-desenvolvimento"><dt>Marcos do desenvolvimento <a class="anchor" href="#marcos-do-desenvolvimento">#</a></dt><dd>Habilidades esperadas em cada fase, como apontar, falar as primeiras palavras ou brincar com outra criança. Aparece nas cadernetas de saúde e nas conversas com o pediatra. Muda pra você: servem de referência para observar, nunca de prazo rígido para cobrar.</dd></div>
-            <div class="term" id="meia-entrada-inclusiva"><dt>Meia-entrada inclusiva <a class="anchor" href="#meia-entrada-inclusiva">#</a></dt><dd>Desconto de 50% no Playground e no Circuito FaçaAmigos para crianças com laudo ou CIPTEA. Muda pra você: menos peso no bolso para um passeio que já ajuda no desenvolvimento.</dd></div>
+            <div class="term" id="meia-entrada-inclusiva"><dt>Meia-entrada inclusiva <a class="anchor" href="#meia-entrada-inclusiva">#</a></dt><dd>Preço reduzido no Playground FaçaAmigos para crianças com laudo ou CIPTEA: R$ 50 os 30 minutos, contra R$ 60 do público geral. Muda pra você: menos peso no bolso para um passeio que já ajuda no desenvolvimento.</dd></div>
           </dl>
         </div>
 
@@ -410,7 +415,7 @@
   <footer data-fa-footer="glossario">
       <img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
       <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
-      <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground - Em Breve)</p>
+      <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner)</p>
       <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA)</p>
       <p>Todos os dias, das 10h às 22h (Playground e Circuito) · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a></p>
       <p style="margin-top: 18px;"><a href="https://wa.me/5591991782027?text=Oi!%20Vim%20pelo%20site%20(Gloss%C3%A1rio)%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">Fale conosco</a> · <a href="/politica-privacidade">Política de privacidade</a> · <a href="/termos">Termos de uso e de compra</a></p>

@@ -35,6 +35,7 @@ flowchart LR
     W["/wifi (noindex)"]
     L["/termos e /politica-privacidade"]
     DC["/descadastrar (noindex)"]
+    TC["/trabalhe-conosco"]
   end
   subgraph PLAY["playground.institutofacaamigos.com.br"]
     P["/ (Playground)"]
@@ -47,7 +48,7 @@ flowchart LR
   WA(("WhatsApp"))
   HM(("Hotmart"))
 
-  H --> S & A & G & T & GU & CO & EV & L
+  H --> S & A & G & T & GU & CO & EV & L & TC
   H --> P & C
   H --> CL
   A --> AR
@@ -62,6 +63,7 @@ flowchart LR
   P --> GU & CO & T & H
   C --> GU & CO & T & H & S & A
   CL --> H
+  P & C -. rodapé .-> TC
   GE -. SSO .-> CL
   P & C & S & GU & CO --> WA
 ```
@@ -71,6 +73,7 @@ flowchart LR
 | Rota | Arquivo | Papel | No sitemap | Observação |
 |---|---|---|---|---|
 | `/` | index.html | Hub: porta de entrada para Playground, Circuito, Clínica, guias, carreiras | sim | seção de próximos eventos |
+| `/trabalhe-conosco` | trabalhe-conosco.html | Carreiras: áreas, tipos de vaga e formulário de candidatura com currículo em PDF | sim | envia para a função `job-application-webhook` (mesmo endpoint do antigo modal); no `playground.` redireciona (308) para o hub |
 | `/servicos` | servicos.html | Serviços da Clínica, FAQ, lista de espera | sim | CTA para o site da Clínica |
 | `/aprender` | aprender.html | Índice de artigos | sim | |
 | `/aprender/*` (9) | aprender/*.html | Artigos: birra-ou-crise, sinais-para-observar, primeira-vez-no-playground, rotina-visual-em-casa, como-e-a-terapia-comportamental, laudo-e-ciptea, conversar-com-a-escola, brincar-com-proposito-10-minutos, e-para-todas-as-criancas | sim | cada um leva ao /teste, à Clínica e ao WhatsApp |
@@ -106,7 +109,7 @@ flowchart LR
 
 Funções: `behavior-test-webhook`, `behavior-test-admin`, `guia-sequence`, `hotmart-webhook`, `hotmart-sync`,
 `wifi-lead-webhook`, `wifi-coupon-admin`, `geo-facts`, `fa-health`, `fa-weekly-report`, `gestao-hub`,
-`eventos-public`, `eventos-dispatch`.
+`eventos-public`, `eventos-dispatch`, `job-application-webhook` (candidaturas do /trabalhe-conosco).
 
 ## 7. Como o visitante circula (jornadas)
 
@@ -114,9 +117,14 @@ Funções: `behavior-test-webhook`, `behavior-test-admin`, `guia-sequence`, `hot
 2. **Quem está no shopping (Maps/Instagram):** `playground.` → guia/código/teste ou WhatsApp; o botão "Instituto FaçaAmigos" leva ao hub.
 3. **Quem procura terapia:** `/servicos` → lista de espera (WhatsApp) ou site da Clínica.
 4. **Quem se inscreve em evento:** hub (seção de eventos) → `/eventos` → `/eventos/:slug` → voucher em `/ingresso`.
-5. **Equipe:** `gestao.` → login único → Clínica e demais sistemas via `/sso`.
+5. **Quem quer trabalhar no FaçaAmigos:** link "Trabalhe Conosco" (rodapé de todas as páginas via `fa-footer.js`, topo do playground) → `/trabalhe-conosco` → candidatura → e-mail com o teste de perfil comportamental.
+6. **Equipe:** `gestao.` → login único → Clínica e demais sistemas via `/sso`.
 
-## 8. Pontos de atenção (28 a 30/09/2026)
+## 8. Pontos de atenção (28/09 a 08/10/2026)
+
+- 08/10/2026: o formulário "Trabalhe Conosco" saiu dos modais (`#jobModalOverlay`) do playground e do circuito e virou a
+  página `/trabalhe-conosco`. Os links do playground/circuito e do rodapé (`fa-footer.js`) apontam para
+  `https://institutofacaamigos.com.br/trabalhe-conosco`. `assets/fa-modal.js` foi removido (nenhuma página tem mais modal).
 
 - `npm run geo:check` acusa `llms.txt` e `llms-full.txt` divergentes do preço atual do quiosque. Rodar `npm run geo`,
   revisar o diff e commitar.

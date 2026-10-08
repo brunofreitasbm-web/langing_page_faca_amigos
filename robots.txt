@@ -59,4 +59,5 @@ Disallow: /hotspot
 # Fatos em JSON: https://institutofacaamigos.com.br/geo-facts.json
 
 Sitemap: https://institutofacaamigos.com.br/sitemap.xml
+Sitemap: https://institutofacaamigos.com.br/sitemap-eventos.xml
 Sitemap: https://playground.institutofacaamigos.com.br/sitemap.xml

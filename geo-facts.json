@@ -7,10 +7,10 @@
       "slug": "playground-bosque",
       "name": "Playground (Bosque Grão-Pará)",
       "kind": "LOJA",
-      "status": "em_breve",
+      "status": "aberto",
       "address": {
         "street": "Av. Centenário, 1052",
-        "complement": "Shopping Bosque Grão-Pará",
+        "complement": "Shopping Bosque Grão-Pará, 1º piso, em frente à Renner",
         "city": "Belém",
         "state": "PA",
         "postal_code": "66635-894"
@@ -23,14 +23,89 @@
       "hours": {
         "open": "10:00",
         "close": "22:00",
-        "days": "todos os dias"
+        "days": "todos os dias",
+        "sunday_close": "21:00"
       },
       "discounts": {
-        "geral_pct": null,
-        "inclusivo_pct": null
+        "geral_pct": 40,
+        "inclusivo_pct": 50
       },
-      "plans": [],
-      "packages": [],
+      "plans": [
+        {
+          "id": "7d56eac2-0387-458c-911a-28123d2657ef",
+          "activity": "PLAYGROUND",
+          "name": "30 minutos",
+          "asset_kind": null,
+          "duration_min": 30,
+          "list_brl": 100,
+          "price_brl": 60,
+          "inclusive_brl": 50,
+          "overage_list_brl": 3,
+          "overage_brl": 1.8,
+          "overage_inclusive_brl": 1.5
+        },
+        {
+          "id": "bcebb1c8-bb10-498e-99ea-8c10cc533297",
+          "activity": "PLAYGROUND",
+          "name": "Pelúcia (20 min)",
+          "asset_kind": "PELUCIA",
+          "duration_min": 20,
+          "list_brl": 48,
+          "price_brl": 28.8,
+          "inclusive_brl": 24,
+          "overage_list_brl": 3,
+          "overage_brl": 1.8,
+          "overage_inclusive_brl": 1.5
+        },
+        {
+          "id": "e3345467-f583-412c-ab49-82b989fb000d",
+          "activity": "PLAYGROUND",
+          "name": "2 horas",
+          "asset_kind": null,
+          "duration_min": 120,
+          "list_brl": 320,
+          "price_brl": 192,
+          "inclusive_brl": 160,
+          "overage_list_brl": 3,
+          "overage_brl": 1.8,
+          "overage_inclusive_brl": 1.5
+        },
+        {
+          "id": "26241007-1f11-4442-83de-7caa7805959e",
+          "activity": "PLAYGROUND",
+          "name": "1 hora",
+          "asset_kind": null,
+          "duration_min": 60,
+          "list_brl": 180,
+          "price_brl": 108,
+          "inclusive_brl": 90,
+          "overage_list_brl": 3,
+          "overage_brl": 1.8,
+          "overage_inclusive_brl": 1.5
+        }
+      ],
+      "packages": [
+        {
+          "id": "5e3b3e92-9694-458b-880e-69fe937590d3",
+          "activity": "PLAYGROUND",
+          "name": "PORTO SEGURO",
+          "included_minutes": 600,
+          "validity_days": 30,
+          "list_brl": 1400,
+          "price_brl": 840,
+          "inclusive_brl": 700
+        },
+        {
+          "id": "1dc648d9-8c66-4559-a3a7-0424f814626a",
+          "activity": "PLAYGROUND",
+          "name": "DAY USE",
+          "included_minutes": 600,
+          "validity_days": 1,
+          "list_brl": 450,
+          "price_brl": 270,
+          "inclusive_brl": 225
+        }
+      ],
       "loyalty": {
         "trigger_visits": 10,
         "reward": "ENTRADA_GRATIS"

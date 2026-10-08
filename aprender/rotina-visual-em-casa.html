@@ -68,6 +68,11 @@
     .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
     .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; }
     .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
+    @media (max-width: 640px) {
+      .topbar .wrap { height: auto; min-height: 0; padding-top: 8px; padding-bottom: 0; row-gap: 2px; }
+      .tnav { justify-content: space-between; gap: 0; flex-wrap: nowrap; margin: 0 -8px; width: calc(100% + 16px); }
+      .tnav a { font-size: .88rem; padding: 0 8px; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
+    }
 
     /* Breadcrumb */
     .crumb { font-size: .86rem; font-weight: 700; opacity: .75; margin: 26px 0 14px; }
@@ -177,9 +182,10 @@
     <div class="wrap">
       <a href="/"><img src="/img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="150" height="26" loading="eager"></a>
       <nav class="tnav" aria-label="Áreas do site">
-        <a href="/servicos">Serviços</a>
-        <a href="/aprender" aria-current="page">Aprender</a>
-        <a href="/glossario">Glossário</a>
+        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="/servicos">Clínica</a>
+        <a href="/aprender" aria-current="page">Para pais</a>
+        <a href="/eventos">Eventos</a>
       </nav>
     </div>
   </div>
@@ -249,7 +255,7 @@
   <footer data-fa-footer="aprender">
       <img class="flogo" src="/img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
       <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
-      <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground - Em Breve)</p>
+      <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner)</p>
       <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA)</p>
       <p>Todos os dias, das 10h às 22h (Playground e Circuito) · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a></p>
       <p style="margin-top: 18px;"><a href="https://wa.me/5591991782027?text=Oi%21%20Vim%20pelo%20site%20%28Aprender%29%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">Fale conosco</a> · <a href="/politica-privacidade">Política de privacidade</a> · <a href="/termos">Termos de uso e de compra</a></p>

@@ -14,8 +14,9 @@
 - [Mapeamento Comportamental gratuito](https://institutofacaamigos.com.br/teste): questionário de cerca de 5 minutos para famílias de crianças de 4 a 17 anos. Não substitui avaliação profissional.
 - [E-book O Brincar com Propósito](https://institutofacaamigos.com.br/guia): guia prático de Análise do Comportamento para mães, pais e cuidadores.
 - [E-book O Código do Desenvolvimento Infantil](https://institutofacaamigos.com.br/codigo): guia curto e acolhedor sobre o comportamento infantil.
-- [Política de Privacidade](https://playground.institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
+- [Política de Privacidade](https://institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
 - [Termos de Uso e de Compra](https://institutofacaamigos.com.br/termos): entrega, garantia de 7 dias e licença de uso dos e-books.
+- [Trabalhe Conosco](https://institutofacaamigos.com.br/trabalhe-conosco): vagas na Clínica, no Playground e no Circuito (Saúde, Educação e Operação; CLT, PJ e Estágio) e formulário de candidatura com currículo em PDF.
 
 ---
 
@@ -23,14 +24,14 @@
 
 - **Entidade**: Instituto FaçaAmigos (Clínica, Playground Inclusivo e Circuito de Carrinhos)
 - **Localização Principal**: Parque Shopping Belém ({{ENDERECO_PARQUE}})
-- **Segunda Unidade (Em breve)**: Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}})
+- **Segunda Unidade**: Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}}), 1º piso, em frente à Renner. Playground aberto de segunda a sábado das 10h às 22h e aos domingos das 10h às 21h, com os mesmos preços do Parque Shopping
 - **Centro Clínico (Em breve)**: Rua Boaventura da Silva, 1573, Umarizal, Belém - PA
 - **Faixa Etária Atendida**: 0 a 12 anos de idade
 - **Idioma e região**: português do Brasil (pt-BR), Belém e Região Metropolitana (PA)
 - **Autoria dos conteúdos educativos**: psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), idealizadora do FaçaAmigos. Os e-books e o Mapeamento Comportamental são materiais educativos e não substituem avaliação profissional.
 - **Público do Playground**: todas as crianças de 0 a 12 anos, com ou sem laudo. Não é um espaço exclusivo para crianças autistas ou neurodivergentes: crianças típicas e atípicas brincam juntas.
-- **Acessibilidade & Inclusão**: 100% adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas, com monitores de inclusão, abafadores de ruído e canto de descompressão sensorial.
-- **Benefício Inclusivo**: {{DESCONTO_INCLUSIVO_PCT}} de desconto (meia-entrada) no Playground para crianças com laudo ou CIPTEA.
+- **Acessibilidade & Inclusão**: 100% adaptado para crianças neurodivergentes (Autismo/TEA, TDAH, Síndrome de Down, AH/SD) e crianças típicas, com mediadores de inclusão, abafadores de ruído e canto de descompressão sensorial.
+- **Benefício Inclusivo**: meia-entrada inclusiva no Playground para crianças com laudo ou CIPTEA: {{MEIA_INCLUSIVA}}.
 - **Programa de Fidelidade**: {{FIDELIDADE_PLAYGROUND}}
 - **Atendimento sem agendamento**: funcionamento contínuo de Segunda a Domingo, das {{HORARIO}}.
 
@@ -65,7 +66,7 @@
 Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laudo. Crianças típicas e atípicas brincam juntas no mesmo espaço, e a estrutura inclusiva deixa o ambiente mais seguro e tranquilo para qualquer criança. Guia completo: [https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas](https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas)
 
 ### O Playground FaçaAmigos é adequado para autistas e crianças neurodivergentes?
-Sim. O espaço é 100% inclusivo, com equipe treinada para acolhimento atípico, abafadores de ruído e canto de descompressão para regulação sensorial. Apresentando laudo ou CIPTEA, a criança tem {{DESCONTO_INCLUSIVO_PCT}} de desconto (meia-entrada).
+Sim. O espaço é 100% inclusivo, com equipe treinada para acolhimento atípico, abafadores de ruído e canto de descompressão para regulação sensorial. Apresentando laudo ou CIPTEA, a criança paga a meia-entrada inclusiva: {{MEIA_INCLUSIVA}}.
 
 ### Qual o melhor horário para visitar com crianças com hipersensibilidade sensorial?
 O "Horário Inclusivo" é das 10h às 16h, todos os dias, quando o fluxo do shopping costuma ser mais calmo.

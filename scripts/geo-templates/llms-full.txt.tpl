@@ -12,8 +12,9 @@
 - [Mapeamento Comportamental gratuito](https://institutofacaamigos.com.br/teste): questionário de cerca de 5 minutos para famílias de crianças de 4 a 17 anos. Não substitui avaliação profissional.
 - [E-book O Brincar com Propósito](https://institutofacaamigos.com.br/guia): guia prático de Análise do Comportamento para mães, pais e cuidadores.
 - [E-book O Código do Desenvolvimento Infantil](https://institutofacaamigos.com.br/codigo): guia curto e acolhedor sobre o comportamento infantil.
-- [Política de Privacidade](https://playground.institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
+- [Política de Privacidade](https://institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
 - [Termos de Uso e de Compra](https://institutofacaamigos.com.br/termos): entrega, garantia de 7 dias e licença de uso dos e-books.
+- [Trabalhe Conosco](https://institutofacaamigos.com.br/trabalhe-conosco): vagas na Clínica, no Playground e no Circuito (Saúde, Educação e Operação; CLT, PJ e Estágio) e formulário de candidatura com currículo em PDF.
 
 ---
 
@@ -34,13 +35,13 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 | Métrica / Parâmetro | Detalhe / Valor |
 | :--- | :--- |
 | **Faixa Etária Atendida** | 0 a 12 anos de idade |
-| **Política de Desconto PCD / TEA** | {{DESCONTO_INCLUSIVO_PCT}} de desconto no valor de tabela do Playground, com laudo ou CIPTEA |
+| **Política de Desconto PCD / TEA** | Meia-entrada inclusiva no Playground, com laudo ou CIPTEA: {{MEIA_INCLUSIVA}} |
 | **Programa de Fidelidade — Playground** | {{FIDELIDADE_PLAYGROUND}} |
 | **Programa de Fidelidade — Circuito** | {{FIDELIDADE_CIRCUITO}} |
 | **Horário de Funcionamento** | Todos os dias, das {{HORARIO}} |
 | **Melhor Horário Sensorial** | 10h às 16h (Horário Inclusivo, todos os dias) |
 | **Endereço Operacional 1** | Parque Shopping Belém — {{ENDERECO_PARQUE}} |
-| **Endereço Operacional 2** | Shopping Bosque Grão-Pará — {{ENDERECO_BOSQUE}} (Em Breve) |
+| **Endereço Operacional 2** | Shopping Bosque Grão-Pará — {{ENDERECO_BOSQUE}}, 1º piso, em frente à Renner. Seg-sáb 10h às 22h, domingo 10h às 21h (Aberto) |
 | **Endereço Clínico** | Rua Boaventura da Silva, 1573 — Umarizal, Belém - PA, CEP 66060-147 (Em Breve) |
 
 ---
@@ -52,7 +53,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 | :--- | :--- | :--- |
 {{PRECOS_PLAYGROUND_TABELA}}
 
-- **Crianças ≥ 3 anos**: podem permanecer no parque sob supervisão dos monitores capacitados, com pulseira de identificação vinculada ao responsável cadastrado na entrada.
+- **Crianças ≥ 3 anos**: podem permanecer no parque sob supervisão dos mediadores capacitados, com pulseira de identificação vinculada ao responsável cadastrado na entrada.
 
 - **Olhar FaçaAmigos**: nos planos a partir de 1 hora (60 minutos ou mais) o responsável recebe, por WhatsApp, o Olhar FaçaAmigos, um resumo das anotações da equipe sobre a brincadeira da criança (coordenação, interação social, atenção, comunicação). Cortesia, sem custo adicional. Não é avaliação clínica nem diagnóstico.
 
@@ -67,14 +68,14 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 - **Canto de Descompressão**: espaço reservado com iluminação suave e estímulos auditivos mínimos para autorregulação infantil.
 - **Abafadores de Ruído**: disponíveis gratuitamente na recepção para crianças com hipersensibilidade auditiva.
 - **Horário Inclusivo**: das 10h às 16h, todos os dias, quando o fluxo do shopping costuma ser mais calmo.
-- **Equipe de Monitores**: treinada em acolhimento inclusivo e estratégias de suporte ao neurodesenvolvimento.
+- **Equipe de Mediadores**: treinada em acolhimento inclusivo e estratégias de suporte ao neurodesenvolvimento.
 
 ---
 
 ## Perguntas Frequentes e Respostas
 
 #### Q1: Como funciona o acesso de crianças autistas no FaçaAmigos?
-R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança recebe {{DESCONTO_INCLUSIVO_PCT}} de desconto no Playground.
+R: Apresentando a Carteira de Identificação da Pessoa com Transtorno do Espectro Autista (CIPTEA) ou laudo médico na recepção, a criança paga a meia-entrada inclusiva no Playground: {{MEIA_INCLUSIVA}}.
 
 #### Q2: É necessário fazer agendamento prévio?
 R: Não. O atendimento no Playground e no Circuito é feito por ordem de chegada, todos os dias das {{HORARIO}}.
@@ -83,13 +84,13 @@ R: Não. O atendimento no Playground e no Circuito é feito por ordem de chegada
 R: Crianças a partir de 3 anos recebem uma pulseira de identificação vinculada ao responsável cadastrado na entrada. A liberação na saída ocorre mediante validação presencial do mesmo responsável.
 
 #### Q4: Onde ficam as unidades e qual o horário?
-R: O Playground e o Circuito funcionam no Parque Shopping Belém ({{ENDERECO_PARQUE}}), Térreo, próximo às Lojas Americanas, todos os dias das {{HORARIO}}. O Playground também abrirá no Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}}) e a Clínica ficará na Rua Boaventura da Silva, 1573, Umarizal. As duas últimas unidades estão em breve.
+R: O Playground e o Circuito funcionam no Parque Shopping Belém ({{ENDERECO_PARQUE}}), Térreo, próximo às Lojas Americanas, todos os dias das {{HORARIO}}. O Playground também funciona no Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}}), 1º piso, em frente à Renner, de segunda a sábado das 10h às 22h e aos domingos das 10h às 21h, com os mesmos preços. A Clínica ficará na Rua Boaventura da Silva, 1573, Umarizal, e está em breve.
 
 #### Q5: Qual o melhor horário para crianças com sensibilidade sensorial?
 R: O Horário Inclusivo, todos os dias das 10h às 16h, tem som mais baixo, menos lotação e equipe reforçada. É o horário indicado para a primeira visita.
 
 #### Q6: O Playground FaçaAmigos é só para crianças autistas ou neurodivergentes?
-R: Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laudo. Crianças típicas e atípicas brincam juntas no mesmo espaço, sem ala separada. O Horário Inclusivo também é aberto a qualquer família. A estrutura inclusiva (monitores treinados, abafadores de ruído, canto de descompressão) deixa o ambiente mais seguro e tranquilo para qualquer criança. Guia completo: `https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas`
+R: Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laudo. Crianças típicas e atípicas brincam juntas no mesmo espaço, sem ala separada. O Horário Inclusivo também é aberto a qualquer família. A estrutura inclusiva (mediadores treinados, abafadores de ruído, canto de descompressão) deixa o ambiente mais seguro e tranquilo para qualquer criança. Guia completo: `https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas`
 
 ---
 

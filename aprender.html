@@ -89,11 +89,16 @@
     .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; height: 64px; flex-wrap: wrap; }
     .topbar img { width: 150px; height: auto; }
     .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
-    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; }
+    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; }
     .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
+    @media (max-width: 640px) {
+      .topbar .wrap { height: auto; min-height: 0; padding-top: 8px; padding-bottom: 0; row-gap: 2px; }
+      .tnav { justify-content: space-between; gap: 0; flex-wrap: nowrap; margin: 0 -8px; width: calc(100% + 16px); }
+      .tnav a { font-size: .88rem; padding: 0 8px; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
+    }
 
     /* Hero */
-    .hero { padding: 44px 0 56px; text-align: center; }
+    .hero { padding: 44px 0 56px; text-align: center; position: relative; overflow: hidden; }
     .hero h1 { font-size: clamp(2rem, 6.4vw, 2.9rem); margin-bottom: 16px; }
     .hero .sub { font-size: 1.12rem; color: rgba(255, 255, 255, .92); max-width: 640px; margin: 0 auto; }
 
@@ -119,6 +124,19 @@
     .ebook-card h3 { font-size: 1.05rem; margin-bottom: 4px; }
     .ebook-card p { font-size: .88rem; opacity: .8; }
 
+    /* Para pais: mapeamento + e-books */
+    .pais { padding: 40px 0 8px; }
+    .pais-grid { display: grid; gap: 14px; }
+    .pais-map { background: var(--yellow-20); border-radius: 22px; padding: 22px 20px; display: grid; gap: 10px; align-content: center; }
+    .pais-map h2 { font-size: 1.35rem; }
+    .pais-map p { font-size: .95rem; }
+    .pais-map .btn-buy { min-height: 52px; font-size: 1.02rem; padding: 12px 24px; margin-top: 4px; justify-self: start; }
+    .pais .ebook-card { align-items: flex-start; }
+    .pais .ebook-card img { width: 72px; }
+    .pais .ebook-card .price { display: block; margin-top: 8px; font-weight: 800; font-size: .9rem; color: var(--pink); opacity: 1; }
+    .pais-gloss { margin-top: 14px; font-size: .95rem; text-align: center; }
+    .pais-gloss a { font-weight: 800; color: var(--petrol); }
+
     footer { background: var(--petrol); color: #fff; padding: 44px 16px 34px; border-top: 1px solid rgba(255, 255, 255, .14); max-width: 1120px; margin: 0 auto; }
     footer img { width: 190px; }
     footer p { margin: 0 0 10px; font-size: .95rem; }
@@ -130,6 +148,9 @@
     @media (min-width: 640px) {
       .guides-grid { grid-template-columns: repeat(2, 1fr); }
       .ebooks { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 980px) {
+      .pais-grid { grid-template-columns: 1.1fr 1fr 1fr; }
     }
     @media (min-width: 980px) {
       section { padding: 84px 0; }
@@ -183,10 +204,10 @@
     <div class="wrap">
       <a href="/"><img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="150" height="26" loading="eager"></a>
       <nav class="tnav" aria-label="Áreas do site">
-        <a href="/servicos">Serviços</a>
-        <a href="/aprender" aria-current="page">Aprender</a>
+        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="/servicos">Clínica</a>
+        <a href="/aprender" aria-current="page">Para pais</a>
         <a href="/eventos">Eventos</a>
-        <a href="/glossario">Glossário</a>
       </nav>
     </div>
   </div>
@@ -201,6 +222,28 @@
         <p class="sub">Guias curtos, escritos por uma psicóloga infantil, sem jargão e sem julgamento. Leia o que faz sentido pra sua família agora.</p>
       </div>
     </header>
+
+    <section class="pais" aria-labelledby="pais-h">
+      <div class="wrap">
+        <div class="pais-grid">
+          <div class="pais-map">
+            <span class="eyebrow" style="margin-bottom:0">Para pais · grátis</span>
+            <h2 id="pais-h">Por onde começar: o mapeamento grátis de 5 minutos</h2>
+            <p>O Mapeamento Comportamental é gratuito, sem rótulo e sem julgamento.</p>
+            <a class="btn-buy" href="/teste?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=para_pais" data-cta="para_pais_mapeamento">Fazer o mapeamento grátis</a>
+          </div>
+          <a class="ebook-card" href="/guia?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=para_pais" data-cta="para_pais_guia">
+            <img src="img/guia/capa.webp" alt="" width="760" height="1077" loading="lazy" decoding="async">
+            <div><h3>O Brincar com Propósito</h3><p>O guia completo: 97 páginas, Plano de 30 dias e 7 materiais para imprimir.</p><span class="price">R$ 149 ou 10x de R$ 17,91</span></div>
+          </a>
+          <a class="ebook-card" href="/codigo?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=para_pais" data-cta="para_pais_codigo">
+            <img src="img/codigo/capa.webp" alt="" width="760" height="1077" loading="lazy" decoding="async">
+            <div><h3>O Código do Desenvolvimento Infantil</h3><p>O livro de entrada: 40 páginas pra entender que o comportamento tem lógica.</p><span class="price">Valor no checkout seguro</span></div>
+          </a>
+        </div>
+        <p class="pais-gloss">Encontrou uma sigla difícil? <a href="/glossario">Veja o glossário: TEA, ABA, CIPTEA e mais</a></p>
+      </div>
+    </section>
 
     <section aria-labelledby="guias-h">
       <div class="wrap">
@@ -262,25 +305,6 @@
       </div>
     </section>
 
-    <section aria-labelledby="ebooks-h">
-      <div class="wrap">
-        <div class="center" style="margin-bottom: 8px;">
-          <span class="eyebrow">Pra ir mais fundo</span>
-          <h2 class="title" id="ebooks-h">E-books em PDF</h2>
-        </div>
-        <div class="ebooks">
-          <a class="ebook-card" href="/guia?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=ebooks">
-            <img src="img/guia/capa.webp" alt="" width="760" height="1077" loading="lazy">
-            <div><h3>O Brincar com Propósito</h3><p>11 capítulos, Plano de 30 dias e 7 materiais para imprimir.</p></div>
-          </a>
-          <a class="ebook-card" href="/codigo?utm_source=site&amp;utm_medium=aprender&amp;utm_campaign=ebooks">
-            <img src="img/codigo/capa.webp" alt="" width="760" height="1077" loading="lazy">
-            <div><h3>O Código do Desenvolvimento Infantil</h3><p>Um e-book curto pra entender que o comportamento tem lógica.</p></div>
-          </a>
-        </div>
-      </div>
-    </section>
-
     <section class="bg-petrol center" aria-labelledby="cta-h">
       <div class="wrap">
         <span class="eyebrow">Ainda com dúvida?</span>
@@ -296,7 +320,7 @@
   <footer data-fa-footer="aprender">
       <img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
       <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
-      <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground - Em Breve)</p>
+      <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner)</p>
       <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA)</p>
       <p>Todos os dias, das 10h às 22h (Playground e Circuito) · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a></p>
       <p style="margin-top: 18px;"><a href="https://wa.me/5591991782027?text=Oi!%20Vim%20pelo%20site%20(Aprender)%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida." target="_blank" rel="noopener">Fale conosco</a> · <a href="/politica-privacidade">Política de privacidade</a> · <a href="/termos">Termos de uso e de compra</a></p>
