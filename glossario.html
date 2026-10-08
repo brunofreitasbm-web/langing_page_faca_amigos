@@ -81,8 +81,13 @@
     .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; height: 64px; flex-wrap: wrap; max-width: 1120px; }
     .topbar img { width: 150px; height: auto; }
     .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
-    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; }
+    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; }
     .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
+    @media (max-width: 640px) {
+      .topbar .wrap { height: auto; min-height: 0; padding-top: 8px; padding-bottom: 0; row-gap: 2px; }
+      .tnav { justify-content: space-between; gap: 0; flex-wrap: nowrap; margin: 0 -8px; width: calc(100% + 16px); }
+      .tnav a { font-size: .88rem; padding: 0 8px; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
+    }
 
     .btn-buy { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 12px 24px; border-radius: 999px; background: var(--pink); color: #fff; text-decoration: none; font-weight: 800; font-size: 1rem; box-shadow: var(--shadow-btn); border: 0; cursor: pointer; }
     .btn-buy.sm { min-height: 40px; padding: 8px 18px; font-size: .92rem; box-shadow: 0 2px 8px rgba(251, 61, 106, .35); }
@@ -221,10 +226,10 @@
     <div class="wrap">
       <a href="/"><img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="150" height="26" loading="eager"></a>
       <nav class="tnav" aria-label="Áreas do site">
-        <a href="/servicos">Serviços</a>
-        <a href="/aprender">Aprender</a>
+        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="/servicos">Clínica</a>
+        <a href="/aprender" aria-current="page">Para pais</a>
         <a href="/eventos">Eventos</a>
-        <a href="/glossario" aria-current="page">Glossário</a>
       </nav>
     </div>
   </div>

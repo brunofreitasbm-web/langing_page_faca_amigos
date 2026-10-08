@@ -64,13 +64,16 @@
       line-height: 1.7;
     }
 
-    .topbar {
-      background: var(--dark);
-      color: #fff;
-      text-align: center;
-      font-size: 0.9rem;
-      font-weight: 700;
-      padding: 9px 14px;
+    .topbar { position: sticky; top: 0; z-index: 50; background: var(--dark); border-bottom: 1px solid rgba(255, 255, 255, .12); }
+    .topbar .bar { max-width: 1120px; margin: 0 auto; padding: 0 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px; height: 64px; flex-wrap: wrap; }
+    .topbar img { width: 150px; height: auto; display: block; }
+    .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
+    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; line-height: 1.6; }
+    .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
+    @media (max-width: 640px) {
+      .topbar .bar { height: auto; min-height: 0; padding-top: 8px; padding-bottom: 0; row-gap: 2px; }
+      .tnav { justify-content: space-between; gap: 0; flex-wrap: nowrap; margin: 0 -8px; width: calc(100% + 16px); }
+      .tnav a { font-size: .88rem; padding: 0 8px; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
     }
 
     .wrap {
@@ -181,9 +184,18 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
-  <div class="topbar">FaçaAmigos — Playground Inclusivo · Parque Shopping Belém</div>
+  <div class="topbar">
+    <div class="bar">
+      <a href="/"><img src="img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="150" height="26" loading="eager"></a>
+      <nav class="tnav" aria-label="Áreas do site">
+        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="/servicos">Clínica</a>
+        <a href="/aprender">Para pais</a>
+        <a href="/eventos">Eventos</a>
+      </nav>
+    </div>
+  </div>
   <div class="wrap" id="conteudo" role="main">
-    <a class="logo" href="https://institutofacaamigos.com.br/" aria-label="FaçaAmigos: ir para o início">Faça<span class="amigos">Amigos</span></a>
     <h1>Política de Privacidade</h1>
     <p class="updated">Última atualização: 20 de setembro de 2026</p>
 
