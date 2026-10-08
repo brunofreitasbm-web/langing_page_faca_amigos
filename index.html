@@ -439,6 +439,8 @@
     .wrap { max-width: 1140px; margin: 0 auto; padding: 0 22px; }
     .sec { padding: 76px 0; }
     .sec-title { font-size: clamp(1.9rem, 4vw, 2.7rem); margin-bottom: 14px; }
+    .sec-title-sm { font-size: clamp(1.6rem, 3.3vw, 2.2rem); }
+    .sec-title-xs { font-size: clamp(1.4rem, 3vw, 1.9rem); }
     .sec-sub { color: var(--ink-soft); font-size: 1.1rem; font-weight: 600; max-width: 46rem; margin: 0 auto 44px; }
     .center { text-align: center; }
 
@@ -465,14 +467,32 @@
     .btn-wa { background: var(--wa); color: #fff; box-shadow: 0 10px 26px rgba(37, 211, 102, 0.35); }
     .btn-ghost { background: var(--white); color: var(--dark); border: 2.5px solid var(--dark); }
     .btn-ghost:hover { background: var(--yellow); border-color: var(--dark); }
-    .btn-sm { padding: 10px 22px; font-size: 0.95rem; min-height: 40px; }
+    .btn-sm { padding: 10px 22px; font-size: 0.95rem; min-height: 44px; }
 
     /* Topbar */
     .topbar {
       background: var(--dark); color: #fff; text-align: center; font-size: 0.92rem; font-weight: 700;
-      padding: 9px 14px;
+      padding: 9px 14px; display: flex; justify-content: center; align-items: center; gap: 4px 12px; flex-wrap: wrap;
     }
     .topbar b { color: var(--yellow); }
+    .tb-status { display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+    .tb-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--yellow); flex-shrink: 0; }
+    .tb-dot.is-open { background: var(--wa); box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.28); }
+    .tb-dot.is-closed { background: rgba(255, 255, 255, 0.45); }
+    .tb-text { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .tb-short { display: none; }
+    .tb-sep { opacity: 0.4; }
+    .tb-jobs { color: var(--yellow); text-decoration: underline; text-underline-offset: 3px; }
+    @media (max-width: 760px) {
+      /* Uma linha só no celular: o status fica, o "Estamos contratando" sai (está no rodapé). */
+      .topbar { font-size: 0.8rem; padding: 8px 12px; flex-wrap: nowrap; }
+      .tb-sep, .tb-jobs { display: none; }
+    }
+    @media (max-width: 480px) {
+      .topbar { font-size: 0.78rem; padding: 8px 10px; }
+      .tb-long { display: none; }
+      .tb-short { display: inline; }
+    }
 
     /* Navbar */
     .navbar {
@@ -489,22 +509,22 @@
     .logo .amigos { color: var(--pink); }
     .nav-units { display: flex; gap: 6px; align-items: center; }
     .nav-units a {
-      font-weight: 800; font-size: 0.95rem; padding: 9px 16px; border-radius: 9999px;
+      font-weight: 800; font-size: 0.95rem; padding: 9px 16px; border-radius: 9999px; min-height: 44px;
+      display: inline-flex; align-items: center; justify-content: center;
       transition: background var(--t-fast), color var(--t-fast);
     }
     .nav-units a:hover { background: var(--white); box-shadow: var(--shadow-sm); }
     .nav-actions { display: flex; gap: 10px; align-items: center; }
 
     @media (max-width: 760px) {
-      /* Sem hambúrguer: os destinos viram uma faixa rolável abaixo da logo (antes sumiam no celular). */
-      .nav-units { order: 3; flex: 1 0 100%; overflow-x: auto; gap: 4px; padding-bottom: 2px; scrollbar-width: none; }
-      .nav-units::-webkit-scrollbar { display: none; }
-      .nav-units a { white-space: nowrap; font-size: 0.85rem; padding: 6px 12px; }
-      .nav-units a[href="#carreiras"] { display: none; }
-      .nav-actions .btn-ghost { display: none; } /* "Trabalhe Conosco" já está na faixa do topo */
-      .navbar { padding: 8px 0; }
+      /* Sem hambúrguer: os 4 destinos ficam numa linha fixa de 4 colunas abaixo da logo (cabe em 360px, sem rolar). */
+      .navbar { padding: 6px 0 2px; }
+      .navbar .wrap { padding: 0 10px; row-gap: 0; }
+      .nav-units { order: 3; flex: 1 0 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+      .nav-units a { white-space: nowrap; font-size: 0.84rem; padding: 0 2px; }
       .navbar .logo { font-size: 1.35rem; }
       .navbar .logo .simbolo { height: 32px; }
+      .nav-actions .btn-wa { padding: 8px 16px; }
       .hl { white-space: normal; } /* o destaque do título passava da tela em 390px */
     }
 
@@ -527,57 +547,22 @@
     .eyebrow::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--ring); }
     .hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.2rem); margin-bottom: 18px; }
     .hero .sub { font-size: 1.15rem; color: var(--ink-soft); font-weight: 700; max-width: 38rem; margin: 0 auto; }
+    .hero .wrap { max-width: 940px; }
+    .hero h1 { max-width: 760px; margin-left: auto; margin-right: auto; }
+    .hero .eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 0.88rem; }
+    /* Triagem: três caminhos com o mesmo peso (a home é um hub, nenhum produto domina) */
+    .triage { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); margin: 30px auto 0; }
+    .triage .btn { flex-direction: column; gap: 2px; padding: 12px 18px; line-height: 1.2; text-align: center; }
+    .triage .btn small { font-size: 0.78rem; font-weight: 700; opacity: 0.9; }
+    @media (max-width: 760px) {
+      .hero { padding: 24px 0 30px; }
+      .hero .eyebrow { margin-bottom: 14px; padding: 6px 14px; font-size: 0.8rem; }
+      .hero h1 { font-size: clamp(1.7rem, 7.4vw, 2.1rem); margin-bottom: 10px; }
+      .hero .sub { font-size: 1rem; }
+      .triage { grid-template-columns: 1fr; gap: 10px; margin-top: 18px; }
+      .triage .btn { width: 100%; min-height: 56px; padding: 9px 18px; }
+    }
 
-    /* Seletor de intenção — resolve o conflito de jornadas */
-    .selector {
-      max-width: 1140px; margin: 44px auto 0; padding: 0 22px 8px;
-      display: grid; gap: 20px; grid-template-columns: 1fr;
-    }
-    @media (min-width: 860px) { .selector { grid-template-columns: repeat(3, 1fr); } }
-
-    .card-unit {
-      border-radius: 32px; overflow: hidden; box-shadow: var(--shadow-lg); color: var(--white);
-      position: relative; min-height: 340px; display: flex; flex-direction: column; justify-content: flex-end;
-      padding: 22px; transition: transform var(--t-fast), box-shadow var(--t-fast);
-    }
-    .card-unit:hover, .card-unit:focus-visible { transform: translateY(-6px); box-shadow: 0 26px 50px rgba(26, 63, 53, 0.22); }
-    .card-unit:focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; }
-    .card-unit img {
-      position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0;
-      transition: transform 0.5s ease;
-    }
-    .card-unit:hover img { transform: scale(1.06); }
-    .card-unit::after {
-      content: ''; position: absolute; inset: 0; z-index: 1;
-      background: linear-gradient(180deg, rgba(0,0,0,0) 24%, rgba(10,20,17,0.86) 100%);
-    }
-    .card-unit > * { position: relative; z-index: 2; }
-    .unit-tag {
-      display: inline-block; font-size: 0.74rem; font-weight: 900; padding: 6px 16px; border-radius: 9999px;
-      margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.08em; width: fit-content;
-    }
-    .card-clinica { border-top: 6px solid var(--teal); }
-    .card-clinica .unit-tag { background: var(--teal); color: var(--dark); }
-    .card-playground { border-top: 6px solid var(--pink); }
-    .card-playground .unit-tag { background: var(--pink); color: #fff; }
-    .card-circuito { border-top: 6px solid var(--yellow); }
-    .card-circuito .unit-tag { background: var(--yellow); color: var(--dark); }
-    .card-unit h2, .card-unit h3 { font-size: 1.4rem; margin: 0 0 6px; }
-    .card-unit .micro { font-size: 0.86rem; font-weight: 700; opacity: 0.92; margin-bottom: 14px; }
-    .card-unit .cta { font-weight: 900; display: inline-flex; align-items: center; gap: 6px; }
-    .card-unit .cta svg { width: 16px; height: 16px; transition: transform var(--t-fast); }
-    .card-unit:hover .cta svg { transform: translateX(3px); }
-
-    /* Prova de ecossistema */
-    .proof-strip {
-      max-width: 1140px; margin: 0 auto; padding: 40px 22px 10px;
-      display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
-    }
-    .chip {
-      display: inline-flex; align-items: center; gap: 8px; background: var(--white); border-radius: 9999px;
-      padding: 9px 18px; font-size: 0.92rem; font-weight: 800; box-shadow: var(--shadow-sm);
-    }
-    .chip svg { width: 17px; height: 17px; color: var(--teal-dark); flex-shrink: 0; }
 
 
     /* Prova social (avaliações) */
@@ -587,6 +572,10 @@
     .rv blockquote { margin: 0 0 10px; font-weight: 700; color: var(--ink); }
     .rv figcaption { font-size: 0.85rem; font-weight: 800; color: var(--ink-soft); }
     .rv-note { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px; }
+    .reviews-hub { margin-top: 44px; }
+    /* Números numa linha só (antes: chips + seção "em números") */
+    .stats-line { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 6px 26px; margin-top: 22px; font-weight: 800; color: var(--ink-soft); text-align: center; }
+    .stats-line strong { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--pink); font-size: 1.35rem; margin-right: 4px; }
 
     /* Bloco Clínica — registro sóbrio */
     .clinica-block { background: var(--white); border-radius: 48px; margin: 40px 0; padding: 60px 0; }
@@ -601,15 +590,8 @@
     }
     .badge svg { width: 16px; height: 16px; color: var(--teal-dark); flex-shrink: 0; }
 
-    /* Faixa de transição entre registros */
-    .transition-band { background: var(--ring); padding: 3px; border-radius: 9999px; max-width: 1140px; margin: 0 auto; }
-    .transition-inner {
-      background: var(--dark); color: #fff; text-align: center; padding: 20px 28px; border-radius: 9999px;
-      font-family: 'Fredoka One', cursive; font-size: clamp(1rem, 2vw, 1.25rem);
-    }
-
     /* Bloco Playground + Circuito — registro colorido */
-    .lazer-block { padding: 60px 0 76px; }
+    .lazer-block { padding: 36px 0 56px; }
     .lazer-grid { display: grid; gap: 20px; grid-template-columns: 1fr; }
     @media (min-width: 760px) { .lazer-grid { grid-template-columns: 1fr 1fr; } }
     .lazer-card {
@@ -640,6 +622,28 @@
 
     /* Localização */
     .local-block { padding: 60px 0; text-align: center; }
+    .local-actions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .geo-facts { margin-top: 40px; text-align: left; }
+    .geo-facts-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; margin-bottom: 18px; text-align: center; }
+    .geo-facts-title { font-size: clamp(1.2rem, 2.6vw, 1.5rem); }
+    .geo-grid[hidden] { display: none; }
+
+    /* Para pais */
+    .para-pais { padding-top: 30px; }
+    .pp-block { margin-top: 56px; }
+    .pp-links { margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .teste-text { color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; margin-bottom: 24px; max-width: 34rem; }
+    .teste-fine { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px; }
+    .guide-card { display: flex; flex-direction: column; gap: 4px; color: var(--dark); }
+    .guide-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+    .guide-go { margin-top: auto; padding-top: 8px; font-weight: 800; color: var(--pink); font-size: 0.92rem; }
+
+    /* Celular: ações viram botões de largura cheia (toque fácil) */
+    @media (max-width: 560px) {
+      .clinica-actions .btn, .local-actions .btn, .pp-links .btn { width: 100%; }
+      .clinica-block { border-radius: 32px; padding: 40px 0; }
+      .guia-sample { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; width: 100%; border: 2px solid currentColor; border-radius: 9999px; text-decoration: none; }
+    }
 
     footer {
       background: var(--dark); color: rgba(255, 255, 255, 0.75); padding: 52px 22px 100px;
@@ -664,128 +668,7 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       .fx { opacity: 1; transform: none; transition: none; }
-      .btn, .card-unit, .card-unit img, .lazer-photo img { transition: none; }
-    }
-
-    /* Modal: Trabalhe Conosco */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(26, 63, 53, 0.6);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal {
-      background: var(--white, #ffffff);
-      border-radius: var(--r-card, 24px);
-      padding: 36px;
-      max-width: 460px;
-      width: 100%;
-      position: relative;
-      box-shadow: var(--shadow-lg, 0 12px 32px rgba(0,0,0,0.15));
-      max-height: 90vh;
-      overflow-y: auto;
-      text-align: left;
-    }
-
-    .modal h3 {
-      font-size: 1.35rem;
-      margin-bottom: 6px;
-      padding-right: 36px;
-      color: var(--dark, #1a3f35);
-      font-family: 'Fredoka One', cursive, sans-serif;
-    }
-
-    .modal>p {
-      color: var(--ink-soft, #556b63);
-      font-weight: 600;
-      font-size: 0.94rem;
-      margin-bottom: 20px;
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 14px;
-      right: 14px;
-      width: 36px;
-      height: 36px;
-      border: none;
-      border-radius: 50%;
-      background: var(--cream, #f7f5f0);
-      color: var(--dark, #1a3f35);
-      font-size: 1.1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background var(--t-fast, 0.2s ease);
-    }
-
-    .modal-close:hover {
-      background: var(--yellow, #ffd15c);
-    }
-
-    .form-group {
-      margin-bottom: 14px;
-    }
-
-    .form-control {
-      width: 100%;
-      padding: 14px 18px;
-      border: 2.5px solid rgba(26, 63, 53, 0.12);
-      border-radius: 14px;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 0.98rem;
-      color: var(--dark, #1a3f35);
-      background: #ffffff;
-      box-sizing: border-box;
-    }
-
-    .form-control:focus {
-      outline: none;
-      border-color: var(--teal, #2dcfb5);
-      box-shadow: 0 0 0 4px rgba(46, 207, 181, 0.18);
-    }
-
-    .form-control optgroup {
-      font-weight: 800;
-      color: var(--teal-dark, #1f917f);
-      background: #f4f8f7;
-      font-style: normal;
-    }
-
-    .form-control option {
-      font-weight: 600;
-      color: var(--dark, #1a3f35);
-      background: #ffffff;
-    }
-
-    .form-label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--dark, #1a3f35);
-      margin-bottom: 6px;
-    }
-
-    .form-error {
-      display: none;
-      background: #ffeeee;
-      color: #cc0000;
-      padding: 10px 14px;
-      border-radius: 10px;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 14px;
+      .btn, .lazer-photo img { transition: none; }
     }
 
     /* Teste de Comportamento (Instituto) */
@@ -874,7 +757,7 @@
     .guia-banner.alt::before { background: #FB3D6A; }
     .guia-banner.alt::after { background: #07C5C8; }
     .guia-banner.alt .eyebrow { background: #065264; color: #fff; }
-    .guia-banner.alt h3, .guia-banner.alt .guia-list li, .guia-banner.alt .guia-price { color: #065264; }
+    .guia-banner.alt h4, .guia-banner.alt .guia-list li, .guia-banner.alt .guia-price { color: #065264; }
     .guia-banner.alt p.guia-text { color: #065264; }
     .guia-banner.alt .guia-list li::before { background: #065264; color: #fff; }
     .guia-banner.alt .btn-pink { background: #065264; color: #fff; box-shadow: 0 10px 26px rgba(6, 82, 100, 0.32); }
@@ -882,7 +765,7 @@
     .guia-banner > * { position: relative; z-index: 1; }
 
     .guia-banner .eyebrow { background: #FDC51D; color: #065264; align-self: flex-start; }
-    .guia-banner h3 { color: #fff; font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 10px; }
+    .guia-banner h4 { color: #fff; font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 10px; }
     .guia-banner p.guia-text { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 1.02rem; margin: 0 0 18px; }
     .guia-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: auto; }
     .guia-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
@@ -905,8 +788,6 @@
     .ev-mini h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem; line-height: 1.3; margin: 2px 0; }
     .ev-mini .when { font-size: 0.86rem; font-weight: 800; color: var(--ink-soft); }
     .ev-mini .go { margin-top: auto; font-weight: 800; color: var(--pink); font-size: 0.9rem; }
-    .nav-units a.nav-guia { background: #065264; color: #fff; }
-    .nav-units a.nav-guia:hover { background: #07C5C8; color: #065264; }
     .guia-note { font-size: 0.82rem; font-weight: 700; opacity: 0.8; text-align: center; max-width: 46rem; margin: 22px auto 0; }
     .guia-cover { display: flex; justify-content: center; margin-bottom: 22px; }
     .guia-cover img { width: 150px; height: auto; border-radius: 4px 10px 10px 4px; box-shadow: 10px 14px 30px rgba(0, 0, 0, 0.35); transform: rotate(-3deg); }
@@ -950,32 +831,56 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0"
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
-  <div class="topbar">
-    Um ecossistema, três jeitos de fazer amigos — <b>Clínica · Playground · Circuito</b>
-    <span style="opacity: 0.4; margin: 0 8px;">|</span>
-    🚀 <b>Estamos contratando!</b> <a href="#" onclick="openJobModal(); return false;" style="color: var(--yellow); text-decoration: underline; margin-left: 4px;">Trabalhe Conosco</a>
+  <!-- TOPBAR — status do playground (horário de Belém) + vagas. Sem JS, mostra o horário fixo. -->
+  <div class="topbar" id="topbar">
+    <span class="tb-status" title="Parque Shopping: todos os dias, 10h às 22h · Grão-Pará: seg a sáb 10h às 22h, dom 10h às 21h">
+      <span class="tb-dot" id="tb-dot" aria-hidden="true"></span>
+      <span class="tb-text"><span id="tb-msg">Playground todo dia a partir das 10h</span><span class="tb-long" id="tb-where-long"> · Parque Shopping e Grão-Pará</span><span class="tb-short" id="tb-where-short"> · Parque e Grão-Pará</span></span>
+    </span>
+    <span class="tb-sep" aria-hidden="true">|</span>
+    <a class="tb-jobs" href="/trabalhe-conosco">Estamos contratando →</a>
   </div>
+  <script>
+    // "Aberto agora" calculado no fuso de Belém (UTC-3, sem horário de verão). Horários: geo-facts.json.
+    (function () {
+      try {
+        var t = new Date(Date.now() - 3 * 3600 * 1000);
+        var dia = t.getUTCDay(); // 0 = domingo
+        var h = t.getUTCHours() + t.getUTCMinutes() / 60;
+        var ABRE = 10, FECHA_PARQUE = 22, FECHA_GRAO = dia === 0 ? 21 : 22;
+        var msg, longo = ' · Parque Shopping e Grão-Pará', curto = ' · Parque e Grão-Pará', aberto = false;
+        if (h < ABRE) msg = 'Playground abre hoje às 10h';
+        else if (h < FECHA_GRAO) { aberto = true; msg = 'Playground aberto|agora|até 22h'; if (dia === 0) longo = ' · Parque Shopping (no Grão-Pará, até 21h)'; }
+        else if (h < FECHA_PARQUE) { aberto = true; msg = 'Playground aberto|agora|até 22h'; longo = ' · só no Parque Shopping'; curto = ' · no Parque Shopping'; }
+        else msg = 'Playground abre amanhã às 10h';
+        // "agora" só aparece em telas largas (no celular a linha precisa caber em 360px)
+        var partes = msg.split('|'), el = document.getElementById('tb-msg');
+        el.textContent = partes[0];
+        if (partes.length === 3) {
+          var ag = document.createElement('span'); ag.className = 'tb-long'; ag.textContent = ' ' + partes[1];
+          el.appendChild(ag); el.appendChild(document.createTextNode(' ' + partes[2]));
+        }
+        document.getElementById('tb-where-long').textContent = longo;
+        document.getElementById('tb-where-short').textContent = curto;
+        document.getElementById('tb-dot').className = 'tb-dot ' + (aberto ? 'is-open' : 'is-closed');
+      } catch (e) { /* fica o texto fixo */ }
+    })();
+  </script>
 
-  <nav class="navbar">
+  <nav class="navbar" aria-label="Principal">
     <div class="wrap">
       <a class="logo" href="/"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
           alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span>Faça<span class="amigos">Amigos</span></span></a>
       <div class="nav-units">
-        <a href="#clinica">Clínica</a>
-        <a href="#playground">Playground</a>
-        <a href="#circuito">Circuito</a>
-        <a href="/teste?utm_source=site&amp;utm_medium=nav&amp;utm_campaign=hub">Mapeamento grátis</a>
-        <a href="/servicos">Serviços</a>
+        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="/servicos">Clínica</a>
+        <a href="/aprender">Para pais</a>
         <a href="/eventos" id="nav-eventos">Eventos</a>
-        <a href="/aprender">Aprender</a>
-        <a href="#guia" class="nav-guia">E-books para pais</a>
-        <a href="#carreiras">Trabalhe Conosco</a>
       </div>
       <div class="nav-actions">
-        <button type="button" class="btn btn-ghost btn-sm" onclick="openJobModal()">Trabalhe Conosco</button>
         <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Vim%20pelo%20site%20e%20gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." target="_blank"
           rel="noopener" class="btn btn-wa btn-sm">
-          <svg viewBox="0 0 24 24" fill="currentColor">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
             <path
               d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" />
           </svg>
@@ -986,138 +891,184 @@
   </nav>
   <main id="conteudo">
 
-  <!-- HERO — âncora de marca, não escolhe lado nenhum -->
+  <!-- HERO — âncora de marca + triagem: cada mãe/pai escolhe o próprio caminho -->
   <header class="hero">
     <div class="wrap fx on">
-      <span class="eyebrow">Instituto &amp; espaços FaçaAmigos · Parque Shopping Belém &amp; Shopping Bosque Grão-Pará</span>
+      <span class="eyebrow">Belém · Parque Shopping &amp; Grão-Pará</span>
       <h1>Um lugar onde seu filho é acolhido <span class="hl">e você pode respirar</span>.</h1>
-      <p class="sub">Terapia, brincadeira e diversão sob o mesmo teto, em Belém. Para a criança, um espaço feito pra ela ser quem é. Para você, tranquilidade de verdade.</p>
+      <p class="sub">Brincadeira sem hora marcada, orientação para pais e uma clínica chegando. Por onde você quer começar?</p>
+      <div class="triage" role="group" aria-label="O que você procura hoje">
+        <a class="btn btn-pink" href="https://playground.institutofacaamigos.com.br/" data-cta="hero_triagem" data-destino="playground">
+          Levar para brincar<small>Playground e Circuito · sem agendar</small></a>
+        <a class="btn btn-teal" href="/teste?utm_source=site&amp;utm_medium=hero&amp;utm_campaign=hub" data-cta="hero_triagem" data-destino="mapeamento">
+          Tenho uma preocupação<small>Mapeamento grátis · 5 minutos</small></a>
+        <a class="btn btn-ghost" href="#clinica" data-cta="hero_triagem" data-destino="clinica">
+          Clínica / lista de espera<small>Em breve · IASEP &amp; PROASA</small></a>
+      </div>
     </div>
   </header>
 
-  <!-- SELETOR — resolve o conflito de jornadas: saúde x lazer -->
-  <section class="selector" aria-label="Escolha o que você procura hoje">
-    <a href="#clinica" class="card-unit card-clinica fx on">
-      <img src="img/clinica-fachada.webp" width="900" height="1080" alt="" loading="eager" decoding="async">
-      <span class="unit-tag" style="background: var(--teal-dark); color: #fff;">Clínica · Em breve · Convênios IASEP &amp; PROASA</span>
-      <h2>Um lugar pra entender seu filho sem julgamento</h2>
-      <p class="micro">Rua Boaventura da Silva, 1573 · Umarizal, Belém - PA</p>
-      <span class="cta">Conhecer a Clínica
-        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd"
-            d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 10H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 010-1.414z"
-            clip-rule="evenodd" /></svg>
-      </span>
-    </a>
-
-    <a href="https://playground.institutofacaamigos.com.br/" class="card-unit card-playground fx on">
-      <img src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="" loading="lazy" decoding="async">
-      <span class="unit-tag">Playground (2 Unidades)</span>
-      <h2>Ele brinca seguro, você descansa por perto</h2>
-      <p class="micro">Parque Shopping Belém &amp; Shopping Bosque Grão-Pará</p>
-      <span class="cta">Ver Unidades do Playground
-        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd"
-            d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 10H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 010-1.414z"
-            clip-rule="evenodd" /></svg>
-      </span>
-    </a>
-
-    <a href="https://playground.institutofacaamigos.com.br/circuito" class="card-unit card-circuito fx on">
-      <img src="img/circuito-carrinhos.webp" width="1000" height="750" alt="" loading="lazy" decoding="async">
-      <span class="unit-tag">Circuito</span>
-      <h2>Ele no volante, você a dois passos</h2>
-      <p class="micro">Minicarros elétricos · Sem hora marcada</p>
-      <span class="cta">Andar de carrinho
-        <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd"
-            d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 10H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 010-1.414z"
-            clip-rule="evenodd" /></svg>
-      </span>
-    </a>
-  </section>
-
-  <p class="center" style="max-width: 34rem; margin: 18px auto 0; color: var(--ink-soft); font-weight: 700; font-size: 0.95rem; padding: 0 22px;">
-    Cansada de adivinhar o que seu filho está tentando dizer? <a href="/teste?utm_source=site&amp;utm_medium=hero&amp;utm_campaign=hub" style="color: var(--pink); font-weight: 800; text-decoration: underline;">Faça o mapeamento gratuito (5 min)</a> ou <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." style="color: var(--teal-dark); text-decoration: underline;">fale com a gente no WhatsApp</a>.
-  </p>
-
-  <!-- PROVA DE ECOSSISTEMA — autoridade coletiva, sem citar tratamento específico -->
-  <div class="proof-strip fx on">
-    <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
-        <path
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
-      </svg> +8 anos de atuação</span>
-    <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
-        <path
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
-      </svg> Mais de 1.100 famílias já brincaram com a gente</span>
-    <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
-        <path
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
-      </svg> Equipe que sabe lidar com crise, birra e primeira visita</span>
-    <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20">
-        <path
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
-      </svg> Parque Shopping Belém &amp; Shopping Bosque Grão-Pará</span>
-  </div>
-
-  <!-- PROVA SOCIAL — avaliações reais do Google (as mesmas do /playground) -->
-  <section class="sec reviews-hub" aria-labelledby="reviews-hub-h" style="padding: 24px 0 10px;">
-    <div class="wrap fx">
-      <h2 id="reviews-hub-h" class="sec-title" style="font-size: clamp(1.4rem, 3vw, 1.9rem); text-align: center;">Mães e pais de Belém contam como foi</h2>
-      <div class="rv-grid">
-        <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-          <blockquote>“Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!”</blockquote>
-          <figcaption>Vanessa S. · avaliação no Google</figcaption></figure>
-        <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-          <blockquote>“Super amo esse lugar, deixo meus filhos com tranquilidade.”</blockquote>
-          <figcaption>Eledes F. · Local Guide no Google</figcaption></figure>
-        <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-          <blockquote>“Amei muito, meu filho se sentiu muito seguro e brincou bastante!”</blockquote>
-          <figcaption>Ana M. · avaliação no Google</figcaption></figure>
+  <!-- PLAYGROUND + CIRCUITO — um bloco só, com as avaliações do Google (todas sobre o Playground) -->
+  <section class="lazer-block" id="playground">
+    <div class="wrap">
+      <div class="center fx" style="margin-bottom: 12px;">
+        <span class="eyebrow" style="background: var(--white);">Diversão sem hora marcada</span>
+        <h2 class="sec-title">Hoje você merece uma tarde leve.</h2>
       </div>
-      <p class="rv-note">Avaliações reais no Google sobre o FaçaAmigos Playground, no Parque Shopping Belém. A palavra que mais aparece: tranquilidade.</p>
-    </div>
-  </section>
-
-  <!-- TESTE DE COMPORTAMENTO — Instituto FaçaAmigos -->
-  <section class="sec" id="teste" style="padding-bottom: 30px;">
-    <div class="wrap fx">
-      <div class="teste-banner">
-        <div>
-          <span class="eyebrow" style="background: var(--cream);">Instituto FaçaAmigos</span>
-          <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.2rem);">Pare de se perguntar se é normal.
-            Em 5 minutos, você tem um retrato claro.</h2>
-          <p
-            style="color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; margin-bottom: 24px; max-width: 34rem;">
-            Um olhar acolhedor, criado por psicóloga, sobre o dia a dia do seu filho. Sem rótulo e sem julgamento: só
-            clareza pra você decidir o próximo passo com o coração mais leve.
-          </p>
-          <a href="/teste?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink">Fazer o
-            mapeamento agora</a>
-          <p style="font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px;">Desenvolvido pela
-            idealizadora do FaçaAmigos · não substitui avaliação profissional · leva cerca de 5 minutos</p>
-        </div>
-        <div class="teste-visual">
-          <div class="teste-photo"><img src="img/idealizadora.jpg" width="700" height="936"
-              alt="Idealizadora do FaçaAmigos, criadora do Mapeamento Comportamental" loading="lazy" decoding="async">
+      <div class="lazer-grid">
+        <div class="lazer-card fx">
+          <div class="lazer-photo"><img src="img/hero-piscina-bolinhas.webp" width="784" height="490"
+              alt="Piscina de bolinhas gigante do playground FaçaAmigos" loading="lazy" decoding="async"></div>
+          <div class="lazer-body">
+            <h3>Playground Inclusivo</h3>
+            <p>Piscina de bolinhas, casa na árvore e monitores que sabem lidar com cada criança, típica ou atípica.
+              Você senta, toma um café e olha de longe. No Parque Shopping e no Grão-Pará.</p>
+            <p><strong>No plano de 1 hora, você recebe no WhatsApp o Olhar FaçaAmigos, o resumo da brincadeira dele. Cortesia.</strong></p>
+            <div class="lazer-actions">
+              <a href="https://playground.institutofacaamigos.com.br/#olhar" class="btn btn-pink btn-sm">Ver o Playground e o Olhar</a>
+              <span class="price-chip"><small>a partir de</small><span>R$ 60</span></span>
+            </div>
           </div>
-          <span>criado pela idealizadora<br>do FaçaAmigos</span>
         </div>
+
+        <div class="lazer-card fx" id="circuito">
+          <div class="lazer-photo"><img src="img/circuito-bombeiro-h.webp" width="784" height="490"
+              alt="Criança dirigindo minicarro elétrico no Circuito FaçaAmigos" loading="lazy" decoding="async"></div>
+          <div class="lazer-body">
+            <h3>Circuito de Carrinhos</h3>
+            <p>Minicarros elétricos numa pista segura, no Parque Shopping. Ele dirige com autonomia e você acompanha a dois passos.</p>
+            <div class="lazer-actions">
+              <a href="https://playground.institutofacaamigos.com.br/circuito" class="btn btn-pink btn-sm">Andar de carrinho</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Prova social: avaliações reais do Google (as mesmas do /playground) + números numa linha só -->
+      <div class="reviews-hub fx" data-section="avaliacoes">
+        <h3 class="sec-title sec-title-xs center">Mães e pais de Belém contam como foi</h3>
+        <div class="rv-grid">
+          <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+            <blockquote>“Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!”</blockquote>
+            <figcaption>Vanessa S. · avaliação no Google</figcaption></figure>
+          <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+            <blockquote>“Super amo esse lugar, deixo meus filhos com tranquilidade.”</blockquote>
+            <figcaption>Eledes F. · Local Guide no Google</figcaption></figure>
+          <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+            <blockquote>“Amei muito, meu filho se sentiu muito seguro e brincou bastante!”</blockquote>
+            <figcaption>Ana M. · avaliação no Google</figcaption></figure>
+        </div>
+        <p class="stats-line"><span><strong>+8 anos</strong> de atuação</span><span><strong>+1.100</strong> famílias já brincaram com a gente</span><span>Equipe que sabe lidar com crise, birra e primeira visita</span></p>
+        <p class="rv-note">Avaliações reais no Google sobre o FaçaAmigos Playground, no Parque Shopping Belém. A palavra que mais aparece: tranquilidade.</p>
       </div>
     </div>
   </section>
 
-  <!-- EVENTOS — próximos encontros (renderizado por JS a partir de eventos-public; some se não houver evento publicado) -->
-  <section class="sec" id="eventos" hidden style="padding: 10px 0 40px;">
-    <div class="wrap fx">
-      <div class="eventos-strip">
-        <div class="eventos-head">
+  <!-- PARA PAIS — mapeamento grátis primeiro, depois guias gratuitos e os e-books -->
+  <section class="sec para-pais" id="para-pais">
+    <div class="wrap">
+      <div class="center fx" style="margin-bottom: 26px;">
+        <span class="eyebrow" style="background: var(--white);">Para pais</span>
+        <h2 class="sec-title">Pra entender seu filho com mais clareza e menos culpa</h2>
+      </div>
+
+      <!-- Mapeamento Comportamental gratuito (Instituto FaçaAmigos) -->
+      <div id="teste" data-section="teste" class="fx">
+        <div class="teste-banner">
           <div>
-            <span class="eyebrow" style="background: var(--cream);">Encontros do Instituto</span>
-            <h2 class="sec-title" style="font-size: clamp(1.5rem, 3.2vw, 2rem); margin-bottom: 6px;">Próximos encontros para quem cuida</h2>
-            <p style="color: var(--ink-soft); font-weight: 600; max-width: 40rem;">Palestras e treinamentos para famílias e profissionais. Turmas pequenas de propósito: o número de vagas é o real.</p>
+            <span class="eyebrow" style="background: var(--cream);">Grátis · Instituto FaçaAmigos</span>
+            <h3 class="sec-title sec-title-sm">Pare de se perguntar se é normal.
+              Em 5 minutos, você tem um retrato claro.</h3>
+            <p class="teste-text">
+              Um olhar acolhedor, criado por psicóloga, sobre o dia a dia do seu filho. Sem rótulo e sem julgamento: só
+              clareza pra você decidir o próximo passo com o coração mais leve.
+            </p>
+            <a href="/teste?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink">Fazer o
+              mapeamento agora</a>
+            <p class="teste-fine">Desenvolvido pela
+              idealizadora do FaçaAmigos · não substitui avaliação profissional · leva cerca de 5 minutos</p>
           </div>
-          <a href="/eventos?utm_source=site&amp;utm_medium=secao&amp;utm_campaign=hub" class="btn btn-ghost btn-sm">Ver a agenda</a>
+          <div class="teste-visual">
+            <div class="teste-photo"><img src="img/idealizadora.jpg" width="700" height="936"
+                alt="Idealizadora do FaçaAmigos, criadora do Mapeamento Comportamental" loading="lazy" decoding="async">
+            </div>
+            <span>criado pela idealizadora<br>do FaçaAmigos</span>
+          </div>
         </div>
-        <div class="eventos-cards" id="eventos-cards"></div>
+      </div>
+
+      <!-- Guias gratuitos: ponte para /aprender e /glossario -->
+      <div id="aprender-strip" data-section="aprender" class="fx pp-block">
+        <h3 class="sec-title sec-title-xs center">Guias curtos pra ler em casa, sem jargão e sem custo</h3>
+        <div class="geo-grid">
+          <a class="geo-card guide-card" href="/aprender/e-para-todas-as-criancas">
+            <span class="geo-lbl">É só pra criança autista? Não.</span>
+            <span class="geo-desc">O playground é pra todas as crianças, com ou sem laudo. Entenda o que inclusivo quer dizer.</span>
+            <span class="guide-go">Ler o guia →</span>
+          </a>
+          <a class="geo-card guide-card" href="/aprender/birra-ou-crise">
+            <span class="geo-lbl">Birra ou crise?</span>
+            <span class="geo-desc">Como diferenciar as duas e o que fazer na hora, em 6 minutos de leitura.</span>
+            <span class="guide-go">Ler o guia →</span>
+          </a>
+          <a class="geo-card guide-card" href="/aprender/rotina-visual-em-casa">
+            <span class="geo-lbl">Rotina visual em casa</span>
+            <span class="geo-desc">Um passo a passo de 20 minutos pra montar a primeira rotina da sua casa.</span>
+            <span class="guide-go">Ler o guia →</span>
+          </a>
+        </div>
+        <div class="pp-links">
+          <a href="/aprender" class="btn btn-ghost btn-sm">Ver todos os guias</a>
+          <a href="/glossario" class="btn btn-ghost btn-sm">Abrir o glossário</a>
+        </div>
+      </div>
+
+      <!-- E-BOOKS — O Brincar com Propósito (/guia) e O Código do Desenvolvimento Infantil (/codigo) -->
+      <div id="guia" data-section="guia" class="fx pp-block">
+        <div class="ebooks-head">
+          <span class="eyebrow">E-books em PDF · para mães, pais e cuidadores</span>
+          <h3 class="sec-title sec-title-sm">Dois livros pra entender seu filho e se sentir menos sozinha</h3>
+        </div>
+        <div class="ebooks-grid">
+          <article class="guia-banner">
+            <div class="guia-cover">
+              <img src="img/guia/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
+                alt="Capa do e-book O Brincar com Propósito: Guia Prático e Afetivo de Análise do Comportamento para Mães, Pais e Cuidadores">
+            </div>
+            <span class="eyebrow">Guia completo · 97 páginas</span>
+            <h4>O Brincar com Propósito</h4>
+            <p class="guia-text">Um guia prático, sem jargão, que traduz a Análise do Comportamento para o dia a dia da sua casa. Você lê no celular e aplica com exercícios curtos.</p>
+            <ul class="guia-list">
+              <li>11 capítulos com cenas do cotidiano e uma tarefa simples em cada um</li>
+              <li>Plano de 30 dias para colocar em prática, um passo de cada vez</li>
+              <li>7 materiais para imprimir: rotina visual, quadro de fichas, diário de bordo e mais</li>
+            </ul>
+            <div class="guia-price"><strong>R$ 149</strong> <span>ou 10x de R$ 17,91 · acesso imediato · 7 dias de garantia</span></div>
+            <div class="guia-actions">
+              <a href="/guia?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'quero_o_guia'})">Quero o guia</a>
+              <a href="downloads/o-brincar-com-proposito-capitulo-1.pdf" download class="guia-sample" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'capitulo_gratis'})">Ler o capítulo 1 de graça</a>
+            </div>
+          </article>
+          <article class="guia-banner alt">
+            <div class="guia-cover">
+              <img src="img/codigo/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
+                alt="Capa do e-book O Código do Desenvolvimento Infantil: um guia de coração para mães, pais e famílias entenderem a Análise do Comportamento">
+            </div>
+            <span class="eyebrow">Livro de entrada · 40 páginas</span>
+            <h4>O Código do Desenvolvimento Infantil</h4>
+            <p class="guia-text">Um guia curto e acolhedor para entender que o comportamento do seu filho tem lógica. Sem jargão e sem culpa. Dá para ler em uma tarde.</p>
+            <ul class="guia-list">
+              <li>9 capítulos com histórias do cotidiano</li>
+              <li>Registro ABC, reforço, antecipação e passos pequenos</li>
+              <li>Birras e crises sem punição, e cuidado com quem cuida</li>
+            </ul>
+            <div class="guia-price"><span>Valor e formas de pagamento no checkout seguro · acesso imediato · 7 dias de garantia</span></div>
+            <div class="guia-actions">
+              <a href="/codigo?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_codigo_click',cta:'quero_o_ebook'})">Quero o e-book</a>
+            </div>
+          </article>
+        </div>
+        <p class="guia-note">Escritos por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727). Material educativo: não substitui avaliação e acompanhamento profissional.</p>
       </div>
     </div>
   </section>
@@ -1136,9 +1087,6 @@
           </p>
           <p class="sec-sub" style="margin: 0 0 8px;">Se você sente que algo está diferente e ninguém te explica direito, aqui você vai ser ouvida. Equipe multidisciplinar, terapia comportamental e um plano que faz sentido pra sua família, com ciência, acolhimento e afeto. <strong>Vamos atender pelos convênios IASEP e PROASA. Entre na lista de espera e avisamos você assim que abrirmos.</strong></p>
           <div class="clinica-badges">
-            <span class="badge" style="border-color: var(--pink); background: #fff0f5; color: var(--dark);"><svg fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg> Convênios IASEP &amp; PROASA</span>
             <span class="badge"><svg fill="currentColor" viewBox="0 0 20 20">
                 <path
                   d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -1153,231 +1101,106 @@
                   d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg> Terapia Comportamental</span>
           </div>
-          <div class="lazer-actions">
-            <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Quero%20entrar%20na%20lista%20de%20espera%20da%20Cl%C3%ADnica%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental%20(vim%20pelo%20site)." target="_blank" rel="noopener" class="btn btn-teal">Entrar na lista de espera no WhatsApp</a>
-            <a href="/servicos" class="btn btn-ghost">Ver o que a Clínica oferece</a>
-            <a href="https://clinica.institutofacaamigos.com.br/?utm_source=hub&amp;utm_medium=site&amp;utm_campaign=clinica" class="btn btn-ghost">Conhecer o site da Clínica</a>
+          <div class="lazer-actions clinica-actions">
+            <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Quero%20entrar%20na%20lista%20de%20espera%20da%20Cl%C3%ADnica%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental%20(vim%20pelo%20site)." target="_blank" rel="noopener" class="btn btn-wa">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" /></svg>
+              Entrar na lista de espera</a>
+            <a href="/servicos" class="btn btn-ghost btn-sm">Ver o que a Clínica oferece</a>
+            <a href="https://clinica.institutofacaamigos.com.br/?utm_source=hub&amp;utm_medium=site&amp;utm_campaign=clinica" class="btn btn-ghost btn-sm">Conhecer o site da Clínica</a>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- FAIXA DE TRANSIÇÃO — sinaliza mudança de registro -->
-  <div class="wrap fx on">
-    <div class="transition-band">
-      <div class="transition-inner">De um lado, cuidado que acolhe. Do outro, diversão que descansa você. É tudo FaçaAmigos.</div>
-    </div>
-  </div>
-
-  <!-- PLAYGROUND + CIRCUITO — registro colorido, tom de impulso -->
-  <section class="lazer-block">
-    <div class="wrap">
-      <div class="center fx" style="margin-bottom: 12px;">
-        <span class="eyebrow" style="background: var(--white);">Diversão sem hora marcada</span>
-        <h2 class="sec-title">Hoje você merece uma tarde leve.</h2>
-      </div>
-      <div class="lazer-grid">
-        <div class="lazer-card fx" id="playground">
-          <div class="lazer-photo"><img src="img/hero-piscina-bolinhas.webp" width="784" height="490"
-              alt="Piscina de bolinhas gigante do playground FaçaAmigos" loading="lazy" decoding="async"></div>
-          <div class="lazer-body">
-            <h3>Playground Inclusivo</h3>
-            <p>Piscina de bolinhas, casa na árvore e monitores que sabem lidar com cada criança, típica ou atípica.
-              Você senta, toma um café e olha de longe.</p>
-            <p><strong>No plano de 1 hora, você recebe no WhatsApp o Olhar FaçaAmigos, o resumo da brincadeira dele. Cortesia.</strong></p>
-            <div class="lazer-actions">
-              <a href="https://playground.institutofacaamigos.com.br/#olhar" class="btn btn-pink btn-sm">Ver o Playground e o Olhar</a>
-              <span class="price-chip"><small>a partir de</small><span>R$ 60</span></span>
-            </div>
-          </div>
-        </div>
-
-        <div class="lazer-card fx" id="circuito">
-          <div class="lazer-photo"><img src="img/circuito-bombeiro-h.webp" width="784" height="490"
-              alt="Criança dirigindo minicarro elétrico no Circuito FaçaAmigos" loading="lazy" decoding="async"></div>
-          <div class="lazer-body">
-            <h3>Circuito de Carrinhos</h3>
-            <p>Minicarros elétricos numa pista segura. Ele dirige com autonomia e você acompanha a dois passos.</p>
-            <div class="lazer-actions">
-              <a href="https://playground.institutofacaamigos.com.br/circuito" class="btn btn-pink btn-sm">Andar de carrinho</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- APRENDER — faixa de guias gratuitos, ponte para /aprender e /glossario -->
-  <section class="sec fx" id="aprender-strip" style="padding: 20px 0 30px;">
-    <div class="wrap">
-      <div class="center" style="margin-bottom: 12px;">
-        <span class="eyebrow" style="background: var(--white);">Para ler em casa, sem custo</span>
-        <h2 class="sec-title" style="font-size: clamp(1.5rem, 3vw, 2.1rem);">Guias curtos pra entender seu filho, sem jargão</h2>
-      </div>
-      <div class="geo-grid">
-        <div class="geo-card">
-          <div class="geo-lbl">É só pra criança autista? Não.</div>
-          <p class="geo-desc">O playground é pra todas as crianças, com ou sem laudo. Entenda o que inclusivo quer dizer.</p>
-        </div>
-        <div class="geo-card">
-          <div class="geo-lbl">Birra ou crise?</div>
-          <p class="geo-desc">Como diferenciar as duas e o que fazer na hora, em 6 minutos de leitura.</p>
-        </div>
-        <div class="geo-card">
-          <div class="geo-lbl">Rotina visual em casa</div>
-          <p class="geo-desc">Um passo a passo de 20 minutos pra montar a primeira rotina da sua casa.</p>
-        </div>
-      </div>
-      <div class="center" style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-        <a href="/aprender" class="btn btn-ghost btn-sm">Ver todos os guias</a>
-        <a href="/glossario" class="btn btn-ghost btn-sm">Abrir o glossário</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- E-BOOKS — O Brincar com Propósito (/guia) e O Código do Desenvolvimento Infantil (/codigo) -->
-  <section class="sec" id="guia" style="padding: 20px 0 30px;">
+  <!-- EVENTOS — próximos encontros (renderizado por JS a partir de eventos-public; some se não houver evento publicado) -->
+  <section class="sec" id="eventos" hidden style="padding: 10px 0 40px;">
     <div class="wrap fx">
-      <div class="ebooks-head">
-        <span class="eyebrow">E-books em PDF · para mães, pais e cuidadores</span>
-        <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.4vw, 2.3rem);">Birras, rotina puxada e aquela culpa no fim do dia? Dois livros pra você entender seu filho e se sentir menos sozinha.</h2>
+      <div class="eventos-strip">
+        <div class="eventos-head">
+          <div>
+            <span class="eyebrow" style="background: var(--cream);">Encontros do Instituto</span>
+            <h2 class="sec-title sec-title-sm" style="margin-bottom: 6px;">Próximos encontros para quem cuida</h2>
+            <p style="color: var(--ink-soft); font-weight: 600; max-width: 40rem;">Palestras e treinamentos para famílias e profissionais. Turmas pequenas de propósito: o número de vagas é o real.</p>
+          </div>
+          <a href="/eventos?utm_source=site&amp;utm_medium=secao&amp;utm_campaign=hub" class="btn btn-ghost btn-sm">Ver a agenda</a>
+        </div>
+        <div class="eventos-cards" id="eventos-cards"></div>
       </div>
-      <div class="ebooks-grid">
-        <article class="guia-banner">
-          <div class="guia-cover">
-            <img src="img/guia/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
-              alt="Capa do e-book O Brincar com Propósito: Guia Prático e Afetivo de Análise do Comportamento para Mães, Pais e Cuidadores">
-          </div>
-          <span class="eyebrow">Guia completo · 97 páginas</span>
-          <h3>O Brincar com Propósito</h3>
-          <p class="guia-text">Um guia prático, sem jargão, que traduz a Análise do Comportamento para o dia a dia da sua casa. Você lê no celular e aplica com exercícios curtos.</p>
-          <ul class="guia-list">
-            <li>11 capítulos com cenas do cotidiano e uma tarefa simples em cada um</li>
-            <li>Plano de 30 dias para colocar em prática, um passo de cada vez</li>
-            <li>7 materiais para imprimir: rotina visual, quadro de fichas, diário de bordo e mais</li>
-          </ul>
-          <div class="guia-price"><strong>R$ 149</strong> <span>ou 10x de R$ 17,91 · acesso imediato · 7 dias de garantia</span></div>
-          <div class="guia-actions">
-            <a href="/guia?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'quero_o_guia'})">Quero o guia</a>
-            <a href="downloads/o-brincar-com-proposito-capitulo-1.pdf" download class="guia-sample" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'capitulo_gratis'})">Ler o capítulo 1 de graça</a>
-          </div>
-        </article>
-        <article class="guia-banner alt">
-          <div class="guia-cover">
-            <img src="img/codigo/capa.webp" width="760" height="1077" loading="lazy" decoding="async"
-              alt="Capa do e-book O Código do Desenvolvimento Infantil: um guia de coração para mães, pais e famílias entenderem a Análise do Comportamento">
-          </div>
-          <span class="eyebrow">Livro de entrada · 40 páginas</span>
-          <h3>O Código do Desenvolvimento Infantil</h3>
-          <p class="guia-text">Um guia curto e acolhedor para entender que o comportamento do seu filho tem lógica. Sem jargão e sem culpa. Dá para ler em uma tarde.</p>
-          <ul class="guia-list">
-            <li>9 capítulos com histórias do cotidiano</li>
-            <li>Registro ABC, reforço, antecipação e passos pequenos</li>
-            <li>Birras e crises sem punição, e cuidado com quem cuida</li>
-          </ul>
-          <div class="guia-price"><span>Valor e formas de pagamento no checkout seguro · acesso imediato · 7 dias de garantia</span></div>
-          <div class="guia-actions">
-            <a href="/codigo?utm_source=site&amp;utm_medium=banner&amp;utm_campaign=hub" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_codigo_click',cta:'quero_o_ebook'})">Quero o e-book</a>
-          </div>
-        </article>
-      </div>
-      <p class="guia-note">Escritos por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727). Material educativo: não substitui avaliação e acompanhamento profissional.</p>
     </div>
   </section>
 
-  <!-- SEÇÃO TRABALHE CONOSCO / CARREIRAS -->
-  <section class="sec" id="carreiras" style="padding: 40px 0 60px;">
+  <!-- UNIDADES E ROTAS (+ resumo rápido do GEO, recolhido) -->
+  <section class="local-block" id="local">
     <div class="wrap fx">
-      <div style="background: linear-gradient(135deg, var(--dark) 0%, #265548 100%); border-radius: 36px; padding: 48px 36px; color: var(--white); box-shadow: var(--shadow-lg); text-align: center; position: relative; overflow: hidden;">
-        <div style="position: absolute; top: -50px; right: -50px; width: 200px; height: 200px; background: var(--teal); opacity: 0.15; border-radius: 50%;"></div>
-        <div style="position: absolute; bottom: -50px; left: -50px; width: 180px; height: 180px; background: var(--yellow); opacity: 0.1; border-radius: 50%;"></div>
-        
-        <span class="eyebrow" style="background: rgba(255,255,255,0.15); color: var(--yellow); margin-bottom: 16px;">🚀 Oportunidades &amp; Carreiras</span>
-        <h2 class="sec-title" style="color: var(--white); font-size: clamp(1.8rem, 3.6vw, 2.5rem); margin-bottom: 14px;">Venha fazer parte do nosso time!</h2>
-        <p style="font-size: 1.05rem; font-weight: 600; opacity: 0.92; max-width: 42rem; margin: 0 auto 28px; line-height: 1.6;">
-          Com a inauguração da nossa Clínica e a expansão dos nossos espaços, estamos em busca de profissionais da Saúde, Educação e Operação apaixonados por transformar vidas com afeto e ciência.
-        </p>
-        
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 28px;">
-          <span class="chip" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2);"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--yellow);"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Psicologia ABA, TO, Fono &amp; Fisioterapia</span>
-          <span class="chip" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2);"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--teal);"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Recepção, Monitores &amp; Operacional</span>
-          <span class="chip" style="background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.2);"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--pink);"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Vagas CLT, PJ e Estágio</span>
-        </div>
-
-        <button type="button" onclick="openJobModal()" class="btn btn-pink" style="font-size: 1.08rem; padding: 16px 36px;">
-          Enviar meu currículo agora
-          <svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l5 5a1 1 0 010 1.414l-5 5a1 1 0 01-1.414-1.414L13.586 10H4a1 1 0 110-2h9.586l-3.293-3.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- GEO (Generative Engine Optimization) - MÉTRICAS E DADOS CERTIFICADOS DO ECOSSISTEMA -->
-  <section class="sec geo-metrics-block" id="geo-facts" style="padding: 50px 0; background: linear-gradient(180deg, rgba(46,207,181,0.06) 0%, rgba(240,25,107,0.04) 100%); border-top: 1px solid rgba(46,207,181,0.2); border-bottom: 1px solid rgba(240,25,107,0.15);">
-    <div class="wrap fx">
-      <div class="center" style="margin-bottom: 32px; text-align: center;">
-        <span class="eyebrow" style="background: rgba(46,207,181,0.18); color: var(--teal-dark);">📊 Resumo rápido</span>
-        <h2 class="sec-title" style="font-size: clamp(1.7rem, 3.4vw, 2.4rem);">FaçaAmigos em números</h2>
-        <p class="sec-sub" style="max-width: 44rem; margin: 8px auto 0;">Faixa etária, desconto inclusivo, fidelidade, horário e endereços: o essencial para planejar sua visita.</p>
+      <h2 class="sec-title sec-title-sm">Nossas Unidades em Belém</h2>
+      <p class="sec-sub"><b>Parque Shopping Belém (Playground &amp; Circuito):</b> Rod. Augusto Montenegro, 4300 · Térreo <i>(todos os dias, 10h-22h)</i></p>
+      <p class="sec-sub" style="margin-top: 4px;"><b>Shopping Bosque Grão-Pará (Playground):</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner <i>(Aberto · seg-sáb 10h-22h, dom 10h-21h)</i></p>
+      <p class="sec-sub" style="margin-top: 4px;"><b>Centro de Terapia Comportamental (Clínica):</b> Rua Boaventura da Silva, 1573 · Umarizal <i>(Em breve · IASEP &amp; PROASA)</i></p>
+      <div class="local-actions">
+        <a class="btn btn-ghost" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank"
+          rel="noopener">Traçar rota Parque Shopping</a>
+        <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving" target="_blank"
+          rel="noopener">Traçar rota Shopping Grão-Pará</a>
       </div>
 
-      <div class="geo-grid">
-        <div class="geo-card">
-          <div class="geo-icon">👶</div>
-          <div class="geo-val">0 a 12 anos</div>
-          <div class="geo-lbl">Faixa Etária Atendida</div>
-          <p class="geo-desc">Áreas e brinquedos setorizados especificamente para cada fase do desenvolvimento neurotípico e atípico.</p>
+      <!-- GEO: resumo rápido (speakable #geo-facts no JSON-LD). Recolhido por JS; sem JS fica aberto.
+           Não usar <details> aqui: o scripts/check.mjs conta todo <details><summary> como pergunta do FAQ. -->
+      <div class="geo-facts" id="geo-facts" data-section="geo-facts">
+        <div class="geo-facts-head">
+          <h3 class="geo-facts-title">Resumo rápido pra planejar a visita</h3>
+          <button type="button" class="btn btn-ghost btn-sm" id="geo-facts-toggle" aria-expanded="true" aria-controls="geo-facts-body" hidden>Ver resumo</button>
         </div>
+        <div class="geo-grid" id="geo-facts-body">
+          <div class="geo-card">
+            <div class="geo-icon">👶</div>
+            <div class="geo-val">0 a 12 anos</div>
+            <div class="geo-lbl">Faixa Etária Atendida</div>
+            <p class="geo-desc">Áreas e brinquedos setorizados especificamente para cada fase do desenvolvimento neurotípico e atípico.</p>
+          </div>
 
-        <div class="geo-card">
-          <div class="geo-icon">♿</div>
-          <div class="geo-val">R$ 50 / 30 min</div>
-          <div class="geo-lbl">Meia-entrada inclusiva PCD / autismo</div>
-          <p class="geo-desc">Válido para crianças atípicas mediante apresentação de laudo médico ou CIPTEA na recepção, com 1 acompanhante grátis.</p>
-        </div>
+          <div class="geo-card">
+            <div class="geo-icon">♿</div>
+            <div class="geo-val">R$ 50 / 30 min</div>
+            <div class="geo-lbl">Meia-entrada inclusiva PCD / autismo</div>
+            <p class="geo-desc">Válido para crianças atípicas mediante apresentação de laudo médico ou CIPTEA na recepção, com 1 acompanhante grátis.</p>
+          </div>
 
-        <div class="geo-card">
-          <div class="geo-icon">🎁</div>
-          <div class="geo-val">10ª entrada grátis</div>
-          <div class="geo-lbl">Programa de Fidelidade</div>
-          <p class="geo-desc">A cada 10 visitas registradas pelo CPF do responsável, a 10ª entrada de 30 minutos é 100% gratuita. Vale no Playground e no Circuito.</p>
-        </div>
+          <div class="geo-card">
+            <div class="geo-icon">🎁</div>
+            <div class="geo-val">10ª entrada grátis</div>
+            <div class="geo-lbl">Programa de Fidelidade</div>
+            <p class="geo-desc">A cada 10 visitas registradas pelo CPF do responsável, a 10ª entrada de 30 minutos é 100% gratuita. Vale no Playground e no Circuito.</p>
+          </div>
 
-        <div class="geo-card">
-          <div class="geo-icon">🕒</div>
-          <div class="geo-val">10h às 22h</div>
-          <div class="geo-lbl">Funcionamento Diário</div>
-          <p class="geo-desc">Aberto de segunda a domingo no Parque Shopping Belém. Atendimento contínuo e imediato sem necessidade de agendamento.</p>
-        </div>
+          <div class="geo-card">
+            <div class="geo-icon">🧠</div>
+            <div class="geo-val">100% Inclusivo</div>
+            <div class="geo-lbl">Suporte Sensorial Especializado</div>
+            <p class="geo-desc">Equipe treinada em acolhimento TEA, abafadores de ruído disponíveis e cantinho de descompressão para autorregulação.</p>
+          </div>
 
-        <div class="geo-card">
-          <div class="geo-icon">🧠</div>
-          <div class="geo-val">100% Inclusivo</div>
-          <div class="geo-lbl">Suporte Sensorial Especializado</div>
-          <p class="geo-desc">Equipe treinada em acolhimento TEA, abafadores de ruído disponíveis e cantinho de descompressão para autorregulação.</p>
-        </div>
-
-        <div class="geo-card">
-          <div class="geo-icon">📍</div>
-          <div class="geo-val">3 Unidades</div>
-          <div class="geo-lbl">Rede em Belém/PA</div>
-          <p class="geo-desc">Parque Shopping Belém (Playground &amp; Circuito), Bosque Grão-Pará (Playground) e Centro Clínico Umarizal (Em breve).</p>
+          <div class="geo-card">
+            <div class="geo-icon">📍</div>
+            <div class="geo-val">3 Unidades</div>
+            <div class="geo-lbl">Rede em Belém/PA</div>
+            <p class="geo-desc">Parque Shopping Belém (Playground &amp; Circuito), Bosque Grão-Pará (Playground) e Centro Clínico Umarizal (Em breve). Sem necessidade de agendamento no Playground e no Circuito.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- DÚVIDAS FREQUENTES (GEO-OPTIMIZED FAQ) -->
+  <!-- DÚVIDAS FREQUENTES (GEO-OPTIMIZED FAQ) — o texto precisa ser idêntico ao FAQPage do JSON-LD (scripts/check.mjs) -->
   <section class="sec" id="faq" style="padding: 40px 0 50px;">
     <div class="wrap fx">
-      <div class="center" style="text-align: center; margin-bottom: 32px;">
+      <div class="center" style="margin-bottom: 32px;">
         <span class="eyebrow" style="background: rgba(240,25,107,0.12); color: var(--pink);">❓ Perguntas Frequentes</span>
-        <h2 class="sec-title" id="faq-geo-title" style="font-size: clamp(1.6rem, 3.2vw, 2.2rem);">Dúvidas Frequentes sobre o FaçaAmigos</h2>
+        <h2 class="sec-title sec-title-sm" id="faq-geo-title">Dúvidas Frequentes sobre o FaçaAmigos</h2>
       </div>
 
       <div class="geo-faq-list">
-        <details class="geo-faq-item" open>
+        <details class="geo-faq-item">
           <summary>O que é o Ecossistema FaçaAmigos?</summary>
           <div class="geo-faq-ans">
             <div>O FaçaAmigos é um ecossistema infantil inclusivo de Belém/PA que une Clínica de Terapia Comportamental (ABA, TO, Fonoaudiologia e Psicopedagogia), Playground Adaptado e Circuito de Carrinhos Elétricos no Parque Shopping Belém.</div>
@@ -1443,22 +1266,6 @@
     </div>
   </section>
 
-  <!-- LOCALIZAÇÃO -->
-  <section class="local-block" id="local">
-    <div class="wrap fx">
-      <h2 class="sec-title" style="font-size: clamp(1.6rem, 3.2vw, 2.2rem);">Nossas Unidades em Belém</h2>
-      <p class="sec-sub"><b>Parque Shopping Belém (Playground &amp; Circuito):</b> Rod. Augusto Montenegro, 4300 · Térreo</p>
-      <p class="sec-sub" style="margin-top: 4px;"><b>Shopping Bosque Grão-Pará (Playground):</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner <i>(Aberto · seg-sáb 10h-22h, dom 10h-21h)</i></p>
-      <p class="sec-sub" style="margin-top: 4px;"><b>Centro de Terapia Comportamental (Clínica):</b> Rua Boaventura da Silva, 1573 · Umarizal <i>(Em breve · IASEP &amp; PROASA)</i></p>
-      <div style="margin-top: 20px;">
-        <a class="btn btn-ghost" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank"
-          rel="noopener">Traçar rota Parque Shopping</a>
-        <a class="btn btn-ghost" href="https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving" target="_blank"
-          rel="noopener">Traçar rota Shopping Grão-Pará</a>
-      </div>
-    </div>
-  </section>
-
   </main>
 
   <footer data-fa-footer="hub">
@@ -1495,7 +1302,7 @@
             <li><a href="/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=hub">E-book: O Brincar com Propósito</a></li>
             <li><a href="/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=hub">E-book: O Código do Desenvolvimento Infantil</a></li>
             <li><a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." target="_blank" rel="noopener">Fale conosco no WhatsApp</a></li>
-            <li><a href="#" onclick="openJobModal(); return false;">Venha fazer parte do nosso time</a></li>
+            <li><a href="/trabalhe-conosco">Trabalhe conosco</a></li>
             <li><a href="/politica-privacidade">Política de Privacidade</a></li>
             <li><a href="/termos">Termos de Uso e de Compra</a></li>
           </ul>
@@ -1533,177 +1340,30 @@
       els.forEach(function (el) { io.observe(el); });
     })();
   </script>
-  <!-- Modal: Venha Fazer Parte do Nosso Time -->
-  <div class="modal-overlay" id="jobModalOverlay" onclick="if(event.target===this) closeJobModal()">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="jobModalTitle">
-      <button type="button" class="modal-close" onclick="closeJobModal()" aria-label="Fechar">✕</button>
-      <h3 id="jobModalTitle">Venha fazer parte do nosso time</h3>
-      <p>Preencha seus dados e envie seu currículo em PDF. Nosso time de RH vai analisar sua candidatura.</p>
-      <form id="job-form">
-        <div class="form-group"><input type="text" id="job-nome" class="form-control" placeholder="Nome completo"
-            required></div>
-        <div class="form-group"><input type="email" id="job-email" class="form-control" placeholder="E-mail" required>
-        </div>
-        <div class="form-group"><input type="tel" id="job-telefone" class="form-control" placeholder="WhatsApp"
-            required></div>
-        <div class="form-group">
-          <input type="text" id="job-curso" class="form-control" list="job-curso-sugestoes"
-            placeholder="Curso / Formação (ex: Psicologia, Terapia Ocupacional...)">
-          <datalist id="job-curso-sugestoes">
-            <option value="Psicologia">
-            <option value="Terapia Ocupacional">
-            <option value="Fisioterapia">
-            <option value="Nutrição">
-            <option value="Fonoaudiologia">
-            <option value="Psicopedagogia">
-            <option value="Pedagogia">
-            <option value="Musicoterapia">
-            <option value="Neuropsicologia">
-            <option value="Educação Física">
-            <option value="Enfermagem">
-            <option value="Técnico(a) de Enfermagem">
-            <option value="Administração">
-            <option value="Recursos Humanos">
-            <option value="Marketing / Comunicação">
-            <option value="Serviço Social">
-            <option value="Medicina / Psiquiatria">
-          </datalist>
-        </div>
-        <div class="form-group">
-          <select id="job-area" class="form-control" required>
-            <option value="" disabled selected>Área pretendida / Função</option>
-            <optgroup label="Saúde & Terapias (Clínica)">
-              <option value="PSICOLOGIA">Psicologia / Aplicador(a) ABA</option>
-              <option value="TERAPIA_OCUPACIONAL">Terapia Ocupacional</option>
-              <option value="FONOAUDIOLOGIA">Fonoaudiologia</option>
-              <option value="FISIOTERAPIA">Fisioterapia</option>
-              <option value="NUTRICAO">Nutrição</option>
-              <option value="PSICOPEDAGOGIA">Psicopedagogia / Pedagogia</option>
-              <option value="MUSICOTERAPIA">Musicoterapia</option>
-              <option value="ENFERMAGEM">Enfermagem / Técnico(a)</option>
-              <option value="SUPERVISAO_CLINICA">Coordenação / Supervisão Clínica</option>
-            </optgroup>
-            <optgroup label="Operacional (Playground / Circuito / Recepção)">
-              <option value="RECEPCAO">Recepção / Atendimento ao Cliente</option>
-              <option value="MONITOR">Monitor(a) de Brincadeiras / Recreação</option>
-              <option value="VENDEDOR">Vendedor(a) / Comercial</option>
-              <option value="CAIXA">Operador(a) de Caixa</option>
-              <option value="SERVICOS_GERAIS">Serviços Gerais / Limpeza</option>
-              <option value="LIDERANCA">Liderança / Supervisão Operacional</option>
-            </optgroup>
-            <optgroup label="Corporativo & Administrativo">
-              <option value="RH">Recursos Humanos</option>
-              <option value="ADMINISTRATIVO">Administração / Financeiro</option>
-              <option value="MARKETING">Marketing / Design</option>
-            </optgroup>
-            <option value="OUTRA">Outra Área / Função</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <select id="job-unidade" class="form-control" required>
-            <option value="" disabled selected>Unidade de preferência</option>
-            <option value="PARQUE_SHOPPING">Parque Shopping Belém (Playground/Circuito)</option>
-            <option value="BOSQUE_GRAO_PARA">Shopping Bosque Grão-Pará (Playground)</option>
-            <option value="CLINICA_FATIMA">Centro de Terapia Comportamental (Clínica Umarizal - Inauguração)</option>
-            <option value="AMBAS">Qualquer unidade / Sem preferência</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <select id="job-tipo" class="form-control" required>
-            <option value="" disabled selected>Tipo de oportunidade</option>
-            <option value="REMUNERADO">CLT</option>
-            <option value="PJ">Prestador de Serviço (PJ)</option>
-            <option value="ESTAGIO">Estágio</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="job-curriculo" class="form-label">Currículo (PDF, até 5MB)</label>
-          <input type="file" id="job-curriculo" class="form-control" accept="application/pdf" required>
-        </div>
-        <p style="font-size: 0.78rem; font-weight: 700; color: var(--ink-soft, #556b63); margin-bottom: 14px;">Ao enviar, você
-          concorda com o uso dos seus dados para o processo seletivo, conforme a <a href="/politica-privacidade"
-            target="_blank" style="color: var(--teal-dark, #1f917f);">Política de Privacidade</a>.</p>
-        <div id="job-form-error" class="form-error"></div>
-        <button type="submit" id="job-form-submit" class="btn btn-pink" style="width: 100%;">Enviar candidatura</button>
-      </form>
-    </div>
-  </div>
-
   <script>
-    // Modal: Venha Fazer Parte do Nosso Time
-    function openJobModal() { document.getElementById('jobModalOverlay').classList.add('active'); }
-    function closeJobModal() { document.getElementById('jobModalOverlay').classList.remove('active'); }
-
+    // Botões de triagem do hero (e qualquer [data-cta] da home): cta_click com cta_location, no mesmo formato do fa-cta.js.
     (function () {
-      var jobForm = document.getElementById('job-form');
-      if (!jobForm) return;
-      jobForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        var errorBox = document.getElementById('job-form-error');
-        var submitBtn = document.getElementById('job-form-submit');
-        var resumeInput = document.getElementById('job-curriculo');
-        errorBox.style.display = 'none';
-
-        var resumeFile = resumeInput.files[0];
-        if (!resumeFile || resumeFile.type !== 'application/pdf') {
-          errorBox.textContent = 'Selecione um currículo em PDF.';
-          errorBox.style.display = 'block';
-          return;
-        }
-        if (resumeFile.size > 5 * 1024 * 1024) {
-          errorBox.textContent = 'O currículo deve ter até 5MB.';
-          errorBox.style.display = 'block';
-          return;
-        }
-
-        var formData = new FormData();
-        formData.append('full_name', document.getElementById('job-nome').value);
-        formData.append('email', document.getElementById('job-email').value);
-        formData.append('phone', document.getElementById('job-telefone').value);
-        formData.append('course', document.getElementById('job-curso').value);
-        formData.append('preferred_unit', document.getElementById('job-unidade') ? document.getElementById('job-unidade').value : '');
-        formData.append('desired_area', document.getElementById('job-area').value);
-        formData.append('opportunity_type', document.getElementById('job-tipo').value);
-        formData.append('resume', resumeFile);
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-
-        var supabaseKey = (typeof window !== 'undefined' && window.VITE_SUPABASE_PUBLISHABLE_KEY) ? window.VITE_SUPABASE_PUBLISHABLE_KEY : '';
-        fetch('https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/job-application-webhook', {
-          method: 'POST',
-          headers: supabaseKey ? { 'Authorization': 'Bearer ' + supabaseKey } : {},
-          body: formData
-        })
-          .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
-          .then(function (r) {
-            if (!r.ok) throw new Error(r.data.error || 'Falha ao enviar candidatura');
-            if (window.faTrack) window.faTrack('job_application_submit', { pagina: location.pathname });
-            var sentEmail = document.getElementById('job-email').value.trim();
-            jobForm.innerHTML = '<div style="text-align:center; padding: 10px 0;">' +
-              '<h4 style="color:var(--dark, #1a3f35); margin-bottom:12px; font-family:\'Fredoka One\',sans-serif; font-size:1.3rem;">Currículo enviado com sucesso!</h4>' +
-              '<p style="color:var(--ink-soft, #556b63); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Agradecemos por querer fazer parte do Instituto Faça Amigos. Recebemos sua candidatura.</p>' +
-              '<p style="color:var(--ink-soft, #556b63); font-weight:600; font-size:0.95rem; margin-bottom:10px;">Fique atento(a) ao seu e-mail <strong id="job-sent-email" style="word-break:break-all;"></strong>: em alguns minutos você vai receber o link do nosso <strong>teste de perfil comportamental</strong>. Responda em até 7 dias para seguir no processo seletivo.</p>' +
-              '<p style="color:var(--ink-soft, #556b63); font-size:0.85rem;">Não encontrou? Confira as pastas de spam e promoções.</p></div>';
-            // textContent, não innerHTML: o e-mail vem do campo digitado.
-            document.getElementById('job-sent-email').textContent = sentEmail;
-          })
-          .catch(function (err) {
-            var errorMsg = err.message || '';
-            if (errorMsg.toLowerCase().includes('failed to fetch')) {
-              errorMsg = 'Não foi possível enviar seu currículo no momento. Verifique sua conexão e tente novamente.';
-            } else {
-              errorMsg = errorMsg || 'Não foi possível enviar sua candidatura. Tente novamente.';
-            }
-            errorBox.textContent = errorMsg;
-            errorBox.style.display = 'block';
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Enviar candidatura';
-          });
+      document.querySelectorAll('a[data-cta]').forEach(function (a) {
+        a.addEventListener('click', function () {
+          if (window.faTrack) window.faTrack('cta_click', { cta_location: a.getAttribute('data-cta'), destino: a.getAttribute('data-destino') || '', pagina: location.pathname });
+        });
       });
     })();
+    // Resumo rápido (#geo-facts): recolhido por padrão; sem JS continua aberto.
+    (function () {
+      var btn = document.getElementById('geo-facts-toggle');
+      var body = document.getElementById('geo-facts-body');
+      if (!btn || !body) return;
+      function set(open) {
+        body.hidden = !open;
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        btn.textContent = open ? 'Fechar resumo' : 'Ver resumo';
+      }
+      btn.hidden = false;
+      set(false);
+      btn.addEventListener('click', function () { set(body.hidden); });
+    })();
   </script>
-  <script src="/assets/fa-modal.js" defer></script>
   <script>
     // Próximos encontros (eventos-public: só contagens, nenhum dado pessoal). Seção e link do menu só aparecem com evento publicado.
     (function () {

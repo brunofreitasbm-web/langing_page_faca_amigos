@@ -79,6 +79,11 @@
     .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
     .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; }
     .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
+    @media (max-width: 640px) {
+      .topbar .wrap { height: auto; min-height: 0; padding-top: 8px; padding-bottom: 0; row-gap: 2px; }
+      .tnav { justify-content: space-between; gap: 0; flex-wrap: nowrap; margin: 0 -8px; width: calc(100% + 16px); }
+      .tnav a { font-size: .88rem; padding: 0 8px; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; }
+    }
 
     /* Hero do evento */
     .hero { padding: 40px 0 44px; }
@@ -161,11 +166,11 @@
   <div class="topbar">
     <div class="wrap">
       <a href="/" aria-label="Instituto FaçaAmigos, início"><img src="/img/guia/logo-branca.png" alt="FaçaAmigos" width="150" height="26"></a>
-      <nav class="tnav" aria-label="Seções do site">
-        <a href="/servicos">Serviços</a>
+      <nav class="tnav" aria-label="Áreas do site">
+        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="/servicos">Clínica</a>
+        <a href="/aprender">Para pais</a>
         <a href="/eventos" aria-current="page">Eventos</a>
-        <a href="/aprender">Aprender</a>
-        <a href="/teste?utm_source=site&amp;utm_medium=nav&amp;utm_campaign=evento">Mapeamento grátis</a>
       </nav>
     </div>
   </div>
