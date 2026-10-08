@@ -2,6 +2,10 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/playground/politica-privacidade", "destination": "/politica-privacidade", "permanent": true },
+    { "source": "/playground/politica-privacidade.html", "destination": "/politica-privacidade", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/eventos/:slug", "destination": "/evento" }
   ],
