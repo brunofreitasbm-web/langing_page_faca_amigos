@@ -10,7 +10,7 @@
 
   // ---- Status das unidades (editar aqui quando abrir) ----
   var CLINICA_STATUS = 'Clínica · Em breve · IASEP &amp; PROASA';
-  var GRAOPARA_STATUS = 'Playground - Em Breve';
+  var GRAOPARA_STATUS = 'Playground · Aberto · 1º piso, em frente à Renner';
 
   // ---- Números de WhatsApp ----
   var WA_CLINICA = '5591991782027';

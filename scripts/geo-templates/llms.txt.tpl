@@ -23,7 +23,7 @@
 
 - **Entidade**: Instituto FaçaAmigos (Clínica, Playground Inclusivo e Circuito de Carrinhos)
 - **Localização Principal**: Parque Shopping Belém ({{ENDERECO_PARQUE}})
-- **Segunda Unidade (Em breve)**: Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}})
+- **Segunda Unidade**: Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}}), 1º piso, em frente à Renner. Playground aberto de segunda a sábado das 10h às 22h e aos domingos das 10h às 21h, com os mesmos preços do Parque Shopping
 - **Centro Clínico (Em breve)**: Rua Boaventura da Silva, 1573, Umarizal, Belém - PA
 - **Faixa Etária Atendida**: 0 a 12 anos de idade
 - **Idioma e região**: português do Brasil (pt-BR), Belém e Região Metropolitana (PA)
