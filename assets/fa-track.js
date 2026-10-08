@@ -9,9 +9,10 @@
  *     01/10/2026 com o projeto novo yr8qq61339; o Contentsquare continua removido.)
  *  2. Origem do visitante: guarda a primeira origem (utm_*, gclid, fbclid, src, sck, referrer) e a mais recente,
  *     num cookie do domínio raiz — assim ela sobrevive ao salto entre o hub e o subdomínio do playground.
- *     Links internos deixam de sobrescrever a origem real (ex.: o banner do hub não vira "site").
+ *     Links internos não levam UTM (a origem real fica no cookie; UTM interno abriria sessão nova no GA4).
  *     window.faOrigin() devolve a origem para os formulários.
- *  3. Eventos: whatsapp_click, begin_checkout (Hotmart), file_download, scroll_depth 50/90.
+ *  3. Eventos: whatsapp_click, begin_checkout (Hotmart), file_download, scroll_depth 50/90 e cta_click nos
+ *     links internos marcados com data-fa-link="<onde>" (substitui os antigos ?utm_source=site&utm_medium=...).
  *  4. client_id do GA4 até o checkout: guia.html/codigo.html pegam o xcod de faOrigin() e mandam junto no link
  *     da Hotmart. O hotmart-webhook lê de volta e manda a compra pro GA4 via Measurement Protocol — sem isso,
  *     nenhuma venda aparecia ligada à campanha que trouxe a pessoa.
@@ -188,6 +189,8 @@
     var found = {};
     var has = false;
     PARAMS.forEach(function (p) { var v = q.get(p); if (v) { found[p] = v.slice(0, 120); has = true; } });
+    // utm_source=site era o UTM dos links internos (removido em 10/2026); links velhos em cache não viram origem.
+    if (found.utm_source === 'site') { found = {}; has = false; }
     var stored = {};
     try { stored = JSON.parse(readOrigin() || '{}') || {}; } catch (e) { stored = {}; }
 
@@ -262,30 +265,6 @@
     };
   };
 
-  // Links internos: leva a origem real adiante em vez de deixar o banner sobrescrever com utm_source=site.
-  function carryOrigin(a) {
-    var u;
-    try { u = new URL(a.href, window.location.href); } catch (e) { return; }
-    if (!isInternalHost(u.hostname) && u.hostname !== window.location.hostname) return;
-    if (/\.(pdf|jpe?g|png|webp|mp4)$/i.test(u.pathname)) return;
-    var o = window.faOrigin();
-    if (!o.utm_source) return; // visita direta: não inventa origem nos links
-    var oldSource = u.searchParams.get('utm_source');
-    var oldMedium = u.searchParams.get('utm_medium');
-    var oldCampaign = u.searchParams.get('utm_campaign');
-    if (oldSource && !u.searchParams.get('utm_content') && oldSource === 'site') {
-      // Guarda o "onde clicou" dentro do site em utm_content, em vez de perder.
-      u.searchParams.set('utm_content', [oldMedium, oldCampaign].filter(Boolean).join('_'));
-    }
-    ['utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid'].forEach(function (k) {
-      if (o[k] && (!u.searchParams.get(k) || (oldSource === 'site' && k.indexOf('utm_') === 0 && k !== 'utm_content'))) {
-        u.searchParams.set(k, o[k]);
-      }
-    });
-    if (o.utm_term && !u.searchParams.get('utm_term')) u.searchParams.set('utm_term', o.utm_term);
-    a.href = u.toString();
-  }
-
   // ---------- eventos por delegação ----------
   function sectionOf(el) {
     var s = el.closest('section[id], [data-section], footer, header, nav');
@@ -297,7 +276,12 @@
     if (!a) return;
     var href = a.getAttribute('href') || '';
 
-    carryOrigin(a);
+    // Links internos sem UTM: o "onde clicou" vai como evento. A origem real já está no cookie fa_origin.
+    var linkId = a.getAttribute('data-fa-link');
+    if (linkId) {
+      track('cta_click', { cta_location: linkId, destino: a.pathname, pagina: window.location.pathname, secao: sectionOf(a) });
+      return;
+    }
 
     var wa = href.match(/(?:wa\.me\/|phone=)(\d{10,15})/);
     if (wa) {

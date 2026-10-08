@@ -101,7 +101,7 @@ flowchart LR
 
 ## 5. Arquivos técnicos e de descoberta
 
-`robots.txt`, `robots-gestao.txt` (host gestao.), `sitemap.xml`, `llms.txt`, `llms-full.txt`, `geo-facts.json`
+`robots.txt`, `robots-gestao.txt` (host gestao.), `sitemap.xml` (só URLs do hub), `sitemap-playground.xml` (servido como /sitemap.xml no host playground.), `llms.txt`, `llms-full.txt`, `geo-facts.json`
 (fatos do quiosque para IAs), `site.webmanifest`, `favicon.ico`, `apple-touch-icon.png`,
 `google877c2b37d3c979fb.html` (verificação do Search Console).
 

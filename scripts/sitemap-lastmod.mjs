@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Atualiza os <lastmod> do sitemap.xml a partir do git (sem dependências, Node 18+).
+// Atualiza os <lastmod> do sitemap.xml e do sitemap-playground.xml a partir do git (sem dependências, Node 18+).
 //   node scripts/sitemap-lastmod.mjs            reescreve o sitemap.xml
 //   node scripts/sitemap-lastmod.mjs --check    só confere (código 1 se algum lastmod estiver defasado)
 //
@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const sitemapPath = join(root, 'sitemap.xml');
+const SITEMAPS = ['sitemap.xml', 'sitemap-playground.xml'];
 const checkOnly = process.argv.includes('--check');
 
 const git = (args) => execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
@@ -39,37 +39,42 @@ function dataDoArquivo(arq) {
   return git(['log', '-1', '--format=%cs', '--', arq]) || hoje();
 }
 
-let xml = readFileSync(sitemapPath, 'utf8');
 let defasados = 0;
 let semArquivo = 0;
+const novos = new Map();
 
-xml = xml.replace(/<url>[\s\S]*?<\/url>/g, (bloco) => {
-  const loc = /<loc>([^<]+)<\/loc>/.exec(bloco)?.[1]?.trim();
-  if (!loc) return bloco;
-  const arq = arquivoDaUrl(loc);
-  if (!existsSync(join(root, arq))) {
-    console.warn(`AVISO: ${loc} aponta para ${arq}, que não existe.`);
-    semArquivo++;
-    return bloco;
-  }
-  const nova = dataDoArquivo(arq);
-  const atual = /<lastmod>([^<]*)<\/lastmod>/.exec(bloco)?.[1];
-  if (atual !== nova) {
-    defasados++;
-    console.log(`${loc}: ${atual ?? '(sem lastmod)'} -> ${nova}  [${arq}]`);
-  }
-  if (/<lastmod>/.test(bloco)) return bloco.replace(/<lastmod>[^<]*<\/lastmod>/, `<lastmod>${nova}</lastmod>`);
-  return bloco.replace('</loc>', `</loc>\n    <lastmod>${nova}</lastmod>`);
-});
+for (const nome of SITEMAPS) {
+  const sitemapPath = join(root, nome);
+  const antes = readFileSync(sitemapPath, 'utf8');
+  const xml = antes.replace(/<url>[\s\S]*?<\/url>/g, (bloco) => {
+    const loc = /<loc>([^<]+)<\/loc>/.exec(bloco)?.[1]?.trim();
+    if (!loc) return bloco;
+    const arq = arquivoDaUrl(loc);
+    if (!existsSync(join(root, arq))) {
+      console.warn(`AVISO: ${loc} aponta para ${arq}, que não existe.`);
+      semArquivo++;
+      return bloco;
+    }
+    const nova = dataDoArquivo(arq);
+    const atual = /<lastmod>([^<]*)<\/lastmod>/.exec(bloco)?.[1];
+    if (atual !== nova) {
+      defasados++;
+      console.log(`${loc}: ${atual ?? '(sem lastmod)'} -> ${nova}  [${arq}]`);
+    }
+    if (/<lastmod>/.test(bloco)) return bloco.replace(/<lastmod>[^<]*<\/lastmod>/, `<lastmod>${nova}</lastmod>`);
+    return bloco.replace('</loc>', `</loc>\n    <lastmod>${nova}</lastmod>`);
+  });
+  if (xml !== antes) novos.set(sitemapPath, xml);
+}
 
 if (checkOnly) {
-  console.log(defasados ? `${defasados} lastmod defasado(s).` : 'sitemap.xml em dia.');
+  console.log(defasados ? `${defasados} lastmod defasado(s).` : 'Sitemaps em dia.');
   process.exit(defasados ? 1 : 0);
 }
 if (defasados) {
-  writeFileSync(sitemapPath, xml);
-  console.log(`sitemap.xml atualizado (${defasados} lastmod).`);
+  for (const [caminho, xml] of novos) writeFileSync(caminho, xml);
+  console.log(`Sitemaps atualizados (${defasados} lastmod).`);
 } else {
-  console.log('sitemap.xml já estava em dia.');
+  console.log('Sitemaps já estavam em dia.');
 }
 process.exit(semArquivo ? 1 : 0);
