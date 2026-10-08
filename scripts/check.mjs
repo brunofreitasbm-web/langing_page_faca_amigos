@@ -455,17 +455,23 @@ if (nomesOrganization.size > 1) {
 
 // ---------- verificação global: sitemap.xml e robots.txt ----------
 {
-  const sitemapPath = join(root, 'sitemap.xml');
-  if (!existsSync(sitemapPath)) {
-    globais.erros.push('sitemap.xml não existe.');
-  } else {
-    const locs = new Set([...read('sitemap.xml').matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map((m) => m[1]));
-    for (const [arq, canon] of canonicais) {
-      if (!locs.has(canon)) globais.erros.push(`${arq}: canonical ${canon} não está no sitemap.xml.`);
+  // Um sitemap por host: o playground. serve o sitemap-playground.xml em /sitemap.xml (middleware.js).
+  const SITEMAPS = { 'sitemap.xml': HUB, 'sitemap-playground.xml': PLAY };
+  const locs = new Set();
+  for (const [nome, host] of Object.entries(SITEMAPS)) {
+    if (!existsSync(join(root, nome))) { globais.erros.push(`${nome} não existe.`); continue; }
+    for (const m of read(nome).matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)) {
+      const loc = m[1];
+      locs.add(loc);
+      if (new URL(loc).hostname !== host) globais.erros.push(`${nome} lista ${loc}, que não é do host ${host}.`);
+      if (/\.[a-z0-9]+$/i.test(new URL(loc).pathname)) globais.erros.push(`${nome} lista ${loc}, que não é página HTML.`);
     }
-    for (const canon of noindexCanonicals) {
-      if (locs.has(canon)) globais.erros.push(`sitemap.xml lista ${canon}, que é noindex.`);
-    }
+  }
+  for (const [arq, canon] of canonicais) {
+    if (!locs.has(canon)) globais.erros.push(`${arq}: canonical ${canon} não está em nenhum sitemap.`);
+  }
+  for (const canon of noindexCanonicals) {
+    if (locs.has(canon)) globais.erros.push(`sitemap lista ${canon}, que é noindex.`);
   }
   if (!existsSync(join(root, 'robots.txt'))) {
     globais.erros.push('robots.txt não existe.');

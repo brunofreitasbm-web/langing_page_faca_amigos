@@ -380,7 +380,7 @@
         text('ev-quando', fmtData(ev.inicio) + ', das ' + fmtHora(ev.inicio) + ' às ' + fmtHora(ev.fim) + ' (horário de Belém)');
         text('ev-onde', ev.formato === 'online' ? 'Online · o link chega no seu ingresso após a confirmação' : [ev.local_nome, ev.local_endereco].filter(Boolean).join(' · ') || 'Belém/PA');
         if (ev.palestrante_nome) { text('ev-quem', ev.palestrante_nome); show('ev-quem-wrap', true); }
-        if (ev.capa_url) { $('ev-capa').src = ev.capa_url; show('ev-capa-wrap', true); }
+        if (ev.capa_url) { $('ev-capa').src = ev.capa_url; $('ev-capa').alt = ev.titulo || ''; show('ev-capa-wrap', true); }
         if (ev.promessa) { text('ev-promessa', ev.promessa); show('ev-promessa-wrap', true); }
         $('ev-beneficios').innerHTML = (ev.beneficios || []).map(function (b) { return '<li>' + esc(b) + '</li>'; }).join('');
         if (ev.para_quem || ev.nao_e_para) {
@@ -395,7 +395,7 @@
             show('ev-palestrante', true);
             text('ev-palestrante-nome', ev.palestrante_nome);
             text('ev-palestrante-bio', ev.palestrante_bio || '');
-            if (ev.palestrante_foto_url) { $('ev-palestrante-foto').src = ev.palestrante_foto_url; show('ev-palestrante-foto', true); }
+            if (ev.palestrante_foto_url) { $('ev-palestrante-foto').src = ev.palestrante_foto_url; $('ev-palestrante-foto').alt = 'Foto de ' + ev.palestrante_nome; show('ev-palestrante-foto', true); }
           }
         }
         var tipos = ev.tipos || [];

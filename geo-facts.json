@@ -23,7 +23,11 @@
       "hours": {
         "open": "10:00",
         "close": "22:00",
-        "days": "todos os dias"
+        "days": "segunda a sábado",
+        "sunday": {
+          "open": "10:00",
+          "close": "21:00"
+        }
       },
       "discounts": {
         "geral_pct": 40,

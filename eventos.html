@@ -220,7 +220,7 @@
         <div id="lista-vazia" class="empty" hidden>
           <h3>Nenhum encontro com inscrições abertas agora</h3>
           <p>Os próximos são anunciados primeiro para quem já participou e para quem faz o mapeamento gratuito. Enquanto isso, o mapeamento leva 5 minutos e já chega com um retrato para você.</p>
-          <a class="btn-buy" href="/teste?utm_source=site&amp;utm_medium=eventos&amp;utm_campaign=sem_eventos">Fazer o mapeamento grátis</a>
+          <a data-fa-link="eventos_sem_eventos" class="btn-buy" href="/teste">Fazer o mapeamento grátis</a>
         </div>
       </div>
     </section>
@@ -287,7 +287,7 @@
       }
       function card(ev) {
         var capa = ev.capa_url
-          ? '<img class="capa" src="' + esc(ev.capa_url) + '" alt="" loading="lazy" decoding="async">'
+          ? '<img class="capa" src="' + esc(ev.capa_url) + '" alt="' + esc(ev.titulo) + '" loading="lazy" decoding="async">'
           : '<div class="capa placeholder" aria-hidden="true">' + (ev.categoria === 'treinamento' ? '🎓' : (ev.categoria === 'reuniao' ? '🤝' : '🎤')) + '</div>';
         var local = ev.formato === 'online' ? 'Online' : (ev.local_nome || 'Belém/PA');
         var preco = (ev.tipos || []).some(function (t) { return t.tipo === 'gratuito'; }) ? 'Gratuito' : ((ev.tipos || []).map(function (t) { return t.preco_exibicao; }).filter(Boolean)[0] || 'Pago');

@@ -196,6 +196,8 @@ export default async function middleware(request) {
     if (host === PLAYGROUND_HOST) {
       if (path === "/") return rewrite(new URL("/playground", request.url));
       if (path === "/playground") return Response.redirect(`https://${PLAYGROUND_HOST}/${url.search}`, 308);
+      // Sitemap próprio do playground. (o sitemap.xml do hub só lista URLs do hub).
+      if (path === "/sitemap.xml") return rewrite(new URL("/sitemap-playground.xml", request.url));
       if (path === "/circuito" || isFile(path)) return next();
       return Response.redirect(`https://${HUB_HOST}${path}${url.search}`, 308);
     }
