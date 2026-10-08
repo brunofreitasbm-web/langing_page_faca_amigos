@@ -40,7 +40,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 | **Horário de Funcionamento** | Todos os dias, das {{HORARIO}} |
 | **Melhor Horário Sensorial** | 10h às 16h (Horário Inclusivo, todos os dias) |
 | **Endereço Operacional 1** | Parque Shopping Belém — {{ENDERECO_PARQUE}} |
-| **Endereço Operacional 2** | Shopping Bosque Grão-Pará — {{ENDERECO_BOSQUE}} (Em Breve) |
+| **Endereço Operacional 2** | Shopping Bosque Grão-Pará — {{ENDERECO_BOSQUE}}, 1º piso, em frente à Renner. Seg-sáb 10h às 22h, domingo 10h às 21h (Aberto) |
 | **Endereço Clínico** | Rua Boaventura da Silva, 1573 — Umarizal, Belém - PA, CEP 66060-147 (Em Breve) |
 
 ---
@@ -83,7 +83,7 @@ R: Não. O atendimento no Playground e no Circuito é feito por ordem de chegada
 R: Crianças a partir de 3 anos recebem uma pulseira de identificação vinculada ao responsável cadastrado na entrada. A liberação na saída ocorre mediante validação presencial do mesmo responsável.
 
 #### Q4: Onde ficam as unidades e qual o horário?
-R: O Playground e o Circuito funcionam no Parque Shopping Belém ({{ENDERECO_PARQUE}}), Térreo, próximo às Lojas Americanas, todos os dias das {{HORARIO}}. O Playground também abrirá no Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}}) e a Clínica ficará na Rua Boaventura da Silva, 1573, Umarizal. As duas últimas unidades estão em breve.
+R: O Playground e o Circuito funcionam no Parque Shopping Belém ({{ENDERECO_PARQUE}}), Térreo, próximo às Lojas Americanas, todos os dias das {{HORARIO}}. O Playground também funciona no Shopping Bosque Grão-Pará ({{ENDERECO_BOSQUE}}), 1º piso, em frente à Renner, de segunda a sábado das 10h às 22h e aos domingos das 10h às 21h, com os mesmos preços. A Clínica ficará na Rua Boaventura da Silva, 1573, Umarizal, e está em breve.
 
 #### Q5: Qual o melhor horário para crianças com sensibilidade sensorial?
 R: O Horário Inclusivo, todos os dias das 10h às 16h, tem som mais baixo, menos lotação e equipe reforçada. É o horário indicado para a primeira visita.
