@@ -124,7 +124,7 @@ Funções: `behavior-test-webhook`, `behavior-test-admin`, `guia-sequence`, `hot
 
 - 08/10/2026: o formulário "Trabalhe Conosco" saiu dos modais (`#jobModalOverlay`) do playground e do circuito e virou a
   página `/trabalhe-conosco`. Os links do playground/circuito e do rodapé (`fa-footer.js`) apontam para
-  `https://institutofacaamigos.com.br/trabalhe-conosco`. `assets/fa-modal.js` só continua em uso enquanto alguma página ainda tiver modal.
+  `https://institutofacaamigos.com.br/trabalhe-conosco`. `assets/fa-modal.js` foi removido (nenhuma página tem mais modal).
 
 - `npm run geo:check` acusa `llms.txt` e `llms-full.txt` divergentes do preço atual do quiosque. Rodar `npm run geo`,
   revisar o diff e commitar.

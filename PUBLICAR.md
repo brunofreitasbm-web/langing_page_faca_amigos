@@ -229,7 +229,6 @@ Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e
 | `fa-track.js` | GTM/GA4/Clarity/Contentsquare com consentimento, origem do visitante, eventos |
 | `fa-footer.js` | Rodapé único (status das unidades e CNPJs numa constante só: virar "Clínica aberta" = 1 edição) |
 | `fa-cta.js` | Barra de ação fixa no celular (hub, /playground, /circuito) |
-| `fa-modal.js` | Acessibilidade do modal de vagas (rótulos, foco, Esc) |
 
 Cache de `/assets/*` é de 1 dia: depois de mudar um deles, o visitante recebe a versão nova em até 24 h.
 
