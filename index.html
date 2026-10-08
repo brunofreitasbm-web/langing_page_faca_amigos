@@ -329,7 +329,7 @@
           "name": "O playground FaçaAmigos é adaptado para autismo (TEA) e crianças atípicas?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Sim! O espaço é 100% inclusivo, contando com monitores treinados em acolhimento neurodivergente, cantinho de descompressão e abafadores de ruído disponíveis gratuitamente. Apresentando CIPTEA ou laudo, a criança paga a meia-entrada inclusiva (R$ 50 os 30 minutos, contra R$ 60 do público geral) e 1 acompanhante entra grátis."
+            "text": "Sim! O espaço é 100% inclusivo, contando com mediadores treinados em acolhimento neurodivergente, cantinho de descompressão e abafadores de ruído disponíveis gratuitamente. Apresentando CIPTEA ou laudo, a criança paga a meia-entrada inclusiva (R$ 50 os 30 minutos, contra R$ 60 do público geral) e 1 acompanhante entra grátis."
           }
         },
         {
@@ -671,6 +671,66 @@
       .btn, .lazer-photo img { transition: none; }
     }
 
+    /* Jornada da família — 4 paradas (brincar, observar, entender, cuidar). Linha e nós animam uma vez ao entrar na tela;
+       sem JS ou com movimento reduzido, tudo aparece já desenhado. */
+    .jornada { padding: 40px 0 14px; }
+    .jornada-head { text-align: center; max-width: 40rem; margin: 0 auto 26px; }
+    .jornada-head p { color: var(--ink-soft); font-weight: 700; }
+    .j-track { height: 70px; position: relative; }
+    .j-track svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+    .j-path-bg { fill: none; stroke: rgba(26, 63, 53, 0.12); stroke-width: 3; }
+    .j-path-draw { fill: none; stroke: url(#j-grad); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+    .j-stops { list-style: none; margin: -63px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .j-stop { display: grid; gap: 12px; align-content: start; min-width: 0; }
+    .j-node {
+      width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; justify-self: center;
+      background: var(--white); border: 3px solid var(--c); color: var(--c); box-shadow: var(--shadow-sm); position: relative; z-index: 1;
+    }
+    .j-node svg { width: 26px; height: 26px; }
+    .j-card { background: var(--white); border-radius: 20px; padding: 18px; border: 1px solid rgba(26, 63, 53, 0.08); box-shadow: var(--shadow-sm); display: grid; gap: 8px; align-content: start; min-width: 0; }
+    .j-tag { font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c); }
+    .j-card h3 { font-size: 1.15rem; line-height: 1.25; margin: 0; }
+    .j-card dl { margin: 0; display: grid; gap: 6px; font-size: 0.9rem; }
+    .j-card dl div { display: grid; gap: 1px; }
+    .j-card dt { font-size: 0.66rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+    .j-card dd { margin: 0; font-weight: 700; min-width: 0; }
+    .j-cta {
+      display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 18px; margin-top: 4px;
+      border-radius: 9999px; background: var(--c); color: #fff; font-weight: 900; font-size: 0.92rem; justify-self: start; text-align: center;
+    }
+    .j-cta:focus-visible { outline: 3px solid var(--dark); outline-offset: 2px; }
+    .j-1 { --c: var(--pink-dark); }
+    .j-2 { --c: #7C4DDB; }
+    .j-3 { --c: #8A6A00; }
+    .j-4 { --c: var(--teal-dark); }
+    .j-note { text-align: center; margin: 22px auto 0; font-weight: 800; color: var(--ink-soft); max-width: 36rem; }
+    .j-note strong { color: var(--dark); }
+
+    .jornada.anim:not(.play) .j-path-draw { stroke-dashoffset: 1; }
+    .jornada.anim:not(.play) .j-node { opacity: 0; transform: scale(0.7); }
+    .jornada.anim.play .j-path-draw { animation: j-draw 2s cubic-bezier(0.6, 0, 0.3, 1) both; }
+    .jornada.anim.play .j-node { animation: j-pop 0.5s cubic-bezier(0.34, 1.5, 0.64, 1) both; animation-delay: calc(var(--i) * 0.45s + 0.15s); }
+    @keyframes j-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+    @keyframes j-pop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
+    @keyframes j-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+
+    @media (max-width: 1020px) and (min-width: 761px) {
+      .j-stops { grid-template-columns: repeat(2, 1fr); margin-top: 0; row-gap: 22px; }
+      .j-track { display: none; }
+    }
+    @media (max-width: 760px) {
+      .j-track { display: none; }
+      .j-stops { grid-template-columns: 1fr; margin-top: 0; gap: 14px; position: relative; }
+      .j-stops::before {
+        content: ''; position: absolute; left: 26px; top: 28px; bottom: 28px; width: 4px; border-radius: 4px;
+        background: linear-gradient(var(--pink), #8B5CF6, #C99A00, var(--teal-dark)); transform-origin: top;
+      }
+      .j-stop { grid-template-columns: 56px 1fr; gap: 12px; align-items: start; }
+      .j-node { justify-self: start; }
+      .jornada.anim:not(.play) .j-stops::before { transform: scaleY(0); }
+      .jornada.anim.play .j-stops::before { animation: j-grow 2s cubic-bezier(0.6, 0, 0.3, 1) both; }
+    }
+
     /* Teste de Comportamento (Instituto) */
     .teste-banner {
       background: var(--white);
@@ -908,6 +968,87 @@
     </div>
   </header>
 
+  <!-- JORNADA DA FAMÍLIA — explica por que brincar, observar, entender e cuidar estão sob a mesma marca.
+       Cada parada: promessa (título), confiança e oferta. A linha anima uma vez (JS adiciona .anim/.play); sem JS fica desenhada. -->
+  <section class="jornada" id="jornada" aria-labelledby="jornada-h">
+    <div class="wrap">
+      <div class="jornada-head">
+        <span class="eyebrow">Um cuidado, quatro momentos</span>
+        <h2 class="sec-title sec-title-sm" id="jornada-h">Cada família entra por onde precisa</h2>
+        <p>Brincar, observar, entender e cuidar. Tudo FaçaAmigos, em Belém.</p>
+      </div>
+
+      <div class="jornada-fluxo" id="jornada-fluxo">
+        <div class="j-track" aria-hidden="true">
+          <svg viewBox="0 0 1000 70" preserveAspectRatio="none" focusable="false">
+            <defs>
+              <linearGradient id="j-grad" x1="0" x2="1" y1="0" y2="0">
+                <stop offset="0" stop-color="#F0196B" /><stop offset="0.38" stop-color="#8B5CF6" />
+                <stop offset="0.66" stop-color="#E0AE00" /><stop offset="1" stop-color="#1FA893" />
+              </linearGradient>
+            </defs>
+            <path class="j-path-bg"
+              d="M0 35 C 60 8, 90 8, 125 35 S 250 62, 375 35 S 500 8, 625 35 S 750 62, 875 35 S 960 8, 1000 35" />
+            <path class="j-path-draw" pathLength="1"
+              d="M0 35 C 60 8, 90 8, 125 35 S 250 62, 375 35 S 500 8, 625 35 S 750 62, 875 35 S 960 8, 1000 35" />
+          </svg>
+        </div>
+
+        <ol class="j-stops">
+          <li class="j-stop j-1" style="--i: 0">
+            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="15" r="3" /><circle cx="16" cy="9" r="3" /><circle cx="16" cy="18" r="2.4" /><circle cx="8" cy="6.5" r="2" /></svg></span>
+            <div class="j-card">
+              <span class="j-tag">Brincar · Playground e Circuito</span>
+              <h3>Ele brinca seguro, você descansa por perto.</h3>
+              <dl>
+                <div><dt>Confiança</dt><dd>Avaliações reais no Google e mediadores que sabem lidar com cada criança</dd></div>
+                <div><dt>Oferta</dt><dd>A partir de R$ 60 · sem hora marcada · 2 shoppings</dd></div>
+              </dl>
+              <a class="j-cta" href="https://playground.institutofacaamigos.com.br/" data-cta="jornada" data-destino="playground">Levar para brincar</a>
+            </div>
+          </li>
+          <li class="j-stop j-2" style="--i: 1">
+            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg></span>
+            <div class="j-card">
+              <span class="j-tag">Observar · Olhar FaçaAmigos</span>
+              <h3>Você sai sabendo como foi a tarde dele.</h3>
+              <dl>
+                <div><dt>Confiança</dt><dd>Mediadores treinados em acolhimento neurodivergente acompanham a brincadeira</dd></div>
+                <div><dt>Oferta</dt><dd>Resumo da brincadeira no WhatsApp, cortesia no plano de 1 hora</dd></div>
+              </dl>
+              <a class="j-cta" href="https://playground.institutofacaamigos.com.br/#olhar" data-cta="jornada" data-destino="olhar">Ver o Olhar</a>
+            </div>
+          </li>
+          <li class="j-stop j-3" style="--i: 2">
+            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4" /><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" /></svg></span>
+            <div class="j-card">
+              <span class="j-tag">Entender · Mapeamento e guias</span>
+              <h3>Pare de se perguntar se é normal.</h3>
+              <dl>
+                <div><dt>Confiança</dt><dd>Criado por psicóloga. Sem rótulo, e não substitui avaliação profissional</dd></div>
+                <div><dt>Oferta</dt><dd>Grátis, em 5 minutos · guias e e-books para ler em casa</dd></div>
+              </dl>
+              <a class="j-cta" href="/teste?utm_source=site&amp;utm_medium=jornada&amp;utm_campaign=hub" data-cta="jornada" data-destino="mapeamento">Fazer o mapeamento</a>
+            </div>
+          </li>
+          <li class="j-stop j-4" style="--i: 3">
+            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.3 12C19 16.6 12 21 12 21z" /></svg></span>
+            <div class="j-card">
+              <span class="j-tag">Cuidar · Clínica (em breve)</span>
+              <h3>Um plano que faz sentido pra sua família.</h3>
+              <dl>
+                <div><dt>Confiança</dt><dd>Equipe multidisciplinar e terapia comportamental, com ciência e afeto</dd></div>
+                <div><dt>Oferta</dt><dd>Convênios IASEP e PROASA · lista de espera aberta</dd></div>
+              </dl>
+              <a class="j-cta" href="#clinica" data-cta="jornada" data-destino="clinica">Entrar na lista</a>
+            </div>
+          </li>
+        </ol>
+      </div>
+      <p class="j-note"><strong>Você não precisa passar por todas as etapas.</strong> Muita família só vem brincar, e está tudo certo.</p>
+    </div>
+  </section>
+
   <!-- PLAYGROUND + CIRCUITO — um bloco só, com as avaliações do Google (todas sobre o Playground) -->
   <section class="lazer-block" id="playground">
     <div class="wrap">
@@ -921,7 +1062,7 @@
               alt="Piscina de bolinhas gigante do playground FaçaAmigos" loading="lazy" decoding="async"></div>
           <div class="lazer-body">
             <h3>Playground Inclusivo</h3>
-            <p>Piscina de bolinhas, casa na árvore e monitores que sabem lidar com cada criança, típica ou atípica.
+            <p>Piscina de bolinhas, casa na árvore e mediadores que sabem lidar com cada criança, típica ou atípica.
               Você senta, toma um café e olha de longe. No Parque Shopping e no Grão-Pará.</p>
             <p><strong>No plano de 1 hora, você recebe no WhatsApp o Olhar FaçaAmigos, o resumo da brincadeira dele. Cortesia.</strong></p>
             <div class="lazer-actions">
@@ -1210,7 +1351,7 @@
         <details class="geo-faq-item">
           <summary>O playground FaçaAmigos é adaptado para autismo (TEA) e crianças atípicas?</summary>
           <div class="geo-faq-ans">
-            <div>Sim! O espaço é 100% inclusivo, contando com monitores treinados em acolhimento neurodivergente, cantinho de descompressão e abafadores de ruído disponíveis gratuitamente. Apresentando CIPTEA ou laudo, a criança paga a meia-entrada inclusiva (R$ 50 os 30 minutos, contra R$ 60 do público geral) e 1 acompanhante entra grátis.</div>
+            <div>Sim! O espaço é 100% inclusivo, contando com mediadores treinados em acolhimento neurodivergente, cantinho de descompressão e abafadores de ruído disponíveis gratuitamente. Apresentando CIPTEA ou laudo, a criança paga a meia-entrada inclusiva (R$ 50 os 30 minutos, contra R$ 60 do público geral) e 1 acompanhante entra grátis.</div>
           </div>
         </details>
 
@@ -1338,6 +1479,19 @@
         });
       }, { threshold: 0.12 });
       els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+  <script>
+    // Jornada: a linha e os nós animam uma vez ao entrar na tela. Sem JS ou com movimento reduzido, ficam já desenhados.
+    (function () {
+      var j = document.getElementById('jornada');
+      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!j || reduced || !('IntersectionObserver' in window)) return;
+      j.classList.add('anim');
+      var io = new IntersectionObserver(function (entries) {
+        if (entries[0].isIntersecting) { j.classList.add('play'); io.disconnect(); }
+      }, { threshold: 0.2 });
+      io.observe(j);
     })();
   </script>
   <script>
