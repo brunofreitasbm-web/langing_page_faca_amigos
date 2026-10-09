@@ -3,6 +3,7 @@
 
 <head>
   <script src="/assets/fa-track.js"></script>
+  <script src="/assets/fa-back.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meu ingresso | Instituto FaçaAmigos</title>
@@ -201,13 +202,19 @@
       }
 
       // Cancelar (liberar a vaga)
-      $('i-cancelar').addEventListener('click', function () { $('modal').classList.add('active'); $('m-nao').focus(); });
-      $('m-nao').addEventListener('click', function () { $('modal').classList.remove('active'); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $('modal').classList.remove('active'); });
+      // Voltar do aparelho fecha o modal (assets/fa-back.js); sem modal aberto, sai da página.
+      var setBackDepth = faBack.use('ingresso', function () { setModal(false); });
+      function setModal(aberto) {
+        $('modal').classList.toggle('active', aberto);
+        setBackDepth(aberto ? 1 : 0);
+      }
+      $('i-cancelar').addEventListener('click', function () { setModal(true); $('m-nao').focus(); });
+      $('m-nao').addEventListener('click', function () { setModal(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setModal(false); });
       $('m-sim').addEventListener('click', function () {
         var b = $('m-sim'); b.disabled = true; b.textContent = 'Liberando…';
         post({ action: 'cancelar', t: t }).then(function (r) {
-          $('modal').classList.remove('active');
+          setModal(false);
           b.disabled = false; b.textContent = 'Sim, liberar minha vaga';
           if (!r.ok) { $('i-err').textContent = (r.d && r.d.error) || 'Não foi possível cancelar agora.'; $('i-err').classList.add('active'); return; }
           show('ingresso', false); show('cancelado', true);
