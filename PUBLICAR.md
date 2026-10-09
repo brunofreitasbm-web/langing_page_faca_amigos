@@ -21,7 +21,7 @@ Este arquivo vale mais que trechos antigos do `LEIA-ME.txt` quando houver confli
 Depende só do site (mais a migration de origem, já no lote 1 e a função `behavior-test-webhook` nova, que grava
 `utm_term`, `gclid` e `fbclid`). Regra de sempre: migration, depois função, depois site.
 
-Depois de publicar, no GTM (`GTM-PN5D2BTS`):
+Depois de publicar, no GTM (`GTM-NPDJ58XR`):
 - Os eventos novos chegam no `dataLayer`: `whatsapp_click`, `begin_checkout`, `file_download`, `scroll_depth`,
   `consent_update`. Criar as tags/acionadores no GTM para levá-los ao GA4.
 - Conferir se o container já tem uma tag GA4 além do `gtag` direto do `fa-track.js`. Se tiver, uma das duas precisa sair
