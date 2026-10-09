@@ -22,12 +22,11 @@
 (function () {
   'use strict';
 
-  // GTM: um container só. Até 29/09/2026 carregavam dois (GTM-PN5D2BTS e GTM-NPDJ58XR). Os dois estavam com a
-  // versão publicada vazia (0 tags, 0 acionadores, 0 regras), então nada era contado em dobro, mas cada página
-  // baixava ~330 KB de gtm.js à toa por container. Ficou o GTM-PN5D2BTS (o do primeiro commit, o do PUBLICAR.md e o
-  // do portal Wi-Fi). Ao criar tags no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o
-  // gtag direto abaixo (page_view em dobro). O scripts/check.mjs reprova a volta de um segundo container.
-  var IDS = { gtm: 'GTM-PN5D2BTS', ga4: 'G-37G5XLBXKG', clarity: 'yr1no82bvm' };
+  // GTM: um container só (GTM-NPDJ58XR). Até 29/09/2026 carregavam dois (GTM-PN5D2BTS e GTM-NPDJ58XR); em 09/10/2026
+  // o site passou a usar só o GTM-NPDJ58XR, em todas as páginas e no portal Wi-Fi. Ao criar tags
+  // no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o gtag direto abaixo (page_view em
+  // dobro). O scripts/check.mjs reprova a volta de um segundo container.
+  var IDS = { gtm: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG', clarity: 'yr1no82bvm' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
