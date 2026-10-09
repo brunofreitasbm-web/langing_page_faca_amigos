@@ -6,7 +6,7 @@
  * O que faz
  *  1. Consent Mode v2: tudo começa NEGADO. GTM e GA4 carregam em modo sem cookies até a pessoa aceitar no
  *     banner. O Microsoft Clarity (mapas de calor e gravação de sessão) só carrega DEPOIS do aceite — voltou em
- *     01/10/2026 com o projeto novo yr8qq61339; o Contentsquare continua removido.)
+ *     01/10/2026 com o projeto novo yr1no82bvm; o Contentsquare continua removido.)
  *  2. Origem do visitante: guarda a primeira origem (utm_*, gclid, fbclid, src, sck, referrer) e a mais recente,
  *     num cookie do domínio raiz — assim ela sobrevive ao salto entre o hub e o subdomínio do playground.
  *     Links internos não levam UTM (a origem real fica no cookie; UTM interno abriria sessão nova no GA4).
@@ -27,7 +27,7 @@
   // baixava ~330 KB de gtm.js à toa por container. Ficou o GTM-PN5D2BTS (o do primeiro commit, o do PUBLICAR.md e o
   // do portal Wi-Fi). Ao criar tags no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o
   // gtag direto abaixo (page_view em dobro). O scripts/check.mjs reprova a volta de um segundo container.
-  var IDS = { gtm: 'GTM-PN5D2BTS', ga4: 'G-37G5XLBXKG', clarity: 'yr8qq61339' };
+  var IDS = { gtm: 'GTM-PN5D2BTS', ga4: 'G-37G5XLBXKG', clarity: 'yr1no82bvm' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
