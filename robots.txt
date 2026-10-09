@@ -1,6 +1,6 @@
 # Robots.txt — Instituto FaçaAmigos
-# Hub: https://institutofacaamigos.com.br · Playground e Circuito: https://playground.institutofacaamigos.com.br
-# O mesmo arquivo é servido nos dois hosts.
+# Site: https://institutofacaamigos.com.br (inclui /playground e /circuito).
+# O host antigo playground. só redireciona (308) para cá.
 
 User-agent: *
 Allow: /
@@ -60,4 +60,3 @@ Disallow: /hotspot
 
 Sitemap: https://institutofacaamigos.com.br/sitemap.xml
 Sitemap: https://institutofacaamigos.com.br/sitemap-eventos.xml
-Sitemap: https://playground.institutofacaamigos.com.br/sitemap.xml

@@ -32,6 +32,7 @@
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
   var ROOT_DOMAIN = 'institutofacaamigos.com.br';
+  // playground. fica na lista enquanto durar o redirecionamento 308 para /playground (links antigos, QR, anúncios).
   var INTERNAL_HOSTS = ['institutofacaamigos.com.br', 'www.institutofacaamigos.com.br', 'playground.institutofacaamigos.com.br'];
   var WHATSAPP_UNITS = { '5591991782027': 'clinica', '5591992347673': 'playground_circuito' };
   // GEO & AEO: quando não há utm_source na URL, mas o referrer é um desses domínios, a visita entrou por uma

@@ -11,7 +11,7 @@ Site **estático** (HTML/CSS/JS puro, sem build) publicado na Vercel, com backen
 | Host | Serve |
 |---|---|
 | `institutofacaamigos.com.br` (hub) | `index.html`, guia, codigo, teste, servicos, aprender, glossario, eventos, termos, política |
-| `playground.institutofacaamigos.com.br` | `/` (= `playground.html`) e `/circuito` |
+| `playground.institutofacaamigos.com.br` (só redireciona 308) | `/` → `institutofacaamigos.com.br/playground`; `/circuito` → `institutofacaamigos.com.br/circuito` |
 | `gestao.` e `clinica.institutofacaamigos.com.br` | `/` → `gestao.html` (Hub de Gestão, noindex) |
 
 A Clínica (Next.js) e os demais sistemas são **outros repositórios**.

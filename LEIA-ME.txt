@@ -1,3 +1,17 @@
+ATUALIZAÇÃO 09/10/2026 — Playground e Circuito saem do subdomínio e vão para o domínio principal
+---------------------------------------------------------------------------------------------
+- URLs novas: https://institutofacaamigos.com.br/playground e https://institutofacaamigos.com.br/circuito.
+- playground.institutofacaamigos.com.br virou só redirecionamento 308 (middleware.js), mantendo caminho e query
+  (/ -> /playground). NÃO remover o domínio da Vercel nem o DNS: QR do quiosque, Google Meu Negócio, Instagram e
+  anúncios antigos dependem dele.
+- Canonicals, JSON-LD, og:url, links internos, llms.txt/llms-full.txt (e seus modelos), sitemap.xml e robots.txt
+  atualizados. sitemap-playground.xml ficou como sitemap de transição (só no host antigo); apagar ~3 meses depois.
+- Ganho: um host só para o conteúdo indexável, uma propriedade no Search Console e atribuição sem depender do cookie
+  entre subdomínios (o cookie do domínio raiz segue valendo para gestao./clinica.).
+- scripts/check.mjs agora reprova qualquer link para o host antigo.
+- FAZER FORA DO CÓDIGO: ver a seção 7 do MAPA-DO-SITE.md (Search Console, Google Meu Negócio, Instagram, anúncios).
+- Esperar oscilação de posição por algumas semanas no Google; acompanhar "/playground" no Search Console.
+
 ATUALIZAÇÃO 29/09/2026 (3) — módulo "É para todas as crianças"
 ---------------------------------------------------------------
 Responde a pergunta mais frequente do Playground: "é só para criança autista, neurodivergente ou atípica?".
