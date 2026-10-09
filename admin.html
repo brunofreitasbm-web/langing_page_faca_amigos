@@ -667,6 +667,7 @@
 </head>
 
 <body>
+  <script src="/assets/fa-back.js"></script>
   <script>if (/^#sso=[0-9a-f]{64}(&aba=eventos)?$/.test(location.hash)) document.documentElement.classList.add('sso-pending');</script>
 
   <!-- ================= LOGIN ================= -->
@@ -1081,6 +1082,39 @@
       // Aba a abrir depois de entrar (vem do Hub: /admin#sso=...&aba=eventos; #eventos é o formato antigo).
       var abaInicial = '';
 
+      // ---------- Voltar do aparelho (assets/fa-back.js) ----------
+      // Camadas, da mais interna à mais externa: modal aberto -> painel do evento -> aba diferente da inicial.
+      // Cada camada aberta soma 1 ao depth; na aba inicial sem nada aberto (depth 0) o voltar sai da página.
+      var OVERLAY_IDS = ['leadModalOverlay', 'evModalOverlay', 'tipoModalOverlay', 'insModalOverlay', 'checkinModalOverlay'];
+      var TAB_BTN_IDS = { leads: 'tabLeadsBtn', config: 'tabConfigBtn', wifi: 'tabWifiBtn', eventos: 'tabEventosBtn' };
+      var activeTab = 'leads';
+      var homeTab = 'leads';
+      function openOverlays() {
+        return OVERLAY_IDS.filter(function (id) { return document.getElementById(id).classList.contains('active'); });
+      }
+      function eventoPanelOpen() {
+        return activeTab === 'eventos' && !document.getElementById('evPanel').hidden;
+      }
+      var setBackDepth = faBack.use('admin', function () {
+        var abertos = openOverlays();
+        if (abertos.length) {
+          abertos.forEach(function (id) { id === 'leadModalOverlay' ? closeLeadModal() : closeOverlay(id); });
+        } else if (eventoPanelOpen()) {
+          document.getElementById('evFecharBtn').click();
+        } else if (activeTab !== homeTab) {
+          document.getElementById(TAB_BTN_IDS[homeTab]).click();
+        }
+      });
+      function syncBack() {
+        var depth = 0;
+        if (!document.getElementById('dashScreen').hidden) {
+          if (openOverlays().length) depth++;
+          if (eventoPanelOpen()) depth++;
+          if (activeTab !== homeTab) depth++;
+        }
+        setBackDepth(depth);
+      }
+
       var loginScreen = document.getElementById('loginScreen');
       var dashScreen = document.getElementById('dashScreen');
       var loginForm = document.getElementById('loginForm');
@@ -1162,6 +1196,7 @@
       function showLogin(message) {
         dashScreen.hidden = true;
         loginScreen.style.display = 'flex';
+        syncBack();
         if (message) {
           loginNotice.textContent = message;
           loginNotice.classList.add('active');
@@ -1176,6 +1211,8 @@
       function showDashboard() {
         loginScreen.style.display = 'none';
         dashScreen.hidden = false;
+        homeTab = (isEquipe() && abaInicial !== 'eventos') ? 'wifi' : (abaInicial === 'eventos' ? 'eventos' : 'leads');
+        syncBack();
         adminEmailLabel.textContent = getEmail() + (isEquipe() ? ' · equipe' : '');
         document.body.classList.toggle('escopo-equipe', isEquipe());
         insSearch.placeholder = isEquipe() ? 'Nome ou código' : 'Nome, e-mail, código ou WhatsApp';
@@ -1564,6 +1601,7 @@
         resetModalState();
         lastFocusedEl = document.activeElement;
         leadModalOverlay.classList.add('active');
+        syncBack();
         document.addEventListener('keydown', onModalKeydown);
         leadDetailGrid.innerHTML = '';
         leadAnswers.innerHTML = '';
@@ -1585,6 +1623,7 @@
 
       function closeLeadModal() {
         leadModalOverlay.classList.remove('active');
+        syncBack();
         document.removeEventListener('keydown', onModalKeydown);
         currentLead = null;
         if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') {
@@ -1778,6 +1817,8 @@
         configView.hidden = name !== 'config';
         wifiView.hidden = name !== 'wifi';
         document.getElementById('eventosView').hidden = name !== 'eventos';
+        activeTab = name;
+        syncBack();
       }
 
       tabLeadsBtn.addEventListener('click', function () { showTab('leads'); });
@@ -2198,12 +2239,14 @@
       function openOverlay(id) {
         var ov = document.getElementById(id);
         ov.classList.add('active');
+        syncBack();
         var first = ov.querySelector('input:not([type=hidden]), select, textarea, button');
         if (first) requestAnimationFrame(function () { first.focus(); });
       }
       function closeOverlay(id) {
         var ov = document.getElementById(id);
         ov.classList.remove('active');
+        syncBack();
         if (id === 'checkinModalOverlay') stopQr();
       }
       Array.prototype.forEach.call(document.querySelectorAll('[data-close]'), function (btn) {
@@ -2283,6 +2326,7 @@
         renderEventos();
         renderPanelHead();
         evPanel.hidden = false;
+        syncBack();
         msg(insError, ''); msg(insNotice, ''); msg(evTiposError, '');
         insSearch.value = '';
         insStatusFilter.value = '';
@@ -2323,6 +2367,7 @@
 
       document.getElementById('evFecharBtn').addEventListener('click', function () {
         evPanel.hidden = true; eventoAtual = null; renderEventos();
+        syncBack();
       });
 
       // ---------- tipos de ingresso ----------

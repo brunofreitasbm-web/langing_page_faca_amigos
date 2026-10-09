@@ -3,6 +3,7 @@
 
 <head>
   <script src="/assets/fa-track.js"></script>
+  <script src="/assets/fa-back.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mapeamento Comportamental Infantil Gratuito | Instituto FaçaAmigos</title>
@@ -1256,6 +1257,22 @@
         window.dataLayer.push(payload);
       }
 
+      // Voltar do aparelho: contato -> landing; pergunta N -> pergunta N-1. Landing, 1ª pergunta e resultado
+      // são "raiz" (depth 0): o voltar sai da página, como o botão "Voltar" da tela, que também não existe ali.
+      var setBackDepth = faBack.use('teste', function () {
+        if (!$('step-contact').hidden) {
+          showStep('step-landing', 'landing-heading');
+        } else if (!$('step-question').hidden && state.currentQ > 0 && $('question-loading').hidden) {
+          renderQuestion(state.currentQ - 1); // com o envio em andamento, ignora (a pilha é reempilhada)
+        }
+      });
+      function syncBack() {
+        var depth = 0;
+        if (!$('step-contact').hidden) depth = 1;
+        else if (!$('step-question').hidden) depth = state.currentQ;
+        setBackDepth(depth);
+      }
+
       function showStep(id, focusId) {
         steps.forEach(function (s) {
           var el = $(s);
@@ -1269,6 +1286,7 @@
           }
         }
         window.scrollTo({ top: 0, behavior: 'auto' });
+        syncBack();
       }
 
       function replaceChild(text) {
@@ -1575,6 +1593,7 @@
         $('btn-back').hidden = (index === 0);
         $('question-error').style.display = 'none';
         $('question-loading').hidden = true;
+        syncBack();
       }
 
       $('btn-back').addEventListener('click', function () {
