@@ -7,14 +7,15 @@ Atualizado em 30/09/2026, a partir do código do repositório (não foi conferid
 | Domínio | O que é | Onde vive | Indexa? |
 |---|---|---|---|
 | `institutofacaamigos.com.br` | Hub: institucional, conteúdo, funil de e-books, eventos, Wi-Fi | este repositório (Vercel) | sim |
-| `playground.institutofacaamigos.com.br` | Playground e Circuito | este repositório (mesmo deploy) | sim |
+| `playground.institutofacaamigos.com.br` | Host antigo: só redireciona (308) para `/playground` e `/circuito` do hub. Nunca remover o domínio | este repositório (mesmo deploy) | não (redireciona) |
 | `gestao.institutofacaamigos.com.br` | Hub de Gestão (login único, só Bruno e Isabella) | este repositório (mesmo deploy) | não (noindex + robots Disallow) |
 | `clinica.institutofacaamigos.com.br` | Site e sistema da Clínica | projeto "Clinica Faça Amigos" (Next.js) | site público sim; áreas logadas não |
 | `sistema.institutofacaamigos.com.br` | Sistema citado no código da Clínica | não verificado aqui | ? |
 
-Regra de "dono" (aplicada em `middleware.js`): o `playground.` só serve a home do Playground e o `/circuito`.
-Qualquer outro caminho redireciona (308) para o hub. No hub, `/playground` e `/circuito` redirecionam para o `playground.`.
-Arquivos (`.txt`, `.xml`, `.ico`, `.well-known`) passam em qualquer host.
+Desde 09/10/2026 o Playground e o Circuito moram no hub (`/playground` e `/circuito`). O `middleware.js` faz o host
+`playground.` redirecionar (308) tudo para o hub (`/` vira `/playground`; o resto mantém o caminho e a query).
+Arquivos (`.txt`, `.xml`, `.ico`, `.well-known`) passam em qualquer host; `playground./sitemap.xml` serve o
+`sitemap-playground.xml`, de transição (URLs antigas, para o Google enxergar os redirecionamentos; pode sair ~3 meses depois).
 
 ## 2. Diagrama de navegação
 
@@ -36,9 +37,7 @@ flowchart LR
     L["/termos e /politica-privacidade"]
     DC["/descadastrar (noindex)"]
     TC["/trabalhe-conosco"]
-  end
-  subgraph PLAY["playground.institutofacaamigos.com.br"]
-    P["/ (Playground)"]
+    P["/playground"]
     C["/circuito"]
   end
   subgraph GESTAO["gestao. (privado)"]
@@ -74,6 +73,8 @@ flowchart LR
 |---|---|---|---|---|
 | `/` | index.html | Hub: porta de entrada para Playground, Circuito, Clínica, guias, carreiras | sim | seção de próximos eventos |
 | `/trabalhe-conosco` | trabalhe-conosco.html | Carreiras: áreas, tipos de vaga e formulário de candidatura com currículo em PDF | sim | envia para a função `job-application-webhook` (mesmo endpoint do antigo modal); no `playground.` redireciona (308) para o hub |
+| `/playground` | playground.html | Playground Inclusivo (antes em `playground.`) | sim | canonical no hub |
+| `/circuito` | circuito.html | Circuito de Carrinhos (antes em `playground.`) | sim | canonical no hub |
 | `/servicos` | servicos.html | Serviços da Clínica, FAQ, lista de espera | sim | CTA para o site da Clínica |
 | `/aprender` | aprender.html | Índice de artigos | sim | |
 | `/aprender/*` (9) | aprender/*.html | Artigos: birra-ou-crise, sinais-para-observar, primeira-vez-no-playground, rotina-visual-em-casa, como-e-a-terapia-comportamental, laudo-e-ciptea, conversar-com-a-escola, brincar-com-proposito-10-minutos, e-para-todas-as-criancas | sim | cada um leva ao /teste, à Clínica e ao WhatsApp |
@@ -92,35 +93,28 @@ flowchart LR
 | `/gestao` | gestao.html | Hub de Gestão | não | só pelo host `gestao.` |
 | `/404` | 404.html | Erro | não | links para home, circuito, guia, código, playground, teste |
 
-## 4. Páginas do playground.
+## 4. Arquivos técnicos e de descoberta
 
-| Rota | Arquivo | Observação |
-|---|---|---|
-| `/` | playground.html | reescrito pelo middleware; canonical em `playground.` |
-| `/circuito` | circuito.html | canonical em `playground.` |
-
-## 5. Arquivos técnicos e de descoberta
-
-`robots.txt`, `robots-gestao.txt` (host gestao.), `sitemap.xml` (só URLs do hub), `sitemap-playground.xml` (servido como /sitemap.xml no host playground.), `llms.txt`, `llms-full.txt`, `geo-facts.json`
+`robots.txt`, `robots-gestao.txt` (host gestao.), `sitemap.xml` (todas as URLs, inclusive /playground e /circuito), `sitemap-playground.xml` (transição, servido como /sitemap.xml no host antigo playground.), `llms.txt`, `llms-full.txt`, `geo-facts.json`
 (fatos do quiosque para IAs), `site.webmanifest`, `favicon.ico`, `apple-touch-icon.png`,
 `google877c2b37d3c979fb.html` (verificação do Search Console).
 
-## 6. Backend (Supabase `ivjvpdzsfjdpyabbzzuj`)
+## 5. Backend (Supabase `ivjvpdzsfjdpyabbzzuj`)
 
 Funções: `behavior-test-webhook`, `behavior-test-admin`, `guia-sequence`, `hotmart-webhook`, `hotmart-sync`,
 `wifi-lead-webhook`, `wifi-coupon-admin`, `geo-facts`, `fa-health`, `fa-weekly-report`, `gestao-hub`,
 `eventos-public`, `eventos-dispatch`, `job-application-webhook` (candidaturas do /trabalhe-conosco).
 
-## 7. Como o visitante circula (jornadas)
+## 6. Como o visitante circula (jornadas)
 
 1. **Pai/mãe que chega pelo Google:** artigo em `/aprender/*` → `/teste` → `/guia` ou `/codigo` (Hotmart) ou WhatsApp.
-2. **Quem está no shopping (Maps/Instagram):** `playground.` → guia/código/teste ou WhatsApp; o botão "Instituto FaçaAmigos" leva ao hub.
+2. **Quem está no shopping (Maps/Instagram):** `/playground` → guia/código/teste ou WhatsApp; o botão "Instituto FaçaAmigos" leva ao hub.
 3. **Quem procura terapia:** `/servicos` → lista de espera (WhatsApp) ou site da Clínica.
 4. **Quem se inscreve em evento:** hub (seção de eventos) → `/eventos` → `/eventos/:slug` → voucher em `/ingresso`.
 5. **Quem quer trabalhar no FaçaAmigos:** link "Trabalhe Conosco" (rodapé de todas as páginas via `fa-footer.js`, topo do playground) → `/trabalhe-conosco` → candidatura → e-mail com o teste de perfil comportamental.
 6. **Equipe:** `gestao.` → login único → Clínica e demais sistemas via `/sso`.
 
-## 8. Pontos de atenção (28/09 a 08/10/2026)
+## 7. Pontos de atenção (28/09 a 08/10/2026)
 
 - 08/10/2026: o formulário "Trabalhe Conosco" saiu dos modais (`#jobModalOverlay`) do playground e do circuito e virou a
   página `/trabalhe-conosco`. Os links do playground/circuito e do rodapé (`fa-footer.js`) apontam para
@@ -131,4 +125,7 @@ Funções: `behavior-test-webhook`, `behavior-test-admin`, `guia-sequence`, `hot
 - `/eventos/:slug` tem canonical para `/eventos`, então os detalhes de evento não são indexados individualmente.
   Se a ideia é ranquear cada evento, cada um precisa do próprio canonical.
 - Falta confirmar o destino de `sistema.institutofacaamigos.com.br`.
-- O app da Clínica ainda linka para `institutofacaamigos.com.br/playground` (redireciona, mas convém apontar direto).
+- 09/10/2026: `playground.` virou só redirecionamento. Pendências fora do código: (1) Search Console: conferir se a propriedade
+  é de domínio; se for de prefixo, criar a do domínio principal e enviar o `sitemap.xml`; (2) trocar o link do site no Google Meu
+  Negócio, na bio do Instagram e nos anúncios (Google/Meta) para `https://institutofacaamigos.com.br/playground`; (3) a lista de
+  CORS das Edge Functions do Supabase ainda tem o host antigo (inofensivo; remover quando o redirecionamento sair).

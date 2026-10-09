@@ -31,13 +31,11 @@
   var kind = footer.getAttribute('data-fa-footer') || 'hub';
   var wa = WA[kind] || WA.hub;
 
-  // Links entre páginas sempre apontam para o domínio "dono" da página (hub ou playground.), para
-  // o visitante não trocar de host sem perceber. Em localhost/preview ficam relativos.
+  // Links absolutos em produção; em localhost/preview ficam relativos. Playground e Circuito
+  // moram no mesmo domínio do hub (/playground e /circuito).
   var HUB = 'https://institutofacaamigos.com.br';
-  var PLAY = 'https://playground.institutofacaamigos.com.br';
   var isProd = /(^|\.)institutofacaamigos\.com\.br$/.test(location.hostname);
   function hub(p) { return (isProd ? HUB : '') + p; }
-  function play(p) { return (isProd ? PLAY : '') + p; }
 
   function link(href, text, extra) { return '<a href="' + href + '"' + (extra || '') + '>' + text + '</a>'; }
   var EXT = ' target="_blank" rel="noopener"';
@@ -87,8 +85,8 @@
     '    <li>' + link(hub('/'), 'Início') + '</li>',
     '    <li>' + link(hub('/servicos'), 'Serviços da Clínica') + '</li>',
     '    <li>' + link('https://clinica.institutofacaamigos.com.br/?utm_source=hub&amp;utm_medium=site&amp;utm_campaign=rodape_' + kind, 'Site da Clínica') + '</li>',
-    '    <li>' + link(play('/'), 'Playground Inclusivo') + '</li>',
-    '    <li>' + link(play('/circuito'), 'Circuito de Carrinhos') + '</li>',
+    '    <li>' + link(hub('/playground'), 'Playground Inclusivo') + '</li>',
+    '    <li>' + link(hub('/circuito'), 'Circuito de Carrinhos') + '</li>',
     '    <li>' + link(hub('/teste'), 'Mapeamento Gratuito', ' data-fa-link="rodape_' + kind + '"') + '</li>',
     '    <li>' + link(hub('/eventos'), 'Eventos (palestras e treinamentos)') + '</li>',
     '    <li>' + link(hub('/aprender'), 'Aprender (Artigos &amp; Guias)') + '</li>',

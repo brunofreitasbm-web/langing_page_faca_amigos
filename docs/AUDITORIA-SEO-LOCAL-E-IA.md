@@ -59,7 +59,7 @@ leem principalmente Google Maps, avaliações e diretórios.
 6. Horário 10h–22h + **horários especiais** em feriados (é o que mais gera "estava fechado" em avaliação).
 7. Atributos: acessível para cadeira de rodas, banheiro acessível, adequado para crianças, e os de identidade se fizer sentido.
 8. Serviços/produtos com os preços do site (os mesmos números, mesmo texto da meia-entrada).
-9. Link do site: `https://playground.institutofacaamigos.com.br/?utm_source=google&utm_medium=organic&utm_campaign=gbp` para medir no GA.
+9. Link do site: `https://institutofacaamigos.com.br/playground?utm_source=google&utm_medium=organic&utm_campaign=gbp` para medir no GA.
 10. 15–30 fotos reais: fachada/entrada, equipe, piscina de bolinhas, canto sensorial, carrinhos. Repor 2–4 por mês.
 11. Depois de verificado, copiar o link do perfil e atualizar `hasMap` e `sameAs` (itens 5 e 6 acima).
 
