@@ -6,7 +6,8 @@
     "check": "node scripts/check.mjs",
     "sitemap": "node scripts/sitemap-lastmod.mjs",
     "geo": "node scripts/geo-build.mjs --fetch",
-    "geo:check": "node scripts/geo-build.mjs --check"
+    "geo:check": "node scripts/geo-build.mjs --check",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@vercel/functions": "^3.9.7"

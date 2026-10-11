@@ -1,0 +1,37 @@
+name: Links externos quebrados
+
+# Os links internos já são verificados pelo scripts/check.mjs a cada push.
+# Aqui entram os externos (Hotmart, Google, Instagram...), uma vez por semana, para não travar PR por site fora do ar.
+on:
+  schedule:
+    - cron: '17 11 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  lychee:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verificar links externos
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: >-
+            --no-progress --scheme https --scheme http
+            --max-retries 2 --timeout 20 --accept 200..=299,403,429
+            --exclude '^https?://(wa\.me|api\.whatsapp\.com|(www\.)?instagram\.com|(www\.)?facebook\.com|(www\.)?linkedin\.com)'
+            --exclude '^https?://(www\.)?googletagmanager\.com' --exclude 'localhost'
+            --exclude-path _arquivo --exclude-path docs --exclude-path supabase --exclude-path node_modules
+            './**/*.html'
+          fail: false
+      - name: Abrir issue se houver link quebrado
+        if: steps.lychee.outputs.exit_code != 0
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: Links externos quebrados no site
+          content-filepath: ./lychee/out.md
+          labels: links

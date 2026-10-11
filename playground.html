@@ -82,7 +82,7 @@
       },
       "image": "https://institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg",
       "url": "https://institutofacaamigos.com.br/playground",
-      "telephone": "+55 91 99234-7673",
+      "telephone": "+5591992347673",
       "priceRange": "$$",
       "hasMap": "https://www.google.com/maps/search/?api=1&query=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA",
       "address": {
@@ -129,7 +129,7 @@
       },
       "image": "https://institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg",
       "url": "https://institutofacaamigos.com.br/playground",
-      "telephone": "+55 91 99234-7673",
+      "telephone": "+5591992347673",
       "priceRange": "$$",
       "address": {
         "@type": "PostalAddress",
@@ -1324,6 +1324,25 @@
       margin-left: 6px;
     }
 
+    .hero-proof {
+      margin: 14px 0 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--ink-soft);
+    }
+
+    .hero-proof a {
+      color: inherit;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .price-cta {
+      display: flex;
+      justify-content: center;
+      margin-top: 18px;
+    }
+
     .price-foot {
       text-align: center;
       font-size: 0.88rem;
@@ -1861,7 +1880,7 @@
 
   <nav class="navbar">
     <div class="wrap">
-      <a class="logo" href="#"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
+      <a class="logo" href="/" aria-label="FaçaAmigos — página inicial"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
           alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span class="txt">Faça<span
             class="amigos">Amigos</span><span class="sub">Playground Inclusivo</span></span></a>
       <div class="nav-actions">
@@ -1910,6 +1929,8 @@
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
             </svg> Sem agendamento</span>
         </div>
+        <p class="hero-proof">Mais de 1.100 famílias de Belém já confiaram o filho à nossa equipe ·
+          <a href="#avaliacoes">ver o que os pais dizem</a></p>
       </div>
       <div class="hero-photo fx on">
         <div class="frame"><picture><source srcset="img/hero-piscina-bolinhas.webp" type="image/webp"><img src="img/hero-piscina-bolinhas.jpg" width="784" height="803"
@@ -1957,10 +1978,13 @@
   <!-- INCLUSÃO — diferencial vem antes de preço -->
   <section class="sec inc" id="inclusao">
     <div class="wrap inc-grid fx">
-      <div class="inc-photo"><img src="img/inclusao-cantinho-leitura.jpg" width="819" height="1024"
-          alt="Cantinho de leitura e atividades do FaçaAmigos" loading="lazy" decoding="async"></div>
+      <div class="inc-photo"><picture><source srcset="img/inclusao-cantinho-leitura.webp" type="image/webp"><img src="img/inclusao-cantinho-leitura.jpg" width="819" height="1024"
+          alt="Cantinho de leitura e atividades do FaçaAmigos" loading="lazy" decoding="async"></picture></div>
       <div>
         <h2 class="sec-title">Se a primeira visita te dá medo, começa por aqui.</h2>
+        <p class="sec-sub" style="margin: 0 0 8px;">Num lugar barulhento e lotado, uma crise vira saída às pressas, e
+          a próxima tentativa de passeio fica ainda mais difícil, pra ele e pra você. Por isso a gente não deixa a
+          primeira vez no improviso.</p>
         <p class="sec-sub" style="margin: 0 0 8px;">Fomos projetados do zero para receber <b>todas</b> as crianças: da
           iluminação ao treinamento da equipe, cada detalhe pensado pra quem precisa de mais cuidado se sentir
           seguro, e pra você poder relaxar.</p>
@@ -2009,8 +2033,8 @@
             idealizadora do FaçaAmigos · não substitui avaliação profissional · leva cerca de 5 minutos</p>
         </div>
         <div class="teste-visual">
-          <div class="teste-photo"><img src="img/isabella-2.jpg" width="700" height="935"
-              alt="Idealizadora do FaçaAmigos, criadora do Mapeamento Comportamental" loading="lazy" decoding="async">
+          <div class="teste-photo"><picture><source srcset="img/isabella-2.webp" type="image/webp"><img src="img/isabella-2.jpg" width="700" height="935"
+              alt="Idealizadora do FaçaAmigos, criadora do Mapeamento Comportamental" loading="lazy" decoding="async"></picture>
           </div>
           <span>criado pela idealizadora<br>do FaçaAmigos</span>
         </div>
@@ -2030,20 +2054,20 @@
             alt="Mediadora do FaçaAmigos sorrindo na recepção, com a parede de escalada ao fundo" loading="lazy" decoding="async"></picture>
           <figcaption>Quem recebe você na porta</figcaption>
         </figure>
-        <figure><img src="img/galeria-oficinas.jpg" width="768" height="1024" alt="Mesa de atividades com lápis de cor"
-            loading="lazy" decoding="async">
+        <figure><picture><source srcset="img/galeria-oficinas.webp" type="image/webp"><img src="img/galeria-oficinas.jpg" width="768" height="1024" alt="Mesa de atividades com lápis de cor"
+            loading="lazy" decoding="async"></picture>
           <figcaption>Oficinas e atividades manuais</figcaption>
         </figure>
-        <figure><video src="video/tour-espaco.mp4" controls playsinline preload="none"
+        <figure><video src="video/tour-espaco.mp4" poster="img/poster-tour-espaco.webp" controls playsinline preload="none"
             style="width: 100%; height: 100%; object-fit: cover;"
             aria-label="Tour em vídeo pelo espaço FaçaAmigos"></video>
           <figcaption>Tour pelo espaço</figcaption>
         </figure>
-        <figure><img src="img/inclusao-cantinho-leitura.jpg" width="819" height="1024"
-            alt="Cantinho de leitura com brinquedos educativos" loading="lazy" decoding="async">
+        <figure><picture><source srcset="img/inclusao-cantinho-leitura.webp" type="image/webp"><img src="img/inclusao-cantinho-leitura.jpg" width="819" height="1024"
+            alt="Cantinho de leitura com brinquedos educativos" loading="lazy" decoding="async"></picture>
           <figcaption>Cantinho de leitura</figcaption>
         </figure>
-        <figure><video src="video/nossa-equipe.mp4" controls playsinline preload="none"
+        <figure><video src="video/nossa-equipe.mp4" poster="img/poster-nossa-equipe.webp" controls playsinline preload="none"
             style="width: 100%; height: 100%; object-fit: cover;"
             aria-label="Vídeo da equipe do FaçaAmigos Playground"></video>
           <figcaption>Nossa equipe</figcaption>
@@ -2151,7 +2175,7 @@
       <div class="rel-grid">
         <div>
           <span class="eyebrow">Só no plano de 1 hora ou mais</span>
-          <h2 class="sec-title" style="text-align: left;">Na de 1 hora, você recebe o Olhar FaçaAmigos da brincadeira dele.</h2>
+          <h2 class="sec-title" style="text-align: left;">No plano de 1 hora, você recebe o Olhar FaçaAmigos da brincadeira dele.</h2>
           <p class="sec-sub" style="text-align: left;">Nos planos a partir de 1 hora, a equipe FaçaAmigos acompanha a brincadeira de perto e manda no seu WhatsApp o Olhar FaçaAmigos: o resumo do que ela reparou. Cortesia, sem custo a mais.</p>
           <ul class="rel-list">
             <li><span class="ic" aria-hidden="true">👀</span><div>O que a equipe repara<span>Coordenação, equilíbrio, interação com outras crianças, atenção, comunicação e como lidou com a espera e com o "não".</span></div></li>
@@ -2237,6 +2261,10 @@
       </div>
       <p class="price-foot">Fidelidade: a cada 10 visitas registradas pelo CPF do responsável, a 10ª entrada de 30 minutos é 100% gratuita (vale no Playground e no Circuito) · Pagamento na recepção ·
           Pix, cartão e dinheiro</p>
+      <div class="price-cta">
+        <a href="https://wa.me/5591992347673?text=Oi!%20Vi%20os%20pre%C3%A7os%20no%20site%20e%20quero%20levar%20meu%20filho%20ao%20Fa%C3%A7aAmigos."
+          target="_blank" rel="noopener" class="btn btn-pink">Tirar dúvida no WhatsApp</a>
+      </div>
     </div>
   </section>
 
@@ -2287,8 +2315,8 @@
         </div>
       </div>
       <div class="circ-photos">
-        <div class="p1"><img src="img/circuito-totem.jpg" width="768" height="1024"
-            alt="Quiosque interativo do FaçaAmigos Circuito" loading="lazy" decoding="async"></div>
+        <div class="p1"><picture><source srcset="img/circuito-totem.webp" type="image/webp"><img src="img/circuito-totem.jpg" width="768" height="1024"
+            alt="Quiosque interativo do FaçaAmigos Circuito" loading="lazy" decoding="async"></picture></div>
         <div class="p2" style="aspect-ratio: 4/3;"><picture><source srcset="img/circuito-carrinhos.webp" type="image/webp"><img src="img/circuito-carrinhos.jpg" width="1200" height="900"
             alt="Carrinhos elétricos Range Rover e Lamborghini Urus do FaçaAmigos Circuito" loading="lazy"
             decoding="async"></picture></div>
