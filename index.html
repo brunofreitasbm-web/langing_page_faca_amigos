@@ -39,6 +39,13 @@
   <link rel="alternate" type="text/plain" href="/llms.txt" title="FaçaAmigos AI & LLM Summary">
 
   <!-- Google Fonts Preconnect & Optimization -->
+  <style>
+    /* Fontes provisórias com as medidas das fontes do Google: evitam que o layout pule quando elas carregam */
+    @font-face { font-family: 'Nunito Fallback'; src: local('Arial'), local('Roboto'), local('Liberation Sans'); font-weight: 400 600; size-adjust: 100%; ascent-override: 105.1%; descent-override: 36.7%; line-gap-override: 0%; }
+    @font-face { font-family: 'Nunito Fallback'; src: local('Arial Bold'), local('Arial-BoldMT'), local('Roboto Bold'), local('Roboto-Bold'), local('Liberation Sans Bold'); font-weight: 700 800; size-adjust: 98.5%; ascent-override: 105.1%; descent-override: 36.7%; line-gap-override: 0%; }
+    @font-face { font-family: 'Nunito Fallback'; src: local('Arial Bold'), local('Arial-BoldMT'), local('Roboto Bold'), local('Roboto-Bold'), local('Liberation Sans Bold'); font-weight: 900; size-adjust: 101.5%; ascent-override: 105.1%; descent-override: 36.7%; line-gap-override: 0%; }
+    @font-face { font-family: 'Fredoka One Fallback'; src: local('Arial Bold'), local('Arial-BoldMT'), local('Roboto Bold'), local('Roboto-Bold'), local('Liberation Sans Bold'); font-weight: 400 900; size-adjust: 99.3%; ascent-override: 98.1%; descent-override: 23.8%; line-gap-override: 0%; }
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
@@ -414,7 +421,7 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
       color: var(--dark);
       background: var(--cream);
       line-height: 1.6;
@@ -422,7 +429,7 @@
     }
 
     h1, h2, h3 {
-      font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif;
       font-weight: 400;
       line-height: 1.15;
       letter-spacing: 0.01em;
@@ -449,7 +456,7 @@
     /* Botões — sempre pill */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem; padding: 15px 30px;
+      font-family: 'Nunito', 'Nunito Fallback', sans-serif; font-weight: 800; font-size: 1.05rem; padding: 15px 30px;
       border-radius: 9999px; border: none; cursor: pointer; min-height: 48px;
       transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast);
     }
@@ -498,7 +505,7 @@
     }
     .navbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
     .logo {
-      font-family: 'Fredoka One', sans-serif; font-size: 1.65rem; color: var(--dark);
+      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif; font-size: 1.65rem; color: var(--dark);
       display: inline-flex; align-items: center; gap: 10px;
     }
     .logo .simbolo { height: 40px; width: auto; flex-shrink: 0; }
@@ -571,7 +578,7 @@
     .reviews-hub { margin-top: 44px; }
     /* Números numa linha só (antes: chips + seção "em números") */
     .stats-line { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 6px 26px; margin-top: 22px; font-weight: 800; color: var(--ink-soft); text-align: center; }
-    .stats-line strong { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; color: var(--pink); font-size: 1.35rem; margin-right: 4px; }
+    .stats-line strong { font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; color: var(--pink); font-size: 1.35rem; margin-right: 4px; }
 
     /* Bloco Clínica — registro sóbrio */
     .clinica-block { background: var(--white); border-radius: 48px; margin: 40px 0; padding: 60px 0; }
@@ -606,7 +613,7 @@
       border-radius: 18px; padding: 8px 16px; font-weight: 800;
     }
     .price-chip small { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
-    .price-chip span { font-family: 'Fredoka One', sans-serif; font-size: 1.1rem; color: var(--pink); }
+    .price-chip span { font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif; font-size: 1.1rem; color: var(--pink); }
 
     /* Depoimentos cruzados */
     .testi-block { background: var(--white); padding: 60px 0; }
@@ -825,14 +832,14 @@
     .guia-banner > * { position: relative; z-index: 1; }
 
     .guia-banner .eyebrow { background: #FDC51D; color: #065264; align-self: flex-start; }
-    .guia-banner h4 { color: #fff; font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 10px; }
+    .guia-banner h4 { color: #fff; font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 10px; }
     .guia-banner p.guia-text { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 1.02rem; margin: 0 0 18px; }
     .guia-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: auto; }
     .guia-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
     .guia-list li { position: relative; padding-left: 30px; font-weight: 700; font-size: 0.98rem; color: #fff; }
     .guia-list li::before { content: '\2713'; position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; background: #07C5C8; color: #065264; font-size: 0.8rem; font-weight: 900; display: flex; align-items: center; justify-content: center; }
     .guia-price { margin-bottom: 18px; color: rgba(255, 255, 255, 0.92); font-weight: 700; font-size: 0.95rem; }
-    .guia-price strong { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 2rem; line-height: 1; color: #fff; margin-right: 6px; }
+    .guia-price strong { font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; font-size: 2rem; line-height: 1; color: #fff; margin-right: 6px; }
     .guia-sample { color: #fff; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; padding: 10px 6px; }
     .guia-sample:hover { text-decoration-thickness: 3px; }
     /* Eventos (teaser) */
@@ -845,7 +852,7 @@
     .ev-mini .tag { display: inline-flex; gap: 6px; align-items: center; border-radius: 9999px; padding: 3px 10px; font-size: 0.74rem; font-weight: 800; background: rgba(46, 207, 181, 0.18); color: var(--teal-dark); width: fit-content; }
     .ev-mini .tag.pink { background: rgba(240, 25, 107, 0.12); color: var(--pink-dark); }
     .ev-mini .tag.gray { background: var(--gray-bg); color: var(--ink-soft); }
-    .ev-mini h3 { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem; line-height: 1.3; margin: 2px 0; }
+    .ev-mini h3 { font-family: 'Nunito', 'Nunito Fallback', sans-serif; font-weight: 800; font-size: 1.05rem; line-height: 1.3; margin: 2px 0; }
     .ev-mini .when { font-size: 0.86rem; font-weight: 800; color: var(--ink-soft); }
     .ev-mini .go { margin-top: auto; font-weight: 800; color: var(--pink); font-size: 0.9rem; }
     .guia-note { font-size: 0.82rem; font-weight: 700; opacity: 0.8; text-align: center; max-width: 46rem; margin: 22px auto 0; }
@@ -867,7 +874,7 @@
     .geo-card { background: var(--white); border-radius: 20px; padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid rgba(26,63,53,0.08); transition: transform var(--t-fast); }
     .geo-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
     .geo-icon { font-size: 2rem; margin-bottom: 10px; }
-    .geo-val { font-family: 'Fredoka One', sans-serif; font-size: 1.45rem; color: var(--pink); line-height: 1.2; margin-bottom: 4px; }
+    .geo-val { font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif; font-size: 1.45rem; color: var(--pink); line-height: 1.2; margin-bottom: 4px; }
     .geo-lbl { font-weight: 800; color: var(--dark); font-size: 0.95rem; margin-bottom: 6px; }
     .geo-desc { font-size: 0.86rem; color: var(--ink-soft); font-weight: 600; line-height: 1.45; }
 

@@ -38,7 +38,7 @@
     '#fa-cta.on{transform:translateY(0)}' +
     'html.fa-consent-open #fa-cta{display:none!important}' +
     '#fa-cta .fa-cta-main{flex:1;text-align:center;min-height:46px;display:flex;align-items:center;justify-content:center;' +
-    'border-radius:999px;background:#F0196B;color:#fff;font:800 16px Nunito,system-ui,sans-serif;text-decoration:none;padding:10px 16px}' +
+    'border-radius:999px;background:#F0196B;color:#fff;font:800 16px Nunito,"Nunito Fallback",system-ui,sans-serif;text-decoration:none;padding:10px 16px}' +
     '#fa-cta .fa-cta-wa{flex:0 0 46px;height:46px;border-radius:50%;background:#25D366;color:#fff;display:flex;align-items:center;justify-content:center}' +
     '@media (max-width:760px){#fa-cta{display:flex}body.fa-cta-on .wa-float{display:none!important}}' +
     '@media (prefers-reduced-motion:reduce){#fa-cta{transition:none}}' +

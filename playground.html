@@ -40,6 +40,13 @@
   <link rel="alternate" type="text/plain" href="/llms.txt" title="FaçaAmigos AI & LLM Summary">
 
   <!-- Google Fonts Preconnect & Optimization -->
+  <style>
+    /* Fontes provisórias com as medidas das fontes do Google: evitam que o layout pule quando elas carregam */
+    @font-face { font-family: 'Nunito Fallback'; src: local('Arial'), local('Roboto'), local('Liberation Sans'); font-weight: 400 600; size-adjust: 100%; ascent-override: 105.1%; descent-override: 36.7%; line-gap-override: 0%; }
+    @font-face { font-family: 'Nunito Fallback'; src: local('Arial Bold'), local('Arial-BoldMT'), local('Roboto Bold'), local('Roboto-Bold'), local('Liberation Sans Bold'); font-weight: 700 800; size-adjust: 98.5%; ascent-override: 105.1%; descent-override: 36.7%; line-gap-override: 0%; }
+    @font-face { font-family: 'Nunito Fallback'; src: local('Arial Bold'), local('Arial-BoldMT'), local('Roboto Bold'), local('Roboto-Bold'), local('Liberation Sans Bold'); font-weight: 900; size-adjust: 101.5%; ascent-override: 105.1%; descent-override: 36.7%; line-gap-override: 0%; }
+    @font-face { font-family: 'Fredoka One Fallback'; src: local('Arial Bold'), local('Arial-BoldMT'), local('Roboto Bold'), local('Roboto-Bold'), local('Liberation Sans Bold'); font-weight: 400 900; size-adjust: 99.3%; ascent-override: 98.1%; descent-override: 23.8%; line-gap-override: 0%; }
+  </style>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
@@ -457,7 +464,7 @@
     }
 
     body {
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
       color: var(--dark);
       background: var(--cream);
       line-height: 1.6;
@@ -467,7 +474,7 @@
     h1,
     h2,
     h3 {
-      font-family: 'Fredoka One', 'Nunito', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif;
       font-weight: 400;
       line-height: 1.12;
       letter-spacing: 0.01em;
@@ -535,7 +542,7 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
       font-weight: 800;
       font-size: 1.05rem;
       padding: 15px 30px;
@@ -628,7 +635,7 @@
     }
 
     .logo {
-      font-family: 'Fredoka One', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif;
       font-size: 1.65rem;
       color: var(--dark);
       display: inline-flex;
@@ -652,7 +659,7 @@
 
     .logo .sub {
       display: block;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
       font-size: 0.58rem;
       font-weight: 800;
       letter-spacing: 0.32em;
@@ -771,7 +778,7 @@
     }
 
     .price-chip span {
-      font-family: 'Fredoka One', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif;
       font-size: 1.25rem;
       color: var(--pink);
     }
@@ -831,7 +838,7 @@
       left: -14px;
       background: var(--yellow);
       color: var(--dark);
-      font-family: 'Fredoka One', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif;
       font-size: 0.98rem;
       padding: 12px 22px;
       border-radius: 9999px;
@@ -1160,7 +1167,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Fredoka One', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif;
       font-size: 1rem;
     }
 
@@ -1243,7 +1250,7 @@
     }
 
     .price-card .value {
-      font-family: 'Fredoka One', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif;
       font-size: 3rem;
       color: var(--pink);
       line-height: 1;
@@ -1278,7 +1285,7 @@
     .ptable th {
       background: var(--dark);
       color: #fff;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
       font-weight: 800;
       font-size: 0.92rem;
       padding: 15px 18px;
@@ -1492,7 +1499,7 @@
 
     summary::after {
       content: '+';
-      font-family: 'Fredoka One', sans-serif;
+      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif;
       font-size: 1.4rem;
       color: var(--pink);
     }

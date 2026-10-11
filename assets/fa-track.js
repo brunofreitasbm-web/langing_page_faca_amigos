@@ -339,11 +339,11 @@
       '<style>' +
       '#fa-consent{position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:640px;margin:0 auto;' +
       'background:#065264;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 8px 28px rgba(0,0,0,.28);' +
-      'font:400 14px/1.5 Nunito,system-ui,sans-serif}' +
+      'font:400 14px/1.5 Nunito,"Nunito Fallback",system-ui,sans-serif}' +
       '#fa-consent p{margin:0 0 12px}#fa-consent a{color:#FDC51D;text-decoration:underline}' +
       '#fa-consent .fa-c-row{display:flex;gap:10px;flex-wrap:wrap}' +
       '#fa-consent button{flex:1 1 150px;min-height:44px;border-radius:999px;border:2px solid #fff;cursor:pointer;' +
-      'font:700 14px Nunito,system-ui,sans-serif;padding:10px 16px}' +
+      'font:700 14px Nunito,"Nunito Fallback",system-ui,sans-serif;padding:10px 16px}' +
       '#fa-consent .fa-c-ok{background:#FDC51D;border-color:#FDC51D;color:#065264}' +
       '#fa-consent .fa-c-no{background:transparent;color:#fff}' +
       '</style>' +
