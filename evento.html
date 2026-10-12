@@ -161,13 +161,13 @@
 </head>
 
 <body>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PN5D2BTS" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a class="skip" href="#conteudo">Ir para o conteúdo</a>
   <div class="topbar">
     <div class="wrap">
       <a href="/" aria-label="Instituto FaçaAmigos, início"><img src="/img/guia/logo-branca.png" alt="FaçaAmigos" width="150" height="26"></a>
       <nav class="tnav" aria-label="Áreas do site">
-        <a href="https://playground.institutofacaamigos.com.br/">Playground</a>
+        <a href="https://institutofacaamigos.com.br/playground">Playground</a>
         <a href="/servicos">Clínica</a>
         <a href="/aprender">Para pais</a>
         <a href="/eventos" aria-current="page">Eventos</a>
@@ -380,7 +380,7 @@
         text('ev-quando', fmtData(ev.inicio) + ', das ' + fmtHora(ev.inicio) + ' às ' + fmtHora(ev.fim) + ' (horário de Belém)');
         text('ev-onde', ev.formato === 'online' ? 'Online · o link chega no seu ingresso após a confirmação' : [ev.local_nome, ev.local_endereco].filter(Boolean).join(' · ') || 'Belém/PA');
         if (ev.palestrante_nome) { text('ev-quem', ev.palestrante_nome); show('ev-quem-wrap', true); }
-        if (ev.capa_url) { $('ev-capa').src = ev.capa_url; show('ev-capa-wrap', true); }
+        if (ev.capa_url) { $('ev-capa').src = ev.capa_url; $('ev-capa').alt = ev.titulo || ''; show('ev-capa-wrap', true); }
         if (ev.promessa) { text('ev-promessa', ev.promessa); show('ev-promessa-wrap', true); }
         $('ev-beneficios').innerHTML = (ev.beneficios || []).map(function (b) { return '<li>' + esc(b) + '</li>'; }).join('');
         if (ev.para_quem || ev.nao_e_para) {
@@ -395,7 +395,7 @@
             show('ev-palestrante', true);
             text('ev-palestrante-nome', ev.palestrante_nome);
             text('ev-palestrante-bio', ev.palestrante_bio || '');
-            if (ev.palestrante_foto_url) { $('ev-palestrante-foto').src = ev.palestrante_foto_url; show('ev-palestrante-foto', true); }
+            if (ev.palestrante_foto_url) { $('ev-palestrante-foto').src = ev.palestrante_foto_url; $('ev-palestrante-foto').alt = 'Foto de ' + ev.palestrante_nome; show('ev-palestrante-foto', true); }
           }
         }
         var tipos = ev.tipos || [];

@@ -2,7 +2,7 @@
 
 Material pronto para responder a pergunta mais frequente do Playground: "é só para criança autista, neurodivergente ou atípica?". Use junto com a seção nova do site e com o guia.
 
-- Página do playground: https://playground.institutofacaamigos.com.br/#para-todas
+- Página do playground: https://institutofacaamigos.com.br/playground#para-todas
 - Guia completo: https://institutofacaamigos.com.br/aprender/e-para-todas-as-criancas
 
 Esta pasta não vai para o site. Ela está no `.vercelignore`.

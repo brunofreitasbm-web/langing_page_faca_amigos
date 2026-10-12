@@ -1,0 +1,34 @@
+name: Avisar buscadores (IndexNow)
+
+# Push humano na main (merge de PR). Publicações das branches auto/* chamam o mesmo script
+# no auto-publicar.yml, porque pushes feitos pelo GITHUB_TOKEN não disparam outros workflows.
+on:
+  push:
+    branches: [main]
+    paths: ['**.html', 'sitemap.xml']
+  workflow_dispatch:
+    inputs:
+      todas:
+        description: 'Enviar todas as URLs do sitemap'
+        type: boolean
+        default: false
+
+jobs:
+  indexnow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Esperar o deploy da Vercel
+        run: sleep 150
+      - name: Enviar páginas alteradas
+        run: |
+          if [ "${{ inputs.todas }}" = "true" ]; then
+            node scripts/indexnow.mjs --all
+          else
+            node scripts/indexnow.mjs "${{ github.event.before }}" "${{ github.sha }}"
+          fi

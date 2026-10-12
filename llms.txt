@@ -5,8 +5,8 @@
 ## Páginas principais
 
 - [Início — visão geral do ecossistema](https://institutofacaamigos.com.br/): Playground, Circuito e Clínica, endereços, horários e perguntas frequentes.
-- [Playground Inclusivo](https://playground.institutofacaamigos.com.br/): preços, Horário Inclusivo, meia-entrada inclusiva, como funciona e perguntas frequentes.
-- [Circuito de Carrinhos Elétricos](https://playground.institutofacaamigos.com.br/circuito): passeios, preço e perguntas frequentes.
+- [Playground Inclusivo](https://institutofacaamigos.com.br/playground): preços, Horário Inclusivo, meia-entrada inclusiva, como funciona e perguntas frequentes.
+- [Circuito de Carrinhos Elétricos](https://institutofacaamigos.com.br/circuito): passeios, preço e perguntas frequentes.
 - [Serviços da Clínica](https://institutofacaamigos.com.br/servicos): avaliação inicial, psicologia e terapia comportamental, fonoaudiologia, terapia ocupacional, psicopedagogia, avaliação neuropsicológica e orientação a pais e escola.
 - [Eventos — palestras, encontros e treinamentos](https://institutofacaamigos.com.br/eventos): agenda do Instituto para famílias e profissionais em Belém, com inscrição gratuita ou paga, vagas limitadas reais e lista de espera.
 - [Aprender — guias educativos](https://institutofacaamigos.com.br/aprender): guias curtos sobre birra e crise, rotina visual, laudo e CIPTEA e mais, escritos pela psicóloga Isabella Gonçalves Freitas.
@@ -85,8 +85,8 @@ Não. O atendimento no Playground e no Circuito é por ordem de chegada, todos o
 ## Contatos e Links Oficiais
 
 - **Site Principal**: [https://institutofacaamigos.com.br/](https://institutofacaamigos.com.br/)
-- **Playground**: [https://playground.institutofacaamigos.com.br/](https://playground.institutofacaamigos.com.br/)
-- **Circuito**: [https://playground.institutofacaamigos.com.br/circuito](https://playground.institutofacaamigos.com.br/circuito)
+- **Playground**: [https://institutofacaamigos.com.br/playground](https://institutofacaamigos.com.br/playground)
+- **Circuito**: [https://institutofacaamigos.com.br/circuito](https://institutofacaamigos.com.br/circuito)
 - **Documentação completa para IA**: [https://institutofacaamigos.com.br/llms-full.txt](https://institutofacaamigos.com.br/llms-full.txt)
 - **WhatsApp**: [+55 91 99234-7673](https://wa.me/5591992347673)
 - **Instagram**: [@facaamigos.belem](https://www.instagram.com/facaamigos.belem/)

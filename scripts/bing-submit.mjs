@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Envia as URLs do sitemap.xml ao Bing Webmaster Tools (SubmitUrlBatch), sem dependências (Node 18+).
+// Envia as URLs do sitemap.xml e do sitemap-playground.xml ao Bing Webmaster Tools (SubmitUrlBatch), sem dependências (Node 18+).
 //   node scripts/bing-submit.mjs            envia
 //   node scripts/bing-submit.mjs --dry      só lista o que seria enviado
 //
@@ -26,7 +26,7 @@ if (!apikey) {
   process.exit(1);
 }
 
-const xml = readFileSync(join(root, 'sitemap.xml'), 'utf8');
+const xml = ['sitemap.xml', 'sitemap-playground.xml'].map((f) => readFileSync(join(root, f), 'utf8')).join('\n');
 const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
 
 const sites = await (await fetch(`${API}/GetUserSites?apikey=${apikey}`)).json();

@@ -11,7 +11,7 @@ Site **estático** (HTML/CSS/JS puro, sem build) publicado na Vercel, com backen
 | Host | Serve |
 |---|---|
 | `institutofacaamigos.com.br` (hub) | `index.html`, guia, codigo, teste, servicos, aprender, glossario, eventos, termos, política |
-| `playground.institutofacaamigos.com.br` | `/` (= `playground.html`) e `/circuito` |
+| `playground.institutofacaamigos.com.br` (só redireciona 308) | `/` → `institutofacaamigos.com.br/playground`; `/circuito` → `institutofacaamigos.com.br/circuito` |
 | `gestao.` e `clinica.institutofacaamigos.com.br` | `/` → `gestao.html` (Hub de Gestão, noindex) |
 
 A Clínica (Next.js) e os demais sistemas são **outros repositórios**.
@@ -49,7 +49,7 @@ Deploy: push na `main` publica na Vercel. **Funções e migrations não vão pel
 ├── admin.html            painel privado (leads, textos, cupons Wi-Fi, eventos)
 ├── gestao.html           Hub de Gestão (login + 7 atalhos SSO)
 ├── termos.html, politica-privacidade.html, 404.html
-├── assets/               fa-track.js, fa-footer.js, fa-cta.js
+├── assets/               fa-track.js, fa-footer.js, fa-cta.js, fa-back.js
 ├── img/, downloads/      mídia pública (downloads/ tem o capítulo 1 grátis)
 ├── middleware.js, vercel.json, package.json, .vercelignore, .gitignore
 ├── robots.txt, robots-gestao.txt, sitemap.xml, llms*.txt, geo-facts.json, site.webmanifest
@@ -77,8 +77,9 @@ Deploy: push na `main` publica na Vercel. **Funções e migrations não vão pel
 
 | Arquivo | Função | Pontos de atenção |
 |---|---|---|
-| `fa-track.js` | **Primeira linha do `<head>`, antes do charset** (não mover). Consent Mode v2 (tudo `denied`; `fa_consent` = `all`/`essential`), GTM `GTM-PN5D2BTS`, GA4 `G-37G5XLBXKG` direto, Clarity só com aceite. Guarda origem (utm_*, gclid, fbclid, src, sck, referrer, IA) em cookie `fa_origin` no domínio raiz. Expõe `faTrack()`, `faOrigin()`, `faAeoMetrics()`, `faConsentOpen()`. Eventos: `whatsapp_click`, `begin_checkout`, `file_download`, `scroll_depth`. Passa `xcod=ga.<client_id>` ao checkout Hotmart. | Mapa `CHECKOUTS` tem os preços (guia R$149, código R$47). O preço do código só existe aqui. IDs de GTM duplicados no HTML. `check.mjs` reprova 2º container GTM. |
-| `fa-footer.js` | Rodapé único via `<footer data-fa-footer="hub\|playground\|circuito\|teste\|servicos\|aprender\|glossario\|eventos">`. Constantes `CLINICA_STATUS`, `GRAOPARA_STATUS` (linhas 10-11) controlam o "Em breve". | `guia.html` e `codigo.html` têm footer próprio e não recebem mudanças daqui. JS diz "Av. Augusto Montenegro", HTML/schemas dizem "Rod.". |
+| `fa-track.js` | **Primeira linha do `<head>`, antes do charset** (não mover). Consent Mode v2 (tudo `denied`; `fa_consent` = `all`/`essential`), GTM `GTM-NPDJ58XR`, GA4 `G-37G5XLBXKG` direto, Clarity só com aceite. Guarda origem (utm_*, gclid, fbclid, src, sck, referrer, IA) em cookie `fa_origin` no domínio raiz. Expõe `faTrack()`, `faOrigin()`, `faAeoMetrics()`, `faConsentOpen()`. Eventos: `whatsapp_click`, `begin_checkout`, `file_download`, `scroll_depth`. Passa `xcod=ga.<client_id>` ao checkout Hotmart. | Mapa `CHECKOUTS` tem os preços (guia R$149, código R$47). O preço do código só existe aqui. IDs de GTM duplicados no HTML. `check.mjs` reprova 2º container GTM. |
+| `fa-back.js` | Botão/gesto "voltar" do celular navega dentro da página. **Único ponto que pode usar `history`/`popstate`.** `faBack.use(dono, onBack)` devolve `setDepth(n)` (n = passos internos de voltar; 0 = raiz, onde o voltar sai da página). Usado em `teste.html` (passos/perguntas), `admin.html` (modais → painel do evento → aba) e `ingresso.html` (modal). | Recarregar a página (SSO, F5, redirect) perde a pilha em memória. Tela nova com estado próprio: usar este módulo, não `pushState` manual. |
+| `fa-footer.js` | Rodapé único via `<footer data-fa-footer="hub\|playground\|circuito\|teste\|servicos\|aprender\|glossario\|eventos">`. Constantes `CLINICA_STATUS`, `GRAOPARA_STATUS` (linhas 10-11) controlam o "Em breve". | `guia.html` e `codigo.html` têm footer próprio e não recebem mudanças daqui. Endereço padronizado como "Rod. Augusto Montenegro, 4300" em todo o site. |
 | `fa-cta.js` | Barra fixa mobile (≤760px). Lê `data-label`, `data-href` (ou `whatsapp`), `data-event` do próprio `<script>`. | Depende de `.wa-float` na página. Não pode ser carregado por módulo/dinâmico. |
 
 **Convenções de página:** CSS inline por página (sem folha compartilhada); duas paletas (hub/clínica: petrol `#065264`; playground/circuito: rosa `#F0196B`); `.fx` + IntersectionObserver para reveal; `<a class=skip>` + `<main id=conteudo>`; links internos sem `.html`, apontando direto para o host dono da página; todo texto em pt-BR; sem "1º/maior/melhor" sem fato público; sem `AggregateRating` inventado; nome do instrumento-base do teste nunca em texto público.

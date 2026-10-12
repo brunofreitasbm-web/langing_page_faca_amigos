@@ -6,11 +6,10 @@
 // então a regra nunca disparava e a raiz sempre caía no comportamento
 // padrão (servir index.html) para qualquer host, inclusive o apex.
 //
-// Decisão de risco: index.html agora É o hub (o domínio mais importante,
-// institutofacaamigos.com.br, não depende de nenhuma lógica condicional —
-// é o comportamento padrão da Vercel, funciona mesmo se este middleware
-// quebrar). Só os subdomínios secundários (playground. e gestao.) precisam
-// de uma regra ativa para servir a página deles em vez do índice padrão.
+// Decisão de risco: index.html É o hub, e /playground e /circuito são páginas comuns dele
+// (cleanUrls). O domínio principal não depende de lógica condicional aqui para servi-las. Só
+// o host antigo playground. (redirecionamento) e os subdomínios privados (gestao., clinica.)
+// precisam de regra ativa.
 //
 // Hub de Gestão (gestao.): além de servir /gestao, todo caminho desse host sai com
 // X-Robots-Tag noindex e o /robots.txt dele é o robots-gestao.txt (Disallow: /). O try/catch
@@ -190,14 +189,15 @@ export default async function middleware(request) {
     const host = request.headers.get("host") || "";
     const url = new URL(request.url);
     const path = url.pathname;
-    // Cada página tem um domínio "dono" (o do canonical): playground. só serve a home do
-    // playground e o /circuito; tudo o mais é do hub. O outro host redireciona (308), assim não
-    // existem cópias navegáveis das mesmas páginas em dois domínios.
+    // Playground e Circuito moram no domínio principal (/playground e /circuito). O host antigo
+    // playground. só redireciona (308) para lá, mantendo caminho e query (links, QR e anúncios antigos).
+    // NUNCA remover o domínio da Vercel/DNS: sem ele esses links quebram.
     if (host === PLAYGROUND_HOST) {
-      if (path === "/") return rewrite(new URL("/playground", request.url));
-      if (path === "/playground") return Response.redirect(`https://${PLAYGROUND_HOST}/${url.search}`, 308);
-      if (path === "/circuito" || isFile(path)) return next();
-      return Response.redirect(`https://${HUB_HOST}${path}${url.search}`, 308);
+      // Sitemap de transição com as URLs antigas, para o Google enxergar os redirecionamentos.
+      if (path === "/sitemap.xml") return rewrite(new URL("/sitemap-playground.xml", request.url));
+      if (isFile(path)) return next();
+      const destino = path === "/" ? "/playground" : path;
+      return Response.redirect(`https://${HUB_HOST}${destino}${url.search}`, 308);
     }
     if (host === HUB_HOST) {
       if (path === "/sitemap-eventos.xml") return await sitemapEventos();
@@ -206,8 +206,6 @@ export default async function middleware(request) {
         const pagina = await eventoSSR(request, evento[1]);
         if (pagina) return pagina;
       }
-      if (path === "/playground") return Response.redirect(`https://${PLAYGROUND_HOST}/${url.search}`, 308);
-      if (path === "/circuito") return Response.redirect(`https://${PLAYGROUND_HOST}/circuito${url.search}`, 308);
       return next();
     }
     // Hub de Gestão (privado, Bruno e Isabella) — ver gestao.html.

@@ -31,13 +31,11 @@
   var kind = footer.getAttribute('data-fa-footer') || 'hub';
   var wa = WA[kind] || WA.hub;
 
-  // Links entre páginas sempre apontam para o domínio "dono" da página (hub ou playground.), para
-  // o visitante não trocar de host sem perceber. Em localhost/preview ficam relativos.
+  // Links absolutos em produção; em localhost/preview ficam relativos. Playground e Circuito
+  // moram no mesmo domínio do hub (/playground e /circuito).
   var HUB = 'https://institutofacaamigos.com.br';
-  var PLAY = 'https://playground.institutofacaamigos.com.br';
   var isProd = /(^|\.)institutofacaamigos\.com\.br$/.test(location.hostname);
   function hub(p) { return (isProd ? HUB : '') + p; }
-  function play(p) { return (isProd ? PLAY : '') + p; }
 
   function link(href, text, extra) { return '<a href="' + href + '"' + (extra || '') + '>' + text + '</a>'; }
   var EXT = ' target="_blank" rel="noopener"';
@@ -72,10 +70,10 @@
     '<div class="fa-footer-col">',
     '  <h4 class="fa-footer-title">Unidades &amp; Locais</h4>',
     '  <ul class="fa-footer-list">',
-    '    <li><strong>Parque Shopping Belém</strong><span>Av. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</span></li>',
+    '    <li><strong>Parque Shopping Belém</strong><span>Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</span></li>',
     '    <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (' + GRAOPARA_STATUS + ')</span></li>',
     '    <li><strong>Centro de Terapia Comportamental</strong><span>Rua Boaventura da Silva, 1573 · Umarizal (' + CLINICA_STATUS + ')</span></li>',
-    '    <li><strong>Funcionamento</strong><span>Todos os dias, 10h às 22h (Playground e Circuito) · ' + link('https://www.instagram.com/facaamigos.belem/', '@facaamigos.belem', EXT) + '</span></li>',
+    '    <li><strong>Funcionamento</strong><span>Parque Shopping: todos os dias, 10h às 22h · Grão-Pará: seg. a sáb. 10h às 22h, dom. 10h às 21h · ' + link('https://www.instagram.com/facaamigos.belem/', '@facaamigos.belem', EXT) + '</span></li>',
     '  </ul>',
     '</div>'
   ].join('\n');
@@ -87,9 +85,9 @@
     '    <li>' + link(hub('/'), 'Início') + '</li>',
     '    <li>' + link(hub('/servicos'), 'Serviços da Clínica') + '</li>',
     '    <li>' + link('https://clinica.institutofacaamigos.com.br/?utm_source=hub&amp;utm_medium=site&amp;utm_campaign=rodape_' + kind, 'Site da Clínica') + '</li>',
-    '    <li>' + link(play('/'), 'Playground Inclusivo') + '</li>',
-    '    <li>' + link(play('/circuito'), 'Circuito de Carrinhos') + '</li>',
-    '    <li>' + link(hub('/teste?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'Mapeamento Gratuito') + '</li>',
+    '    <li>' + link(hub('/playground'), 'Playground Inclusivo') + '</li>',
+    '    <li>' + link(hub('/circuito'), 'Circuito de Carrinhos') + '</li>',
+    '    <li>' + link(hub('/teste'), 'Mapeamento Gratuito', ' data-fa-link="rodape_' + kind + '"') + '</li>',
     '    <li>' + link(hub('/eventos'), 'Eventos (palestras e treinamentos)') + '</li>',
     '    <li>' + link(hub('/aprender'), 'Aprender (Artigos &amp; Guias)') + '</li>',
     '    <li>' + link(hub('/glossario'), 'Glossário Comportamental') + '</li>',
@@ -101,8 +99,8 @@
     '<div class="fa-footer-col">',
     '  <h4 class="fa-footer-title">Conteúdos &amp; Contato</h4>',
     '  <ul class="fa-footer-list">',
-    '    <li>' + link(hub('/guia?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'E-book: O Brincar com Propósito') + '</li>',
-    '    <li>' + link(hub('/codigo?utm_source=site&amp;utm_medium=rodape&amp;utm_campaign=' + kind), 'E-book: O Código do Desenvolvimento Infantil') + '</li>',
+    '    <li>' + link(hub('/guia'), 'E-book: O Brincar com Propósito', ' data-fa-link="rodape_' + kind + '"') + '</li>',
+    '    <li>' + link(hub('/codigo'), 'E-book: O Código do Desenvolvimento Infantil', ' data-fa-link="rodape_' + kind + '"') + '</li>',
     '    <li>' + link('https://wa.me/' + wa.n + '?text=' + encodeURIComponent(wa.t), 'Fale conosco no WhatsApp', EXT) + '</li>',
     '    <li>' + link(hub('/trabalhe-conosco'), 'Trabalhe Conosco') + '</li>',
     '    <li>' + link(hub('/politica-privacidade'), 'Política de Privacidade') + '</li>',

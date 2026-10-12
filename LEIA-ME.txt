@@ -1,3 +1,17 @@
+ATUALIZAÇÃO 09/10/2026 — Playground e Circuito saem do subdomínio e vão para o domínio principal
+---------------------------------------------------------------------------------------------
+- URLs novas: https://institutofacaamigos.com.br/playground e https://institutofacaamigos.com.br/circuito.
+- playground.institutofacaamigos.com.br virou só redirecionamento 308 (middleware.js), mantendo caminho e query
+  (/ -> /playground). NÃO remover o domínio da Vercel nem o DNS: QR do quiosque, Google Meu Negócio, Instagram e
+  anúncios antigos dependem dele.
+- Canonicals, JSON-LD, og:url, links internos, llms.txt/llms-full.txt (e seus modelos), sitemap.xml e robots.txt
+  atualizados. sitemap-playground.xml ficou como sitemap de transição (só no host antigo); apagar ~3 meses depois.
+- Ganho: um host só para o conteúdo indexável, uma propriedade no Search Console e atribuição sem depender do cookie
+  entre subdomínios (o cookie do domínio raiz segue valendo para gestao./clinica.).
+- scripts/check.mjs agora reprova qualquer link para o host antigo.
+- FAZER FORA DO CÓDIGO: ver a seção 7 do MAPA-DO-SITE.md (Search Console, Google Meu Negócio, Instagram, anúncios).
+- Esperar oscilação de posição por algumas semanas no Google; acompanhar "/playground" no Search Console.
+
 ATUALIZAÇÃO 29/09/2026 (3) — módulo "É para todas as crianças"
 ---------------------------------------------------------------
 Responde a pergunta mais frequente do Playground: "é só para criança autista, neurodivergente ou atípica?".
@@ -25,6 +39,9 @@ por até 1 ano e continua vendo a versão antiga deles. Para uma troca urgente d
 renomeie o arquivo e atualize as referências. Arquivos novos e nomes novos não sofrem disso.
 Redes sociais (WhatsApp, Facebook, X) guardam a prévia por conta própria: use o depurador de compartilhamento
 da Meta para atualizar a de um link.
+
+TROCA DE CONTAINER — 09/10/2026: o site passou a usar SÓ o GTM-NPDJ58XR (todas as páginas, fa-track.js e portal Wi-Fi),
+a pedido do dono. Onde o texto abaixo (29/09) diz GTM-PN5D2BTS como o que ficou, vale agora o GTM-NPDJ58XR.
 
 UM CONTAINER GTM SÓ — 29/09/2026
 --------------------------------
@@ -726,7 +743,7 @@ RASTREAMENTO — AGORA IDÊNTICO NAS 4 PÁGINAS
 Antes estava inconsistente: index e circuito carregavam DOIS Clarity
 diferentes, a política de privacidade usava outro container do GTM e o
 hub não tinha rastreamento nenhum. Foi unificado em:
-- Google Tag Manager  GTM-PN5D2BTS
+- Google Tag Manager  GTM-NPDJ58XR
 - Google Analytics 4  G-Q7LHH3C9P8
 - Microsoft Clarity   xz0butjjbh
 - Contentsquare       c3b9c7ee91c87

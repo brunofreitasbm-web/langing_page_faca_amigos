@@ -6,12 +6,13 @@
  * O que faz
  *  1. Consent Mode v2: tudo começa NEGADO. GTM e GA4 carregam em modo sem cookies até a pessoa aceitar no
  *     banner. O Microsoft Clarity (mapas de calor e gravação de sessão) só carrega DEPOIS do aceite — voltou em
- *     01/10/2026 com o projeto novo yr8qq61339; o Contentsquare continua removido.)
+ *     01/10/2026 com o projeto novo yr1no82bvm; o Contentsquare continua removido.)
  *  2. Origem do visitante: guarda a primeira origem (utm_*, gclid, fbclid, src, sck, referrer) e a mais recente,
  *     num cookie do domínio raiz — assim ela sobrevive ao salto entre o hub e o subdomínio do playground.
- *     Links internos deixam de sobrescrever a origem real (ex.: o banner do hub não vira "site").
+ *     Links internos não levam UTM (a origem real fica no cookie; UTM interno abriria sessão nova no GA4).
  *     window.faOrigin() devolve a origem para os formulários.
- *  3. Eventos: whatsapp_click, begin_checkout (Hotmart), file_download, scroll_depth 50/90.
+ *  3. Eventos: whatsapp_click, begin_checkout (Hotmart), file_download, scroll_depth 50/90 e cta_click nos
+ *     links internos marcados com data-fa-link="<onde>" (substitui os antigos ?utm_source=site&utm_medium=...).
  *  4. client_id do GA4 até o checkout: guia.html/codigo.html pegam o xcod de faOrigin() e mandam junto no link
  *     da Hotmart. O hotmart-webhook lê de volta e manda a compra pro GA4 via Measurement Protocol — sem isso,
  *     nenhuma venda aparecia ligada à campanha que trouxe a pessoa.
@@ -21,16 +22,16 @@
 (function () {
   'use strict';
 
-  // GTM: um container só. Até 29/09/2026 carregavam dois (GTM-PN5D2BTS e GTM-NPDJ58XR). Os dois estavam com a
-  // versão publicada vazia (0 tags, 0 acionadores, 0 regras), então nada era contado em dobro, mas cada página
-  // baixava ~330 KB de gtm.js à toa por container. Ficou o GTM-PN5D2BTS (o do primeiro commit, o do PUBLICAR.md e o
-  // do portal Wi-Fi). Ao criar tags no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o
-  // gtag direto abaixo (page_view em dobro). O scripts/check.mjs reprova a volta de um segundo container.
-  var IDS = { gtm: 'GTM-PN5D2BTS', ga4: 'G-37G5XLBXKG', clarity: 'yr8qq61339' };
+  // GTM: um container só (GTM-NPDJ58XR). Até 29/09/2026 carregavam dois (GTM-PN5D2BTS e GTM-NPDJ58XR); em 09/10/2026
+  // o site passou a usar só o GTM-NPDJ58XR, em todas as páginas e no portal Wi-Fi. Ao criar tags
+  // no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o gtag direto abaixo (page_view em
+  // dobro). O scripts/check.mjs reprova a volta de um segundo container.
+  var IDS = { gtm: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG', clarity: 'yr1no82bvm' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
   var ROOT_DOMAIN = 'institutofacaamigos.com.br';
+  // playground. fica na lista enquanto durar o redirecionamento 308 para /playground (links antigos, QR, anúncios).
   var INTERNAL_HOSTS = ['institutofacaamigos.com.br', 'www.institutofacaamigos.com.br', 'playground.institutofacaamigos.com.br'];
   var WHATSAPP_UNITS = { '5591991782027': 'clinica', '5591992347673': 'playground_circuito' };
   // GEO & AEO: quando não há utm_source na URL, mas o referrer é um desses domínios, a visita entrou por uma
@@ -188,6 +189,8 @@
     var found = {};
     var has = false;
     PARAMS.forEach(function (p) { var v = q.get(p); if (v) { found[p] = v.slice(0, 120); has = true; } });
+    // utm_source=site era o UTM dos links internos (removido em 10/2026); links velhos em cache não viram origem.
+    if (found.utm_source === 'site') { found = {}; has = false; }
     var stored = {};
     try { stored = JSON.parse(readOrigin() || '{}') || {}; } catch (e) { stored = {}; }
 
@@ -262,30 +265,6 @@
     };
   };
 
-  // Links internos: leva a origem real adiante em vez de deixar o banner sobrescrever com utm_source=site.
-  function carryOrigin(a) {
-    var u;
-    try { u = new URL(a.href, window.location.href); } catch (e) { return; }
-    if (!isInternalHost(u.hostname) && u.hostname !== window.location.hostname) return;
-    if (/\.(pdf|jpe?g|png|webp|mp4)$/i.test(u.pathname)) return;
-    var o = window.faOrigin();
-    if (!o.utm_source) return; // visita direta: não inventa origem nos links
-    var oldSource = u.searchParams.get('utm_source');
-    var oldMedium = u.searchParams.get('utm_medium');
-    var oldCampaign = u.searchParams.get('utm_campaign');
-    if (oldSource && !u.searchParams.get('utm_content') && oldSource === 'site') {
-      // Guarda o "onde clicou" dentro do site em utm_content, em vez de perder.
-      u.searchParams.set('utm_content', [oldMedium, oldCampaign].filter(Boolean).join('_'));
-    }
-    ['utm_source', 'utm_medium', 'utm_campaign', 'gclid', 'fbclid'].forEach(function (k) {
-      if (o[k] && (!u.searchParams.get(k) || (oldSource === 'site' && k.indexOf('utm_') === 0 && k !== 'utm_content'))) {
-        u.searchParams.set(k, o[k]);
-      }
-    });
-    if (o.utm_term && !u.searchParams.get('utm_term')) u.searchParams.set('utm_term', o.utm_term);
-    a.href = u.toString();
-  }
-
   // ---------- eventos por delegação ----------
   function sectionOf(el) {
     var s = el.closest('section[id], [data-section], footer, header, nav');
@@ -297,7 +276,12 @@
     if (!a) return;
     var href = a.getAttribute('href') || '';
 
-    carryOrigin(a);
+    // Links internos sem UTM: o "onde clicou" vai como evento. A origem real já está no cookie fa_origin.
+    var linkId = a.getAttribute('data-fa-link');
+    if (linkId) {
+      track('cta_click', { cta_location: linkId, destino: a.pathname, pagina: window.location.pathname, secao: sectionOf(a) });
+      return;
+    }
 
     var wa = href.match(/(?:wa\.me\/|phone=)(\d{10,15})/);
     if (wa) {
@@ -355,11 +339,11 @@
       '<style>' +
       '#fa-consent{position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:640px;margin:0 auto;' +
       'background:#065264;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 8px 28px rgba(0,0,0,.28);' +
-      'font:400 14px/1.5 Nunito,system-ui,sans-serif}' +
+      'font:400 14px/1.5 Nunito,"Nunito Fallback",system-ui,sans-serif}' +
       '#fa-consent p{margin:0 0 12px}#fa-consent a{color:#FDC51D;text-decoration:underline}' +
       '#fa-consent .fa-c-row{display:flex;gap:10px;flex-wrap:wrap}' +
       '#fa-consent button{flex:1 1 150px;min-height:44px;border-radius:999px;border:2px solid #fff;cursor:pointer;' +
-      'font:700 14px Nunito,system-ui,sans-serif;padding:10px 16px}' +
+      'font:700 14px Nunito,"Nunito Fallback",system-ui,sans-serif;padding:10px 16px}' +
       '#fa-consent .fa-c-ok{background:#FDC51D;border-color:#FDC51D;color:#065264}' +
       '#fa-consent .fa-c-no{background:transparent;color:#fff}' +
       '</style>' +

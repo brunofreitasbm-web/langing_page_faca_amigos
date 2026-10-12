@@ -97,33 +97,20 @@ function alvoLocal(valor) {
   return v.replace(/^\/+/, '');
 }
 
-// Cada página tem um domínio "dono" (o do canonical). O playground. só serve a home do playground e o
-// /circuito; o resto é do hub (o middleware.js redireciona o que estiver no host errado). Links devem
-// apontar direto para o dono, senão o visitante troca de host sem querer ou passa por um redirect.
+// Tudo mora em institutofacaamigos.com.br (inclusive /playground e /circuito). O host antigo
+// playground. só redireciona (308, middleware.js): nenhum link do site pode apontar para ele.
 const HUB = 'institutofacaamigos.com.br';
 const PLAY = 'playground.institutofacaamigos.com.br';
-const DONO_PLAYGROUND = new Set(['', 'circuito']);
-function problemaDeDominio(valor, hostDaPagina) {
+function problemaDeDominio(valor) {
   let v = decodeHtml(valor.trim());
   if (/^\/\//.test(v)) v = 'https:' + v;
-  let host, caminho;
-  if (/^https?:\/\//i.test(v)) {
-    let u;
-    try { u = new URL(v); } catch { return null; }
-    host = u.hostname;
-    caminho = u.pathname;
-  } else if (v.startsWith('/')) {
-    host = hostDaPagina;
-    caminho = v.split('#')[0].split('?')[0];
-  } else return null;
-  if (host !== HUB && host !== PLAY) return null;
-  const rel = caminho.replace(/^\/+|\/+$/g, '');
-  if (/\.[a-z0-9]+$/i.test(rel) && !/\.html$/i.test(rel)) return null; // arquivos (llms.txt, imagens...) passam em qualquer host
-  const donoPlay = DONO_PLAYGROUND.has(rel) || rel === 'playground';
-  if (host === HUB && donoPlay && rel !== '') return `pertence ao playground.; use https://${PLAY}/${rel === 'playground' ? '' : rel}`;
-  if (host === PLAY && !donoPlay) return `pertence ao hub; use https://${HUB}/${rel}`;
-  if (host === PLAY && rel === 'playground') return `use https://${PLAY}/`;
-  return null;
+  if (!/^https?:\/\//i.test(v)) return null;
+  let u;
+  try { u = new URL(v); } catch { return null; }
+  if (u.hostname !== PLAY) return null;
+  const rel = u.pathname.replace(/^\/+|\/+$/g, '');
+  if (/\.[a-z0-9]+$/i.test(rel) && !/\.html$/i.test(rel)) return null; // arquivos passam em qualquer host
+  return `host antigo; use https://${HUB}/${rel === '' ? 'playground' : rel}`;
 }
 
 // "guia" -> conteúdo de guia.html (para conferir âncoras entre páginas)
@@ -234,8 +221,6 @@ for (const arq of paginas) {
   // links internos (href/src/poster/srcset de tags reais; JS e comentários ignorados)
   const vistos = new Set();
   const canonDaPagina = [...limpo.matchAll(/<linkb[^>]*>/gi)].map((m) => attrs(m[0])).find((a) => /(?:^|\s)canonical(?:\s|$)/i.test(a.rel ?? ''))?.href ?? '';
-  let hostDaPagina = HUB;
-  try { hostDaPagina = new URL(canonDaPagina).hostname; } catch { /* sem canonical: assume hub */ }
   for (const m of limpo.matchAll(/<([a-zA-Z][a-zA-Z0-9-]*)\b([^>]*)>/g)) {
     const tag = m[1].toLowerCase();
     const a = attrs(m[2]);
@@ -247,7 +232,7 @@ for (const arq of paginas) {
     if (a.srcset) for (const parte of a.srcset.split(',')) cand.push(parte.trim().split(/\s+/)[0]);
     for (const c of cand) {
       if (tag === 'a') {
-        const prob = problemaDeDominio(c, hostDaPagina);
+        const prob = problemaDeDominio(c);
         if (prob) erros.push(`link no domínio errado: ${c} (${prob})`);
         const hash = decodeHtml(c.trim()).split('#')[1];
         const alvoRel = alvoLocal(c);
@@ -455,17 +440,24 @@ if (nomesOrganization.size > 1) {
 
 // ---------- verificação global: sitemap.xml e robots.txt ----------
 {
-  const sitemapPath = join(root, 'sitemap.xml');
-  if (!existsSync(sitemapPath)) {
-    globais.erros.push('sitemap.xml não existe.');
-  } else {
-    const locs = new Set([...read('sitemap.xml').matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)].map((m) => m[1]));
-    for (const [arq, canon] of canonicais) {
-      if (!locs.has(canon)) globais.erros.push(`${arq}: canonical ${canon} não está no sitemap.xml.`);
+  // sitemap.xml é o oficial. sitemap-playground.xml é de transição (URLs antigas do host playground.,
+  // servido em /sitemap.xml daquele host pelo middleware.js) e pode sair ~3 meses depois da migração.
+  const SITEMAPS = { 'sitemap.xml': HUB, 'sitemap-playground.xml': PLAY };
+  const locs = new Set();
+  for (const [nome, host] of Object.entries(SITEMAPS)) {
+    if (!existsSync(join(root, nome))) { globais.erros.push(`${nome} não existe.`); continue; }
+    for (const m of read(nome).matchAll(/<loc>\s*([^<]+?)\s*<\/loc>/g)) {
+      const loc = m[1];
+      locs.add(loc);
+      if (new URL(loc).hostname !== host) globais.erros.push(`${nome} lista ${loc}, que não é do host ${host}.`);
+      if (/\.[a-z0-9]+$/i.test(new URL(loc).pathname)) globais.erros.push(`${nome} lista ${loc}, que não é página HTML.`);
     }
-    for (const canon of noindexCanonicals) {
-      if (locs.has(canon)) globais.erros.push(`sitemap.xml lista ${canon}, que é noindex.`);
-    }
+  }
+  for (const [arq, canon] of canonicais) {
+    if (!locs.has(canon)) globais.erros.push(`${arq}: canonical ${canon} não está em nenhum sitemap.`);
+  }
+  for (const canon of noindexCanonicals) {
+    if (locs.has(canon)) globais.erros.push(`sitemap lista ${canon}, que é noindex.`);
   }
   if (!existsSync(join(root, 'robots.txt'))) {
     globais.erros.push('robots.txt não existe.');
