@@ -175,10 +175,14 @@ Deno.serve(async (req) => {
     }
     rating = Math.max(1, Math.min(5, Math.round(rating)));
 
-    // Chave operacional opcional para auto-aprovação se o App tiver a credencial
+    // Regra de Auto-Aprovação (Opção A):
+    // Se o cliente avaliou com NPS 9 ou 10 (Promotor) ou 5 estrelas, aprova na hora e publica no site!
+    // Notas inferiores (neutros e detratores) ficam pendentes de moderação no admin.
     const opsKey = Deno.env.get("OPS_KEY");
     const reqOpsKey = req.headers.get("x-ops-key");
-    const autoApprove = !!(opsKey && reqOpsKey && opsKey === reqOpsKey);
+    const explicitOpsApprove = !!(opsKey && reqOpsKey && opsKey === reqOpsKey);
+    const isPromoter = (npsScore !== null && npsScore >= 9) || (npsScore === null && rating >= 5);
+    const autoApprove = explicitOpsApprove || isPromoter;
 
     const visitDate = str(body.visit_date) || formatMonthYear();
     const visitRole = str(body.author_role) || `${visitCount}ª visita`;
@@ -196,7 +200,7 @@ Deno.serve(async (req) => {
       approved: autoApprove,
       featured: false,
       approved_at: autoApprove ? new Date().toISOString() : null,
-      approved_by: autoApprove ? "api_auto_approve" : null,
+      approved_by: autoApprove ? (explicitOpsApprove ? "api_ops_key" : "auto_promoter_nps") : null,
     };
 
     const { data: inserted, error: insertError } = await admin
@@ -215,7 +219,7 @@ Deno.serve(async (req) => {
       id: inserted.id,
       status: inserted.approved ? "approved" : "pending_moderation",
       message: inserted.approved
-        ? "Avaliação aprovada e publicada no site."
+        ? "Avaliação (NPS 9-10) auto-aprovada e publicada no site com sucesso."
         : "Avaliação recebida com sucesso e aguardando moderação no painel.",
     }, 201);
   }
