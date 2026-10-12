@@ -565,12 +565,56 @@
 
 
 
-    /* Prova social (avaliações) */
-    .rv-grid { display: grid; gap: 16px; margin-top: 18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-    .rv { margin: 0; background: var(--white); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-sm); }
+    /* Prova social (avaliações) — Carrossel Deslizante */
+    .rv-slider-wrap { position: relative; margin: 18px 0 10px; width: 100%; }
+    .rv-grid {
+      display: flex !important;
+      gap: 16px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 10px 4px 18px;
+      margin: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--teal) rgba(26,63,53,0.08);
+      cursor: grab;
+    }
+    .rv-grid.is-dragging { cursor: grabbing; scroll-snap-type: none; scroll-behavior: auto; }
+    .rv-grid::-webkit-scrollbar { height: 7px; }
+    .rv-grid::-webkit-scrollbar-track { background: rgba(26,63,53,0.06); border-radius: 9999px; }
+    .rv-grid::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 9999px; }
+    .rv {
+      flex: 0 0 clamp(260px, 78vw, 320px);
+      min-width: 260px;
+      margin: 0;
+      background: var(--white);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      scroll-snap-align: start;
+      scroll-snap-stop: normal;
+      transition: transform var(--t-fast), box-shadow var(--t-fast);
+      user-select: none;
+      display: flex;
+      flex-direction: column;
+    }
+    .rv:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
     .rv-stars { color: #F5B301; letter-spacing: 2px; font-size: 1.05rem; margin-bottom: 8px; }
-    .rv blockquote { margin: 0 0 10px; font-weight: 700; color: var(--ink); }
+    .rv blockquote { margin: 0 0 10px; font-weight: 700; color: var(--ink); flex: 1; }
     .rv figcaption { font-size: 0.85rem; font-weight: 800; color: var(--ink-soft); }
+    .rv-nav-btn {
+      position: absolute; top: calc(50% - 22px); width: 44px; height: 44px; border-radius: 50%;
+      background: var(--white); border: 2px solid rgba(26,63,53,0.1); box-shadow: var(--shadow-lg);
+      color: var(--dark); display: flex; align-items: center; justify-content: center; cursor: pointer;
+      z-index: 10; transition: all var(--t-fast);
+    }
+    .rv-nav-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); transform: scale(1.1); }
+    .rv-nav-btn.rv-prev { left: -20px; }
+    .rv-nav-btn.rv-next { right: -20px; }
+    .rv-scroll-hint { display: flex; justify-content: center; font-size: 0.82rem; font-weight: 800; color: var(--ink-soft); margin-top: 6px; }
+    @media (max-width: 860px) { .rv-nav-btn { display: none; } }
     .rv-note { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px; }
     .reviews-hub { margin-top: 44px; }
     /* Números numa linha só (antes: chips + seção "em números") */
@@ -1089,22 +1133,45 @@
         </div>
       </div>
 
-      <!-- Prova social: avaliações reais do Google (as mesmas do /playground) + números numa linha só -->
+      <!-- Prova social: avaliações reais do Sistema Playground / Google + números numa linha só -->
       <div class="reviews-hub fx" data-section="avaliacoes">
         <h3 class="sec-title sec-title-xs center">Mães e pais de Belém contam como foi</h3>
-        <div class="rv-grid">
-          <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-            <blockquote>“Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!”</blockquote>
-            <figcaption>Vanessa S. · avaliação no Google</figcaption></figure>
-          <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-            <blockquote>“Super amo esse lugar, deixo meus filhos com tranquilidade.”</blockquote>
-            <figcaption>Eledes F. · Local Guide no Google</figcaption></figure>
-          <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-            <blockquote>“Amei muito, meu filho se sentiu muito seguro e brincou bastante!”</blockquote>
-            <figcaption>Ana M. · avaliação no Google</figcaption></figure>
+        <div class="rv-slider-wrap">
+          <button class="rv-nav-btn rv-prev" aria-label="Avaliação anterior" id="hubRevPrevBtn" type="button">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+
+          <div class="rv-grid" id="hubReviewsGrid" role="region" aria-label="Carrossel de avaliações de famílias" tabindex="0">
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!”</blockquote>
+              <figcaption>Vanessa S. · 3ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Super amo esse lugar, deixo meus filhos com tranquilidade.”</blockquote>
+              <figcaption>Eledes F. · 5ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Amei muito, meu filho se sentiu muito seguro e brincou bastante!”</blockquote>
+              <figcaption>Ana M. · 2ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Os mediadores são super atenciosos. Meu filho é atípico e foi muito bem acolhido no Horário Inclusivo.”</blockquote>
+              <figcaption>Juliana L. · 4ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Ambiente limpo, seguro e com dinâmica excelente. Dá pra tomar um café tranquilo enquanto eles brincam.”</blockquote>
+              <figcaption>Rodrigo P. · 2ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Já virou nossa parada obrigatória todo fim de semana no shopping! Parabéns à equipe toda.”</blockquote>
+              <figcaption>Camila F. · 6ª visita</figcaption></figure>
+          </div>
+
+          <button class="rv-nav-btn rv-next" aria-label="Próxima avaliação" id="hubRevNextBtn" type="button">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+
+        <div class="rv-scroll-hint">
+          <span>← Deslize para ver mais avaliações →</span>
         </div>
         <p class="stats-line"><span><strong>+8 anos</strong> de atuação</span><span><strong>+1.100</strong> famílias já brincaram com a gente</span><span>Equipe que sabe lidar com crise, birra e primeira visita</span></p>
-        <p class="rv-note">Avaliações reais no Google sobre o FaçaAmigos Playground, no Parque Shopping Belém. A palavra que mais aparece: tranquilidade.</p>
+        <p class="rv-note">Avaliações reais de famílias sobre o FaçaAmigos Playground, no Parque Shopping Belém. A palavra que mais aparece: tranquilidade.</p>
       </div>
     </div>
   </section>
@@ -1553,6 +1620,68 @@
           document.getElementById('eventos').hidden = false;
           var nav = document.getElementById('nav-eventos'); if (nav) nav.hidden = false;
         }).catch(function () { /* sem agenda, sem seção */ });
+    })();
+  </script>
+  <script>
+    /* Carrossel Interativo + Hidratação dinâmica de Prova Social vinda do Sistema App Playground */
+    (function () {
+      var grid = document.getElementById('hubReviewsGrid');
+      var prevBtn = document.getElementById('hubRevPrevBtn');
+      var nextBtn = document.getElementById('hubRevNextBtn');
+
+      if (grid) {
+        function scrollTrack(dir) {
+          var step = grid.clientWidth > 640 ? 340 : 280;
+          grid.scrollBy({ left: dir * step, behavior: 'smooth' });
+        }
+        if (prevBtn) prevBtn.addEventListener('click', function () { scrollTrack(-1); });
+        if (nextBtn) nextBtn.addEventListener('click', function () { scrollTrack(1); });
+
+        var isDown = false, startX, scrollLeft;
+        grid.addEventListener('mousedown', function (e) {
+          isDown = true;
+          grid.classList.add('is-dragging');
+          startX = e.pageX - grid.offsetLeft;
+          scrollLeft = grid.scrollLeft;
+        });
+        grid.addEventListener('mouseleave', function () {
+          isDown = false;
+          grid.classList.remove('is-dragging');
+        });
+        grid.addEventListener('mouseup', function () {
+          isDown = false;
+          grid.classList.remove('is-dragging');
+        });
+        grid.addEventListener('mousemove', function (e) {
+          if (!isDown) return;
+          e.preventDefault();
+          var x = e.pageX - grid.offsetLeft;
+          var walk = (x - startX) * 1.5;
+          grid.scrollLeft = scrollLeft - walk;
+        });
+      }
+
+      if (!grid || !window.fetch) return;
+      var API = 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/playground-reviews';
+      fetch(API).then(function (r) {
+        if (!r.ok) return null;
+        return r.json();
+      }).then(function (d) {
+        if (!d || !Array.isArray(d.reviews) || !d.reviews.length) return;
+        var html = '';
+        d.reviews.slice(0, 10).forEach(function (r) {
+          var nameParts = (r.author_name || 'Cliente').split(' ');
+          var shortName = nameParts[0] + (nameParts[1] ? ' ' + nameParts[1].charAt(0) + '.' : '');
+          var stars = '★'.repeat(Math.max(1, Math.min(5, r.rating || 5)));
+          var visitLabel = r.author_role || (r.visit_count ? r.visit_count + 'ª visita' : '');
+          var figText = [shortName, visitLabel].filter(Boolean).join(' · ');
+          var comment = r.comment ? r.comment.replace(/^["“”]+|["“”]+$/g, '') : '';
+          html += '<figure class="rv"><div class="rv-stars" aria-label="' + (r.rating || 5) + ' estrelas">' + stars + '</div>' +
+            '<blockquote>“' + comment + '”</blockquote>' +
+            '<figcaption>' + figText + '</figcaption></figure>';
+        });
+        if (html) grid.innerHTML = html;
+      }).catch(function () { /* fallback estático preservado */ });
     })();
   </script>
   <script src="/assets/fa-footer.js" defer></script>

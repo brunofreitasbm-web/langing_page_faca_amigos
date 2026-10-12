@@ -1102,5 +1102,140 @@ Deno.serve(async (req) => {
     return jsonResponse(req, { success: true });
   }
 
+  // -------------------------------------------------------------------------
+  // Avaliações / Depoimentos de NPS do Playground (moderação para o site)
+  // -------------------------------------------------------------------------
+  if (action === "reviews_list") {
+    const status = str(body.status); // "all", "approved", "pending"
+    const q = str(body.q);
+    const limit = Math.min(Math.max(Number(body.limit) || 100, 1), 300);
+
+    let query = admin
+      .from("fa_playground_reviews")
+      .select("id, author_name, author_role, visit_count, rating, nps_score, comment, unit, source, visit_date, approved, featured, created_at, approved_at, approved_by")
+      .order("created_at", { ascending: false })
+      .limit(limit);
+
+    if (status === "approved") query = query.eq("approved", true);
+    else if (status === "pending") query = query.eq("approved", false);
+
+    if (q) {
+      const pattern = quoteFilterValue(`%${q.replace(/[%_]/g, "")}%`);
+      query = query.or(`author_name.ilike.${pattern},comment.ilike.${pattern}`);
+    }
+
+    const { data: reviews, error } = await query;
+    if (error) {
+      console.error("Erro ao listar reviews:", error);
+      return jsonResponse(req, { error: "falha ao listar avaliações" }, 500);
+    }
+
+    // Contadores rápidos para o painel
+    const [allCount, approvedCount] = await Promise.all([
+      admin.from("fa_playground_reviews").select("id", { count: "exact", head: true }),
+      admin.from("fa_playground_reviews").select("id", { count: "exact", head: true }).eq("approved", true),
+    ]);
+
+    const total = allCount.count ?? 0;
+    const approved = approvedCount.count ?? 0;
+    const pending = Math.max(0, total - approved);
+
+    return jsonResponse(req, {
+      reviews: reviews ?? [],
+      kpis: {
+        total,
+        approved,
+        pending,
+      },
+    });
+  }
+
+  if (action === "reviews_toggle_approval") {
+    const id = str(body.id);
+    const approved = !!body.approved;
+    if (!id) return jsonResponse(req, { error: "id da avaliação é obrigatório" }, 400);
+
+    const { data: updated, error } = await admin
+      .from("fa_playground_reviews")
+      .update({
+        approved,
+        approved_at: approved ? new Date().toISOString() : null,
+        approved_by: approved ? session.email : null,
+      })
+      .eq("id", id)
+      .select("id, approved, approved_at, approved_by")
+      .single();
+
+    if (error) {
+      console.error("Erro ao alternar aprovação de review:", error);
+      return jsonResponse(req, { error: "falha ao atualizar status da avaliação" }, 500);
+    }
+
+    return jsonResponse(req, { success: true, review: updated });
+  }
+
+  if (action === "reviews_toggle_featured") {
+    const id = str(body.id);
+    const featured = !!body.featured;
+    if (!id) return jsonResponse(req, { error: "id da avaliação é obrigatório" }, 400);
+
+    const { data: updated, error } = await admin
+      .from("fa_playground_reviews")
+      .update({ featured })
+      .eq("id", id)
+      .select("id, featured")
+      .single();
+
+    if (error) {
+      console.error("Erro ao alternar destaque de review:", error);
+      return jsonResponse(req, { error: "falha ao atualizar destaque" }, 500);
+    }
+
+    return jsonResponse(req, { success: true, review: updated });
+  }
+
+  if (action === "reviews_delete") {
+    const id = str(body.id);
+    if (!id) return jsonResponse(req, { error: "id da avaliação é obrigatório" }, 400);
+
+    const { error } = await admin
+      .from("fa_playground_reviews")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erro ao excluir review:", error);
+      return jsonResponse(req, { error: "falha ao excluir avaliação" }, 500);
+    }
+
+    return jsonResponse(req, { success: true, id });
+  }
+
+  if (action === "reviews_update") {
+    const id = str(body.id);
+    const authorName = str(body.author_name);
+    const comment = str(body.comment);
+    const rating = Number(body.rating) || 5;
+    if (!id || !authorName || !comment) {
+      return jsonResponse(req, { error: "dados incompletos para atualização" }, 400);
+    }
+
+    const { error } = await admin
+      .from("fa_playground_reviews")
+      .update({
+        author_name: authorName.slice(0, 100),
+        comment: comment.slice(0, 1000),
+        rating: Math.max(1, Math.min(5, Math.round(rating))),
+      })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Erro ao editar review:", error);
+      return jsonResponse(req, { error: "falha ao editar avaliação" }, 500);
+    }
+
+    return jsonResponse(req, { success: true });
+  }
+
   return jsonResponse(req, { error: "ação inválida" }, 400);
 });

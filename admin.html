@@ -714,6 +714,7 @@
         <button type="button" class="tab-btn owner-only" id="tabConfigBtn">Textos do resultado</button>
         <button type="button" class="tab-btn" id="tabWifiBtn">Cupons Wi-Fi</button>
         <button type="button" class="tab-btn" id="tabEventosBtn">Eventos</button>
+        <button type="button" class="tab-btn owner-only" id="tabReviewsBtn">Avaliações NPS <span class="badge badge-pink" id="reviewsPendingBadge" style="display:none;margin-left:4px;font-size:0.7rem;padding:2px 7px;">0</span></button>
       </div>
 
       <div id="leadsView">
@@ -908,6 +909,59 @@
         <div class="config-actions" id="configActions" hidden>
           <button type="button" class="btn btn-pink btn-sm" id="saveConfigBtn">Salvar</button>
           <button type="button" class="btn btn-ghost btn-sm" id="resetConfigBtn">Restaurar padrões</button>
+        </div>
+      </div>
+
+      <!-- ================= ABA: AVALIAÇÕES NPS / PROVA SOCIAL ================= -->
+      <div id="reviewsView" hidden>
+        <div class="owner-only" id="reviewsResumo">
+          <div class="ev-kpis" id="reviewsKpis">
+            <div class="ev-kpi"><div class="label">Total cadastradas</div><div class="value" id="rvTotalKpi">0</div></div>
+            <div class="ev-kpi"><div class="label">Aprovadas no site</div><div class="value" id="rvAprovadasKpi" style="color:var(--teal-dark);">0</div></div>
+            <div class="ev-kpi warn"><div class="label">Pendentes de moderação</div><div class="value" id="rvPendentesKpi">0</div></div>
+          </div>
+        </div>
+        <div class="toolbar">
+          <div class="form-group search-group">
+            <label for="reviewsSearchInput" class="form-label">Buscar avaliação</label>
+            <input type="search" id="reviewsSearchInput" class="form-control" placeholder="Buscar por autor ou comentário">
+          </div>
+          <div class="form-group status-group">
+            <label for="reviewsStatusFilter" class="form-label">Status no site</label>
+            <select id="reviewsStatusFilter" class="form-control">
+              <option value="all">Todas as avaliações</option>
+              <option value="pending">Pendentes de moderação</option>
+              <option value="approved">Aprovadas (visíveis no site)</option>
+            </select>
+          </div>
+          <span class="count" id="reviewsCount"></span>
+          <button type="button" class="btn btn-ghost btn-sm btn-export" id="reviewsReloadBtn">Atualizar</button>
+        </div>
+
+        <div id="reviewsError" class="form-error" role="alert"></div>
+        <div id="reviewsNotice" class="form-notice" role="status"></div>
+
+        <div class="leads-wrap">
+          <div id="reviewsState" class="state-msg">Carregando avaliações…</div>
+
+          <div style="overflow-x:auto;">
+            <table class="leads-table" id="reviewsTable" hidden>
+              <thead>
+                <tr>
+                  <th>Autor</th>
+                  <th>Nota / NPS</th>
+                  <th>Depoimento</th>
+                  <th>Origem</th>
+                  <th>Data</th>
+                  <th>Status no site</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="reviewsTbody"></tbody>
+            </table>
+          </div>
+
+          <div class="leads-cards" id="reviewsCards" hidden></div>
         </div>
       </div>
     </main>
@@ -1764,20 +1818,26 @@
       var tabLeadsBtn = document.getElementById('tabLeadsBtn');
       var tabConfigBtn = document.getElementById('tabConfigBtn');
       var tabWifiBtn = document.getElementById('tabWifiBtn');
+      var tabReviewsBtn = document.getElementById('tabReviewsBtn');
       var leadsView = document.getElementById('leadsView');
       var configView = document.getElementById('configView');
       var wifiView = document.getElementById('wifiView');
+      var reviewsView = document.getElementById('reviewsView');
+      var reviewsPendingBadge = document.getElementById('reviewsPendingBadge');
       var configLoaded = false;
+      var reviewsLoaded = false;
 
       function showTab(name) {
         tabLeadsBtn.classList.toggle('active', name === 'leads');
         tabConfigBtn.classList.toggle('active', name === 'config');
         tabWifiBtn.classList.toggle('active', name === 'wifi');
         document.getElementById('tabEventosBtn').classList.toggle('active', name === 'eventos');
+        tabReviewsBtn.classList.toggle('active', name === 'reviews');
         leadsView.hidden = name !== 'leads';
         configView.hidden = name !== 'config';
         wifiView.hidden = name !== 'wifi';
         document.getElementById('eventosView').hidden = name !== 'eventos';
+        reviewsView.hidden = name !== 'reviews';
       }
 
       tabLeadsBtn.addEventListener('click', function () { showTab('leads'); });
@@ -1790,6 +1850,11 @@
       tabWifiBtn.addEventListener('click', function () {
         showTab('wifi');
         loadWifi();
+      });
+
+      tabReviewsBtn.addEventListener('click', function () {
+        showTab('reviews');
+        loadReviews();
       });
 
       // ---------- Cupons Wi-Fi ----------
@@ -2118,6 +2183,181 @@
         });
       });
 
+      // =====================================================================
+      // Aba "Avaliações NPS" — Moderação de Prova Social para o site
+      // =====================================================================
+      var reviewsSearchInput = document.getElementById('reviewsSearchInput');
+      var reviewsStatusFilter = document.getElementById('reviewsStatusFilter');
+      var reviewsCount = document.getElementById('reviewsCount');
+      var reviewsError = document.getElementById('reviewsError');
+      var reviewsNotice = document.getElementById('reviewsNotice');
+      var reviewsState = document.getElementById('reviewsState');
+      var reviewsTable = document.getElementById('reviewsTable');
+      var reviewsTbody = document.getElementById('reviewsTbody');
+      var reviewsCards = document.getElementById('reviewsCards');
+      var reviewsReloadBtn = document.getElementById('reviewsReloadBtn');
+      var rvTotalKpi = document.getElementById('rvTotalKpi');
+      var rvAprovadasKpi = document.getElementById('rvAprovadasKpi');
+      var rvPendentesKpi = document.getElementById('rvPendentesKpi');
+      var reviewsDebounce = null;
+      var allReviews = [];
+
+      function showReviewMsg(el, text) {
+        if (!el) return;
+        el.textContent = text || '';
+        el.classList.toggle('active', !!text);
+      }
+
+      function loadReviews() {
+        reviewsState.hidden = false;
+        reviewsState.textContent = 'Carregando avaliações…';
+        reviewsTable.hidden = true;
+        reviewsCards.hidden = true;
+        showReviewMsg(reviewsError, '');
+        showReviewMsg(reviewsNotice, '');
+
+        var payload = { action: 'reviews_list' };
+        if (reviewsStatusFilter.value && reviewsStatusFilter.value !== 'all') {
+          payload.status = reviewsStatusFilter.value;
+        }
+        if (reviewsSearchInput.value.trim()) {
+          payload.q = reviewsSearchInput.value.trim();
+        }
+
+        apiRequest(payload).then(function (data) {
+          reviewsState.hidden = true;
+          allReviews = data.reviews || [];
+          if (data.kpis) {
+            rvTotalKpi.textContent = data.kpis.total || 0;
+            rvAprovadasKpi.textContent = data.kpis.approved || 0;
+            rvPendentesKpi.textContent = data.kpis.pending || 0;
+            if (data.kpis.pending > 0) {
+              reviewsPendingBadge.style.display = 'inline-block';
+              reviewsPendingBadge.textContent = data.kpis.pending;
+            } else {
+              reviewsPendingBadge.style.display = 'none';
+            }
+          }
+          renderReviews(allReviews);
+        }).catch(function (err) {
+          if (err.handled) return;
+          reviewsState.textContent = 'Não foi possível carregar as avaliações.';
+          showReviewMsg(reviewsError, err.message || 'Falha de conexão.');
+        });
+      }
+
+      function renderReviews(list) {
+        reviewsCount.textContent = list.length + (list.length === 1 ? ' avaliação' : ' avaliações');
+        if (!list.length) {
+          reviewsState.hidden = false;
+          reviewsState.textContent = 'Nenhuma avaliação encontrada com estes filtros.';
+          reviewsTable.hidden = true;
+          reviewsCards.hidden = true;
+          return;
+        }
+        reviewsState.hidden = true;
+        reviewsTable.hidden = false;
+        reviewsCards.hidden = false;
+
+        var rowsHtml = '';
+        var cardsHtml = '';
+
+        list.forEach(function (r) {
+          var stars = '★'.repeat(Math.max(1, Math.min(5, r.rating || 5)));
+          var npsTxt = r.nps_score !== null && r.nps_score !== undefined ? 'NPS: ' + r.nps_score : 'Nota: ' + r.rating;
+          var statusBadge = r.approved
+            ? '<span class="badge badge-teal">✓ Aprovado no site</span>'
+            : '<span class="badge badge-yellow">⏳ Pendente de moderação</span>';
+          var originBadge = r.source === 'google'
+            ? '<span class="badge badge-gray">Google</span>'
+            : '<span class="badge badge-teal" style="background:rgba(46,207,181,0.2);">App Playground (NPS)</span>';
+          var dateTxt = r.visit_date || (r.created_at ? formatDate(r.created_at) : '—');
+          var featBtn = '<button type="button" class="btn btn-ghost btn-sm btn-feat" data-id="' + escapeHtml(r.id) + '" data-featured="' + (r.featured ? 'true' : 'false') + '" title="Destaque no topo">' + (r.featured ? '★ Em destaque' : '☆ Destacar') + '</button>';
+          var toggleBtn = r.approved
+            ? '<button type="button" class="btn btn-ghost btn-sm btn-toggle-appr" data-id="' + escapeHtml(r.id) + '" data-next="false" style="color:var(--pink-dark);border-color:var(--pink-dark);">Ocultar do site</button>'
+            : '<button type="button" class="btn btn-teal btn-sm btn-toggle-appr" data-id="' + escapeHtml(r.id) + '" data-next="true">✓ Aprovar para o site</button>';
+          var delBtn = '<button type="button" class="btn btn-ghost btn-sm btn-del-rv" data-id="' + escapeHtml(r.id) + '" style="color:#9ca3af;border-color:transparent;" title="Excluir">🗑</button>';
+
+          var visitLabel = r.author_role || (r.visit_count ? r.visit_count + 'ª visita' : '');
+
+          rowsHtml += '<tr>' +
+            '<td><div class="guardian-name">' + escapeHtml(r.author_name) + '</div><div class="guardian-meta">' + escapeHtml(visitLabel) + '</div></td>' +
+            '<td><div style="color:#F5A800;letter-spacing:2px;font-size:0.95rem;">' + stars + '</div><div class="guardian-meta" style="font-weight:800;">' + escapeHtml(npsTxt) + '</div></td>' +
+            '<td><div style="max-width:380px;font-style:italic;font-size:0.92rem;line-height:1.45;">“' + escapeHtml(r.comment) + '”</div></td>' +
+            '<td>' + originBadge + '</td>' +
+            '<td>' + escapeHtml(dateTxt) + '</td>' +
+            '<td>' + statusBadge + (r.featured ? ' <span class="badge badge-pink" style="margin-top:4px;display:inline-block;">Destaque</span>' : '') + '</td>' +
+            '<td><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' + toggleBtn + featBtn + delBtn + '</div></td>' +
+            '</tr>';
+
+          cardsHtml += '<div class="lead-card">' +
+            '<div class="row"><div><div class="child-name">' + escapeHtml(r.author_name) + '</div><div class="guardian-meta">' + escapeHtml(visitLabel) + '</div></div>' + statusBadge + '</div>' +
+            '<div style="color:#F5A800;letter-spacing:2px;font-size:1.1rem;margin:4px 0;">' + stars + ' <span class="guardian-meta" style="font-size:0.8rem;vertical-align:middle;font-weight:800;">(' + escapeHtml(npsTxt) + ')</span></div>' +
+            '<div style="font-style:italic;margin:6px 0 10px;line-height:1.5;">“' + escapeHtml(r.comment) + '”</div>' +
+            '<div class="row"><div class="guardian-meta">' + originBadge + ' · ' + escapeHtml(dateTxt) + '</div>' + (r.featured ? '<span class="badge badge-pink">Destaque</span>' : '') + '</div>' +
+            '<div class="actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' + toggleBtn + featBtn + delBtn + '</div>' +
+            '</div>';
+        });
+
+        reviewsTbody.innerHTML = rowsHtml;
+        reviewsCards.innerHTML = cardsHtml;
+
+        Array.prototype.forEach.call(document.querySelectorAll('.btn-toggle-appr'), function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.getAttribute('data-id');
+            var nextApproved = btn.getAttribute('data-next') === 'true';
+            btn.disabled = true;
+            btn.textContent = 'Salvando…';
+            apiRequest({ action: 'reviews_toggle_approval', id: id, approved: nextApproved }).then(function () {
+              showReviewMsg(reviewsNotice, nextApproved ? 'Avaliação aprovada e agora visível no site!' : 'Avaliação ocultada do site.');
+              loadReviews();
+            }).catch(function (err) {
+              if (err.handled) return;
+              showReviewMsg(reviewsError, err.message || 'Falha ao atualizar avaliação.');
+              btn.disabled = false;
+            });
+          });
+        });
+
+        Array.prototype.forEach.call(document.querySelectorAll('.btn-feat'), function (btn) {
+          btn.addEventListener('click', function () {
+            var id = btn.getAttribute('data-id');
+            var isFeat = btn.getAttribute('data-featured') === 'true';
+            btn.disabled = true;
+            apiRequest({ action: 'reviews_toggle_featured', id: id, featured: !isFeat }).then(function () {
+              showReviewMsg(reviewsNotice, !isFeat ? 'Avaliação destacada no topo!' : 'Destaque removido.');
+              loadReviews();
+            }).catch(function (err) {
+              if (err.handled) return;
+              showReviewMsg(reviewsError, err.message || 'Falha ao destacar.');
+              btn.disabled = false;
+            });
+          });
+        });
+
+        Array.prototype.forEach.call(document.querySelectorAll('.btn-del-rv'), function (btn) {
+          btn.addEventListener('click', function () {
+            if (!confirm('Deseja realmente excluir esta avaliação definitivamente?')) return;
+            var id = btn.getAttribute('data-id');
+            btn.disabled = true;
+            apiRequest({ action: 'reviews_delete', id: id }).then(function () {
+              showReviewMsg(reviewsNotice, 'Avaliação excluída com sucesso.');
+              loadReviews();
+            }).catch(function (err) {
+              if (err.handled) return;
+              showReviewMsg(reviewsError, err.message || 'Falha ao excluir.');
+              btn.disabled = false;
+            });
+          });
+        });
+      }
+
+      reviewsSearchInput.addEventListener('input', function () {
+        clearTimeout(reviewsDebounce);
+        reviewsDebounce = setTimeout(loadReviews, 350);
+      });
+      reviewsStatusFilter.addEventListener('change', loadReviews);
+      reviewsReloadBtn.addEventListener('click', loadReviews);
 
       // =====================================================================
       // Aba "Eventos" — CRUD de eventos, tipos de ingresso, inscritos e check-in.

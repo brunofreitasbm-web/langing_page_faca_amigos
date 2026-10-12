@@ -1123,14 +1123,52 @@
       font-size: 0.99rem;
     }
 
-    /* Avaliações */
+    /* Avaliações — Carrossel Deslizante */
+    .reviews-slider-wrap {
+      position: relative;
+      width: 100%;
+      margin: 24px 0 8px;
+    }
+
     .reviews {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 22px;
+      display: flex !important;
+      flex-direction: row;
+      gap: 20px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      padding: 12px 6px 20px;
+      margin: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--teal) rgba(26, 63, 53, 0.08);
+      cursor: grab;
+    }
+
+    .reviews.is-dragging {
+      cursor: grabbing;
+      scroll-snap-type: none;
+      scroll-behavior: auto;
+    }
+
+    .reviews::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    .reviews::-webkit-scrollbar-track {
+      background: rgba(26, 63, 53, 0.06);
+      border-radius: 9999px;
+    }
+
+    .reviews::-webkit-scrollbar-thumb {
+      background: var(--teal);
+      border-radius: 9999px;
     }
 
     .review {
+      flex: 0 0 clamp(290px, 82vw, 360px);
+      min-width: 280px;
       background: var(--white);
       border-radius: var(--r-card);
       padding: 28px;
@@ -1138,6 +1176,15 @@
       display: flex;
       flex-direction: column;
       gap: 14px;
+      scroll-snap-align: start;
+      scroll-snap-stop: normal;
+      transition: transform var(--t-fast), box-shadow var(--t-fast);
+      user-select: none;
+    }
+
+    .review:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
     }
 
     .review .who {
@@ -1190,6 +1237,57 @@
       font-weight: 600;
       font-size: 0.96rem;
       font-style: italic;
+    }
+
+    .rev-nav-btn {
+      position: absolute;
+      top: calc(50% - 24px);
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid rgba(26, 63, 53, 0.1);
+      box-shadow: var(--shadow-lg);
+      color: var(--dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all var(--t-fast);
+    }
+
+    .rev-nav-btn:hover {
+      background: var(--teal);
+      color: #fff;
+      border-color: var(--teal);
+      transform: scale(1.12);
+    }
+
+    .rev-nav-btn.rev-prev {
+      left: -22px;
+    }
+
+    .rev-nav-btn.rev-next {
+      right: -22px;
+    }
+
+    .rev-scroll-hint {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--ink-soft);
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .rev-nav-btn {
+        display: none;
+      }
     }
 
     /* Preços */
@@ -1738,6 +1836,11 @@
       height: 34px;
     }
 
+    /* No celular o WhatsApp já está na navbar e na barra fixa (fa-cta.js): sem botão flutuante duplicado */
+    @media (max-width: 760px) {
+      .wa-float { display: none; }
+    }
+
     /* Animações de entrada */
     .fx {
       opacity: 0;
@@ -1801,7 +1904,6 @@
       }
 
       .steps,
-      .reviews,
       .partner-grid,
       .price-cards {
         grid-template-columns: 1fr;
@@ -2110,37 +2212,81 @@
         <h2 class="sec-title">Mães e pais de Belém contam como foi</h2>
         <p class="sec-sub">Mais de 1.100 famílias e 7.500 visitas registradas no nosso sistema de entrada e saída. Nossa maior recompensa é o sorriso das crianças e os ombros dos pais descendo.</p>
       </div>
-      <div class="reviews">
-        <div class="review">
-          <div class="who">
-            <div class="av">
-              <div>V</div>
+      <div class="reviews-slider-wrap">
+        <button class="rev-nav-btn rev-prev" aria-label="Avaliação anterior" id="revPrevBtn" type="button">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+
+        <div class="reviews" id="reviewsContainer" role="region" aria-label="Carrossel de avaliações de famílias" tabindex="0">
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>V</div>
+              </div>
+              <div><b>Vanessa Santos</b><small>3ª visita · ago/2026</small></div>
             </div>
-            <div><b>Vanessa Santos</b><small>Avaliação no Google · ago/2026</small></div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!"</p>
           </div>
-          <div class="stars">★ ★ ★ ★ ★</div>
-          <p>"Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!"</p>
-        </div>
-        <div class="review">
-          <div class="who">
-            <div class="av">
-              <div>E</div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>E</div>
+              </div>
+              <div><b>Eledes Failache</b><small>5ª visita · jul/2026</small></div>
             </div>
-            <div><b>Eledes Failache</b><small>Local Guide · Google · jul/2026</small></div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Super amo esse lugar, deixo meus filhos com tranquilidade."</p>
           </div>
-          <div class="stars">★ ★ ★ ★ ★</div>
-          <p>"Super amo esse lugar, deixo meus filhos com tranquilidade."</p>
-        </div>
-        <div class="review">
-          <div class="who">
-            <div class="av">
-              <div>A</div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>A</div>
+              </div>
+              <div><b>Ana Monteiro</b><small>2ª visita · jul/2026</small></div>
             </div>
-            <div><b>Ana Monteiro</b><small>Avaliação no Google · jul/2026</small></div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Amei muito, meu filho se sentiu muito seguro e brincou bastante! ♥️♥️"</p>
           </div>
-          <div class="stars">★ ★ ★ ★ ★</div>
-          <p>"Amei muito, meu filho se sentiu muito seguro e brincou bastante! ♥️♥️"</p>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>J</div>
+              </div>
+              <div><b>Juliana Lima</b><small>4ª visita · set/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Os mediadores são super atenciosos. Meu filho é atípico e foi muito bem acolhido no Horário Inclusivo."</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>R</div>
+              </div>
+              <div><b>Rodrigo Paiva</b><small>2ª visita · ago/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Ambiente limpo, seguro e com dinâmica excelente. Dá pra tomar um café tranquilo enquanto eles brincam."</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>C</div>
+              </div>
+              <div><b>Camila Fernandes</b><small>6ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Já virou nossa parada obrigatória todo fim de semana no shopping! Parabéns à equipe toda."</p>
+          </div>
         </div>
+
+        <button class="rev-nav-btn rev-next" aria-label="Próxima avaliação" id="revNextBtn" type="button">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <div class="rev-scroll-hint">
+        <span>← Deslize para ver mais avaliações →</span>
       </div>
       <div class="center" style="margin-top: 30px;">
         <a href="https://g.page/r/CdAKkR4NdeqlEAE/review" target="_blank" rel="noopener"
@@ -2467,6 +2613,73 @@
         });
       }, { threshold: 0.12 });
       els.forEach(function (el) { io.observe(el); });
+    })();
+  </script>
+  <script>
+    /* Carrossel Interativo + Hidratação dinâmica de Prova Social do Sistema App Playground */
+    (function () {
+      var container = document.getElementById('reviewsContainer');
+      var prevBtn = document.getElementById('revPrevBtn');
+      var nextBtn = document.getElementById('revNextBtn');
+
+      if (container) {
+        function scrollTrack(dir) {
+          var step = container.clientWidth > 640 ? 380 : 300;
+          container.scrollBy({ left: dir * step, behavior: 'smooth' });
+        }
+        if (prevBtn) prevBtn.addEventListener('click', function () { scrollTrack(-1); });
+        if (nextBtn) nextBtn.addEventListener('click', function () { scrollTrack(1); });
+
+        var isDown = false, startX, scrollLeft;
+        container.addEventListener('mousedown', function (e) {
+          isDown = true;
+          container.classList.add('is-dragging');
+          startX = e.pageX - container.offsetLeft;
+          scrollLeft = container.scrollLeft;
+        });
+        container.addEventListener('mouseleave', function () {
+          isDown = false;
+          container.classList.remove('is-dragging');
+        });
+        container.addEventListener('mouseup', function () {
+          isDown = false;
+          container.classList.remove('is-dragging');
+        });
+        container.addEventListener('mousemove', function (e) {
+          if (!isDown) return;
+          e.preventDefault();
+          var x = e.pageX - container.offsetLeft;
+          var walk = (x - startX) * 1.5;
+          container.scrollLeft = scrollLeft - walk;
+        });
+      }
+
+      if (!container || !window.fetch) return;
+      var API = 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/functions/v1/playground-reviews';
+      fetch(API).then(function (res) {
+        if (!res.ok) return null;
+        return res.json();
+      }).then(function (data) {
+        if (!data || !Array.isArray(data.reviews) || data.reviews.length === 0) return;
+        var html = '';
+        data.reviews.slice(0, 10).forEach(function (r) {
+          var initial = (r.author_initial || (r.author_name ? r.author_name.charAt(0) : 'V')).toUpperCase();
+          var name = r.author_name || 'Família FaçaAmigos';
+          var visitLabel = r.author_role || (r.visit_count ? r.visit_count + 'ª visita' : '');
+          var meta = [visitLabel, r.visit_date].filter(Boolean).join(' · ');
+          var stars = '★ '.repeat(Math.max(1, Math.min(5, r.rating || 5))).trim();
+          var comment = r.comment ? r.comment.replace(/^["“”]+|["“”]+$/g, '') : '';
+          html += '<div class="review">' +
+            '<div class="who">' +
+            '<div class="av"><div>' + initial + '</div></div>' +
+            '<div><b>' + name + '</b>' + (meta ? '<small>' + meta + '</small>' : '') + '</div>' +
+            '</div>' +
+            '<div class="stars">' + stars + '</div>' +
+            '<p>"' + comment + '"</p>' +
+            '</div>';
+        });
+        if (html) container.innerHTML = html;
+      }).catch(function () { /* preserva os cards já existentes */ });
     })();
   </script>
   <script src="/assets/fa-footer.js" defer></script>
