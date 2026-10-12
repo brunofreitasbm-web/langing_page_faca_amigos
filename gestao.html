@@ -163,6 +163,7 @@
     .tile[data-app="cacau"] { --accent: #E9CBB5; }
     .tile[data-app="painel"] { --accent: #C9E7DD; }
     .tile[data-app="eventos"] { --accent: #FFD9A8; }
+    .tile.tile-download { --accent: #D9CCFF; text-decoration: none; }
 
     .hub-error { margin-top: 20px; }
     .hub-foot { margin-top: 32px; color: var(--gray); font-size: 0.85rem; font-weight: 600; }
@@ -314,6 +315,16 @@
             <span class="desc">Criar eventos e ingressos, ver inscritos e fazer check-in</span>
             <span class="host">institutofacaamigos.com.br/admin</span>
           </button>
+          <!-- Link direto (sem ticket do gestao-hub): o instalador fica num bucket público do Supabase.
+               O nome "-atual" é fixo: o release do kiosk (faca_amigos) o atualiza a cada versão. -->
+          <a class="tile tile-download"
+             href="https://ivjvpdzsfjdpyabbzzuj.supabase.co/storage/v1/object/public/kiosk-updates/kiosk/FacaAmigos-Setup-atual.exe"
+             download>
+            <span class="icon" aria-hidden="true">⬇️</span>
+            <span class="name">Baixar app Windows</span>
+            <span class="desc">Instalador do FaçaAmigos para o computador do balcão</span>
+            <span class="host">FacaAmigos-Setup-atual.exe</span>
+          </a>
         </div>
 
         <p class="hub-foot">Cada clique fica registrado. A sessão do hub vale 7 dias neste aparelho.</p>
@@ -341,7 +352,7 @@
       var codigoInput = document.getElementById('login-codigo');
       var helloTitle = document.getElementById('helloTitle');
       var hubError = document.getElementById('hubError');
-      var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile'));
+      var tiles = Array.prototype.slice.call(document.querySelectorAll('.tile[data-app]'));
 
       var loginNotice = document.getElementById('loginNotice');
       var esqueciForm = document.getElementById('esqueciForm');
