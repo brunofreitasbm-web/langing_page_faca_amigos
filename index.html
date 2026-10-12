@@ -1146,6 +1146,30 @@
 
           <div class="rv-grid" id="hubReviewsGrid" role="region" aria-label="Carrossel de avaliações de famílias" tabindex="0">
             <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Eu amei o espaço! Tem uma equipe muito acolhedora a Laura ficou super a vontade e nós também ficamos muito a vontade no local.”</blockquote>
+              <figcaption>Marlucy P. · 1ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Quero pacote especial de colônia de férias, por favor 🙏🏼😁”</blockquote>
+              <figcaption>Aline R. · 15ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Eu Amei; Traz Muita Alegria e Momentos Excelente para Meu Filho 🩷”</blockquote>
+              <figcaption>Thiene · 2ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Excelente espaço e funcionárias muitíssimo preparadas e educadas 👏 parabéns”</blockquote>
+              <figcaption>Mayara N. · 1ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Excelente o atendimento local ótimo parabéns vcs são nota 1000”</blockquote>
+              <figcaption>Ivan G. · 1ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Atendimento maravilhoso, equipe preparada pra atender e cuidar das nossas crianças”</blockquote>
+              <figcaption>Patroci D. · 1ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“A atendente foi muito educada e bastante atenciosa”</blockquote>
+              <figcaption>Romario O. · 1ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
+              <blockquote>“Atendimento ótimo.”</blockquote>
+              <figcaption>Marcia N. · 2ª visita</figcaption></figure>
+            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
               <blockquote>“Espaço maravilhoso! Acolhedor, brinquedos novos e limpos, equipe nota 10!”</blockquote>
               <figcaption>Vanessa S. · 3ª visita</figcaption></figure>
             <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
@@ -1154,15 +1178,6 @@
             <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
               <blockquote>“Amei muito, meu filho se sentiu muito seguro e brincou bastante!”</blockquote>
               <figcaption>Ana M. · 2ª visita</figcaption></figure>
-            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-              <blockquote>“Os mediadores são super atenciosos. Meu filho é atípico e foi muito bem acolhido no Horário Inclusivo.”</blockquote>
-              <figcaption>Juliana L. · 4ª visita</figcaption></figure>
-            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-              <blockquote>“Ambiente limpo, seguro e com dinâmica excelente. Dá pra tomar um café tranquilo enquanto eles brincam.”</blockquote>
-              <figcaption>Rodrigo P. · 2ª visita</figcaption></figure>
-            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-              <blockquote>“Já virou nossa parada obrigatória todo fim de semana no shopping! Parabéns à equipe toda.”</blockquote>
-              <figcaption>Camila F. · 6ª visita</figcaption></figure>
           </div>
 
           <button class="rv-nav-btn rv-next" aria-label="Próxima avaliação" id="hubRevNextBtn" type="button">
@@ -1672,7 +1687,7 @@
       }).then(function (d) {
         if (!d || !Array.isArray(d.reviews) || !d.reviews.length) return;
         var html = '';
-        d.reviews.slice(0, 10).forEach(function (r) {
+        d.reviews.forEach(function (r) {
           var nameParts = (r.author_name || 'Cliente').split(' ');
           var shortName = nameParts[0] + (nameParts[1] ? ' ' + nameParts[1].charAt(0) + '.' : '');
           var stars = '★'.repeat(Math.max(1, Math.min(5, r.rating || 5)));

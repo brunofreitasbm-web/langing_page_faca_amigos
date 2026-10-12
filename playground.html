@@ -2248,6 +2248,86 @@
           <div class="review">
             <div class="who">
               <div class="av">
+                <div>M</div>
+              </div>
+              <div><b>Marlucy Pantoja</b><small>1ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Eu amei o espaço! Tem uma equipe muito acolhedora a Laura ficou super a vontade e nós também ficamos muito a vontade no local. Espaço bem diversificado. E com circuitos que estimula a aventura e diversão. Grata foi um momento super agradável!"</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>A</div>
+              </div>
+              <div><b>Aline Raniere</b><small>15ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Quero pacote especial de colônia de férias, por favor 🙏🏼😁"</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>T</div>
+              </div>
+              <div><b>Thiene</b><small>2ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Eu Amei; Traz Muita Alegria e Momentos Excelente para Meu Filho 🩷"</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>M</div>
+              </div>
+              <div><b>Mayara Nascimento</b><small>1ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Excelente espaço e funcionárias muitíssimo preparadas e educadas 👏 parabéns"</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>I</div>
+              </div>
+              <div><b>Ivan Gomes Da Silva</b><small>1ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Excelente o atendimento local ótimo parabéns vcs são nota 1000"</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>P</div>
+              </div>
+              <div><b>Patroci Darling De Oliveira</b><small>1ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Atendimento maravilhoso, equipe preparada pra atender e cuidar das nossas crianças"</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>R</div>
+              </div>
+              <div><b>Romario Oeiras</b><small>1ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"A atendente foi muito educada e bastante atenciosa"</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
+                <div>M</div>
+              </div>
+              <div><b>Marcia Nascimento</b><small>2ª visita · out/2026</small></div>
+            </div>
+            <div class="stars">★ ★ ★ ★ ★</div>
+            <p>"Atendimento ótimo."</p>
+          </div>
+          <div class="review">
+            <div class="who">
+              <div class="av">
                 <div>V</div>
               </div>
               <div><b>Vanessa Santos</b><small>3ª visita · ago/2026</small></div>
@@ -2274,36 +2354,6 @@
             </div>
             <div class="stars">★ ★ ★ ★ ★</div>
             <p>"Amei muito, meu filho se sentiu muito seguro e brincou bastante! ♥️♥️"</p>
-          </div>
-          <div class="review">
-            <div class="who">
-              <div class="av">
-                <div>J</div>
-              </div>
-              <div><b>Juliana Lima</b><small>4ª visita · set/2026</small></div>
-            </div>
-            <div class="stars">★ ★ ★ ★ ★</div>
-            <p>"Os mediadores são super atenciosos. Meu filho é atípico e foi muito bem acolhido no Horário Inclusivo."</p>
-          </div>
-          <div class="review">
-            <div class="who">
-              <div class="av">
-                <div>R</div>
-              </div>
-              <div><b>Rodrigo Paiva</b><small>2ª visita · ago/2026</small></div>
-            </div>
-            <div class="stars">★ ★ ★ ★ ★</div>
-            <p>"Ambiente limpo, seguro e com dinâmica excelente. Dá pra tomar um café tranquilo enquanto eles brincam."</p>
-          </div>
-          <div class="review">
-            <div class="who">
-              <div class="av">
-                <div>C</div>
-              </div>
-              <div><b>Camila Fernandes</b><small>6ª visita · out/2026</small></div>
-            </div>
-            <div class="stars">★ ★ ★ ★ ★</div>
-            <p>"Já virou nossa parada obrigatória todo fim de semana no shopping! Parabéns à equipe toda."</p>
           </div>
         </div>
 
@@ -2693,7 +2743,7 @@
       }).then(function (data) {
         if (!data || !Array.isArray(data.reviews) || data.reviews.length === 0) return;
         var html = '';
-        data.reviews.slice(0, 10).forEach(function (r) {
+        data.reviews.forEach(function (r) {
           var initial = (r.author_initial || (r.author_name ? r.author_name.charAt(0) : 'V')).toUpperCase();
           var name = r.author_name || 'Família FaçaAmigos';
           var visitLabel = r.author_role || (r.visit_count ? r.visit_count + 'ª visita' : '');

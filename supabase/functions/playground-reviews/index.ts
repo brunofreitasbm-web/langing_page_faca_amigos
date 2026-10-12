@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
         .eq("approved", true)
         .order("featured", { ascending: false })
         .order("created_at", { ascending: false })
-        .limit(12);
+        .limit(30);
 
       if (error) {
         console.error("Erro ao buscar avaliações aprovadas:", error);
