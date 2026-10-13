@@ -11,7 +11,8 @@
 //
 // GET  ?code=ESPERA-XXXX        → retorna o status do cupom
 // POST { code, operation }      → resgata (operation: "playground" | "circuito"),
-//                                  bloqueado se já resgatado hoje ou expirado
+//                                  bloqueado se o cupom já foi usado (aqui ou no caixa) ou expirou.
+//                                  Um benefício por cupom, igual à aba Cupons Wi-Fi e ao caixa.
 
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
@@ -39,13 +40,6 @@ function safeEqual(a: string, b: string): boolean {
   let diff = 0;
   for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return diff === 0;
-}
-
-// Início do dia de hoje em Belém (UTC-3, sem horário de verão), em ISO/UTC.
-function startOfTodayBelemIso(now = new Date()): string {
-  const belem = new Date(now.getTime() - 3 * 3600_000);
-  belem.setUTCHours(0, 0, 0, 0);
-  return new Date(belem.getTime() + 3 * 3600_000).toISOString();
 }
 
 Deno.serve(async (req) => {
@@ -111,8 +105,16 @@ Deno.serve(async (req) => {
     if (new Date(lead.coupon_expires_at) < new Date()) {
       return jsonResponse({ error: "cupom expirado" }, 409);
     }
+    if (Number(lead.redeemed_count ?? 0) > 0) {
+      return jsonResponse({ error: "este cupom já foi usado — um benefício por cupom" }, 409);
+    }
+    // Já usado direto no caixa (em qualquer unidade): o benefício acabou, não vale de novo por aqui.
+    const { data: usedAtRegister } = await admin
+      .from("fa_kiosk_coupons").select("id").eq("code", code).gt("used_count", 0).limit(1);
+    if (usedAtRegister?.length) {
+      return jsonResponse({ error: "este cupom já foi usado no caixa — um benefício por cupom" }, 409);
+    }
     // Resgate atômico: o filtro vai na própria UPDATE, então dois toques simultâneos não passam os dois.
-    const todayStart = startOfTodayBelemIso();
     const { data: updated, error: updateError } = await admin
       .from("fa_wifi_leads")
       .update({
@@ -122,13 +124,16 @@ Deno.serve(async (req) => {
         redeemed_count: (lead.redeemed_count ?? 0) + 1,
       })
       .eq("id", lead.id)
-      .or(`last_redeemed_at.is.null,last_redeemed_at.lt.${todayStart}`)
+      .is("last_redeemed_at", null)
       .select("id");
 
     if (updateError) return jsonResponse({ error: "falha ao registrar resgate" }, 500);
     if (!updated?.length) {
-      return jsonResponse({ error: "este cupom já foi resgatado hoje — um benefício por dia" }, 409);
+      return jsonResponse({ error: "este cupom já foi usado — um benefício por cupom" }, 409);
     }
+    // Resgatado por aqui: desativa o cupom nas duas unidades do caixa para o código não valer de novo lá.
+    const { error: caixaErr } = await admin.from("fa_kiosk_coupons").update({ active: false }).eq("code", code).like("code", "ESPERA-%");
+    if (caixaErr) console.error("Erro ao desativar cupom no caixa:", caixaErr.message);
 
     return jsonResponse({ ok: true, coupon_code: code, operation });
   }

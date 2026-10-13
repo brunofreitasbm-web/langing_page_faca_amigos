@@ -341,30 +341,46 @@
       transform: translateX(2px);
     }
 
-    /* ---------- Banner de Download: Balcão Windows ---------- */
-    .download-banner {
-      background: var(--white); border-radius: var(--r-card); padding: 22px 26px;
-      box-shadow: var(--shadow-sm); border: 2px solid rgba(139, 92, 246, 0.25);
-      display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
-      transition: transform var(--t-fast), box-shadow var(--t-fast), border-color 0.18s;
+    /* ---------- Grid Corporativo & Ajuste de Espaço ---------- */
+    .grid-corp {
+      grid-template-columns: repeat(2, minmax(280px, 1fr));
     }
-    .download-banner:hover {
-      transform: translateY(-2px); box-shadow: var(--shadow-lg); border-color: var(--purple);
+    @media (max-width: 680px) {
+      .grid-corp { grid-template-columns: 1fr; }
     }
-    .download-banner.search-hidden { display: none !important; }
-    .dl-left { display: flex; align-items: center; gap: 18px; min-width: 0; }
-    .dl-icon {
-      width: 54px; height: 54px; min-width: 54px; border-radius: 16px; background: #D9CCFF;
-      display: grid; place-items: center; font-size: 1.7rem; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+
+    /* ---------- Ícone de Atalho Header: App Balcão (Owner) ---------- */
+    .btn-icon-header {
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      width: 42px;
+      height: 42px;
+      padding: 0;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      text-decoration: none;
+      cursor: pointer;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: transform var(--t-fast), background var(--t-fast), border-color var(--t-fast), box-shadow var(--t-fast);
     }
-    .dl-info { min-width: 0; }
-    .dl-badge {
-      font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--purple); margin-bottom: 2px;
+    .btn-icon-header:hover {
+      background: rgba(46, 207, 181, 0.22);
+      border-color: var(--teal);
+      transform: translateY(-2px) scale(1.08);
+      box-shadow: 0 4px 14px rgba(46, 207, 181, 0.35);
     }
-    .dl-title { font-family: 'Fredoka One', cursive, sans-serif; font-size: 1.25rem; color: var(--dark); }
-    .dl-desc { font-size: 0.9rem; color: var(--ink-soft); font-weight: 600; margin-top: 2px; }
-    .dl-meta { font-size: 0.78rem; font-weight: 700; color: var(--gray); display: block; margin-top: 4px; font-family: monospace; }
-    .dl-btn { text-decoration: none; padding: 12px 24px; font-size: 0.94rem; }
+    .btn-icon-header:active {
+      transform: scale(0.95);
+    }
+    .btn-icon-header:focus-visible {
+      outline: 3px solid var(--teal);
+      outline-offset: 3px;
+    }
 
     /* ---------- pessoas e acessos (owner) ---------- */
     .header-actions { display: flex; align-items: center; gap: 10px; }
@@ -558,6 +574,15 @@
         </div>
         <div class="header-actions">
           <button type="button" class="btn logout" id="pessoasBtn" hidden>Pessoas e acessos</button>
+          <a href="https://ivjvpdzsfjdpyabbzzuj.supabase.co/storage/v1/object/public/kiosk-updates/kiosk/FacaAmigos-Setup-atual.exe"
+             download
+             class="btn-icon-header"
+             id="balcaoDlBtn"
+             title="App Balcão — Baixar Instalador Windows (PDV)"
+             aria-label="Baixar App Balcão Windows"
+             hidden>
+            💻
+          </a>
           <button type="button" class="btn logout" id="logoutBtn">Sair</button>
         </div>
       </div>
@@ -619,59 +644,7 @@
           </div>
         </section>
 
-        <!-- SEÇÃO 3: CONTROLADORIA & PESSOAS -->
-        <section class="hub-section" data-section="gestao">
-          <div class="section-head">
-            <span class="section-tag">Estratégia & Backoffice</span>
-            <h2 class="section-title">Controladoria & Gestão Corporativa</h2>
-          </div>
-          <div class="grid grid-corp">
-            <button type="button" class="tile" data-app="financeiro">
-              <div class="tile-top">
-                <span class="icon" aria-hidden="true">📊</span>
-                <span class="live-indicator"><span class="live-dot"></span> Online</span>
-              </div>
-              <span class="name">Financeiro</span>
-              <span class="desc">Simulador financeiro e DRE das empresas</span>
-              <span class="host">simulador-financeiro</span>
-            </button>
-            <button type="button" class="tile" data-app="rh">
-              <div class="tile-top">
-                <span class="icon" aria-hidden="true">👥</span>
-                <span class="live-indicator"><span class="live-dot"></span> Online</span>
-              </div>
-              <span class="name">Gestão de Pessoas</span>
-              <span class="desc">Grupo IB: equipe, estagiários e controle de ponto</span>
-              <span class="host">rh.institutofacaamigos.com.br</span>
-            </button>
-          </div>
-        </section>
-
-        <!-- SEÇÃO 4: APLICATIVOS DE BALCÃO & DOWNLOADS -->
-        <section class="hub-section" data-section="downloads">
-          <div class="section-head">
-            <span class="section-tag">Equipamentos & Balcão</span>
-            <h2 class="section-title">Instaladores de Ponto de Atendimento</h2>
-          </div>
-          <div class="download-banner">
-            <div class="dl-left">
-              <div class="dl-icon" aria-hidden="true">💻</div>
-              <div class="dl-info">
-                <div class="dl-badge">PDV & Balcão Windows</div>
-                <h3 class="dl-title">App Balcão FaçaAmigos</h3>
-                <p class="dl-desc">Instalador oficial para os computadores físicos de atendimento e bilheteria do quiosque.</p>
-                <span class="dl-meta">Arquivo: FacaAmigos-Setup-atual.exe · Auto-atualizável</span>
-              </div>
-            </div>
-            <a class="btn btn-pink dl-btn"
-               href="https://ivjvpdzsfjdpyabbzzuj.supabase.co/storage/v1/object/public/kiosk-updates/kiosk/FacaAmigos-Setup-atual.exe"
-               download>
-              <span>⬇️ Baixar Instalador Windows</span>
-            </a>
-          </div>
-        </section>
-
-        <!-- SEÇÃO 2: PORTAL DO SITE & MARKETING (OPÇÃO A: SUPER-CARD UNIFICADO) -->
+        <!-- SEÇÃO 2: PORTAL DO SITE & MARKETING -->
         <section class="hub-section" data-section="portal">
           <div class="section-head">
             <span class="section-tag">Captação & Comunidade</span>
@@ -719,6 +692,34 @@
                 </button>
               </div>
             </div>
+          </div>
+        </section>
+
+        <!-- SEÇÃO 3: CONTROLADORIA & PESSOAS -->
+        <section class="hub-section" data-section="gestao">
+          <div class="section-head">
+            <span class="section-tag">Estratégia & Backoffice</span>
+            <h2 class="section-title">Controladoria & Gestão Corporativa</h2>
+          </div>
+          <div class="grid grid-corp">
+            <button type="button" class="tile" data-app="financeiro">
+              <div class="tile-top">
+                <span class="icon" aria-hidden="true">📊</span>
+                <span class="live-indicator"><span class="live-dot"></span> Online</span>
+              </div>
+              <span class="name">Financeiro</span>
+              <span class="desc">Simulador financeiro e DRE das empresas</span>
+              <span class="host">simulador-financeiro</span>
+            </button>
+            <button type="button" class="tile" data-app="rh">
+              <div class="tile-top">
+                <span class="icon" aria-hidden="true">👥</span>
+                <span class="live-indicator"><span class="live-dot"></span> Online</span>
+              </div>
+              <span class="name">Gestão de Pessoas</span>
+              <span class="desc">Grupo IB: equipe, estagiários e controle de ponto</span>
+              <span class="host">rh.institutofacaamigos.com.br</span>
+            </button>
           </div>
         </section>
 
@@ -847,6 +848,7 @@
       var hubMain = document.getElementById('hubMain');
       var pessoasMain = document.getElementById('pessoasMain');
       var pessoasBtn = document.getElementById('pessoasBtn');
+      var balcaoDlBtn = document.getElementById('balcaoDlBtn');
 
       var NIVEL_ROTULO = { nenhum: 'Sem acesso', ver: 'Visualizar', operar: 'Operar', admin: 'Administrar' };
 
@@ -914,6 +916,7 @@
         pessoasMain.hidden = true;
         meuPapel = papel || 'gerente';
         pessoasBtn.hidden = meuPapel !== 'owner';
+        if (balcaoDlBtn) balcaoDlBtn.hidden = meuPapel !== 'owner';
         helloTitle.textContent = nome ? 'Olá, ' + nome.split(' ')[0] + '!' : 'Olá!';
 
         var roleBadge = document.getElementById('userRoleBadge');
@@ -968,7 +971,7 @@
       if (hubSearch) {
         hubSearch.addEventListener('input', function () {
           var term = hubSearch.value.trim().toLowerCase();
-          var allItems = document.querySelectorAll('.tile[data-app], .portal-card, .download-banner');
+          var allItems = document.querySelectorAll('.tile[data-app], .portal-card');
           allItems.forEach(function (item) {
             if (!term) {
               item.classList.remove('search-hidden');
@@ -986,7 +989,7 @@
               sec.classList.remove('search-hidden');
               return;
             }
-            var visibleChildren = sec.querySelectorAll('.tile:not(.search-hidden), .portal-card:not(.search-hidden), .download-banner:not(.search-hidden)');
+            var visibleChildren = sec.querySelectorAll('.tile:not(.search-hidden), .portal-card:not(.search-hidden)');
             if (visibleChildren.length === 0) {
               sec.classList.add('search-hidden');
             } else {

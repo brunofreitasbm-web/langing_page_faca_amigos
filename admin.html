@@ -1908,7 +1908,7 @@
       });
 
       // ---------- Cupons Wi-Fi ----------
-      // Mesma regra do balcão (wifi-coupon-admin): um resgate por dia (dia de Belém) e cupom vencido não resgata;
+      // Mesma regra do balcão e do caixa: um benefício por cupom (não volta nem no dia seguinte) e cupom vencido não resgata;
       // quem decide é o servidor, aqui os botões só refletem o estado. Todo dado do cupom é escapado (o cadastro
       // é digitado por terceiros no portal Wi-Fi).
       var wifiSearchInput = document.getElementById('wifiSearchInput');
@@ -1933,8 +1933,8 @@
       function wifiStatusBadge(c) {
         if (c.used_at_register) return '<span class="badge badge-blue">Usado no caixa (' + escapeHtml(OP_LABEL[c.used_at_register] || c.used_at_register) + ')</span>';
         if (c.expired) return '<span class="badge badge-gray">Expirado</span>';
-        if (c.redeemed_today) return '<span class="badge badge-blue">Resgatado hoje' + (OP_LABEL[c.coupon_operation] ? ' (' + OP_LABEL[c.coupon_operation] + ')' : '') + '</span>';
-        return '<span class="badge badge-teal">Disponível hoje</span>';
+        if (c.redeemed || c.redeemed_today) return '<span class="badge badge-blue">Já usado' + (OP_LABEL[c.coupon_operation] ? ' (' + OP_LABEL[c.coupon_operation] + ')' : '') + '</span>';
+        return '<span class="badge badge-teal">Disponível</span>';
       }
 
       // Só o dono recebe estes campos. Aceite de contato é o que autoriza usar o telefone/e-mail para marketing.
@@ -1949,7 +1949,7 @@
       }
 
       function wifiButtons(c) {
-        var off = (c.expired || c.redeemed_today || c.used_at_register) ? ' disabled' : '';
+        var off = (c.expired || c.redeemed || c.redeemed_today || c.used_at_register) ? ' disabled' : '';
         var code = escapeHtml(c.coupon_code);
         return '<div class="wifi-actions">' +
           '<button type="button" class="btn btn-teal btn-sm" data-wifi-code="' + code + '" data-wifi-op="playground"' + off + '>Resgatar no Playground</button>' +
@@ -2076,7 +2076,7 @@
 
       function redeemWifi(code, operation, btn) {
         var label = OP_LABEL[operation] || operation;
-        if (!window.confirm('Resgatar o cupom ' + code + ' no ' + label + '?\n\nSó vale um resgate por dia e não dá para desfazer aqui.')) return;
+        if (!window.confirm('Resgatar o cupom ' + code + ' no ' + label + '?\n\nCada cupom vale um único benefício e não dá para desfazer aqui.')) return;
         wifiError.classList.remove('active');
         wifiNotice.classList.remove('active');
         wifiError.textContent = '';

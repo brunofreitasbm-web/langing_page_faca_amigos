@@ -182,7 +182,7 @@ aqui é a configuração técnica, não uma orientação legal.
 ## Resgate do cupom e resumo
 
 - **Aba "Cupons Wi-Fi" do `/admin`** (entrada pelo Hub de Gestão; a equipe usa o login direto limitado): lista os
-  cadastros, mostra o código, o nome e o status, e resgata no Playground ou no Circuito (um resgate por dia, cupom
+  cadastros, mostra o código, o nome e o status, e resgata no Playground ou no Circuito (um benefício por cupom, cupom
   vencido não resgata). O dono também vê o resumo do portal, o telefone, o e-mail e quem aceitou contato.
 - **Caixa:** o cupom `ESPERA-XXXX` também existe, com o mesmo código, no caixa do Circuito (+5 min) e do Playground
   (meia inclusiva), de uso único. O atendente pode digitar o código direto no caixa em vez de usar a aba. O uso no

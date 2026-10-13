@@ -112,7 +112,7 @@ const PLAYGROUND_DISCOUNT_PCT = 50;
 // indisponível (o atendente ainda pode aplicar manualmente).
 async function syncKioskCoupon(
   admin: Admin,
-  params: { couponCode: string; guardianName: string; unitId: string; kind: "MINUTOS_EXTRA" | "DESCONTO_PCT"; value: number; label: string },
+  params: { couponCode: string; guardianName: string; unitId: string; kind: "MINUTOS_EXTRA" | "DESCONTO_PCT"; value: number; label: string; expiresAtMs: number },
 ): Promise<{ synced: boolean; error?: string }> {
   const { error } = await admin.from("fa_kiosk_coupons").insert({
     unit_id: params.unitId,
@@ -120,6 +120,8 @@ async function syncKioskCoupon(
     kind: params.kind,
     value: params.value,
     max_uses: 1,
+    // Validade própria no caixa: o gatilho fa_kiosk_coupons_validade recusa o uso depois deste instante.
+    expires_at_ms: params.expiresAtMs,
     description: `Wi-Fi da clínica (${params.label}) — ${params.guardianName}`,
   });
   if (error) return { synced: false, error: error.message ?? "erro desconhecido" };
@@ -172,7 +174,7 @@ async function sendCouponEmail(params: {
             <li>Meia inclusiva (R$ 50 na entrada) para crianças com laudo ou CIPTEA — todo dia</li>
             <li>+5 minutos grátis no Circuito, em qualquer plano — de segunda a sexta</li>
           </ul>
-          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 20px 0;font-style:italic;">Use um benefício por visita — Playground ou Circuito, nunca os dois na mesma vinda.</p>
+          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 20px 0;font-style:italic;">Cada cupom vale um único benefício — no Playground ou no Circuito, nunca nos dois.</p>
           <div style="text-align:center;margin-bottom:8px;">
             <a href="${waPlayground}" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:9999px;font-size:15px;">Falar no WhatsApp</a>
           </div>
@@ -345,6 +347,7 @@ Deno.serve(async (req) => {
     kind: "MINUTOS_EXTRA",
     value: CIRCUITO_BONUS_MINUTES,
     label: "+5 min Circuito",
+    expiresAtMs: couponExpiresAt.getTime(),
   }).catch(onError);
   if (!kioskResult.synced) {
     console.error("Erro ao sincronizar cupom no kiosk:", kioskResult.error);
@@ -357,6 +360,7 @@ Deno.serve(async (req) => {
     kind: "DESCONTO_PCT",
     value: PLAYGROUND_DISCOUNT_PCT,
     label: "meia inclusiva Playground",
+    expiresAtMs: couponExpiresAt.getTime(),
   }).catch(onError);
   if (!playgroundResult.synced) {
     console.error("Erro ao sincronizar cupom do Playground no kiosk:", playgroundResult.error);
