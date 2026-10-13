@@ -73,9 +73,25 @@
     background: var(--cream);
     transition: border-color var(--t-fast);
   }
-  input:focus { outline: none; border-color: var(--teal); }
+  input[type="text"], input[type="tel"], input[type="email"] { min-height: 52px; } /* Fitts: alvo >= 48px */
+  input:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(46,207,181,0.22); }
+  input.invalid { border-color: var(--error); background: #FFF5F5; }
+  input.valid { border-color: var(--teal); }
   .field-error { display: none; color: var(--error); font-size: 12.5px; font-weight: 700; margin-top: 5px; }
   .field-error.show { display: block; }
+  .field { position: relative; }
+  .field .ok-mark { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--teal-dark); font-weight: 900; opacity: 0; transition: opacity 0.15s; pointer-events: none; }
+  .field input.valid ~ .ok-mark { opacity: 1; }
+  .hint { color: var(--ink-soft); font-size: 12px; font-weight: 600; margin-top: 4px; }
+  fieldset.group { border: 0; padding: 0; margin: 0; }
+  .progress { margin: 0 0 4px; }
+  .progress-top { display: flex; justify-content: space-between; font-size: 12px; font-weight: 800; color: var(--ink-soft); margin-bottom: 6px; }
+  .progress-bar { height: 8px; border-radius: 999px; background: #EDF1EF; overflow: hidden; }
+  .progress-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), var(--teal-dark)); border-radius: 999px; transition: width 0.25s ease; }
+  .consent-box { background: var(--cream); border-radius: 16px; padding: 4px 14px 14px; margin-top: 18px; }
+  .consent label { cursor: pointer; padding: 4px 0; }
+  .btn:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation-duration: 0.01ms !important; } }
   .consent { display: flex; gap: 10px; align-items: flex-start; margin-top: 16px; }
   .consent input[type="checkbox"] { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; accent-color: var(--pink); }
   .consent label { margin: 0; font-weight: 600; font-size: 13px; color: var(--ink-soft); line-height: 1.4; }
@@ -88,13 +104,15 @@
     color: var(--white);
     border: none;
     border-radius: 999px;
-    padding: 16px;
+    padding: 17px 16px;
+    min-height: 56px;
     font-family: 'Fredoka One', sans-serif;
-    font-size: 17px;
+    font-size: 18px;
     box-shadow: var(--shadow-pink);
     cursor: pointer;
     transition: transform var(--t-fast), background var(--t-fast);
   }
+  .btn:hover { background: var(--pink-dark); }
   .btn:active { transform: scale(0.97); background: var(--pink-dark); }
   .btn:disabled { opacity: 0.55; cursor: default; }
   .honey { position: absolute; left: -9999px; top: -9999px; }
@@ -133,7 +151,8 @@
     margin-bottom: 16px;
   }
   .proof .stars { color: var(--yellow); letter-spacing: 1px; text-shadow: 0 1px 0 rgba(26,63,53,0.15); }
-  .offer-strip { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+  .offer-strip { display: flex; flex-direction: column; gap: 8px; margin-bottom: 22px; border: 2px solid rgba(46,207,181,0.35); border-radius: 18px; padding: 10px; background: #fff; }
+  .offer-strip .offer-title { font-size: 11.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--teal-dark); padding: 0 4px; }
   .offer-item {
     display: flex;
     align-items: flex-start;
@@ -147,7 +166,7 @@
     background: var(--teal); color: var(--white); font-weight: 900; font-size: 13px;
     display: flex; align-items: center; justify-content: center;
   }
-  .offer-item p { font-size: 13px; font-weight: 700; color: var(--dark); line-height: 1.35; }
+  .offer-item p { font-size: 13.5px; font-weight: 700; color: var(--dark); line-height: 1.35; }
   .offer-item p b { color: var(--pink-dark); }
 </style>
 </head>
@@ -162,11 +181,12 @@
   <div class="card">
     <span class="kicker">Cupom exclusivo + Wi-Fi grátis</span>
     <h1>Garanta sua vantagem antes de entrar</h1>
-    <p class="sub">Cadastre-se em 20 segundos e libere o Wi-Fi com um cupom real para o Playground e o Circuito no Parque Shopping.</p>
+    <p class="sub">Só 3 campos e 20 segundos: libera o Wi-Fi e você ainda ganha cupom para o Playground e o Circuito.</p>
 
     <div class="proof"><span class="stars">★★★★★</span> +1.100 famílias · 7.500 visitas</div>
 
     <div class="offer-strip">
+      <div class="offer-title">Seu cupom inclui</div>
       <div class="offer-item">
         <div class="ic">♥</div>
         <p>Meia inclusiva <b>fixa em R$ 50</b> no Playground, todo dia</p>
@@ -182,21 +202,40 @@
     <!-- Formulário visível: coleta o lead. O envio dispara o registro do lead e, em
          seguida, submete o formulário real do hotspot (oculto) para liberar a internet. -->
     <form id="leadForm" autocomplete="on" novalidate>
+      <div class="progress" aria-live="polite">
+        <div class="progress-top"><span id="progLabel">Falta pouco: 0 de 3 preenchidos</span><span id="progPct">0%</span></div>
+        <div class="progress-bar"><i id="progBar"></i></div>
+      </div>
+
+      <fieldset class="group">
+      <legend style="position:absolute;left:-9999px">Seus dados</legend>
       <label for="guardianName">Seu nome</label>
-      <input type="text" id="guardianName" name="guardianName" placeholder="Como você se chama?" required>
-      <div class="field-error" id="err-name">Digite seu nome, por favor.</div>
+      <div class="field">
+        <input type="text" id="guardianName" name="guardianName" placeholder="Como você se chama?" autocomplete="name" enterkeyhint="next" required aria-describedby="err-name">
+        <span class="ok-mark" aria-hidden="true">✓</span>
+      </div>
+      <div class="field-error" id="err-name" role="alert">Digite seu nome, por favor.</div>
 
       <label for="guardianPhone">WhatsApp</label>
-      <input type="tel" id="guardianPhone" name="guardianPhone" placeholder="(91) 9XXXX-XXXX" inputmode="tel" required>
-      <div class="field-error" id="err-phone">Informe um WhatsApp válido com DDD.</div>
+      <div class="field">
+        <input type="tel" id="guardianPhone" name="guardianPhone" placeholder="(91) 99999-9999" inputmode="tel" autocomplete="tel" enterkeyhint="next" required aria-describedby="err-phone hint-phone">
+        <span class="ok-mark" aria-hidden="true">✓</span>
+      </div>
+      <div class="hint" id="hint-phone">Com DDD. Pode digitar do seu jeito, a gente ajeita.</div>
+      <div class="field-error" id="err-phone" role="alert">Informe um WhatsApp válido com DDD.</div>
 
       <label for="guardianEmail">E-mail</label>
-      <input type="email" id="guardianEmail" name="guardianEmail" placeholder="seuemail@exemplo.com" required>
-      <div class="field-error" id="err-email">Digite um e-mail válido.</div>
+      <div class="field">
+        <input type="email" id="guardianEmail" name="guardianEmail" placeholder="seuemail@exemplo.com" autocomplete="email" enterkeyhint="done" autocapitalize="none" required aria-describedby="err-email">
+        <span class="ok-mark" aria-hidden="true">✓</span>
+      </div>
+      <div class="field-error" id="err-email" role="alert">Digite um e-mail válido.</div>
+      </fieldset>
 
       <!-- honeypot anti-robô -->
       <input type="text" class="honey" id="website-hp" name="website-hp" tabindex="-1" autocomplete="off">
 
+      <div class="consent-box">
       <div class="consent">
         <input type="checkbox" id="consent" name="consent" required>
         <label for="consent">Li e concordo com a <a href="https://institutofacaamigos.com.br/politica-privacidade" target="_blank" rel="noopener">Política de Privacidade</a> e autorizo o uso dos meus dados para liberar o Wi-Fi.</label>
@@ -207,14 +246,15 @@
         <input type="checkbox" id="optIn" name="optIn" checked>
         <label for="optIn">Quero receber novidades e cupons do Playground e do Circuito por WhatsApp e e-mail.</label>
       </div>
+      </div>
 
       <button type="submit" class="btn" id="submitBtn">
-        <span id="btnLabel">Liberar Wi-Fi e receber meu cupom</span>
+        <span id="btnLabel">Liberar Wi-Fi e pegar meu cupom →</span>
         <div class="spinner" id="btnSpinner"></div>
       </button>
     </form>
 
-    <p class="foot-note">Cupom válido por 15 dias · Sessão de 1 hora · Rede exclusiva para visitantes</p>
+    <p class="foot-note">🔒 Seus dados ficam protegidos · Cupom válido por 15 dias · Sessão de 1 hora</p>
   </div>
 </div>
 
@@ -250,6 +290,62 @@
 
   pushDL("wifi_view", { mac: "$(mac)" });
 
+  /* Postel: aceita telefone/e-mail em qualquer formato razoável e normaliza na saída. */
+  function normPhone(v) {
+    var d = v.replace(/\D/g, "");
+    if (d.indexOf("55") === 0 && d.length > 11) d = d.slice(2);
+    return d;
+  }
+  function fmtPhone(v) {
+    var d = normPhone(v).slice(0, 11);
+    if (d.length <= 2) return d;
+    if (d.length <= 6) return "(" + d.slice(0, 2) + ") " + d.slice(2);
+    if (d.length <= 10) return "(" + d.slice(0, 2) + ") " + d.slice(2, 6) + "-" + d.slice(6);
+    return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
+  }
+  function fieldOk(id) {
+    var v = document.getElementById(id).value.trim();
+    if (id === "guardianName") return v.length >= 2;
+    if (id === "guardianPhone") return normPhone(v).length >= 10;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+  }
+  var ERR = { guardianName: "err-name", guardianPhone: "err-phone", guardianEmail: "err-email" };
+  var IDS = ["guardianName", "guardianPhone", "guardianEmail"];
+
+  /* Goal-gradient + Zeigarnik: barra de progresso que cresce a cada campo concluído. */
+  function updateProgress() {
+    var done = IDS.filter(fieldOk).length;
+    var pct = Math.round(done / IDS.length * 100);
+    document.getElementById("progBar").style.width = pct + "%";
+    document.getElementById("progPct").textContent = pct + "%";
+    document.getElementById("progLabel").textContent = done === IDS.length
+      ? "Tudo certo! Falta só o aceite" : "Falta pouco: " + done + " de 3 preenchidos";
+  }
+
+  /* Doherty: feedback imediato ao digitar e ao sair do campo. */
+  IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener("input", function () {
+      if (id === "guardianPhone") el.value = fmtPhone(el.value);
+      var ok = fieldOk(id);
+      if (el.classList.contains("invalid") && ok) {
+        el.classList.remove("invalid"); toggleError(ERR[id], false); el.removeAttribute("aria-invalid");
+      }
+      el.classList.toggle("valid", ok);
+      updateProgress();
+    });
+    el.addEventListener("blur", function () {
+      if (el.value.trim() === "") return;
+      var ok = fieldOk(id);
+      el.classList.toggle("invalid", !ok);
+      el.classList.toggle("valid", ok);
+      toggleError(ERR[id], !ok);
+    });
+  });
+  document.getElementById("consent").addEventListener("change", function () {
+    if (this.checked) toggleError("err-consent", false);
+  });
+
   function validate() {
     var ok = true;
     var name = document.getElementById("guardianName").value.trim();
@@ -257,13 +353,22 @@
     var email = document.getElementById("guardianEmail").value.trim();
     var consent = document.getElementById("consent").checked;
 
-    var phoneDigits = phone.replace(/\D/g, "");
+    var phoneDigits = normPhone(phone);
     var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
     toggleError("err-name", name.length < 2);
     toggleError("err-phone", phoneDigits.length < 10);
     toggleError("err-email", !emailOk);
     toggleError("err-consent", !consent);
+    IDS.forEach(function (id) {
+      var bad = !fieldOk(id), el = document.getElementById(id);
+      el.classList.toggle("invalid", bad);
+      if (bad) el.setAttribute("aria-invalid", "true"); else el.removeAttribute("aria-invalid");
+    });
+    // Foco direto no primeiro problema: menos esforço para corrigir.
+    var first = IDS.filter(function (id) { return !fieldOk(id); })[0];
+    if (first) document.getElementById(first).focus();
+    else if (!consent) document.getElementById("consent").focus();
 
     if (name.length < 2) ok = false;
     if (phoneDigits.length < 10) ok = false;
@@ -280,7 +385,7 @@
 
   function setLoading(loading) {
     document.getElementById("submitBtn").disabled = loading;
-    document.getElementById("btnLabel").style.display = loading ? "none" : "inline";
+    document.getElementById("btnLabel").textContent = loading ? "Liberando seu Wi-Fi…" : "Liberar Wi-Fi e pegar meu cupom →";
     document.getElementById("btnSpinner").classList.toggle("show", loading);
   }
 
@@ -312,7 +417,7 @@
     var lead = {
       guardian_name: document.getElementById("guardianName").value.trim(),
       guardian_phone: document.getElementById("guardianPhone").value.trim(),
-      guardian_email: document.getElementById("guardianEmail").value.trim(),
+      guardian_email: document.getElementById("guardianEmail").value.trim().toLowerCase(),
       marketing_opt_in_whatsapp: document.getElementById("optIn").checked,
       marketing_opt_in_email: document.getElementById("optIn").checked,
       mac: "$(mac)",

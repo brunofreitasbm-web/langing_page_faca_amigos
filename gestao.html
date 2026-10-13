@@ -432,6 +432,48 @@
       .brand span { font-size: 1.05rem; }
     }
 
+
+    /* ---------- Layout sem rolagem (desktop): tudo na primeira tela ---------- */
+    .hub-sections { display: block; }
+    @media (min-width: 900px) {
+      .hub-main { padding: 18px 0 14px; }
+      .hello-bar { margin-bottom: 8px; }
+      .hello p { margin-top: 0; font-size: 0.88rem; }
+      .hub-error:empty { display: none; }
+      .hub-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
+      .hub-sections .hub-section { margin-top: 0; }
+      .hub-section[data-section="operacoes"], .hub-section[data-section="portal"] { grid-column: 1 / -1; }
+      .section-head { margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+      .section-tag { margin-bottom: 0; }
+      .section-title { font-size: 1.1rem; }
+      .hub-sections .grid { gap: 12px; }
+      .hub-sections .tile { min-height: 0; padding: 12px 14px; gap: 6px; }
+      .hub-sections .tile .icon { width: 38px; height: 38px; font-size: 1.3rem; border-radius: 12px; }
+      .hub-sections .tile .name { font-size: 1.05rem; }
+      .hub-sections .tile .desc { font-size: 0.82rem; line-height: 1.25; }
+      .hub-sections .tile .host { font-size: 0.7rem; }
+      .hub-sections .tile.tile-subaction { padding: 12px 16px; gap: 12px; }
+      .hub-sections .tile-subaction .icon { width: 44px; height: 44px; min-width: 44px; font-size: 1.4rem; }
+      .download-banner { padding: 12px 16px; gap: 12px; }
+      .dl-icon { width: 40px; height: 40px; min-width: 40px; font-size: 1.3rem; }
+      .dl-left { gap: 12px; }
+      .dl-title { font-size: 1.05rem; }
+      .dl-desc { font-size: 0.8rem; }
+      .dl-meta { display: none; }
+      .dl-btn { padding: 8px 16px; font-size: 0.85rem; }
+      .portal-card { padding: 14px 18px; }
+      .portal-header { margin-bottom: 8px; }
+      .portal-badge-row { margin-bottom: 4px; }
+      .portal-title { font-size: 1.2rem; margin-bottom: 2px; }
+      .portal-desc { font-size: 0.85rem; line-height: 1.35; }
+      .portal-modules-pill { margin-top: 8px; font-size: 0.76rem; }
+      .pill-item { padding: 2px 10px; }
+      .portal-actions { padding-top: 10px; margin-top: 10px; }
+      .portal-actions-label { display: none; }
+      .portal-actions-grid { gap: 12px; }
+      .hub-foot { margin-top: 10px; font-size: 0.78rem; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .btn, .tile { transition: none; }
     }
@@ -539,6 +581,7 @@
 
         <div id="hubError" class="form-error hub-error" role="alert"></div>
 
+        <div class="hub-sections">
         <!-- SEÇÃO 1: OPERAÇÕES & UNIDADES -->
         <section class="hub-section" data-section="operacoes">
           <div class="section-head">
@@ -573,57 +616,6 @@
               <span class="desc">Hub de operações: caixa, envelopes e equipe das lojas</span>
               <span class="host">hub-operacoes</span>
             </button>
-          </div>
-        </section>
-
-        <!-- SEÇÃO 2: PORTAL DO SITE & MARKETING (OPÇÃO A: SUPER-CARD UNIFICADO) -->
-        <section class="hub-section" data-section="portal">
-          <div class="section-head">
-            <span class="section-tag">Captação & Comunidade</span>
-            <h2 class="section-title">Portal do Site FaçaAmigos</h2>
-          </div>
-          
-          <div class="portal-card" id="cardPortalSite">
-            <div class="portal-header">
-              <div class="portal-badge-row">
-                <span class="badge-system">🌐 Painel Integrado do Site</span>
-                <span class="badge-dest">institutofacaamigos.com.br/admin</span>
-              </div>
-              <h3 class="portal-title">Painel Administrativo do Site</h3>
-              <p class="portal-desc">
-                Central unificada do site público: funil de leads do teste comportamental, gestão de eventos e inscrições, cupons Wi-Fi e avaliações.
-              </p>
-              <div class="portal-modules-pill">
-                <span>Recursos integrados:</span>
-                <span class="pill-item">🧭 Mapeamento & Leads</span>
-                <span class="pill-item">🎟️ Eventos & Ingressos</span>
-                <span class="pill-item">📶 Cupons Wi-Fi</span>
-                <span class="pill-item">⭐ Avaliações NPS</span>
-              </div>
-            </div>
-
-            <div class="portal-actions">
-              <div class="portal-actions-label">Acesse diretamente a aba desejada:</div>
-              <div class="portal-actions-grid">
-                <button type="button" class="tile tile-subaction" data-app="painel">
-                  <span class="icon" aria-hidden="true">🧭</span>
-                  <div class="sub-info">
-                    <span class="name">Mapeamento Comportamental</span>
-                    <span class="desc">Leads do Teste, respostas, relatórios e textos de persona</span>
-                  </div>
-                  <span class="sub-arrow">Abrir Leads ↗</span>
-                </button>
-
-                <button type="button" class="tile tile-subaction" data-app="eventos">
-                  <span class="icon" aria-hidden="true">🎟️</span>
-                  <div class="sub-info">
-                    <span class="name">Eventos & Ingressos</span>
-                    <span class="desc">Criação de eventos, ingressos, lista de inscritos e check-in</span>
-                  </div>
-                  <span class="sub-arrow">Abrir Eventos ↗</span>
-                </button>
-              </div>
-            </div>
           </div>
         </section>
 
@@ -678,6 +670,59 @@
             </a>
           </div>
         </section>
+
+        <!-- SEÇÃO 2: PORTAL DO SITE & MARKETING (OPÇÃO A: SUPER-CARD UNIFICADO) -->
+        <section class="hub-section" data-section="portal">
+          <div class="section-head">
+            <span class="section-tag">Captação & Comunidade</span>
+            <h2 class="section-title">Portal do Site FaçaAmigos</h2>
+          </div>
+          
+          <div class="portal-card" id="cardPortalSite">
+            <div class="portal-header">
+              <div class="portal-badge-row">
+                <span class="badge-system">🌐 Painel Integrado do Site</span>
+                <span class="badge-dest">institutofacaamigos.com.br/admin</span>
+              </div>
+              <h3 class="portal-title">Painel Administrativo do Site</h3>
+              <p class="portal-desc">
+                Central unificada do site público: funil de leads do teste comportamental, gestão de eventos e inscrições, cupons Wi-Fi e avaliações.
+              </p>
+              <div class="portal-modules-pill">
+                <span>Recursos integrados:</span>
+                <span class="pill-item">🧭 Mapeamento & Leads</span>
+                <span class="pill-item">🎟️ Eventos & Ingressos</span>
+                <span class="pill-item">📶 Cupons Wi-Fi</span>
+                <span class="pill-item">⭐ Avaliações NPS</span>
+              </div>
+            </div>
+
+            <div class="portal-actions">
+              <div class="portal-actions-label">Acesse diretamente a aba desejada:</div>
+              <div class="portal-actions-grid">
+                <button type="button" class="tile tile-subaction" data-app="painel">
+                  <span class="icon" aria-hidden="true">🧭</span>
+                  <div class="sub-info">
+                    <span class="name">Mapeamento Comportamental</span>
+                    <span class="desc">Leads do Teste, respostas, relatórios e textos de persona</span>
+                  </div>
+                  <span class="sub-arrow">Abrir Leads ↗</span>
+                </button>
+
+                <button type="button" class="tile tile-subaction" data-app="eventos">
+                  <span class="icon" aria-hidden="true">🎟️</span>
+                  <div class="sub-info">
+                    <span class="name">Eventos & Ingressos</span>
+                    <span class="desc">Criação de eventos, ingressos, lista de inscritos e check-in</span>
+                  </div>
+                  <span class="sub-arrow">Abrir Eventos ↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        </div>
 
         <p class="hub-foot">Cada clique fica registrado. A sessão do hub vale 7 dias neste aparelho.</p>
       </div>
