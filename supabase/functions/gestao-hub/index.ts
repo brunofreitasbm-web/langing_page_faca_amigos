@@ -126,6 +126,7 @@ type Conta = {
   senha_hash: string | null;
   senha_definida_em: string | null;
   convidado_em: string | null;
+  login_email: string | null;
   criado_por: string | null;
   created_at: string;
 };
@@ -440,12 +441,13 @@ async function enviarCodigo(
   return enviarEmail(email, nome, reset ? `${code} é o código para definir sua senha` : `${code} é o seu código do Hub de Gestão`, html);
 }
 
-async function enviarConvite(email: string, nome: string, quemConvidou: string): Promise<boolean> {
+// `loginEmail` é o e-mail que a pessoa digita na tela de primeiro acesso (pode ser diferente do e-mail que recebe o código).
+async function enviarConvite(email: string, nome: string, quemConvidou: string, loginEmail: string): Promise<boolean> {
   const html = moldeEmail(`
     <p style="margin:0 0 12px;font-size:15px;">Olá, ${escapeHtml(nome)}!</p>
     <p style="margin:0 0 18px;font-size:14px;color:#4C6B62;">${escapeHtml(quemConvidou)} liberou o seu acesso ao Hub de Gestão do Instituto Faça Amigos. Para entrar pela primeira vez, defina a sua senha:</p>
     <p style="margin:0 0 18px;"><a href="${HUB_URL}/#primeiro-acesso" style="display:inline-block;background:#f0196b;color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 22px;border-radius:999px;">Definir minha senha</a></p>
-    <p style="margin:0;font-size:12px;color:#8B9A94;">Na tela, informe este e-mail (${escapeHtml(email)}) e digite o código de 6 dígitos que enviaremos para cá. Se você não esperava este convite, ignore a mensagem.</p>`);
+    <p style="margin:0;font-size:12px;color:#8B9A94;">Na tela, informe o e-mail ${escapeHtml(loginEmail)} e digite o código de 6 dígitos que enviaremos para cá. Se você não esperava este convite, ignore a mensagem.</p>`);
   return enviarEmail(email, nome, "Seu acesso ao Hub de Gestão Faça Amigos", html);
 }
 
@@ -517,6 +519,14 @@ async function auditar(
 async function carregarConta(admin: Admin, email: string): Promise<Conta | null> {
   const { data } = await admin.from("fa_gestao_contas").select("*").eq("email", email).maybeSingle();
   return data && data.ativo ? (data as Conta) : null;
+}
+
+// Acha a conta ativa pelo e-mail de login: a chave (email) ou o e-mail de login próprio do Hub (login_email).
+async function acharContaPorLogin(admin: Admin, login: string): Promise<Conta | null> {
+  const e = quoteFilterValue(login.toLowerCase());
+  const { data } = await admin.from("fa_gestao_contas").select("*").or(`email.eq.${e},login_email.eq.${e}`).limit(1);
+  const c = data?.[0] as Conta | undefined;
+  return c && c.ativo ? c : null;
 }
 
 async function exigirSessao(admin: Admin, req: Request): Promise<{ tokenHash: string; conta: Conta } | null> {
@@ -660,7 +670,7 @@ Deno.serve(async (req) => {
     };
 
     // Conta com senha própria do Hub (login = e-mail); as demais seguem pela senha do Sistema da Clínica.
-    const contaHub = loginInput.includes("@") ? await carregarConta(admin, loginInput.toLowerCase()) : null;
+    const contaHub = loginInput.includes("@") ? await acharContaPorLogin(admin, loginInput) : null;
     let conta: Conta | null;
     if (contaHub?.auth_modo === "hub") {
       if (!contaHub.senha_hash || !(await verificarSenhaHub(password, contaHub.senha_hash))) {
@@ -762,7 +772,7 @@ Deno.serve(async (req) => {
       jsonResponse(req, { challenge_id: id, mensagem: "Se os dados conferem, enviamos um código para o e-mail cadastrado." });
 
     // Conta de senha própria: acha pelo e-mail no próprio Hub. As legadas, pelo usuário da Clínica.
-    const contaHub = loginInput.includes("@") ? await carregarConta(admin, loginInput.toLowerCase()) : null;
+    const contaHub = loginInput.includes("@") ? await acharContaPorLogin(admin, loginInput) : null;
     const ehHub = contaHub?.auth_modo === "hub";
     const alvo = ehHub ? null : await acharUsuarioClinica(loginInput);
     const conta = ehHub ? contaHub : alvo ? await carregarConta(admin, alvo.email) : null;
@@ -898,7 +908,7 @@ Deno.serve(async (req) => {
   }
 
   // --- gestão de pessoas e acessos: só owner ---
-  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_ativo", "convidar", "sessoes_revogar", "auditoria_listar"];
+  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar"];
   if (ACOES_OWNER.includes(action)) {
     if (conta.papel !== "owner") {
       await auditar(admin, req, "acao_owner_negada", { email: conta.email, detalhe: action });
@@ -917,7 +927,7 @@ Deno.serve(async (req) => {
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const CAMPOS_MAPEAMENTO = [...new Set(APP_IDS.map((id) => APPS[id].campo))].filter((c) => c !== "painel_usuario");
 const COLUNAS_PUBLICAS =
-  "email, email_codigo, nome, playground_email, clinica_email, financeiro_email, rh_email, cacau_usuario, painel_usuario, ativo, papel, auth_modo, senha_definida_em, convidado_em, criado_por, created_at";
+  "email, email_codigo, nome, playground_email, clinica_email, financeiro_email, rh_email, cacau_usuario, painel_usuario, ativo, papel, auth_modo, login_email, senha_definida_em, convidado_em, criado_por, created_at";
 
 // Derruba o que a pessoa tem aberto: sessão do Hub e sessão do /admin (12 h), para um novo nível valer já.
 async function revogarSessoes(admin: Admin, email: string, painelUsuario: string | null) {
@@ -983,6 +993,13 @@ async function acaoOwner(
     // Ninguém tira o próprio owner: evita deixar o Hub sem quem o administre.
     if (atual && atual.email === dono.email && papel !== "owner") {
       return jsonResponse(req, { error: "você não pode rebaixar a si mesmo" }, 400);
+    }
+    // Conta nova: o e-mail de acesso não pode ser o login de outra conta.
+    if (novo) {
+      const q = quoteFilterValue(alvoEmail);
+      const { data: colide } = await admin.from("fa_gestao_contas").select("email").eq("login_email", alvoEmail).limit(1);
+      if (colide?.length) return jsonResponse(req, { error: "já existe uma conta com este e-mail" }, 409);
+      void q;
     }
 
     // Matriz: só níveis válidos; owner não precisa de linhas (é admin em tudo).
@@ -1055,7 +1072,7 @@ async function acaoOwner(
 
     let conviteEnviado: boolean | null = null;
     if (novo && body.convidar !== false) {
-      conviteEnviado = await enviarConvite(emailCodigo, nome, dono.nome);
+      conviteEnviado = await enviarConvite(emailCodigo, nome, dono.nome, alvoEmail);
       if (conviteEnviado) {
         await admin.from("fa_gestao_contas").update({ convidado_em: new Date().toISOString() }).eq("email", alvoEmail);
         await auditar(admin, req, "convite_enviado", { email: alvoEmail, detalhe: `por ${dono.email}` });
@@ -1082,6 +1099,34 @@ async function acaoOwner(
     return jsonResponse(req, { ok: true });
   }
 
+  // Troca a forma de entrar: senha própria do Hub com um e-mail de login real (a chave da conta e os
+  // usuários nos sistemas não mudam), ou volta para a senha do Sistema da Clínica (só contas antigas).
+  if (action === "conta_acesso") {
+    if (body.modo === "clinica") {
+      if (atual.criado_por) return jsonResponse(req, { error: "conta criada no Hub não tem senha da Clínica" }, 400);
+      const { error } = await admin.from("fa_gestao_contas").update({ auth_modo: "clinica", login_email: null }).eq("email", atual.email);
+      if (error) return jsonResponse(req, { error: "não foi possível atualizar" }, 500);
+      await auditar(admin, req, "acesso_clinica", { email: atual.email, detalhe: `por ${dono.email}` });
+      return jsonResponse(req, { ok: true });
+    }
+    const login = str(body.login_email).toLowerCase();
+    if (!EMAIL_RE.test(login)) return jsonResponse(req, { error: "e-mail de login inválido" }, 400);
+    const q = quoteFilterValue(login);
+    const { data: colide } = await admin.from("fa_gestao_contas").select("email")
+      .or(`email.eq.${q},login_email.eq.${q}`).neq("email", atual.email).limit(1);
+    if (colide?.length) return jsonResponse(req, { error: "este e-mail já é usado por outra conta" }, 409);
+    const { error } = await admin.from("fa_gestao_contas").update({ auth_modo: "hub", login_email: login }).eq("email", atual.email);
+    if (error) return jsonResponse(req, { error: "não foi possível atualizar" }, 500);
+    await auditar(admin, req, "acesso_hub", { email: atual.email, detalhe: `por ${dono.email}; login=${login}` });
+    // Sem senha própria ainda: manda o convite para definir (a sessão aberta segue valendo).
+    let conviteEnviado: boolean | null = null;
+    if (!atual.senha_hash) {
+      conviteEnviado = await enviarConvite(atual.email_codigo, atual.nome, dono.nome, login);
+      if (conviteEnviado) await admin.from("fa_gestao_contas").update({ convidado_em: new Date().toISOString() }).eq("email", atual.email);
+    }
+    return jsonResponse(req, { ok: true, convite_enviado: conviteEnviado, senha_definida: !!atual.senha_hash });
+  }
+
   if (action === "convidar") {
     if (!atual.ativo || atual.auth_modo !== "hub") {
       return jsonResponse(req, { error: "convite só vale para conta ativa com senha própria do Hub" }, 400);
@@ -1089,7 +1134,7 @@ async function acaoOwner(
     if (atual.convidado_em && Date.now() - new Date(atual.convidado_em).getTime() < 60_000) {
       return jsonResponse(req, { error: "convite enviado há pouco, aguarde 1 minuto" }, 429);
     }
-    if (!(await enviarConvite(atual.email_codigo, atual.nome, dono.nome))) {
+    if (!(await enviarConvite(atual.email_codigo, atual.nome, dono.nome, atual.login_email ?? atual.email))) {
       return jsonResponse(req, { error: "não foi possível enviar o e-mail" }, 502);
     }
     await admin.from("fa_gestao_contas").update({ convidado_em: new Date().toISOString() }).eq("email", atual.email);

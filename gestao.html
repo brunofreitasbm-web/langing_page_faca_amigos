@@ -211,6 +211,8 @@
     .matriz-row .mod { font-weight: 800; }
     .matriz-row .form-control { padding: 9px 12px; font-size: 0.92rem; }
     .matriz-row .auto { color: var(--gray); font-size: 0.82rem; font-weight: 700; }
+    .acesso-box { background: var(--cream); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
+    .acesso-estado { color: var(--ink-soft); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; }
     .check { display: flex; align-items: center; gap: 8px; font-weight: 700; margin: 4px 0 16px; }
     .form-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
     .audit { margin-top: 30px; }
@@ -432,6 +434,20 @@
                   <option value="owner">Owner (tudo, e gerencia pessoas)</option>
                 </select>
               </div>
+            </div>
+            <div class="acesso-box" id="pf-acesso" hidden>
+              <p class="form-label" style="margin-bottom:6px;">Como esta pessoa entra no Hub</p>
+              <p class="acesso-estado" id="pf-acesso-estado"></p>
+              <div class="grid-2" id="pf-acesso-migrar">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label for="pf-login-email" class="form-label">E-mail para entrar (login)</label>
+                  <input type="email" id="pf-login-email" class="form-control" autocomplete="off">
+                </div>
+                <div class="form-group" style="margin-bottom:0; justify-content:flex-end;">
+                  <button type="button" class="btn btn-ghost btn-sm" id="pf-migrar">Usar senha própria do Hub</button>
+                </div>
+              </div>
+              <button type="button" class="btn-link" id="pf-voltar-clinica" hidden>Voltar para a senha da Clínica</button>
             </div>
             <div class="form-group" id="pf-preset-group">
               <label for="pf-preset" class="form-label">Perfil pronto (preenche a tabela abaixo)</label>
@@ -1001,12 +1017,64 @@
         document.getElementById('pf-convidar-label').hidden = !!conta;
         document.getElementById('pf-convidar').checked = true;
         showMsg(pessoaFormError, '');
+        montarAcesso(conta);
         montarMatriz(conta);
         montarPresets();
         pessoaForm.hidden = false;
         pessoaForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
         document.getElementById('pf-nome').focus();
       }
+      // Caixa "Como esta pessoa entra": só na edição de conta que já existe.
+      function montarAcesso(conta) {
+        var box = document.getElementById('pf-acesso');
+        box.hidden = !conta;
+        if (!conta) return;
+        var estado = document.getElementById('pf-acesso-estado');
+        var migrar = document.getElementById('pf-acesso-migrar');
+        var voltar = document.getElementById('pf-voltar-clinica');
+        var loginInp = document.getElementById('pf-login-email');
+        if (conta.auth_modo === 'hub') {
+          estado.textContent = 'Senha própria do Hub. Entra com ' + (conta.login_email || conta.email) +
+            (conta.senha_definida_em ? '.' : ' (senha ainda não definida: use "Enviar convite" na lista).');
+          migrar.hidden = false;
+          document.getElementById('pf-migrar').textContent = 'Trocar e-mail de login';
+          loginInp.value = conta.login_email || '';
+          voltar.hidden = !!conta.criado_por;
+        } else {
+          estado.textContent = 'Hoje entra com o login e a senha do Sistema da Clínica (' + conta.email + ').';
+          migrar.hidden = false;
+          document.getElementById('pf-migrar').textContent = 'Usar senha própria do Hub';
+          loginInp.value = conta.email_codigo || '';
+          voltar.hidden = true;
+        }
+      }
+      function trocarAcesso(payload, okMsg) {
+        if (!editando) return;
+        var btns = [document.getElementById('pf-migrar'), document.getElementById('pf-voltar-clinica')];
+        btns.forEach(function (b) { b.disabled = true; });
+        acaoPessoas('conta_acesso', Object.assign({ email: editando }, payload)).then(function (r) {
+          btns.forEach(function (b) { b.disabled = false; });
+          if (!r.ok) { showMsg(pessoaFormError, r.data.error || 'Não foi possível trocar o acesso.'); return; }
+          var msg = okMsg;
+          if (r.data.convite_enviado === true) msg += ' Enviamos um e-mail para definir a senha.';
+          else if (r.data.convite_enviado === false) msg += ' O e-mail não saiu: use "Enviar convite" na lista.';
+          fecharFormPessoa();
+          showMsg(pessoasNotice, msg);
+          carregarPessoas();
+          carregarAuditoria();
+        });
+      }
+      document.getElementById('pf-migrar').addEventListener('click', function () {
+        var login = document.getElementById('pf-login-email').value.trim().toLowerCase();
+        if (!login) { showMsg(pessoaFormError, 'Informe o e-mail para entrar.'); return; }
+        showMsg(pessoaFormError, '');
+        trocarAcesso({ modo: 'hub', login_email: login }, 'Pronto: a partir de agora entra com ' + login + ' e senha própria.');
+      });
+      document.getElementById('pf-voltar-clinica').addEventListener('click', function () {
+        if (!window.confirm('Voltar a usar a senha do Sistema da Clínica para esta conta?')) return;
+        trocarAcesso({ modo: 'clinica' }, 'Voltou para a senha da Clínica.');
+      });
+
       function fecharFormPessoa() { pessoaForm.hidden = true; editando = null; }
       document.getElementById('novaPessoaBtn').addEventListener('click', function () { abrirFormPessoa(null); });
       document.getElementById('pf-cancelar').addEventListener('click', fecharFormPessoa);
@@ -1075,12 +1143,13 @@
             showLogin('senha');
             return;
           }
+          if (window.location.hash === '#primeiro-acesso') return;
           showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis);
         });
       }
 
       // Link do convite (#primeiro-acesso): já abre a tela de definir senha.
-      if (!memToken && window.location.hash === '#primeiro-acesso') {
+      if (window.location.hash === '#primeiro-acesso') {
         esqueciSub.textContent = 'Primeiro acesso: informe o seu e-mail e enviaremos um código para você escolher a sua senha.';
         showMsg(esqueciError, '');
         showLogin('esqueci');
