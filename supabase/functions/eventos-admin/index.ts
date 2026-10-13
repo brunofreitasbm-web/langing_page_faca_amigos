@@ -93,7 +93,7 @@ async function requireSession(admin: Admin, req: Request) {
   const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : "";
   if (!token) return null;
   const { data, error } = await admin.from("fa_teste_admin_sessions")
-    .select("token, clinica_user_id, admin_email, expires_at, escopo").eq("token", token).maybeSingle();
+    .select("token, clinica_user_id, admin_email, expires_at, escopo, escopo_eventos").eq("token", token).maybeSingle();
   if (error || !data) return null;
   if (new Date(data.expires_at).getTime() < Date.now()) {
     await admin.from("fa_teste_admin_sessions").delete().eq("token", token);
@@ -103,13 +103,21 @@ async function requireSession(admin: Admin, req: Request) {
     token,
     userId: data.clinica_user_id as string,
     email: data.admin_email as string,
-    escopo: data.escopo === "equipe" ? "equipe" as const : "owner" as const,
+    // Escopo do módulo Eventos: o da coluna própria; sessão antiga (sem ela) usa o escopo geral.
+    escopo: lerEscopo(data.escopo_eventos ?? data.escopo),
   };
+}
+
+type Escopo = "owner" | "equipe" | "ver" | "nenhum";
+function lerEscopo(v: unknown): Escopo {
+  return v === "owner" || v === "equipe" || v === "ver" || v === "nenhum" ? v : "nenhum";
 }
 
 // Escopo 'equipe' (login direto limitado): só a porta do evento. Lista de permissão: ação nova nasce
 // negada. Quem edita evento, vê e-mail/WhatsApp, exporta ou cancela entra pelo Hub de Gestão (owner).
 const ACOES_EQUIPE = new Set(["eventos_listar", "inscricoes_listar", "checkin"]);
+// Nível "ver" no Hub: mesma leitura da equipe, sem fazer check-in. "nenhum": nada.
+const ACOES_VER = new Set(["eventos_listar", "inscricoes_listar"]);
 const EVENTO_COLS_EQUIPE = ["id", "slug", "titulo", "categoria", "publico", "formato", "inicio", "fim", "status", "local_nome", "contagens"];
 const INS_COLS_EQUIPE = ["id", "nome", "status", "codigo", "tipo", "checkin_at", "created_at", "posicao"];
 
@@ -282,8 +290,9 @@ Deno.serve(async (req) => {
 
   const session = await requireSession(admin, req);
   if (!session) return jsonResponse(req, { error: "sessão inválida ou expirada" }, 401);
-  const equipe = session.escopo === "equipe";
-  if (equipe && !ACOES_EQUIPE.has(action)) return jsonResponse(req, { error: "sem permissão para esta ação" }, 403);
+  const equipe = session.escopo !== "owner"; // quem não é owner recebe as respostas filtradas (sem receita, e-mail, WhatsApp)
+  const permitidas = session.escopo === "equipe" ? ACOES_EQUIPE : session.escopo === "ver" ? ACOES_VER : session.escopo === "nenhum" ? new Set<string>() : null;
+  if (permitidas && !permitidas.has(action)) return jsonResponse(req, { error: "sem permissão para esta ação" }, 403);
 
   // --- eventos ---
   if (action === "eventos_listar") {

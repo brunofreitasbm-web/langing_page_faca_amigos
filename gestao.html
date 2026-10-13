@@ -15,10 +15,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <!--
-    Hub de Gestão: página privada de Bruno e Isabella (gestao.institutofacaamigos.com.br,
-    reescrita para /gestao pelo middleware.js). Login = senha do Sistema da Clínica + código
-    por e-mail; cada quadrado pede à função gestao-hub um ticket de uso único e abre o
-    sistema já logado. Sem GTM/Clarity de propósito.
+    Hub de Gestão: página privada de owners e gerências (gestao.institutofacaamigos.com.br,
+    reescrita para /gestao pelo middleware.js). Login = senha + código por e-mail (senha própria
+    do Hub, ou a do Sistema da Clínica nas contas antigas); cada quadrado pede à função
+    gestao-hub um ticket de uso único e abre o sistema já logado. Owners cadastram pessoas,
+    módulos e níveis na área "Pessoas e acessos". Sem GTM/Clarity de propósito.
   -->
 
   <style>
@@ -165,6 +166,60 @@
     .tile[data-app="eventos"] { --accent: #FFD9A8; }
     .tile.tile-download { --accent: #D9CCFF; text-decoration: none; }
 
+    .tile .nivel {
+      position: absolute; top: 14px; right: 14px; font-size: 0.72rem; font-weight: 800;
+      padding: 3px 10px; border-radius: 9999px; background: var(--gray-bg); color: var(--ink-soft);
+    }
+
+    /* ---------- pessoas e acessos (owner) ---------- */
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .btn-sm { padding: 8px 16px; font-size: 0.88rem; }
+    .btn-ghost { background: var(--white); color: var(--dark); border-color: var(--gray-bg); }
+    .btn-danger { background: var(--white); color: var(--pink-dark); border-color: #F6C3D6; }
+    .people-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .people-head h1 { font-size: clamp(1.6rem, 4vw, 2.1rem); }
+    .people-head p { color: var(--ink-soft); font-weight: 600; margin-top: 4px; }
+    .people-list { display: grid; gap: 12px; margin-top: 22px; }
+    .person {
+      background: var(--white); border-radius: 18px; box-shadow: var(--shadow-sm);
+      padding: 16px 18px; display: flex; gap: 14px; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    }
+    .person.off { opacity: 0.6; }
+    .person .who { min-width: 0; }
+    .person .who b { font-size: 1.02rem; }
+    .person .who small { display: block; color: var(--gray); font-weight: 700; word-break: break-all; }
+    .person .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .chip { font-size: 0.74rem; font-weight: 800; padding: 3px 10px; border-radius: 9999px; background: var(--gray-bg); color: var(--ink-soft); }
+    .chip.owner { background: #FFE9F1; color: var(--pink-dark); }
+    .chip.warn { background: #FFF3C4; color: #7A5B00; }
+    .chip.ok { background: #E3F8F4; color: #11705F; }
+    .person .acts { display: flex; gap: 8px; flex-wrap: wrap; }
+
+    .person-form {
+      margin-top: 22px; background: var(--white); border-radius: var(--r-card);
+      box-shadow: var(--shadow-lg); padding: 24px 22px;
+    }
+    .person-form h2 { font-size: 1.35rem; margin-bottom: 14px; }
+    .grid-2 { display: grid; gap: 0 16px; grid-template-columns: 1fr 1fr; }
+    @media (max-width: 640px) { .grid-2 { grid-template-columns: 1fr; } }
+    .matriz { display: grid; gap: 10px; margin: 6px 0 18px; }
+    .matriz-row {
+      display: grid; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 14px;
+      background: var(--cream); grid-template-columns: minmax(140px, 1fr) 150px minmax(160px, 1.4fr);
+    }
+    @media (max-width: 640px) { .matriz-row { grid-template-columns: 1fr; } }
+    .matriz-row .mod { font-weight: 800; }
+    .matriz-row .form-control { padding: 9px 12px; font-size: 0.92rem; }
+    .matriz-row .auto { color: var(--gray); font-size: 0.82rem; font-weight: 700; }
+    .check { display: flex; align-items: center; gap: 8px; font-weight: 700; margin: 4px 0 16px; }
+    .form-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+    .audit { margin-top: 30px; }
+    .audit h2 { font-size: 1.2rem; margin-bottom: 10px; }
+    .audit ul { list-style: none; display: grid; gap: 6px; }
+    .audit li { background: var(--white); border-radius: 12px; padding: 8px 12px; font-size: 0.85rem; font-weight: 600; display: flex; gap: 10px; flex-wrap: wrap; }
+    .audit li .t { color: var(--gray); font-weight: 700; }
+    .audit li .e { font-weight: 800; }
+
     .hub-error { margin-top: 20px; }
     .hub-foot { margin-top: 32px; color: var(--gray); font-size: 0.85rem; font-weight: 600; }
 
@@ -209,7 +264,7 @@
 
       <form id="esqueciForm" novalidate hidden>
         <div id="esqueciError" class="form-error" role="alert"></div>
-        <p class="sub" style="margin-bottom:16px;">Enviamos um código para o e-mail cadastrado. Com ele você escolhe uma senha nova (vale também para o Sistema da Clínica).</p>
+        <p class="sub" id="esqueciSub" style="margin-bottom:16px;">Enviamos um código para o e-mail cadastrado. Com ele você escolhe uma senha nova (nas contas ligadas ao Sistema da Clínica, vale também para a Clínica).</p>
         <div class="form-group">
           <label for="esqueci-id" class="form-label">E-mail ou CPF</label>
           <input type="text" id="esqueci-id" class="form-control" autocomplete="username" required>
@@ -259,11 +314,14 @@
           <img src="img/logo-simbolo.png" alt="" decoding="async">
           <span>Faça<b>Amigos</b> · Gestão</span>
         </div>
-        <button type="button" class="btn logout" id="logoutBtn">Sair</button>
+        <div class="header-actions">
+          <button type="button" class="btn logout" id="pessoasBtn" hidden>Pessoas e acessos</button>
+          <button type="button" class="btn logout" id="logoutBtn">Sair</button>
+        </div>
       </div>
     </header>
 
-    <main class="hub-main">
+    <main class="hub-main" id="hubMain">
       <div class="wrap">
         <div class="hello">
           <h1 id="helloTitle">Olá!</h1>
@@ -330,6 +388,71 @@
         <p class="hub-foot">Cada clique fica registrado. A sessão do hub vale 7 dias neste aparelho.</p>
       </div>
     </main>
+
+    <!-- ===== Pessoas e acessos (só owner) ===== -->
+    <main class="hub-main" id="pessoasMain" hidden>
+      <div class="wrap">
+        <div class="people-head">
+          <div>
+            <h1>Pessoas e acessos</h1>
+            <p>Quem entra no Hub, em quais sistemas e com qual nível.</p>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-pink btn-sm" id="novaPessoaBtn">Nova pessoa</button>
+            <button type="button" class="btn-link" id="voltarHubBtn">Voltar aos sistemas</button>
+          </div>
+        </div>
+
+        <div id="pessoasError" class="form-error hub-error" role="alert"></div>
+        <div id="pessoasNotice" class="form-notice hub-error" role="status"></div>
+
+        <div class="people-list" id="pessoasLista"></div>
+
+        <section class="person-form" id="pessoaForm" hidden>
+          <h2 id="pessoaFormTitulo">Nova pessoa</h2>
+          <form id="pessoaFormEl" novalidate>
+            <div id="pessoaFormError" class="form-error" role="alert"></div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="pf-nome" class="form-label">Nome</label>
+                <input type="text" id="pf-nome" class="form-control" maxlength="120" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label for="pf-email" class="form-label">E-mail de acesso ao Hub</label>
+                <input type="email" id="pf-email" class="form-control" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label for="pf-email-codigo" class="form-label">E-mail que recebe o código</label>
+                <input type="email" id="pf-email-codigo" class="form-control" autocomplete="off" placeholder="igual ao de acesso, se ficar em branco">
+              </div>
+              <div class="form-group">
+                <label for="pf-papel" class="form-label">Papel</label>
+                <select id="pf-papel" class="form-control">
+                  <option value="gerente">Gerência (só o que eu liberar)</option>
+                  <option value="owner">Owner (tudo, e gerencia pessoas)</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" id="pf-preset-group">
+              <label for="pf-preset" class="form-label">Perfil pronto (preenche a tabela abaixo)</label>
+              <select id="pf-preset" class="form-control"></select>
+            </div>
+            <p class="form-label" style="margin-bottom:6px;">Módulos e nível</p>
+            <div class="matriz" id="pf-matriz"></div>
+            <label class="check" id="pf-convidar-label"><input type="checkbox" id="pf-convidar" checked> Enviar convite por e-mail para definir a senha</label>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-pink btn-sm" id="pf-salvar">Salvar</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="pf-cancelar">Cancelar</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="audit">
+          <h2>Últimos eventos</h2>
+          <ul id="auditList"></ul>
+        </section>
+      </div>
+    </main>
   </div>
 
   <script>
@@ -366,6 +489,13 @@
 
       var challengeId = null;
       var resetChallengeId = null;
+      var meuPapel = 'gerente';
+      var esqueciSub = document.getElementById('esqueciSub');
+      var hubMain = document.getElementById('hubMain');
+      var pessoasMain = document.getElementById('pessoasMain');
+      var pessoasBtn = document.getElementById('pessoasBtn');
+
+      var NIVEL_ROTULO = { nenhum: 'Sem acesso', ver: 'Visualizar', operar: 'Operar', admin: 'Administrar' };
 
       // ---------- sessão ----------
       function getToken() {
@@ -424,13 +554,29 @@
         if (el) el.focus();
       }
 
-      function showHub(nome, apps) {
+      function showHub(nome, apps, papel, niveis) {
         loginScreen.hidden = true;
         hubScreen.hidden = false;
+        hubMain.hidden = false;
+        pessoasMain.hidden = true;
+        meuPapel = papel || 'gerente';
+        pessoasBtn.hidden = meuPapel !== 'owner';
         helloTitle.textContent = nome ? 'Olá, ' + nome.split(' ')[0] + '!' : 'Olá!';
         tiles.forEach(function (tile) {
-          var ok = !apps || apps[tile.getAttribute('data-app')] !== false;
+          var id = tile.getAttribute('data-app');
+          var nivel = niveis ? niveis[id] : 'admin';
+          // Sem nível no módulo: o quadrado nem aparece (o servidor também recusa o clique).
+          tile.hidden = nivel === 'nenhum';
+          var ok = !apps || apps[id] !== false;
           tile.disabled = !ok;
+          var oldNivel = tile.querySelector('.nivel');
+          if (oldNivel) oldNivel.remove();
+          if (meuPapel !== 'owner' && nivel && nivel !== 'admin' && nivel !== 'nenhum') {
+            var b = document.createElement('span');
+            b.className = 'nivel';
+            b.textContent = NIVEL_ROTULO[nivel];
+            tile.appendChild(b);
+          }
           var old = tile.querySelector('.status');
           if (old) old.remove();
           if (!ok) {
@@ -493,7 +639,7 @@
           }
           saveSession(r.data.token, r.data.expires_at);
           challengeId = null;
-          showHub(r.data.nome, r.data.apps);
+          showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis);
         });
       });
 
@@ -616,6 +762,294 @@
         });
       });
 
+      // ---------- pessoas e acessos (owner) ----------
+      var pessoasLista = document.getElementById('pessoasLista');
+      var pessoasError = document.getElementById('pessoasError');
+      var pessoasNotice = document.getElementById('pessoasNotice');
+      var pessoaForm = document.getElementById('pessoaForm');
+      var pessoaFormEl = document.getElementById('pessoaFormEl');
+      var pessoaFormError = document.getElementById('pessoaFormError');
+      var pfMatriz = document.getElementById('pf-matriz');
+      var pfPapel = document.getElementById('pf-papel');
+      var pfPreset = document.getElementById('pf-preset');
+      var contas = [];
+      var modulos = [];
+      var editando = null; // e-mail da conta em edição; null = pessoa nova
+
+      // Perfis prontos para preencher a tabela de módulos × nível de uma vez.
+      // TODO(human): defina os perfis que fazem sentido para as suas gerências.
+      // Formato: 'Nome do perfil': { playground: 'operar', clinica: 'ver', ... }
+      // Módulos: playground, clinica, financeiro, rh, cacau, painel, eventos.
+      // Níveis: 'ver' (só consulta), 'operar' (consulta + rotina do dia) ou 'admin' (tudo no módulo).
+      // Módulo fora do perfil = sem acesso.
+      var PRESETS = {};
+
+      function el(tag, cls, text) {
+        var n = document.createElement(tag);
+        if (cls) n.className = cls;
+        if (text != null) n.textContent = text;
+        return n;
+      }
+      function fmtData(iso) {
+        if (!iso) return '';
+        var d = new Date(iso);
+        return isNaN(d.getTime()) ? '' : d.toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      }
+
+      function abrirPessoas() {
+        hubMain.hidden = true;
+        pessoasMain.hidden = false;
+        fecharFormPessoa();
+        showMsg(pessoasError, '');
+        showMsg(pessoasNotice, '');
+        carregarPessoas();
+        carregarAuditoria();
+      }
+      function voltarHub() {
+        pessoasMain.hidden = true;
+        hubMain.hidden = false;
+        // Os níveis podem ter mudado (inclusive os do próprio owner): recarrega os quadrados.
+        api('me').then(function (r) { if (r.ok) showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis); });
+      }
+      pessoasBtn.addEventListener('click', abrirPessoas);
+      document.getElementById('voltarHubBtn').addEventListener('click', voltarHub);
+
+      function acaoPessoas(action, payload, okMsg) {
+        showMsg(pessoasError, '');
+        showMsg(pessoasNotice, '');
+        return api(action, payload).then(function (r) {
+          if (r.status === 401) { clearSession(); showMsg(senhaError, 'Sua sessão expirou. Entre de novo.'); showLogin('senha'); return r; }
+          if (!r.ok) showMsg(pessoasError, r.data.error || 'Não foi possível concluir.');
+          else if (okMsg) showMsg(pessoasNotice, okMsg);
+          return r;
+        });
+      }
+
+      function carregarPessoas() {
+        api('contas_listar').then(function (r) {
+          if (!r.ok) { showMsg(pessoasError, r.data.error || 'Não foi possível carregar as pessoas.'); return; }
+          contas = r.data.contas || [];
+          modulos = r.data.modulos || [];
+          renderPessoas();
+        });
+      }
+
+      function renderPessoas() {
+        pessoasLista.textContent = '';
+        contas.forEach(function (c) {
+          var card = el('div', 'person' + (c.ativo ? '' : ' off'));
+          var who = el('div', 'who');
+          who.appendChild(el('b', null, c.nome));
+          who.appendChild(el('small', null, c.email));
+          var meta = el('div', 'meta');
+          meta.appendChild(el('span', 'chip ' + (c.papel === 'owner' ? 'owner' : ''), c.papel === 'owner' ? 'Owner' : 'Gerência'));
+          if (!c.ativo) meta.appendChild(el('span', 'chip warn', 'Desativada'));
+          if (c.auth_modo === 'hub') {
+            meta.appendChild(c.senha_definida_em
+              ? el('span', 'chip ok', 'Senha definida')
+              : el('span', 'chip warn', c.convidado_em ? 'Convite enviado ' + fmtData(c.convidado_em) : 'Convite não enviado'));
+          } else {
+            meta.appendChild(el('span', 'chip', 'Senha da Clínica'));
+          }
+          if (c.papel !== 'owner') {
+            modulos.forEach(function (m) {
+              var n = c.permissoes && c.permissoes[m.id];
+              if (n) meta.appendChild(el('span', 'chip', m.rotulo + ': ' + NIVEL_ROTULO[n]));
+            });
+          }
+          who.appendChild(meta);
+
+          var acts = el('div', 'acts');
+          var bEd = el('button', 'btn btn-ghost btn-sm', 'Editar');
+          bEd.type = 'button';
+          bEd.addEventListener('click', function () { abrirFormPessoa(c); });
+          acts.appendChild(bEd);
+          if (c.auth_modo === 'hub' && c.ativo) {
+            var bConv = el('button', 'btn btn-ghost btn-sm', c.senha_definida_em ? 'Reenviar acesso' : 'Enviar convite');
+            bConv.type = 'button';
+            bConv.addEventListener('click', function () {
+              acaoPessoas('convidar', { email: c.email }, 'Convite enviado para ' + c.email_codigo + '.').then(carregarPessoas);
+            });
+            acts.appendChild(bConv);
+          }
+          if (c.ativo) {
+            var bRev = el('button', 'btn btn-ghost btn-sm', 'Encerrar sessões');
+            bRev.type = 'button';
+            bRev.addEventListener('click', function () {
+              acaoPessoas('sessoes_revogar', { email: c.email }, 'Sessões encerradas.').then(carregarAuditoria);
+            });
+            acts.appendChild(bRev);
+          }
+          var bAtivo = el('button', 'btn btn-sm ' + (c.ativo ? 'btn-danger' : 'btn-ghost'), c.ativo ? 'Desativar' : 'Reativar');
+          bAtivo.type = 'button';
+          bAtivo.addEventListener('click', function () {
+            if (c.ativo && !window.confirm('Desativar ' + c.nome + '? O acesso ao Hub e ao painel é encerrado na hora.')) return;
+            acaoPessoas('conta_ativo', { email: c.email, ativo: !c.ativo }, c.ativo ? 'Conta desativada.' : 'Conta reativada.').then(function () {
+              carregarPessoas();
+              carregarAuditoria();
+            });
+          });
+          acts.appendChild(bAtivo);
+
+          card.appendChild(who);
+          card.appendChild(acts);
+          pessoasLista.appendChild(card);
+        });
+      }
+
+      function carregarAuditoria() {
+        api('auditoria_listar', { limit: 40 }).then(function (r) {
+          var ul = document.getElementById('auditList');
+          ul.textContent = '';
+          if (!r.ok) return;
+          (r.data.eventos || []).forEach(function (ev) {
+            var li = el('li');
+            li.appendChild(el('span', 't', fmtData(ev.created_at)));
+            li.appendChild(el('span', 'e', ev.evento));
+            if (ev.email) li.appendChild(el('span', null, ev.email));
+            if (ev.app) li.appendChild(el('span', null, ev.app));
+            if (ev.detalhe) li.appendChild(el('span', 't', ev.detalhe));
+            ul.appendChild(li);
+          });
+        });
+      }
+
+      // Tabela módulo × nível (+ identidade da pessoa no sistema, até o provisionamento automático).
+      function montarMatriz(conta) {
+        pfMatriz.textContent = '';
+        var ehOwner = pfPapel.value === 'owner';
+        modulos.forEach(function (m) {
+          var linha = el('div', 'matriz-row');
+          linha.setAttribute('data-modulo', m.id);
+          linha.appendChild(el('span', 'mod', m.rotulo));
+
+          var sel = el('select', 'form-control');
+          sel.setAttribute('aria-label', 'Nível em ' + m.rotulo);
+          ['nenhum', 'ver', 'operar', 'admin'].forEach(function (n) {
+            var o = el('option', null, NIVEL_ROTULO[n]);
+            o.value = n;
+            sel.appendChild(o);
+          });
+          var atual = (conta && conta.permissoes && conta.permissoes[m.id]) || 'nenhum';
+          sel.value = ehOwner ? 'admin' : atual;
+          sel.disabled = ehOwner;
+          linha.appendChild(sel);
+
+          var ident;
+          if (m.campo === 'painel_usuario') {
+            ident = el('span', 'auto', 'usa o e-mail de acesso');
+          } else {
+            ident = el('input', 'form-control');
+            ident.type = 'text';
+            ident.setAttribute('data-campo', m.campo);
+            ident.placeholder = m.campo_rotulo;
+            ident.setAttribute('aria-label', m.campo_rotulo);
+            ident.autocomplete = 'off';
+            ident.value = (conta && conta[m.campo]) || '';
+          }
+          linha.appendChild(ident);
+
+          function sincroniza() { ident.hidden = sel.value === 'nenhum'; }
+          sel.addEventListener('change', sincroniza);
+          sincroniza();
+          pfMatriz.appendChild(linha);
+        });
+      }
+
+      function montarPresets() {
+        pfPreset.textContent = '';
+        var o0 = el('option', null, 'Personalizado');
+        o0.value = '';
+        pfPreset.appendChild(o0);
+        Object.keys(PRESETS).forEach(function (nome) {
+          var o = el('option', null, nome);
+          o.value = nome;
+          pfPreset.appendChild(o);
+        });
+        document.getElementById('pf-preset-group').hidden = Object.keys(PRESETS).length === 0 || pfPapel.value === 'owner';
+      }
+      pfPreset.addEventListener('change', function () {
+        var perfil = PRESETS[pfPreset.value];
+        if (!perfil) return;
+        Array.prototype.forEach.call(pfMatriz.querySelectorAll('.matriz-row'), function (linha) {
+          var sel = linha.querySelector('select');
+          sel.value = perfil[linha.getAttribute('data-modulo')] || 'nenhum';
+          sel.dispatchEvent(new Event('change'));
+        });
+      });
+      pfPapel.addEventListener('change', function () {
+        // Mantém o que já foi digitado ao trocar o papel.
+        var snapshot = { permissoes: {} };
+        Array.prototype.forEach.call(pfMatriz.querySelectorAll('.matriz-row'), function (linha) {
+          snapshot.permissoes[linha.getAttribute('data-modulo')] = linha.querySelector('select').value;
+          var inp = linha.querySelector('input[data-campo]');
+          if (inp) snapshot[inp.getAttribute('data-campo')] = inp.value;
+        });
+        montarMatriz(snapshot);
+        montarPresets();
+      });
+
+      function abrirFormPessoa(conta) {
+        editando = conta ? conta.email : null;
+        document.getElementById('pessoaFormTitulo').textContent = conta ? 'Editar ' + conta.nome : 'Nova pessoa';
+        document.getElementById('pf-nome').value = conta ? conta.nome : '';
+        var emailEl = document.getElementById('pf-email');
+        emailEl.value = conta ? conta.email : '';
+        emailEl.disabled = !!conta; // o e-mail é a chave da conta
+        document.getElementById('pf-email-codigo').value = conta && conta.email_codigo !== conta.email ? conta.email_codigo : '';
+        pfPapel.value = conta ? conta.papel : 'gerente';
+        document.getElementById('pf-convidar-label').hidden = !!conta;
+        document.getElementById('pf-convidar').checked = true;
+        showMsg(pessoaFormError, '');
+        montarMatriz(conta);
+        montarPresets();
+        pessoaForm.hidden = false;
+        pessoaForm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        document.getElementById('pf-nome').focus();
+      }
+      function fecharFormPessoa() { pessoaForm.hidden = true; editando = null; }
+      document.getElementById('novaPessoaBtn').addEventListener('click', function () { abrirFormPessoa(null); });
+      document.getElementById('pf-cancelar').addEventListener('click', fecharFormPessoa);
+
+      pessoaFormEl.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var nome = document.getElementById('pf-nome').value.trim();
+        var email = document.getElementById('pf-email').value.trim().toLowerCase();
+        var emailCodigo = document.getElementById('pf-email-codigo').value.trim().toLowerCase();
+        if (!nome || !email) { showMsg(pessoaFormError, 'Informe o nome e o e-mail de acesso.'); return; }
+        var permissoes = {};
+        var mapeamentos = {};
+        Array.prototype.forEach.call(pfMatriz.querySelectorAll('.matriz-row'), function (linha) {
+          var n = linha.querySelector('select').value;
+          if (n !== 'nenhum') permissoes[linha.getAttribute('data-modulo')] = n;
+          var inp = linha.querySelector('input[data-campo]');
+          if (inp && !inp.hidden) mapeamentos[inp.getAttribute('data-campo')] = inp.value.trim();
+        });
+        showMsg(pessoaFormError, '');
+        var btn = document.getElementById('pf-salvar');
+        btn.disabled = true;
+        acaoPessoas('conta_salvar', {
+          novo: !editando,
+          email: email,
+          nome: nome,
+          email_codigo: emailCodigo,
+          papel: pfPapel.value,
+          permissoes: permissoes,
+          mapeamentos: mapeamentos,
+          convidar: document.getElementById('pf-convidar').checked
+        }).then(function (r) {
+          btn.disabled = false;
+          if (!r.ok) { showMsg(pessoaFormError, r.data.error || 'Não foi possível salvar.'); return; }
+          var msg = 'Salvo.';
+          if (r.data.convite_enviado === true) msg = 'Salvo. Convite enviado para ' + (emailCodigo || email) + '.';
+          else if (r.data.convite_enviado === false) msg = 'Salvo, mas o e-mail do convite não saiu. Use "Enviar convite" na lista.';
+          fecharFormPessoa();
+          showMsg(pessoasNotice, msg);
+          carregarPessoas();
+          carregarAuditoria();
+        });
+      });
+
       // ---------- sair ----------
       document.getElementById('logoutBtn').addEventListener('click', function () {
         api('logout').then(function () {
@@ -641,8 +1075,15 @@
             showLogin('senha');
             return;
           }
-          showHub(r.data.nome, r.data.apps);
+          showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis);
         });
+      }
+
+      // Link do convite (#primeiro-acesso): já abre a tela de definir senha.
+      if (!memToken && window.location.hash === '#primeiro-acesso') {
+        esqueciSub.textContent = 'Primeiro acesso: informe o seu e-mail e enviaremos um código para você escolher a sua senha.';
+        showMsg(esqueciError, '');
+        showLogin('esqueci');
       }
     })();
   </script>

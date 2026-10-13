@@ -31,6 +31,10 @@
 //   - equipe: login direto limitado a ACOES_EQUIPE (cupons Wi-Fi). Com a
 //     chave em "equipe", o login direto aceita qualquer perfil da Clínica,
 //     mas só entrega este escopo.
+//   - ver / nenhum: só pelo Hub. O Hub de Gestão grava o nível de cada pessoa
+//     (admin -> owner, operar -> equipe, ver -> ver, sem acesso -> nenhum) no
+//     ticket; a ação `sso` cria um escopo para o painel (`escopo`) e outro para
+//     Eventos (`escopo_eventos`, lido por eventos-admin).
 
 import { createClient, type SupabaseClient } from "jsr:@supabase/supabase-js@2";
 
@@ -341,11 +345,35 @@ function newSessionToken(): string {
   return toHex(arr.buffer);
 }
 
-type Escopo = "owner" | "equipe";
+type Escopo = "owner" | "equipe" | "ver" | "nenhum";
 
-// Escopo 'equipe' (login direto): só cupons Wi-Fi e sair. Todo o resto é do owner,
-// que entra pelo Hub de Gestão. Lista de permissão: ação nova nasce negada.
+// Escopos de quem não é owner. Lista de permissão: ação nova nasce negada.
+//   equipe  (nível "operar" no Hub; também o login direto): cupons Wi-Fi (listar e resgatar).
+//   ver     (nível "ver" no Hub): só leitura, lista os cupons sem resgatar.
+//   nenhum  (sem acesso ao painel): só sair.
+// O resto é do owner (nível "admin" no Hub).
 const ACOES_EQUIPE = new Set(["wifi_list_coupons", "wifi_redeem", "logout"]);
+const ACOES_VER = new Set(["wifi_list_coupons", "logout"]);
+const ACOES_NENHUM = new Set(["logout"]);
+
+function acoesDoEscopo(escopo: Escopo): Set<string> | null {
+  if (escopo === "equipe") return ACOES_EQUIPE;
+  if (escopo === "ver") return ACOES_VER;
+  if (escopo === "nenhum") return ACOES_NENHUM;
+  return null; // owner: sem restrição
+}
+
+// Nível do Hub -> escopo da sessão. Ticket sem nível (anterior aos níveis) só existia para owner.
+function escopoDoNivel(nivel: unknown): Escopo {
+  if (nivel === "operar") return "equipe";
+  if (nivel === "ver") return "ver";
+  if (nivel === "admin" || nivel == null) return "owner";
+  return "nenhum";
+}
+
+function lerEscopo(v: unknown): Escopo {
+  return v === "owner" || v === "equipe" || v === "ver" || v === "nenhum" ? v : "nenhum";
+}
 
 async function requireSession(admin: Admin, req: Request) {
   const authHeader = req.headers.get("authorization") ?? "";
@@ -367,7 +395,7 @@ async function requireSession(admin: Admin, req: Request) {
     token,
     userId: data.clinica_user_id as string,
     email: data.admin_email as string,
-    escopo: (data.escopo === "equipe" ? "equipe" : "owner") as Escopo,
+    escopo: lerEscopo(data.escopo),
   };
 }
 
@@ -688,7 +716,7 @@ Deno.serve(async (req) => {
       .eq("token_hash", await sha256Hex(ticket))
       .is("used_at", null)
       .gt("expires_at", new Date().toISOString())
-      .select("email");
+      .select("email, nivel_painel, nivel_eventos");
     const email = usado?.[0]?.email as string | undefined;
     if (usoErr || !email) return jsonResponse(req, { error: "ticket inválido ou expirado" }, 401);
 
@@ -700,6 +728,10 @@ Deno.serve(async (req) => {
       .maybeSingle();
     if (!conta?.ativo || !conta.painel_usuario) return jsonResponse(req, { error: "acesso não autorizado" }, 403);
 
+    // Um escopo por módulo que o /admin hospeda: painel (aqui) e eventos (eventos-admin).
+    const escopo = escopoDoNivel(usado?.[0]?.nivel_painel);
+    const escopoEventos = escopoDoNivel(usado?.[0]?.nivel_eventos);
+
     const token = newSessionToken();
     const expiresAt = new Date(Date.now() + SESSION_TTL_MS).toISOString();
     const { error: sessionError } = await admin.from("fa_teste_admin_sessions").insert({
@@ -707,19 +739,21 @@ Deno.serve(async (req) => {
       clinica_user_id: HUB_USER_ID,
       admin_email: conta.painel_usuario,
       expires_at: expiresAt,
-      escopo: "owner",
+      escopo,
+      escopo_eventos: escopoEventos,
     });
     if (sessionError) {
       console.error("Erro ao criar sessão (sso):", sessionError);
       return jsonResponse(req, { error: "falha ao autenticar" }, 500);
     }
-    return jsonResponse(req, { token, expires_at: expiresAt, email: conta.painel_usuario, escopo: "owner" });
+    return jsonResponse(req, { token, expires_at: expiresAt, email: conta.painel_usuario, escopo, escopo_eventos: escopoEventos });
   }
 
   // --- todas as ações abaixo exigem sessão válida ---
   const session = await requireSession(admin, req);
   if (!session) return jsonResponse(req, { error: "sessão inválida ou expirada" }, 401);
-  if (session.escopo === "equipe" && !ACOES_EQUIPE.has(action)) {
+  const permitidas = acoesDoEscopo(session.escopo);
+  if (permitidas && !permitidas.has(action)) {
     return jsonResponse(req, { error: "sem permissão para esta ação" }, 403);
   }
 
@@ -916,7 +950,7 @@ Deno.serve(async (req) => {
   if (action === "wifi_list_coupons") {
     const q = str(body.q);
     const optin = str(body.optin); // owner: "whatsapp" | "email" mostra só quem aceitou contato
-    const equipe = session.escopo === "equipe";
+    const equipe = session.escopo !== "owner";
     let query = admin
       .from("fa_wifi_leads")
       .select(

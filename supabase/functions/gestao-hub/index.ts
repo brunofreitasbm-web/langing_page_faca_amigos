@@ -37,6 +37,7 @@
 import { createClient, type SupabaseClient } from "npm:@supabase/supabase-js@2";
 
 const LOGO_URL = "https://institutofacaamigos.com.br/img/logo-simbolo.png";
+const HUB_URL = "https://gestao.institutofacaamigos.com.br";
 
 const ALLOWED_ORIGINS = [
   "https://gestao.institutofacaamigos.com.br",
@@ -120,47 +121,71 @@ type Conta = {
   cacau_usuario: string | null;
   painel_usuario: string | null;
   ativo: boolean;
+  papel: "owner" | "gerente";
+  auth_modo: "clinica" | "hub";
+  senha_hash: string | null;
+  senha_definida_em: string | null;
+  convidado_em: string | null;
+  criado_por: string | null;
+  created_at: string;
 };
 
 type AppId = "playground" | "clinica" | "financeiro" | "rh" | "cacau" | "painel" | "eventos";
 
+// Nível da pessoa num módulo. `nenhum` = sem linha em fa_gestao_permissoes.
+type Nivel = "nenhum" | "ver" | "operar" | "admin";
+const NIVEIS: Nivel[] = ["nenhum", "ver", "operar", "admin"];
+type Niveis = Record<AppId, Nivel>;
+
 const APPS: Record<AppId, {
+  rotulo: string;
   campo: keyof Conta;
+  campoRotulo: string;
   tipo: "supabase_a" | "supabase_b" | "cacau" | "painel";
   baseEnv: string;
   baseDefault: string;
   entrada: (base: string, ticket: string) => string;
 }> = {
   playground: {
+    rotulo: "Playground",
     campo: "playground_email",
+    campoRotulo: "E-mail no Playground",
     tipo: "supabase_a",
     baseEnv: "GESTAO_URL_PLAYGROUND",
     baseDefault: "https://app.institutofacaamigos.com.br",
     entrada: (b, t) => `${b}/sso?token_hash=${encodeURIComponent(t)}`,
   },
   clinica: {
+    rotulo: "Clínica",
     campo: "clinica_email",
+    campoRotulo: "E-mail na Clínica",
     tipo: "supabase_b",
     baseEnv: "GESTAO_URL_CLINICA",
     baseDefault: "https://sistema.institutofacaamigos.com.br",
     entrada: (b, t) => `${b}/auth/sso?token_hash=${encodeURIComponent(t)}`,
   },
   financeiro: {
+    rotulo: "Simulador Financeiro",
     campo: "financeiro_email",
+    campoRotulo: "E-mail no Simulador",
     tipo: "supabase_a",
     baseEnv: "GESTAO_URL_FINANCEIRO",
     baseDefault: "https://simulador-financeiro-blush.vercel.app",
     entrada: (b, t) => `${b}/auth/sso?token_hash=${encodeURIComponent(t)}`,
   },
   rh: {
+    rotulo: "Gestão de Pessoas",
     campo: "rh_email",
+    campoRotulo: "E-mail na Gestão de Pessoas",
     tipo: "supabase_b",
     baseEnv: "GESTAO_URL_RH",
     baseDefault: "https://rh.institutofacaamigos.com.br",
     entrada: (b, t) => `${b}/sso?token_hash=${encodeURIComponent(t)}`,
   },
   cacau: {
+    rotulo: "Cacau Show",
     campo: "cacau_usuario",
+    campoRotulo: "Usuário no Cacau Show",
     tipo: "cacau",
     baseEnv: "GESTAO_URL_CACAU",
     baseDefault: "https://hub-operacoes-theta.vercel.app",
@@ -171,7 +196,9 @@ const APPS: Record<AppId, {
   // banco (fa_gestao_painel_tickets), trocado pela ação `sso` de
   // behavior-test-admin. Também no fragmento: fora de logs e do Referer.
   painel: {
+    rotulo: "Mapeamento Comportamental",
     campo: "painel_usuario",
+    campoRotulo: "Usuário no painel",
     tipo: "painel",
     baseEnv: "GESTAO_URL_PAINEL",
     baseDefault: "https://institutofacaamigos.com.br",
@@ -179,7 +206,9 @@ const APPS: Record<AppId, {
   },
   // Mesmo painel, já aberto na aba Eventos.
   eventos: {
+    rotulo: "Eventos",
     campo: "painel_usuario",
+    campoRotulo: "Usuário no painel",
     tipo: "painel",
     baseEnv: "GESTAO_URL_PAINEL",
     baseDefault: "https://institutofacaamigos.com.br",
@@ -189,18 +218,33 @@ const APPS: Record<AppId, {
 
 const APP_IDS = Object.keys(APPS) as AppId[];
 
-function appsDisponiveis(conta: Conta): Record<AppId, boolean> {
+// Nível efetivo em cada módulo: owner é admin em tudo; gerente vale o que está na matriz.
+async function carregarNiveis(admin: Admin, conta: Conta): Promise<Niveis> {
+  const out = {} as Niveis;
+  for (const id of APP_IDS) out[id] = conta.papel === "owner" ? "admin" : "nenhum";
+  if (conta.papel === "owner") return out;
+  const { data } = await admin.from("fa_gestao_permissoes").select("modulo, nivel").eq("email", conta.email);
+  for (const p of data ?? []) {
+    if (p.modulo in APPS && NIVEIS.includes(p.nivel)) out[p.modulo as AppId] = p.nivel as Nivel;
+  }
+  return out;
+}
+
+// Quadrado habilitado = tem nível no módulo E a identidade da pessoa naquele sistema está preenchida.
+function appsDisponiveis(conta: Conta, niveis: Niveis): Record<AppId, boolean> {
   const out = {} as Record<AppId, boolean>;
-  for (const id of APP_IDS) out[id] = !!conta[APPS[id].campo];
+  for (const id of APP_IDS) out[id] = niveis[id] !== "nenhum" && !!conta[APPS[id].campo];
   return out;
 }
 
 // Ticket do Hub de Operações Cacau Show: base64url(payload).base64url(HMAC-SHA256).
-async function ticketCacau(usuario: string): Promise<string | null> {
+// `n` leva o nível (ver|operar|admin) para o Cacau passar a honrá-lo; payload extra é ignorado por quem não conhece.
+async function ticketCacau(usuario: string, nivel: Nivel): Promise<string | null> {
   const secret = Deno.env.get("GESTAO_SSO_SECRET_CACAU");
   if (!secret) return null;
   const payload = {
     u: usuario,
+    n: nivel,
     aud: "hub-operacoes",
     exp: Math.floor(Date.now() / 1000) + 60,
     jti: crypto.randomUUID(),
@@ -221,11 +265,15 @@ async function ticketCacau(usuario: string): Promise<string | null> {
 // vale 60 s e só serve uma vez (a troca é feita por behavior-test-admin).
 const PAINEL_TICKET_TTL_MS = 60 * 1000;
 
-async function ticketPainel(admin: Admin, email: string): Promise<string | null> {
+// O /admin hospeda dois módulos (painel e eventos); o ticket leva o nível da pessoa nos dois,
+// e a troca (`sso`) grava um escopo para cada, independente de qual quadrado foi clicado.
+async function ticketPainel(admin: Admin, email: string, niveis: Niveis): Promise<string | null> {
   const ticket = randomHex(32);
   const { error } = await admin.from("fa_gestao_painel_tickets").insert({
     token_hash: await sha256Hex(ticket),
     email,
+    nivel_painel: niveis.painel,
+    nivel_eventos: niveis.eventos,
     expires_at: new Date(Date.now() + PAINEL_TICKET_TTL_MS).toISOString(),
   });
   if (error) {
@@ -313,6 +361,40 @@ async function acharUsuarioClinica(identifier: string): Promise<{ id: string; em
 }
 
 // ---------------------------------------------------------------------
+// Senha própria do Hub (contas com auth_modo = 'hub'): PBKDF2-SHA256 com sal.
+// Formato guardado: pbkdf2$iterações$salt(hex)$hash(hex). A senha nunca é guardada.
+// ---------------------------------------------------------------------
+
+const PBKDF2_ITER = 150_000;
+const SENHA_MIN = 8;
+const SENHA_MAX = 72;
+
+async function derivarSenha(senha: string, salt: Uint8Array, iter: number): Promise<string> {
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(senha), "PBKDF2", false, ["deriveBits"]);
+  const bits = await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: iter }, key, 256);
+  return toHex(bits);
+}
+
+async function hashSenha(senha: string): Promise<string> {
+  const salt = new Uint8Array(16);
+  crypto.getRandomValues(salt);
+  return `pbkdf2$${PBKDF2_ITER}$${toHex(salt.buffer)}$${await derivarSenha(senha, salt, PBKDF2_ITER)}`;
+}
+
+async function verificarSenhaHub(senha: string, guardado: string): Promise<boolean> {
+  const [alg, iterStr, saltHex, hashHex] = guardado.split("$");
+  const iter = Number(iterStr);
+  if (alg !== "pbkdf2" || !Number.isInteger(iter) || iter < 1 || !/^[0-9a-f]+$/.test(saltHex ?? "") || !hashHex) return false;
+  const salt = Uint8Array.from(saltHex.match(/../g)!.map((h) => parseInt(h, 16)));
+  const calculado = await derivarSenha(senha, salt, iter);
+  // Comparação sem curto-circuito.
+  if (calculado.length !== hashHex.length) return false;
+  let diff = 0;
+  for (let i = 0; i < calculado.length; i++) diff |= calculado.charCodeAt(i) ^ hashHex.charCodeAt(i);
+  return diff === 0;
+}
+
+// ---------------------------------------------------------------------
 // E-mail do código (Brevo)
 // ---------------------------------------------------------------------
 
@@ -329,27 +411,51 @@ function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-async function enviarCodigo(email: string, nome: string, code: string, finalidade: "login" | "reset" = "login"): Promise<boolean> {
+function moldeEmail(corpo: string): string {
+  return `
+<div style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#1a3f35;">
+  <div style="text-align:center;padding:10px 0 16px;">
+    <img src="${LOGO_URL}" alt="Instituto Faça Amigos" width="32" height="32" style="display:inline-block;vertical-align:middle;margin-right:8px;">
+    <span style="font-size:15px;font-weight:800;vertical-align:middle;">Faça<span style="color:#f0196b;">Amigos</span> · Gestão</span>
+  </div>
+  <div style="background:#fff;border-radius:24px;padding:28px 24px;text-align:center;border:1px solid #edf1ef;">${corpo}</div>
+</div>`.trim();
+}
+
+// `modo` diz de quem é a senha: contas 'hub' têm senha própria; as legadas usam a do Sistema da Clínica.
+async function enviarCodigo(
+  email: string,
+  nome: string,
+  code: string,
+  finalidade: "login" | "reset" = "login",
+  modo: "clinica" | "hub" = "clinica",
+): Promise<boolean> {
+  const reset = finalidade === "reset";
+  const quemSenha = modo === "hub" ? "do Hub de Gestão" : "do Hub de Gestão e do Sistema da Clínica";
+  const html = moldeEmail(`
+    <p style="margin:0 0 12px;font-size:15px;">Olá, ${escapeHtml(nome)}!</p>
+    <p style="margin:0 0 18px;font-size:14px;color:#4C6B62;">${reset ? `Seu código para definir a senha ${quemSenha}:` : "Seu código para entrar no Hub de Gestão:"}</p>
+    <div style="font-size:34px;font-weight:900;letter-spacing:10px;color:#1a3f35;background:#FFF9F1;border-radius:16px;padding:16px 0;">${code}</div>
+    <p style="margin:18px 0 0;font-size:12px;color:#8B9A94;">Vale por 10 minutos. ${reset ? "Se não foi você, ignore este e-mail: a senha só muda com este código." : modo === "hub" ? "Se não foi você, avise quem administra o Hub e troque sua senha." : "Se não foi você, troque a senha do Sistema da Clínica agora."}</p>`);
+  return enviarEmail(email, nome, reset ? `${code} é o código para definir sua senha` : `${code} é o seu código do Hub de Gestão`, html);
+}
+
+async function enviarConvite(email: string, nome: string, quemConvidou: string): Promise<boolean> {
+  const html = moldeEmail(`
+    <p style="margin:0 0 12px;font-size:15px;">Olá, ${escapeHtml(nome)}!</p>
+    <p style="margin:0 0 18px;font-size:14px;color:#4C6B62;">${escapeHtml(quemConvidou)} liberou o seu acesso ao Hub de Gestão do Instituto Faça Amigos. Para entrar pela primeira vez, defina a sua senha:</p>
+    <p style="margin:0 0 18px;"><a href="${HUB_URL}/#primeiro-acesso" style="display:inline-block;background:#f0196b;color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 22px;border-radius:999px;">Definir minha senha</a></p>
+    <p style="margin:0;font-size:12px;color:#8B9A94;">Na tela, informe este e-mail (${escapeHtml(email)}) e digite o código de 6 dígitos que enviaremos para cá. Se você não esperava este convite, ignore a mensagem.</p>`);
+  return enviarEmail(email, nome, "Seu acesso ao Hub de Gestão Faça Amigos", html);
+}
+
+async function enviarEmail(email: string, nome: string, assunto: string, html: string): Promise<boolean> {
   const apiKey = Deno.env.get("BREVO_API_KEY");
   const fromRaw = Deno.env.get("BREVO_FROM") ?? "Instituto Faça Amigos <nao-responder@institutofacaamigos.com.br>";
   if (!apiKey) {
     console.error("BREVO_API_KEY não configurada");
     return false;
   }
-
-  const html = `
-<div style="font-family:'Nunito','Segoe UI',Helvetica,Arial,sans-serif;max-width:480px;margin:0 auto;padding:24px;color:#1a3f35;">
-  <div style="text-align:center;padding:10px 0 16px;">
-    <img src="${LOGO_URL}" alt="Instituto Faça Amigos" width="32" height="32" style="display:inline-block;vertical-align:middle;margin-right:8px;">
-    <span style="font-size:15px;font-weight:800;vertical-align:middle;">Faça<span style="color:#f0196b;">Amigos</span> · Gestão</span>
-  </div>
-  <div style="background:#fff;border-radius:24px;padding:28px 24px;text-align:center;border:1px solid #edf1ef;">
-    <p style="margin:0 0 12px;font-size:15px;">Olá, ${escapeHtml(nome)}!</p>
-    <p style="margin:0 0 18px;font-size:14px;color:#4C6B62;">${finalidade === "reset" ? "Seu código para redefinir a senha do Hub de Gestão e do Sistema da Clínica:" : "Seu código para entrar no Hub de Gestão:"}</p>
-    <div style="font-size:34px;font-weight:900;letter-spacing:10px;color:#1a3f35;background:#FFF9F1;border-radius:16px;padding:16px 0;">${code}</div>
-    <p style="margin:18px 0 0;font-size:12px;color:#8B9A94;">Vale por 10 minutos. ${finalidade === "reset" ? "Se não foi você, ignore este e-mail: a senha só muda com este código." : "Se não foi você, troque a senha do Sistema da Clínica agora."}</p>
-  </div>
-</div>`.trim();
 
   try {
     const resp = await fetch("https://api.brevo.com/v3/smtp/email", {
@@ -358,7 +464,7 @@ async function enviarCodigo(email: string, nome: string, code: string, finalidad
       body: JSON.stringify({
         sender: parseSenderAddress(fromRaw),
         to: [{ email, name: nome }],
-        subject: finalidade === "reset" ? `${code} é o código para redefinir sua senha` : `${code} é o seu código do Hub de Gestão`,
+        subject: assunto,
         htmlContent: html,
       }),
     });
@@ -553,11 +659,20 @@ Deno.serve(async (req) => {
       );
     };
 
-    const check = await verificarSenhaClinica(loginInput, password);
-    if (!check.ok) return falhou(check.status, "senha");
-
-    const conta = await carregarConta(admin, check.email);
-    if (!conta) return falhou(401, "fora_da_lista", check.email);
+    // Conta com senha própria do Hub (login = e-mail); as demais seguem pela senha do Sistema da Clínica.
+    const contaHub = loginInput.includes("@") ? await carregarConta(admin, loginInput.toLowerCase()) : null;
+    let conta: Conta | null;
+    if (contaHub?.auth_modo === "hub") {
+      if (!contaHub.senha_hash || !(await verificarSenhaHub(password, contaHub.senha_hash))) {
+        return falhou(401, "senha", contaHub.email);
+      }
+      conta = contaHub;
+    } else {
+      const check = await verificarSenhaClinica(loginInput, password);
+      if (!check.ok) return falhou(check.status, "senha");
+      conta = await carregarConta(admin, check.email);
+      if (!conta) return falhou(401, "fora_da_lista", check.email);
+    }
 
     const { count: codigosRecentes } = await admin
       .from("fa_gestao_desafios")
@@ -583,7 +698,7 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "falha ao gerar código" }, 500);
     }
 
-    if (!(await enviarCodigo(conta.email_codigo, conta.nome, code))) {
+    if (!(await enviarCodigo(conta.email_codigo, conta.nome, code, "login", conta.auth_modo))) {
       return jsonResponse(req, { error: "não foi possível enviar o código por e-mail" }, 502);
     }
 
@@ -613,7 +728,15 @@ Deno.serve(async (req) => {
     }
 
     await auditar(admin, req, "codigo_ok", { email: conta.email });
-    return jsonResponse(req, { token, expires_at: expiresAt, nome: conta.nome, apps: appsDisponiveis(conta) });
+    const niveis = await carregarNiveis(admin, conta);
+    return jsonResponse(req, {
+      token,
+      expires_at: expiresAt,
+      nome: conta.nome,
+      papel: conta.papel,
+      apps: appsDisponiveis(conta, niveis),
+      niveis,
+    });
   }
 
   // --- esqueci a senha (1/2): pede o código, que vai para o e-mail real cadastrado ---
@@ -638,9 +761,12 @@ Deno.serve(async (req) => {
     const generica = (id: string) =>
       jsonResponse(req, { challenge_id: id, mensagem: "Se os dados conferem, enviamos um código para o e-mail cadastrado." });
 
-    const alvo = await acharUsuarioClinica(loginInput);
-    const conta = alvo ? await carregarConta(admin, alvo.email) : null;
-    if (!alvo || !conta) {
+    // Conta de senha própria: acha pelo e-mail no próprio Hub. As legadas, pelo usuário da Clínica.
+    const contaHub = loginInput.includes("@") ? await carregarConta(admin, loginInput.toLowerCase()) : null;
+    const ehHub = contaHub?.auth_modo === "hub";
+    const alvo = ehHub ? null : await acharUsuarioClinica(loginInput);
+    const conta = ehHub ? contaHub : alvo ? await carregarConta(admin, alvo.email) : null;
+    if ((!ehHub && !alvo) || !conta) {
       await auditar(admin, req, "reset_ignorado", { email: loginInput.toLowerCase() });
       return generica(crypto.randomUUID());
     }
@@ -661,14 +787,14 @@ Deno.serve(async (req) => {
       code_hash: await sha256Hex(`${challengeId}:${code}`),
       ip,
       finalidade: "reset",
-      alvo_id: alvo.id,
+      alvo_id: alvo?.id ?? null,
       expires_at: new Date(Date.now() + CODE_TTL_MS).toISOString(),
     });
     if (insErr) {
       console.error("desafio reset:", insErr.message);
       return jsonResponse(req, { error: "falha ao gerar código" }, 500);
     }
-    if (!(await enviarCodigo(conta.email_codigo, conta.nome, code, "reset"))) {
+    if (!(await enviarCodigo(conta.email_codigo, conta.nome, code, "reset", conta.auth_modo))) {
       return jsonResponse(req, { error: "não foi possível enviar o código por e-mail" }, 502);
     }
     await auditar(admin, req, "reset_codigo_enviado", { email: conta.email });
@@ -678,14 +804,30 @@ Deno.serve(async (req) => {
   // --- esqueci a senha (2/2): código certo + senha nova -> troca a senha do Sistema da Clínica ---
   if (action === "redefinir") {
     const novaSenha = typeof body.new_password === "string" ? body.new_password : "";
-    if (novaSenha.length < 8 || novaSenha.length > 72) {
-      return jsonResponse(req, { error: "a senha nova precisa ter de 8 a 72 caracteres" }, 400);
+    if (novaSenha.length < SENHA_MIN || novaSenha.length > SENHA_MAX) {
+      return jsonResponse(req, { error: `a senha nova precisa ter de ${SENHA_MIN} a ${SENHA_MAX} caracteres` }, 400);
     }
     const conf = await conferirCodigo(admin, req, str(body.challenge_id), str(body.code).replace(/\D/g, ""), "reset");
     if (!conf.ok) return conf.resp;
     const desafio = conf.desafio;
 
     const conta = await carregarConta(admin, desafio.email);
+
+    // Conta de senha própria: a senha nova é do Hub (convite = primeiro acesso, o mesmo caminho).
+    if (conta?.auth_modo === "hub") {
+      const { error: hubErr } = await admin
+        .from("fa_gestao_contas")
+        .update({ senha_hash: await hashSenha(novaSenha), senha_definida_em: new Date().toISOString() })
+        .eq("email", conta.email);
+      if (hubErr) {
+        console.error("senha hub:", hubErr.message);
+        return jsonResponse(req, { error: "não foi possível trocar a senha agora" }, 500);
+      }
+      await admin.from("fa_gestao_sessoes").delete().eq("email", conta.email);
+      await auditar(admin, req, "senha_redefinida", { email: conta.email, detalhe: "hub" });
+      return jsonResponse(req, { ok: true });
+    }
+
     const b = clinicaAdmin();
     if (!conta || !b || !desafio.alvo_id) return jsonResponse(req, { error: "não foi possível trocar a senha agora" }, 500);
 
@@ -707,7 +849,14 @@ Deno.serve(async (req) => {
   const { conta } = sessao;
 
   if (action === "me") {
-    return jsonResponse(req, { nome: conta.nome, email: conta.email, apps: appsDisponiveis(conta) });
+    const niveis = await carregarNiveis(admin, conta);
+    return jsonResponse(req, {
+      nome: conta.nome,
+      email: conta.email,
+      papel: conta.papel,
+      apps: appsDisponiveis(conta, niveis),
+      niveis,
+    });
   }
 
   if (action === "logout") {
@@ -721,15 +870,22 @@ Deno.serve(async (req) => {
     const app = APPS[appId];
     if (!app) return jsonResponse(req, { error: "sistema desconhecido" }, 400);
 
+    // O nível é conferido aqui no servidor: esconder o quadrado no front não é controle de acesso.
+    const niveis = await carregarNiveis(admin, conta);
+    if (niveis[appId] === "nenhum") {
+      await auditar(admin, req, "launch_negado", { email: conta.email, app: appId });
+      return jsonResponse(req, { error: "você não tem acesso a este sistema" }, 403);
+    }
+
     const identidade = conta[app.campo];
     if (typeof identidade !== "string" || !identidade) {
       return jsonResponse(req, { error: "você ainda não tem acesso configurado a este sistema" }, 403);
     }
 
     const ticket = app.tipo === "cacau"
-      ? await ticketCacau(identidade)
+      ? await ticketCacau(identidade, niveis[appId])
       : app.tipo === "painel"
-      ? await ticketPainel(admin, conta.email)
+      ? await ticketPainel(admin, conta.email, niveis)
       : await ticketSupabase(app.tipo, identidade);
     if (!ticket) {
       await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: "falhou" });
@@ -741,5 +897,205 @@ Deno.serve(async (req) => {
     return jsonResponse(req, { url: app.entrada(base, ticket) });
   }
 
+  // --- gestão de pessoas e acessos: só owner ---
+  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_ativo", "convidar", "sessoes_revogar", "auditoria_listar"];
+  if (ACOES_OWNER.includes(action)) {
+    if (conta.papel !== "owner") {
+      await auditar(admin, req, "acao_owner_negada", { email: conta.email, detalhe: action });
+      return jsonResponse(req, { error: "apenas owner" }, 403);
+    }
+    return await acaoOwner(admin, req, body, action, conta);
+  }
+
   return jsonResponse(req, { error: "ação inválida" }, 400);
 });
+
+// ---------------------------------------------------------------------
+// Pessoas e acessos (só owner)
+// ---------------------------------------------------------------------
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const CAMPOS_MAPEAMENTO = [...new Set(APP_IDS.map((id) => APPS[id].campo))].filter((c) => c !== "painel_usuario");
+const COLUNAS_PUBLICAS =
+  "email, email_codigo, nome, playground_email, clinica_email, financeiro_email, rh_email, cacau_usuario, painel_usuario, ativo, papel, auth_modo, senha_definida_em, convidado_em, criado_por, created_at";
+
+// Derruba o que a pessoa tem aberto: sessão do Hub e sessão do /admin (12 h), para um novo nível valer já.
+async function revogarSessoes(admin: Admin, email: string, painelUsuario: string | null) {
+  await admin.from("fa_gestao_sessoes").delete().eq("email", email);
+  if (painelUsuario) await admin.from("fa_teste_admin_sessions").delete().eq("admin_email", painelUsuario);
+}
+
+async function acaoOwner(
+  admin: Admin,
+  req: Request,
+  body: Record<string, unknown>,
+  action: string,
+  dono: Conta,
+): Promise<Response> {
+  const alvoEmail = str(body.email).toLowerCase();
+
+  if (action === "contas_listar") {
+    const [{ data: contas, error }, { data: perms }] = await Promise.all([
+      admin.from("fa_gestao_contas").select(COLUNAS_PUBLICAS).order("created_at", { ascending: true }),
+      admin.from("fa_gestao_permissoes").select("email, modulo, nivel"),
+    ]);
+    if (error) return jsonResponse(req, { error: "falha ao listar" }, 500);
+    const porEmail = new Map<string, Record<string, string>>();
+    for (const p of perms ?? []) {
+      const m = porEmail.get(p.email) ?? {};
+      m[p.modulo] = p.nivel;
+      porEmail.set(p.email, m);
+    }
+    return jsonResponse(req, {
+      contas: (contas ?? []).map((c) => ({ ...c, permissoes: porEmail.get(c.email) ?? {} })),
+      modulos: APP_IDS.map((id) => ({ id, rotulo: APPS[id].rotulo, campo: APPS[id].campo, campo_rotulo: APPS[id].campoRotulo })),
+      niveis: NIVEIS,
+    });
+  }
+
+  if (action === "auditoria_listar") {
+    const limite = Math.min(Math.max(Number(body.limit) || 50, 1), 200);
+    let q = admin
+      .from("fa_gestao_auditoria")
+      .select("evento, email, app, detalhe, ip, created_at")
+      .order("created_at", { ascending: false })
+      .limit(limite);
+    if (EMAIL_RE.test(alvoEmail)) q = q.eq("email", alvoEmail);
+    const { data, error } = await q;
+    if (error) return jsonResponse(req, { error: "falha ao listar" }, 500);
+    return jsonResponse(req, { eventos: data ?? [] });
+  }
+
+  if (!EMAIL_RE.test(alvoEmail)) return jsonResponse(req, { error: "e-mail inválido" }, 400);
+  const { data: existente } = await admin.from("fa_gestao_contas").select("*").eq("email", alvoEmail).maybeSingle();
+  const atual = existente as Conta | null;
+
+  if (action === "conta_salvar") {
+    const novo = body.novo === true;
+    if (novo && atual) return jsonResponse(req, { error: "já existe uma conta com este e-mail" }, 409);
+    if (!novo && !atual) return jsonResponse(req, { error: "conta não encontrada" }, 404);
+
+    const nome = str(body.nome).slice(0, 120);
+    const emailCodigo = (str(body.email_codigo) || alvoEmail).toLowerCase();
+    const papel = body.papel === "owner" ? "owner" : "gerente";
+    if (!nome) return jsonResponse(req, { error: "informe o nome" }, 400);
+    if (!EMAIL_RE.test(emailCodigo)) return jsonResponse(req, { error: "e-mail do código inválido" }, 400);
+    // Ninguém tira o próprio owner: evita deixar o Hub sem quem o administre.
+    if (atual && atual.email === dono.email && papel !== "owner") {
+      return jsonResponse(req, { error: "você não pode rebaixar a si mesmo" }, 400);
+    }
+
+    // Matriz: só níveis válidos; owner não precisa de linhas (é admin em tudo).
+    const recebidas = (body.permissoes && typeof body.permissoes === "object" ? body.permissoes : {}) as Record<string, unknown>;
+    const permissoes: Partial<Record<AppId, "ver" | "operar" | "admin">> = {};
+    if (papel === "gerente") {
+      for (const id of APP_IDS) {
+        const n = recebidas[id];
+        if (n === "ver" || n === "operar" || n === "admin") permissoes[id] = n;
+      }
+    }
+
+    // Identidade da pessoa em cada sistema (até o provisionamento automático existir, o owner informa).
+    const mapa = (body.mapeamentos && typeof body.mapeamentos === "object" ? body.mapeamentos : {}) as Record<string, unknown>;
+    const campos: Record<string, string | null> = {};
+    // Campo ausente = mantém o que está gravado; campo enviado vazio = limpa.
+    for (const campo of CAMPOS_MAPEAMENTO) {
+      if (typeof mapa[campo] === "string") {
+        const bruto = str(mapa[campo]).slice(0, 200);
+        campos[campo] = bruto ? (campo === "cacau_usuario" ? bruto : bruto.toLowerCase()) : null;
+      } else {
+        campos[campo] = atual ? (atual[campo as keyof Conta] as string | null) : null;
+      }
+    }
+    // O /admin identifica a pessoa pelo próprio e-mail de login no Hub.
+    const usaPainel = papel === "owner" || !!permissoes.painel || !!permissoes.eventos;
+    campos.painel_usuario = usaPainel ? (atual?.painel_usuario ?? alvoEmail) : null;
+
+    const linha = { email: alvoEmail, nome, email_codigo: emailCodigo, papel, ...campos };
+    const { error: gravaErr } = novo
+      ? await admin.from("fa_gestao_contas").insert({ ...linha, auth_modo: "hub", ativo: true, criado_por: dono.email })
+      : await admin.from("fa_gestao_contas").update(linha).eq("email", alvoEmail);
+    if (gravaErr) {
+      console.error("conta_salvar:", gravaErr.message);
+      return jsonResponse(req, { error: "não foi possível salvar" }, 500);
+    }
+
+    // Permissões: apaga o que saiu da matriz e grava o resto.
+    const { data: antes } = await admin.from("fa_gestao_permissoes").select("modulo, nivel").eq("email", alvoEmail);
+    await admin.from("fa_gestao_permissoes").delete().eq("email", alvoEmail);
+    const linhas = Object.entries(permissoes).map(([modulo, nivel]) => ({
+      email: alvoEmail,
+      modulo,
+      nivel,
+      atualizado_por: dono.email,
+    }));
+    if (linhas.length) {
+      const { error: permErr } = await admin.from("fa_gestao_permissoes").insert(linhas);
+      if (permErr) {
+        console.error("permissões:", permErr.message);
+        return jsonResponse(req, { error: "conta salva, mas as permissões falharam. Tente de novo." }, 500);
+      }
+    }
+
+    const resumo = (m: Record<string, string>) => Object.keys(m).sort().map((k) => `${k}=${m[k]}`).join(",") || "-";
+    const antesMapa = Object.fromEntries((antes ?? []).map((p) => [p.modulo, p.nivel]));
+    const depoisMapa = permissoes as Record<string, string>;
+    const mudou = resumo(antesMapa) !== resumo(depoisMapa) || atual?.papel !== papel;
+    await auditar(admin, req, novo ? "conta_criada" : "conta_atualizada", {
+      email: alvoEmail,
+      detalhe: `por ${dono.email}; papel=${papel}; ${resumo(depoisMapa)}`.slice(0, 300),
+    });
+    // Nível novo vale já: derruba a sessão aberta do /admin (12 h). A do Hub segue: ele recalcula o nível a cada clique.
+    const painelAntes = atual?.painel_usuario ?? null;
+    if (mudou) {
+      for (const u of new Set([painelAntes, campos.painel_usuario].filter(Boolean) as string[])) {
+        await admin.from("fa_teste_admin_sessions").delete().eq("admin_email", u);
+      }
+    }
+
+    let conviteEnviado: boolean | null = null;
+    if (novo && body.convidar !== false) {
+      conviteEnviado = await enviarConvite(emailCodigo, nome, dono.nome);
+      if (conviteEnviado) {
+        await admin.from("fa_gestao_contas").update({ convidado_em: new Date().toISOString() }).eq("email", alvoEmail);
+        await auditar(admin, req, "convite_enviado", { email: alvoEmail, detalhe: `por ${dono.email}` });
+      }
+    }
+    return jsonResponse(req, { ok: true, convite_enviado: conviteEnviado });
+  }
+
+  if (!atual) return jsonResponse(req, { error: "conta não encontrada" }, 404);
+
+  if (action === "conta_ativo") {
+    const ativo = body.ativo === true;
+    if (!ativo && atual.email === dono.email) return jsonResponse(req, { error: "você não pode desativar a si mesmo" }, 400);
+    const { error } = await admin.from("fa_gestao_contas").update({ ativo }).eq("email", atual.email);
+    if (error) return jsonResponse(req, { error: "não foi possível atualizar" }, 500);
+    if (!ativo) await revogarSessoes(admin, atual.email, atual.painel_usuario);
+    await auditar(admin, req, ativo ? "conta_reativada" : "conta_desativada", { email: atual.email, detalhe: `por ${dono.email}` });
+    return jsonResponse(req, { ok: true });
+  }
+
+  if (action === "sessoes_revogar") {
+    await revogarSessoes(admin, atual.email, atual.painel_usuario);
+    await auditar(admin, req, "sessoes_revogadas", { email: atual.email, detalhe: `por ${dono.email}` });
+    return jsonResponse(req, { ok: true });
+  }
+
+  if (action === "convidar") {
+    if (!atual.ativo || atual.auth_modo !== "hub") {
+      return jsonResponse(req, { error: "convite só vale para conta ativa com senha própria do Hub" }, 400);
+    }
+    if (atual.convidado_em && Date.now() - new Date(atual.convidado_em).getTime() < 60_000) {
+      return jsonResponse(req, { error: "convite enviado há pouco, aguarde 1 minuto" }, 429);
+    }
+    if (!(await enviarConvite(atual.email_codigo, atual.nome, dono.nome))) {
+      return jsonResponse(req, { error: "não foi possível enviar o e-mail" }, 502);
+    }
+    await admin.from("fa_gestao_contas").update({ convidado_em: new Date().toISOString() }).eq("email", atual.email);
+    await auditar(admin, req, "convite_enviado", { email: atual.email, detalhe: `por ${dono.email}` });
+    return jsonResponse(req, { ok: true });
+  }
+
+  return jsonResponse(req, { error: "ação inválida" }, 400);
+}

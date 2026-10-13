@@ -197,6 +197,20 @@ Depois da chave em `equipe`, o login direto aceita qualquer perfil da Clínica (
 
 Ordem: (1) migração `20261001150000_wifi_cupom_playground.sql`; (2) deploy de `wifi-lead-webhook` e `behavior-test-admin` (`--no-verify-jwt`); (3) site.
 
+## Lote 10: Hub de Gestão com gerências, módulos e níveis, 13/10/2026 (pendente, feito só no código, branch `feat/hub-gestao-contas-niveis`)
+
+- **Quem entra.** O owner cadastra pessoas no próprio Hub (botão "Pessoas e acessos", só para `papel = owner`). A gerência entra com **senha própria do Hub** (hash PBKDF2 em `fa_gestao_contas.senha_hash`) + código de 6 dígitos por e-mail. Bruno e Isabella viram `owner` e seguem com a senha da Clínica (`auth_modo = 'clinica'`) até decidirem migrar.
+- **Convite.** Ao criar a pessoa, o Hub manda um e-mail com o link `gestao.institutofacaamigos.com.br/#primeiro-acesso`; ela informa o e-mail, recebe o código e define a senha (é o mesmo fluxo do "Esqueci a senha").
+- **Níveis por módulo:** sem acesso / visualizar / operar / administrar, na tabela `fa_gestao_permissoes`. Owner é administrador em tudo. O `launch` recusa no servidor módulo sem nível; quadrado sem nível nem aparece.
+- **Efeito dentro do /admin** (neste repositório): o ticket leva o nível do painel e o de Eventos; a troca (`sso`) grava `escopo` (painel) e `escopo_eventos` (eventos). `admin` = owner, `operar` = equipe, `ver` = só leitura, sem acesso = só sair.
+- **Nos outros sistemas** (Playground, Clínica, Simulador, Gestão de Pessoas, Cacau Show) o Hub só controla **quem vê o quadrado** e a identidade da pessoa em cada um (campos preenchidos na tela). Ainda não cria contas lá nem aplica o nível: isso é a fase 2 (adaptadores de provisionamento + tabela de correspondência nível → papel nativo). O Cacau Show já recebe o nível no ticket (`n`).
+- **Auditoria:** `conta_criada`, `conta_atualizada`, `conta_desativada`, `conta_reativada`, `convite_enviado`, `sessoes_revogadas`, `launch_negado`, `acao_owner_negada`, além dos eventos antigos. Aparece na própria tela.
+- **Desativar** uma pessoa encerra na hora a sessão do Hub e a do /admin.
+
+Ordem: (1) migração `20261013120000_gestao_contas_niveis.sql` (aditiva; promove as contas atuais a `owner`); (2) deploy de `behavior-test-admin` e `eventos-admin` (aceitam as colunas novas; ticket sem nível continua valendo como owner); (3) deploy de `gestao-hub`; (4) site (`gestao.html`, `admin.html`). Funções com `--no-verify-jwt`.
+
+Teste: entrar como owner e conferir que tudo segue igual; cadastrar uma gerência de teste (Eventos = visualizar, Mapeamento = sem acesso), receber o convite, definir a senha, entrar e confirmar que só aparece Eventos, que o /admin abre direto em Eventos e que fazer check-in dá "sem permissão"; chamar `launch` de outro módulo direto na API e ver 403; desativar a pessoa e ver a sessão cair.
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.

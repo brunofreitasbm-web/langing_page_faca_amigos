@@ -1133,6 +1133,7 @@
       var EXPIRES_KEY = 'fa_admin_token_expires';
       var EMAIL_KEY = 'fa_admin_email';
       var ESCOPO_KEY = 'fa_admin_escopo';
+      var ESCOPO_EV_KEY = 'fa_admin_escopo_eventos';
       // Aba a abrir depois de entrar (vem do Hub: /admin#sso=...&aba=eventos; #eventos é o formato antigo).
       var abaInicial = '';
 
@@ -1212,18 +1213,23 @@
 
       function getEmail() { return localStorage.getItem(EMAIL_KEY) || ''; }
 
-      // 'owner' (Hub de Gestão) ou 'equipe' (login direto limitado). Só esconde botões: quem barra é o servidor.
+      // Escopo do painel: 'owner' (nível admin no Hub de Gestão) ou restrito: 'equipe' (operar / login direto),
+      // 'ver' (só leitura) ou 'nenhum'. Só esconde botões: quem barra é o servidor.
       function getEscopo() {
-        try { return localStorage.getItem(ESCOPO_KEY) === 'equipe' ? 'equipe' : 'owner'; } catch (e) { return 'owner'; }
+        try {
+          var e = localStorage.getItem(ESCOPO_KEY);
+          return (e === 'equipe' || e === 'ver' || e === 'nenhum') ? e : 'owner';
+        } catch (e) { return 'owner'; }
       }
-      function isEquipe() { return getEscopo() === 'equipe'; }
+      function isEquipe() { return getEscopo() !== 'owner'; }
 
-      function saveSession(token, expiresAt, email, escopo) {
+      function saveSession(token, expiresAt, email, escopo, escopoEventos) {
         try {
           localStorage.setItem(TOKEN_KEY, token);
           localStorage.setItem(EXPIRES_KEY, expiresAt || '');
           localStorage.setItem(EMAIL_KEY, email || '');
-          localStorage.setItem(ESCOPO_KEY, escopo === 'equipe' ? 'equipe' : 'owner');
+          localStorage.setItem(ESCOPO_KEY, (escopo === 'equipe' || escopo === 'ver' || escopo === 'nenhum') ? escopo : 'owner');
+          localStorage.setItem(ESCOPO_EV_KEY, escopoEventos || '');
         } catch (e) { /* localStorage indisponível (modo privado etc.) — segue sem persistir */ }
       }
 
@@ -1233,6 +1239,7 @@
           localStorage.removeItem(EXPIRES_KEY);
           localStorage.removeItem(EMAIL_KEY);
           localStorage.removeItem(ESCOPO_KEY);
+          localStorage.removeItem(ESCOPO_EV_KEY);
         } catch (e) { /* ignora */ }
       }
 
@@ -1265,14 +1272,16 @@
       function showDashboard() {
         loginScreen.style.display = 'none';
         dashScreen.hidden = false;
-        homeTab = (isEquipe() && abaInicial !== 'eventos') ? 'wifi' : (abaInicial === 'eventos' ? 'eventos' : 'leads');
+        // Sem acesso ao painel (só Eventos): abre direto em Eventos.
+        var irEventos = abaInicial === 'eventos' || getEscopo() === 'nenhum';
+        homeTab = isEquipe() ? (irEventos ? 'eventos' : 'wifi') : (irEventos ? 'eventos' : 'leads');
         syncBack();
         adminEmailLabel.textContent = getEmail() + (isEquipe() ? ' · equipe' : '');
         document.body.classList.toggle('escopo-equipe', isEquipe());
         insSearch.placeholder = isEquipe() ? 'Nome ou código' : 'Nome, e-mail, código ou WhatsApp';
         if (isEquipe()) {
           // Equipe não tem Leads nem Textos: abre direto nos cupons Wi-Fi (ou no check-in, se veio pedir).
-          (abaInicial === 'eventos' ? document.getElementById('tabEventosBtn') : document.getElementById('tabWifiBtn')).click();
+          (irEventos ? document.getElementById('tabEventosBtn') : document.getElementById('tabWifiBtn')).click();
           return;
         }
         loadLeads();
@@ -3098,7 +3107,7 @@
         callApi({ action: 'sso', ticket: hashParams.sso }, { skipAuth: true }).then(function (result) {
           document.documentElement.classList.remove('sso-pending');
           if (result.ok && result.data && result.data.token) {
-            saveSession(result.data.token, result.data.expires_at, result.data.email, result.data.escopo);
+            saveSession(result.data.token, result.data.expires_at, result.data.email, result.data.escopo, result.data.escopo_eventos);
             showDashboard();
             return;
           }
