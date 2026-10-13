@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wi-Fi Conectado! | Instituto FaçaAmigos</title>
   <meta name="description"
-    content="Conectou no Wi-Fi da clínica FaçaAmigos? Enquanto espera, faça o Mapeamento Comportamental gratuito e use seu cupom no Playground Inclusivo e no Circuito, no Parque Shopping Belém.">
+    content="Conectou no Wi-Fi da clínica FaçaAmigos? Enquanto espera, faça o Mapeamento Comportamental gratuito e use seu cupom no Playground Inclusivo (Parque Shopping e Grão-Pará) e no Circuito.">
   <meta name="robots" content="noindex, follow">
   <link rel="canonical" href="https://institutofacaamigos.com.br/wifi">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
@@ -21,7 +21,7 @@
   <meta property="og:site_name" content="Instituto FaçaAmigos">
   <meta property="og:title" content="Wi-Fi Conectado! | Instituto FaçaAmigos">
   <meta property="og:description"
-    content="O FaçaAmigos também tem um Playground e um Circuito inclusivos no Parque Shopping Belém — a 15 minutos da clínica.">
+    content="O FaçaAmigos tem Playground Inclusivo no Parque Shopping Belém e no Shopping Bosque Grão-Pará, além do Circuito — a 15 minutos da clínica.">
   <meta property="og:url" content="https://institutofacaamigos.com.br/wifi">
   <meta property="og:image" content="https://institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg">
   <meta property="og:locale" content="pt_BR">
@@ -676,25 +676,97 @@
     }
     .place .btn-wa { flex-shrink: 0; }
 
-    .where-box {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
+    .place-unit-tag {
+      display: inline-block;
+      font-size: 0.72rem;
       font-weight: 800;
-      color: var(--ink-soft);
-      margin-top: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: rgba(255, 255, 255, 0.22);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      padding: 3px 9px;
+      border-radius: var(--r-pill);
+      margin-bottom: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* ── [Lei da Proximidade & Região Comum]: Unidades em Igual Hierarquia ── */
+    .units-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    @media (max-width: 580px) {
+      .units-grid { grid-template-columns: 1fr; }
+    }
+    .unit-card {
       background: var(--white);
-      padding: 12px 18px;
-      border-radius: var(--r-card);
+      border-radius: 20px;
+      padding: 16px 18px;
       box-shadow: var(--shadow-sm);
+      border: 1.5px solid rgba(26, 63, 53, 0.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
     }
-    .where-box svg {
-      width: 22px;
-      height: 22px;
+    .unit-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .unit-card-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      background: rgba(240, 25, 107, 0.12);
       color: var(--pink);
+      display: grid;
+      place-items: center;
       flex-shrink: 0;
+      margin-top: 2px;
     }
+    .unit-card-icon svg { width: 18px; height: 18px; }
+    .unit-card-title {
+      font-family: 'Fredoka One', sans-serif;
+      font-size: 1.15rem;
+      color: var(--dark);
+      line-height: 1.2;
+    }
+    .unit-card-attractions {
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--teal-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 2px;
+    }
+    .unit-card-meta {
+      font-size: 0.84rem;
+      color: var(--ink-soft);
+      font-weight: 600;
+      line-height: 1.4;
+    }
+    .unit-card-meta b { color: var(--dark); font-weight: 800; }
+    .unit-route-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.82rem;
+      font-weight: 800;
+      padding: 8px 14px;
+      border-radius: var(--r-pill);
+      background: var(--cream);
+      border: 1px solid rgba(26, 63, 53, 0.12);
+      color: var(--dark);
+      transition: background 0.15s, border-color 0.15s;
+      text-decoration: none;
+    }
+    .unit-route-btn:hover { background: var(--white); border-color: var(--teal); }
+    .unit-route-btn:active { transform: scale(0.98); }
 
     /* ── [Lei de Miller]: Chips Educativos ── */
     .chips { display: grid; gap: 12px; }
@@ -947,13 +1019,13 @@
           <!-- Benefícios Chunked (Lei de Miller) -->
           <div class="tiles">
             <div class="tile">
-              <span class="badge badge-teal">Todo dia</span>
+              <span class="badge badge-teal">Todo dia · 2 Unidades</span>
               <div>
                 <div class="big">
                   <s>R$ 60</s>
                   <span><span class="unit">R$</span> 50</span>
                 </div>
-                <div class="label">Meia inclusiva no Playground</div>
+                <div class="label">Meia inclusiva no Playground (Parque Shopping &amp; Grão-Pará)</div>
               </div>
             </div>
 
@@ -964,7 +1036,7 @@
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6M12 2v3"/></svg>
                   <span>+5 <span class="unit">min</span></span>
                 </div>
-                <div class="label">Grátis no Circuito</div>
+                <div class="label">Grátis no Circuito (Parque Shopping)</div>
               </div>
             </div>
           </div>
@@ -974,28 +1046,29 @@
             <span class="sep">=</span>
             <span>1 visita</span>
             <span class="sep">·</span>
-            <span>Válido no Playground <strong style="color:var(--pink);">ou</strong> Circuito</span>
+            <span>Playground (Parque Shopping ou Grão-Pará) <strong style="color:var(--pink);">ou</strong> Circuito</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ── 3. Lugares de Diversão (Lei de Jakob & Fitts) ── -->
+    <!-- ── 3. Lugares de Diversão (Lei de Jakob, Fitts & Região Comum) ── -->
     <section>
       <div class="sec-head">
         <div class="ic ic-pink">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/><circle cx="12" cy="12" r="9"/></svg>
         </div>
-        <h2>Dois lugares pra ele sorrir</h2>
+        <h2>Nossas unidades pra ele sorrir</h2>
       </div>
 
       <div class="places">
-        <!-- Card Playground -->
+        <!-- Card Playground: Em operação nas 2 Unidades -->
         <a class="place" id="ctaPlayground" href="#" target="_blank" rel="noopener">
           <img src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="Playground Inclusivo FaçaAmigos" loading="lazy" decoding="async">
           <div class="veil"></div>
           <div class="txt">
             <div>
+              <span class="place-unit-tag">2 Unidades: Parque Shopping &amp; Grão-Pará</span>
               <h3>Playground Inclusivo</h3>
               <p>Onde ele brinca do jeito dele</p>
             </div>
@@ -1006,12 +1079,13 @@
           </div>
         </a>
 
-        <!-- Card Circuito -->
+        <!-- Card Circuito: Exclusivo Parque Shopping -->
         <a class="place" id="ctaCircuito" href="#" target="_blank" rel="noopener">
           <img src="img/circuito-carrinhos.webp" width="1000" height="750" alt="FaçaAmigos Circuito" loading="lazy" decoding="async">
           <div class="veil"></div>
           <div class="txt">
             <div>
+              <span class="place-unit-tag">Exclusivo no Parque Shopping</span>
               <h3>Circuito</h3>
               <p>Ele no volante, você logo ali</p>
             </div>
@@ -1023,9 +1097,51 @@
         </a>
       </div>
 
-      <div class="where-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
-        <span>Parque Shopping Belém · Apenas 15 min da clínica · Seg a Dom 10h às 22h</span>
+      <!-- Unidades em Igual Hierarquia (conforme index.html) -->
+      <div class="units-grid">
+        <!-- Unidade 1: Parque Shopping -->
+        <div class="unit-card">
+          <div>
+            <div class="unit-card-header">
+              <div class="unit-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              </div>
+              <div>
+                <h4 class="unit-card-title">Parque Shopping Belém</h4>
+                <div class="unit-card-attractions">Playground &amp; Circuito</div>
+              </div>
+            </div>
+            <div class="unit-card-meta" style="margin-top: 8px;">
+              <p>Rod. Augusto Montenegro, 4300 · Térreo</p>
+              <p><b>Todos os dias, 10h às 22h</b> · ~15 min da clínica</p>
+            </div>
+          </div>
+          <a class="unit-route-btn" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank" rel="noopener">
+            <span>Traçar rota Parque Shopping ↗</span>
+          </a>
+        </div>
+
+        <!-- Unidade 2: Shopping Bosque Grão-Pará -->
+        <div class="unit-card">
+          <div>
+            <div class="unit-card-header">
+              <div class="unit-card-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
+              </div>
+              <div>
+                <h4 class="unit-card-title">Shopping Bosque Grão-Pará</h4>
+                <div class="unit-card-attractions">Playground Inclusivo · Aberto!</div>
+              </div>
+            </div>
+            <div class="unit-card-meta" style="margin-top: 8px;">
+              <p>Av. Centenário, 1052 · 1º piso (em frente à Renner)</p>
+              <p><b>Seg a sáb 10h-22h · Dom 10h-21h</b> · ~15 min da clínica</p>
+            </div>
+          </div>
+          <a class="unit-route-btn" href="https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving" target="_blank" rel="noopener">
+            <span>Traçar rota Grão-Pará ↗</span>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -1074,7 +1190,8 @@
 
   <!-- ── 5. Rodapé Institucional (Peak-End Rule) ── -->
   <footer id="footer">
-    <div>Instituto Faça Amigos · Boaventura da Silva, 1573 · Umarizal, Belém-PA</div>
+    <div>Instituto Faça Amigos · Clínica: Boaventura da Silva, 1573 (Umarizal)</div>
+    <div style="margin-top: 4px; font-size: 0.82rem; color: var(--ink-soft);">Unidades: Parque Shopping Belém (Térreo) &amp; Shopping Bosque Grão-Pará (1º piso)</div>
     <div class="links">
       <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">Instagram</a>
       <a href="https://institutofacaamigos.com.br/politica-privacidade">Privacidade</a>
@@ -1099,8 +1216,8 @@
       /* [Lei de Tesler]: Redirecionamento pronto e rastreado */
       $("ctaTeste").href = SITE + "/teste?" + UTM;
       $("ctaTesteSticky").href = SITE + "/teste?" + UTM + "&utm_content=sticky";
-      $("ctaPlayground").href = waLink("Vim da clínica, tenho o cupom e quero usar a meia inclusiva no Playground");
-      $("ctaCircuito").href = waLink("Vim da clínica, tenho o cupom e quero usar os 5 minutos extras no Circuito");
+      $("ctaPlayground").href = waLink("Vim da clínica, tenho o cupom e quero usar a meia inclusiva no Playground (Parque Shopping ou Grão-Pará)");
+      $("ctaCircuito").href = waLink("Vim da clínica, tenho o cupom e quero usar os 5 minutos extras no Circuito (Parque Shopping)");
       $("ctaGuia").href = SITE + "/guia?" + UTM;
       $("ctaCodigo").href = SITE + "/codigo?" + UTM;
 
