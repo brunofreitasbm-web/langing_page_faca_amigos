@@ -284,8 +284,120 @@ async function ticketPainel(admin: Admin, email: string, niveis: Niveis): Promis
   return ticket;
 }
 
-// hashed_token de magic link (nunca enviado por e-mail) no projeto A ou B.
-async function ticketSupabase(tipo: "supabase_a" | "supabase_b", email: string): Promise<string | null> {
+// Papéis que uma conta `gerente` recebe em cada sistema ao abrir pelo Hub. O nível do módulo no
+// Hub (ver/operar/admin) só decide se o quadrado abre; o papel dentro do sistema é este.
+// Contas `owner` não são provisionadas: já existem nos sistemas, cadastradas à mão.
+const PAPEL_CLINICA = "supervisor"; // public.profiles.role (Clínica)
+const PAPEL_RH = "supervisor"; // app_metadata.role (Gestão de Pessoas)
+const PAPEL_PLAYGROUND = "GERENTE"; // fa_kiosk_employees.role (Playground)
+const CLINICA_ID = "c0000000-0000-0000-0000-000000000001";
+
+type UsuarioAuth = { id: string; app_metadata?: Record<string, unknown> | null };
+
+// O magic link cria o usuário vazio se ele não existir, e cada sistema exige mais que isso para
+// abrir (RH: papel no claim; Playground: linha de colaborador; Clínica: perfil com o papel certo).
+// Aqui a pessoa é completada ANTES de o ticket sair, sempre de forma idempotente e sem rebaixar nem
+// sobrescrever o que já existe. Devolve uma descrição do que foi feito, "" se nada, null se recusou.
+async function provisionar(
+  client: SupabaseClient,
+  appId: AppId,
+  user: UsuarioAuth,
+  conta: Conta,
+  email: string,
+): Promise<string | null> {
+  if (conta.papel !== "gerente") return "";
+
+  if (appId === "rh") {
+    const atual = (user.app_metadata ?? {}) as Record<string, unknown>;
+    // role/workspace_scope só em app_metadata: user_metadata é editável pela própria pessoa.
+    if (atual.role === PAPEL_RH) return "";
+    if (atual.role) {
+      console.error(`provisionar rh: ${email} já tem papel '${String(atual.role)}', não sobrescrevo`);
+      return null;
+    }
+    const { error } = await client.auth.admin.updateUserById(user.id, {
+      app_metadata: { ...atual, role: PAPEL_RH, workspace_scope: ["all"] },
+    });
+    if (error) {
+      console.error("provisionar rh:", error.message);
+      return null;
+    }
+    return `rh=${PAPEL_RH}`;
+  }
+
+  if (appId === "clinica") {
+    const { data: perfil, error } = await client.from("profiles").select("id, role, active").eq("id", user.id).maybeSingle();
+    if (error) {
+      console.error("provisionar clinica (lê perfil):", error.message);
+      return null;
+    }
+    if (!perfil) {
+      const { error: insErr } = await client.from("profiles").insert({
+        id: user.id,
+        clinic_id: CLINICA_ID,
+        role: PAPEL_CLINICA,
+        full_name: conta.nome,
+        email,
+        active: true,
+      });
+      if (insErr) {
+        console.error("provisionar clinica (cria perfil):", insErr.message);
+        return null;
+      }
+      return `clinica=${PAPEL_CLINICA}(novo)`;
+    }
+    if (perfil.role === "gestor" || perfil.role === PAPEL_CLINICA) {
+      if (perfil.active === false) return null; // perfil desativado na Clínica: respeita
+      return "";
+    }
+    if (perfil.active === false) return null;
+    // O trigger de auth.users cria todo usuário novo como 'terapeuta'. Sobe só dali; nunca de gestor.
+    const { error: upErr } = await client.from("profiles").update({ role: PAPEL_CLINICA }).eq("id", user.id);
+    if (upErr) {
+      console.error("provisionar clinica (atualiza perfil):", upErr.message);
+      return null;
+    }
+    return `clinica=${PAPEL_CLINICA}(era ${perfil.role})`;
+  }
+
+  if (appId === "playground") {
+    const { data: colab, error } = await client
+      .from("fa_kiosk_employees")
+      .select("id, active")
+      .eq("auth_user_id", user.id)
+      .maybeSingle();
+    if (error) {
+      console.error("provisionar playground (lê colaborador):", error.message);
+      return null;
+    }
+    if (colab) return colab.active === false ? null : ""; // já existe: papel e vínculo não são tocados
+    const { data: novo, error: insErr } = await client
+      .from("fa_kiosk_employees")
+      .insert({ auth_user_id: user.id, full_name: conta.nome, role: PAPEL_PLAYGROUND, email, active: true })
+      .select("id")
+      .single();
+    if (insErr || !novo) {
+      console.error("provisionar playground (cria colaborador):", insErr?.message);
+      return null;
+    }
+    await client.from("fa_kiosk_audit_log").insert({
+      action: "HUB_PROVISION_EMPLOYEE",
+      severity: "ALERTA",
+      details_json: { employeeId: novo.id, role: PAPEL_PLAYGROUND, via: "gestao-hub" },
+    });
+    return `playground=${PAPEL_PLAYGROUND}(novo)`;
+  }
+
+  return "";
+}
+
+// hashed_token de magic link (nunca enviado por e-mail) no projeto A ou B, com a pessoa já provisionada.
+async function ticketSupabase(
+  tipo: "supabase_a" | "supabase_b",
+  email: string,
+  appId: AppId,
+  conta: Conta,
+): Promise<{ ticket: string; provisionado: string } | null> {
   const url = tipo === "supabase_a" ? Deno.env.get("SUPABASE_URL") : Deno.env.get("CLINICA_SUPABASE_URL");
   const key = tipo === "supabase_a"
     ? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
@@ -293,11 +405,13 @@ async function ticketSupabase(tipo: "supabase_a" | "supabase_b", email: string):
   if (!url || !key) return null;
   const client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data, error } = await client.auth.admin.generateLink({ type: "magiclink", email });
-  if (error || !data?.properties?.hashed_token) {
+  if (error || !data?.properties?.hashed_token || !data.user) {
     console.error(`generateLink (${tipo}) falhou:`, error?.message);
     return null;
   }
-  return data.properties.hashed_token;
+  const provisionado = await provisionar(client, appId, data.user, conta, email);
+  if (provisionado === null) return null;
+  return { ticket: data.properties.hashed_token, provisionado };
 }
 
 // ---------------------------------------------------------------------
@@ -892,11 +1006,16 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "você ainda não tem acesso configurado a este sistema" }, 403);
     }
 
-    const ticket = app.tipo === "cacau"
-      ? await ticketCacau(identidade, niveis[appId])
-      : app.tipo === "painel"
-      ? await ticketPainel(admin, conta.email, niveis)
-      : await ticketSupabase(app.tipo, identidade);
+    let provisionado = "";
+    let ticket: string | null;
+    if (app.tipo === "cacau") ticket = await ticketCacau(identidade, niveis[appId]);
+    else if (app.tipo === "painel") ticket = await ticketPainel(admin, conta.email, niveis);
+    else {
+      const r = await ticketSupabase(app.tipo, identidade, appId, conta);
+      ticket = r?.ticket ?? null;
+      provisionado = r?.provisionado ?? "";
+    }
+    if (provisionado) await auditar(admin, req, "acesso_provisionado", { email: conta.email, app: appId, detalhe: provisionado });
     if (!ticket) {
       await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: "falhou" });
       return jsonResponse(req, { error: "não foi possível abrir o sistema agora" }, 502);
