@@ -1985,7 +1985,7 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <div class="topbar">📍 Parque Shopping Belém · 10h às 22h · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h) · <b>Já aberto!</b></div>
+  <div class="topbar">📍 Parque Shopping Belém · 10h às 22h · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h) · <b id="topbar-status">Abre todos os dias às 10h</b></div>
 
   <nav class="navbar">
     <div class="wrap">
@@ -2019,9 +2019,9 @@
           as que brincam soltas e as que precisam de um pouco mais de cuidado. Você passeia pelo Parque Shopping
           sabendo exatamente onde e com quem seu filho está.</p>
         <div class="hero-actions">
+          <a data-fa-link="hero_como_chegar" href="#unidades" class="btn btn-pink">Como chegar</a>
           <a href="https://wa.me/5591992347673?text=Oi!%20Quero%20levar%20meu%20filho%20para%20brincar%20no%20Fa%C3%A7aAmigos!"
-            target="_blank" rel="noopener" class="btn btn-pink">Quero levar meu filho</a>
-          <a href="#espaco" class="btn btn-ghost">Conhecer o espaço</a>
+            target="_blank" rel="noopener" class="btn btn-ghost">Tirar dúvida no WhatsApp</a>
           <span class="price-chip"><small>a partir de</small><span>R$ 60</span></span>
         </div>
         <div class="trust">
@@ -2039,7 +2039,8 @@
             </svg> Sem agendamento</span>
         </div>
         <p class="hero-proof">Mais de 1.100 famílias de Belém já confiaram o filho à nossa equipe ·
-          <a href="#avaliacoes">ver o que os pais dizem</a></p>
+          <a href="#avaliacoes">ver o que os pais dizem</a> ·
+          <a href="#espaco">conhecer o espaço</a></p>
       </div>
       <div class="hero-photo fx on">
         <div class="frame"><picture><source srcset="img/playground-piscina-casinha.webp" type="image/webp"><img src="img/playground-piscina-casinha.jpg" width="1440" height="1920"
@@ -2782,6 +2783,21 @@
   </script>
   <script src="/assets/fa-footer.js" defer></script>
   <script src="/assets/fa-cta.js" defer data-label="Ver preços" data-href="#precos" data-event="ver_precos"></script>
+  <script>
+    // Estado de funcionamento pelo horário de Belém (UTC-3, sem horário de verão), referente ao Parque Shopping.
+    // Sem JS, o texto fixo "Abre todos os dias às 10h" continua verdadeiro.
+    (function () {
+      try {
+        var el = document.getElementById('topbar-status');
+        if (!el) return;
+        var now = new Date(Date.now() - 3 * 3600 * 1000);
+        var h = now.getUTCHours() + now.getUTCMinutes() / 60;
+        el.textContent = h < 10 ? 'Abrimos hoje às 10h'
+          : h < 22 ? 'Aberto agora até 22h (Parque Shopping)'
+          : 'Fechado agora, abrimos amanhã às 10h';
+      } catch (e) {}
+    })();
+  </script>
 </body>
 
 </html>
