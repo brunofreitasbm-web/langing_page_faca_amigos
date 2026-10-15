@@ -971,11 +971,10 @@
 
       <!-- PASSO 1 — CONTATO E DADOS DA CRIANÇA -->
       <section id="step-contact" class="quiz-card" hidden>
-        <h2 id="contact-heading" tabindex="-1">Vamos nos conhecer</h2>
-        <p class="sub" style="margin-bottom:24px;">Preencha pra gente personalizar o retrato de observação. Seus
-          dados ficam seguros e só servem pra te enviar o resultado e, se você quiser, conversar com nossa equipe.
-          Só enviamos o seu resultado e, se você quiser, dicas curtas.</p>
-        <form id="lead-form" novalidate>
+        <h2 id="contact-heading" tabindex="-1">Vamos começar</h2>
+        <p class="sub" style="margin-bottom:24px;">Só precisamos do primeiro nome e da idade para adaptar as
+          perguntas. Seus dados de contato só entram no final, para enviar o retrato.</p>
+        <form id="child-form" novalidate>
           <div class="form-group">
             <label class="form-label" for="child-name">Primeiro nome da criança</label>
             <input type="text" id="child-name" class="form-control" placeholder="Ex: Pedro" autocomplete="given-name"
@@ -1014,6 +1013,17 @@
             </div>
           </div>
 
+          <div id="contact-form-error" class="form-error" aria-live="polite"></div>
+          <button type="submit" id="contact-form-submit" class="btn btn-pink btn-block">Começar as perguntas</button>
+        </form>
+      </section>
+
+      <!-- PASSO 2 — CONTATO (depois das 25 perguntas, antes do resultado) -->
+      <section id="step-lead" class="quiz-card" hidden>
+        <h2 id="lead-heading" tabindex="-1">O retrato de <span data-child-name>seu filho</span> está pronto</h2>
+        <p class="sub" style="margin-bottom:24px;">Para onde enviamos? Você vê o retrato na tela e recebe uma cópia
+          no e-mail. Usamos seus dados para isso e, se você quiser, para conversar com a nossa equipe.</p>
+        <form id="lead-form" novalidate>
           <fieldset>
             <legend>Quem está respondendo</legend>
             <div class="opt-grid" id="relation-options" role="radiogroup" aria-label="Quem está respondendo">
@@ -1065,8 +1075,9 @@
             <input type="checkbox" id="marketing-opt-in">
             <span>Quero receber, por e-mail, conteúdos gratuitos, novidades e ofertas dos materiais da idealizadora (como o guia O Brincar com Propósito) sobre desenvolvimento infantil, autismo e neurodivergência.</span>
           </label>
-          <div id="contact-form-error" class="form-error" aria-live="polite"></div>
-          <button type="submit" id="contact-form-submit" class="btn btn-pink btn-block">Começar as perguntas</button>
+          <div id="lead-form-error" class="form-error" aria-live="polite"></div>
+          <button type="submit" id="lead-form-submit" class="btn btn-pink btn-block">Ver o retrato</button>
+          <div class="step-nav"><button type="button" id="btn-lead-back" class="btn btn-ghost btn-sm">Voltar</button></div>
         </form>
       </section>
 
@@ -1234,7 +1245,7 @@
         landingPage: ''
       };
 
-      var steps = ['step-landing', 'step-contact', 'step-question', 'step-result'];
+      var steps = ['step-landing', 'step-contact', 'step-question', 'step-lead', 'step-result'];
 
       function $(id) { return document.getElementById(id); }
 
@@ -1262,13 +1273,16 @@
       var setBackDepth = faBack.use('teste', function () {
         if (!$('step-contact').hidden) {
           showStep('step-landing', 'landing-heading');
+        } else if (!$('step-lead').hidden) {
+          renderQuestion(totalQuestions() - 1);
+          showStep('step-question', 'question-heading');
         } else if (!$('step-question').hidden && state.currentQ > 0 && $('question-loading').hidden) {
           renderQuestion(state.currentQ - 1); // com o envio em andamento, ignora (a pilha é reempilhada)
         }
       });
       function syncBack() {
         var depth = 0;
-        if (!$('step-contact').hidden) depth = 1;
+        if (!$('step-contact').hidden || !$('step-lead').hidden) depth = 1;
         else if (!$('step-question').hidden) depth = state.currentQ;
         setBackDepth(depth);
       }
@@ -1406,21 +1420,15 @@
         try { phoneInput.selectionEnd = pos + (after - before); } catch (e) { /* ignore */ }
       });
 
-      var leadForm = $('lead-form');
-      leadForm.addEventListener('submit', function (e) {
+      // Passo 1: só nome e faixa etária da criança. Nenhuma chamada ao servidor aqui.
+      var childForm = $('child-form');
+      childForm.addEventListener('submit', function (e) {
         e.preventDefault();
         var errBox = $('contact-form-error');
         errBox.style.display = 'none';
 
         var childName = $('child-name').value.trim().split(' ')[0];
         var ageEl = document.querySelector('input[name="age-range"]:checked');
-        var relEl = document.querySelector('input[name="relation"]:checked');
-        var guardianName = $('guardian-name').value.trim();
-        var guardianPhone = $('guardian-phone').value.trim();
-        var guardianEmail = $('guardian-email').value.trim();
-        var unit = $('preferred-unit').value;
-        var consent = $('consent-check').checked;
-        var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
         if (!childName) {
           errBox.textContent = 'Digite o primeiro nome da criança.';
@@ -1438,34 +1446,72 @@
           errBox.style.display = 'block';
           return;
         }
-        if (!relEl) {
-          errBox.textContent = 'Selecione quem está respondendo.';
-          errBox.style.display = 'block';
-          return;
-        }
-        if (!guardianName) {
-          errBox.textContent = 'Digite seu nome.';
-          errBox.style.display = 'block';
-          return;
-        }
-        if (!phoneDigitsValid(guardianPhone)) {
-          errBox.textContent = 'Digite um WhatsApp válido, com DDD.';
-          errBox.style.display = 'block';
-          return;
-        }
-        if (!emailRe.test(guardianEmail)) {
-          errBox.textContent = 'Digite um e-mail válido.';
-          errBox.style.display = 'block';
-          return;
-        }
-        if (!consent) {
-          errBox.textContent = 'É preciso aceitar a Política de Privacidade para continuar.';
-          errBox.style.display = 'block';
-          return;
-        }
 
         state.childName = childName;
         state.ageRange = ageEl.value;
+        state.leadId = null;
+        state.testVersion = null;
+        state.currentQ = 0;
+        state.answers = {};
+        state.completed = false;
+        state.result = null;
+        saveState();
+        pushEvent({ event: 'teste_child_info' });
+        renderQuestion(0);
+        showStep('step-question', 'question-heading');
+      });
+
+      // Passo 2 (depois da última pergunta): contato. Só aqui criamos o lead no servidor
+      // (evento "start") e, em seguida, enviamos as respostas já guardadas (evento "complete").
+      function showLeadStep() {
+        document.querySelectorAll('[data-child-name]').forEach(function (el) {
+          el.textContent = state.childName || 'seu filho';
+        });
+        $('lead-form-submit').textContent = 'Ver o retrato de ' + (state.childName || 'seu filho');
+        $('lead-form-error').style.display = 'none';
+        pushEvent({ event: 'teste_lead_step' });
+        showStep('step-lead', 'lead-heading');
+      }
+
+      $('btn-lead-back').addEventListener('click', function () {
+        renderQuestion(totalQuestions() - 1);
+        showStep('step-question', 'question-heading');
+      });
+
+      var phoneInput = $('guardian-phone');
+      phoneInput.addEventListener('input', function () {
+        var pos = phoneInput.selectionStart;
+        var before = phoneInput.value.length;
+        phoneInput.value = maskPhone(phoneInput.value);
+        var after = phoneInput.value.length;
+        try { phoneInput.selectionEnd = pos + (after - before); } catch (e) { /* ignore */ }
+      });
+
+      var leadForm = $('lead-form');
+      leadForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var errBox = $('lead-form-error');
+        errBox.style.display = 'none';
+
+        var relEl = document.querySelector('input[name="relation"]:checked');
+        var guardianName = $('guardian-name').value.trim();
+        var guardianPhone = $('guardian-phone').value.trim();
+        var guardianEmail = $('guardian-email').value.trim();
+        var unit = $('preferred-unit').value;
+        var consent = $('consent-check').checked;
+        var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        function fail(msg, focusEl) {
+          errBox.textContent = msg;
+          errBox.style.display = 'block';
+          if (focusEl) focusEl.focus();
+        }
+        if (!relEl) return fail('Selecione quem está respondendo.');
+        if (!guardianName) return fail('Digite seu nome.', $('guardian-name'));
+        if (!phoneDigitsValid(guardianPhone)) return fail('Digite um WhatsApp válido, com DDD.', $('guardian-phone'));
+        if (!emailRe.test(guardianEmail)) return fail('Digite um e-mail válido.', $('guardian-email'));
+        if (!consent) return fail('É preciso aceitar a Política de Privacidade para continuar.');
+
         state.relation = relEl.value;
         state.guardianName = guardianName;
         state.guardianEmail = guardianEmail;
@@ -1474,7 +1520,8 @@
         state.marketingOptIn = !!($('marketing-opt-in') && $('marketing-opt-in').checked);
         saveState();
 
-        var submitBtn = $('contact-form-submit');
+        var submitBtn = $('lead-form-submit');
+        var label = submitBtn.textContent;
         submitBtn.disabled = true;
         submitBtn.textContent = 'Enviando...';
 
@@ -1504,31 +1551,27 @@
           .then(function (r) {
             if (!r.ok) {
               if (r.status === 429) throw new Error('Muitas tentativas em pouco tempo. Aguarde um instante e tente novamente.');
-              throw new Error(r.data && r.data.error ? r.data.error : 'Não foi possível iniciar o mapeamento.');
+              throw new Error(r.data && r.data.error ? r.data.error : 'Não foi possível enviar seus dados.');
             }
             state.leadId = r.data.lead_id;
             state.testVersion = r.data.test_version;
-            state.currentQ = 0;
-            state.answers = {};
-            state.completed = false;
-            state.result = null;
             saveState();
             pushEvent({ event: 'teste_lead' });
             pushEvent({ event: 'generate_lead', lead_source: 'teste_comportamento' });
-            renderQuestion(0);
+            // As respostas já estão em state.answers: envia na sequência (a tela mostra "Montando o retrato...").
             showStep('step-question', 'question-heading');
+            submitAnswers();
           })
           .catch(function (err) {
             var msg = err.message || '';
             if (msg.toLowerCase().indexOf('failed to fetch') !== -1) {
               msg = 'Não foi possível conectar agora. Verifique sua conexão e tente novamente.';
             }
-            errBox.textContent = msg || 'Não foi possível iniciar o mapeamento. Tente novamente.';
-            errBox.style.display = 'block';
+            fail(msg || 'Não foi possível enviar seus dados. Tente novamente.');
           })
           .then(function () {
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Começar as perguntas';
+            submitBtn.textContent = label;
           });
       });
 
@@ -1568,7 +1611,10 @@
           label.setAttribute('for', inputId);
           label.textContent = opt.label;
 
+          var picked = false;
           input.addEventListener('change', function () {
+            if (picked) return;
+            picked = true;
             state.answers[q.id] = opt.v;
             saveState();
             var percent = Math.round(((index + 1) / total) * 100);
@@ -1581,9 +1627,17 @@
                 requestAnimationFrame(function () { heading.focus(); });
               } else {
                 pushEvent({ event: 'teste_complete' });
-                submitAnswers();
+                // Sessões antigas já têm lead_id (contato pedido no começo): envia direto.
+                if (state.leadId) submitAnswers(); else showLeadStep();
               }
             }, 180);
+          });
+
+          // Voltar e tocar na resposta que já estava marcada não dispara "change": avança mesmo assim.
+          input.addEventListener('click', function () {
+            window.setTimeout(function () {
+              if (!picked && input.checked) input.dispatchEvent(new Event('change'));
+            }, 0);
           });
 
           list.appendChild(input);
@@ -1923,6 +1977,7 @@
           answers: {}, currentQ: 0, completed: false, result: null,
           utm: state.utm, referrer: state.referrer, landingPage: state.landingPage
         };
+        childForm.reset();
         leadForm.reset();
         $('under4-notice').hidden = true;
         $('scale-options').style.display = '';
@@ -1951,8 +2006,20 @@
           return;
         }
 
-        if (state.leadId) {
-          var answeredCount = Object.keys(state.answers || {}).length;
+        var answeredCount = Object.keys(state.answers || {}).length;
+        if (state.leadId || (state.childName && state.ageRange)) {
+          if (answeredCount >= totalQuestions() && totalQuestions() > 0) {
+            if (state.leadId) {
+              // lead criado mas o envio das respostas falhou: tenta de novo
+              renderQuestion(totalQuestions() - 1);
+              showStep('step-question', 'question-heading');
+              submitAnswers();
+            } else {
+              renderQuestion(totalQuestions() - 1);
+              showLeadStep();
+            }
+            return;
+          }
           var resumeIndex = Math.min(answeredCount, totalQuestions() - 1);
           if (resumeIndex < 0) resumeIndex = 0;
           renderQuestion(resumeIndex);
@@ -1960,20 +2027,12 @@
           return;
         }
 
-        // sem lead_id: fica na landing (pré-preenche o formulário de contato se já tinha algo digitado)
+        // sem criança informada: fica na landing (pré-preenche o que já tinha sido digitado)
         if (state.childName) $('child-name').value = state.childName;
         if (state.ageRange) {
           var ageInput = document.querySelector('input[name="age-range"][value="' + state.ageRange + '"]');
           if (ageInput) ageInput.checked = true;
         }
-        if (state.relation) {
-          var relInput = document.querySelector('input[name="relation"][value="' + state.relation + '"]');
-          if (relInput) relInput.checked = true;
-        }
-        if (state.guardianName) $('guardian-name').value = state.guardianName;
-        if (state.guardianPhone) $('guardian-phone').value = state.guardianPhone;
-        if (state.guardianEmail) $('guardian-email').value = state.guardianEmail;
-        if (state.unit) $('preferred-unit').value = state.unit;
         showStep('step-landing');
       });
     })();

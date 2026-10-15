@@ -21,6 +21,8 @@ Prioridade: corrija esses quatro antes de reescrever qualquer título.
 
 ### P1 — `/teste`: gate de dados antes do valor (maior vazamento do funil)
 
+> **Status (15/10/2026): implementado no PR #45.** O contato agora é pedido depois da 25ª pergunta. A faixa 0–3 anos continua bloqueada (decisão pendente) e o título não foi trocado (aguarda A/B).
+
 **O que está lá:** a tela inicial pede nome da criança, faixa etária, quem responde, seu nome, WhatsApp, e-mail, unidade de interesse e dois consentimentos. Só depois vêm as 25 perguntas.
 
 **Por que prejudica:** o visitante ainda não recebeu nada e já pagou o custo máximo (dados pessoais + 2 consentimentos). Cada campo derruba a conversão. Você também perde o efeito de compromisso e coerência: quem respondeu 25 perguntas sobre o próprio filho está muito mais disposto a dar o e-mail para "receber o resultado" do que quem ainda não começou.
