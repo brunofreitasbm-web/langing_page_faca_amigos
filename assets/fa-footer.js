@@ -14,7 +14,9 @@
 
   // ---- Números de WhatsApp ----
   var WA_CLINICA = '5591991782027';
-  var WA_LAZER = '5591992347673';
+  var WA_PARQUE = '5591992347673';
+  var WA_GRAOPARA = '5591991101215';
+  var WA_LAZER = WA_PARQUE;
   var WA = {
     hub: { n: WA_CLINICA, t: 'Olá! Gostaria de informações sobre o FaçaAmigos - Centro de Terapia Comportamental.' },
     teste: { n: WA_CLINICA, t: 'Oi! Vim pelo site e gostaria de tirar uma dúvida.' },
@@ -49,14 +51,14 @@
       'footer[data-fa-footer] .fa-footer-wrap { width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; text-align: left; }',
       'footer[data-fa-footer] .fa-footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 32px 40px; margin-top: 24px; margin-bottom: 32px; }',
       'footer[data-fa-footer] .fa-footer-col { font-size: 0.9rem; }',
-      'footer[data-fa-footer] .fa-footer-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.7; margin: 0 0 14px 0; color: inherit; }',
+      'footer[data-fa-footer] .fa-footer-title { font-size: 0.8rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.88; margin: 0 0 14px 0; color: inherit; }',
       'footer[data-fa-footer] .fa-footer-list { list-style: none; padding: 0; margin: 0; }',
-      'footer[data-fa-footer] .fa-footer-list li { margin-bottom: 12px; line-height: 1.5; font-size: 0.88rem; }',
+      'footer[data-fa-footer] .fa-footer-list li { margin-bottom: 12px; line-height: 1.55; font-size: 0.92rem; }',
       'footer[data-fa-footer] .fa-footer-list li strong { display: block; font-weight: 700; opacity: 0.95; }',
-      'footer[data-fa-footer] .fa-footer-list li span { display: block; opacity: 0.75; font-size: 0.82rem; margin-top: 2px; }',
-      'footer[data-fa-footer] .fa-footer-col a { color: inherit; text-decoration: none; font-weight: 600; opacity: 0.88; transition: opacity 0.2s, text-decoration 0.2s; }',
+      'footer[data-fa-footer] .fa-footer-list li span { display: block; opacity: 0.9; font-size: 0.86rem; margin-top: 2px; }',
+      'footer[data-fa-footer] .fa-footer-col a { color: inherit; text-decoration: none; font-weight: 600; opacity: 0.94; transition: opacity 0.2s, text-decoration 0.2s; }',
       'footer[data-fa-footer] .fa-footer-col a:hover { opacity: 1; text-decoration: underline; }',
-      'footer[data-fa-footer] .fa-footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.14); padding-top: 20px; margin-top: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; font-size: 0.8rem; opacity: 0.75; }',
+      'footer[data-fa-footer] .fa-footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.14); padding-top: 20px; margin-top: 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; font-size: 0.85rem; opacity: 0.88; }',
       'footer[data-fa-footer] .fa-footer-bottom p { margin: 0; line-height: 1.5; }',
       '@media (max-width: 640px) {',
       '  footer[data-fa-footer] .fa-footer-wrap { text-align: center; }',
@@ -70,8 +72,8 @@
     '<div class="fa-footer-col">',
     '  <h4 class="fa-footer-title">Unidades &amp; Locais</h4>',
     '  <ul class="fa-footer-list">',
-    '    <li><strong>Parque Shopping Belém</strong><span>Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</span></li>',
-    '    <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (' + GRAOPARA_STATUS + ')</span></li>',
+    '    <li><strong>Parque Shopping Belém</strong><span>Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · ' + link('https://wa.me/' + WA_PARQUE + '?text=' + encodeURIComponent('Oi! Gostaria de informações sobre a unidade Parque Shopping.'), 'WhatsApp: (91) 99234-7673', EXT) + '</span></li>',
+    '    <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (' + GRAOPARA_STATUS + ') · ' + link('https://wa.me/' + WA_GRAOPARA + '?text=' + encodeURIComponent('Oi! Gostaria de informações sobre o Playground Grão-Pará.'), 'WhatsApp: (91) 99110-1215', EXT) + '</span></li>',
     '    <li><strong>Centro de Terapia Comportamental</strong><span>Rua Boaventura da Silva, 1573 · Umarizal (' + CLINICA_STATUS + ')</span></li>',
     '    <li><strong>Funcionamento</strong><span>Parque Shopping: todos os dias, 10h às 22h · Grão-Pará: seg. a sáb. 10h às 22h, dom. 10h às 21h · ' + link('https://www.instagram.com/facaamigos.belem/', '@facaamigos.belem', EXT) + '</span></li>',
     '  </ul>',

@@ -105,7 +105,10 @@ R: Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laud
   - `https://institutofacaamigos.com.br/`
   - `https://institutofacaamigos.com.br/playground`
   - `https://institutofacaamigos.com.br/circuito`
-- **Contato Comercial & Atendimento**: +55 (91) 99234-7673 (WhatsApp)
+- **Contato Comercial & Atendimento**:
+  - Parque Shopping (Playground &amp; Circuito): +55 (91) 99234-7673 (WhatsApp)
+  - Shopping Bosque Grão-Pará (Playground): +55 (91) 99110-1215 (WhatsApp)
+  - Clínica de Terapia Comportamental: +55 (91) 99178-2027 (WhatsApp)
 - **Outros conteúdos**: `/servicos` (serviços da Clínica), `/eventos` (agenda de palestras e treinamentos), `/aprender` (guias educativos), `/glossario` (glossário de termos), `/teste` (Mapeamento Comportamental gratuito), `/guia` (e-book O Brincar com Propósito), `/codigo` (e-book O Código do Desenvolvimento Infantil)
 - **Resumo curto**: `https://institutofacaamigos.com.br/llms.txt`
 - **Fatos legíveis por máquina**: `https://institutofacaamigos.com.br/geo-facts.json`

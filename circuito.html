@@ -1399,7 +1399,17 @@
       .ebooks-strip p { margin: 0 0 14px; font-weight: 600; }
       .ebooks-strip .es-links { display: flex; flex-wrap: wrap; gap: 10px 22px; }
       .ebooks-strip .es-links a { font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
-    </style>
+    
+    /* Celular estreito: logo menor e botão WhatsApp compacto, sem um cobrir o outro */
+    @media (max-width: 480px) {
+      .navbar .wrap { gap: 8px; }
+      .logo { font-size: 1.3rem; gap: 7px; min-width: 0; }
+      .logo .simbolo { height: 32px; }
+      .logo .sub { font-size: 0.5rem; letter-spacing: 0.2em; white-space: nowrap; }
+      .nav-actions { flex-shrink: 0; }
+      .nav-actions .btn-wa { padding: 9px 14px; font-size: 0.85rem; gap: 6px; }
+    }
+  </style>
     <div class="wrap">
       <div class="es-card">
         <h2 id="ebooks-strip-h">Para ler em casa</h2>
@@ -1506,8 +1516,8 @@
         <div class="fa-footer-col">
           <h4 class="fa-footer-title">Unidades &amp; Locais</h4>
           <ul class="fa-footer-list">
-            <li><strong>Parque Shopping Belém</strong><span>Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</span></li>
-            <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner)</span></li>
+            <li><strong>Parque Shopping Belém</strong><span>Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · WhatsApp: <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">(91) 99234-7673</a></span></li>
+            <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner) · WhatsApp: <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">(91) 99110-1215</a></span></li>
             <li><strong>Centro de Terapia Comportamental</strong><span>Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA)</span></li>
             <li><strong>Funcionamento</strong><span>Parque Shopping: todos os dias, 10h às 22h · Grão-Pará: seg. a sáb. 10h às 22h, dom. 10h às 21h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a></span></li>
           </ul>

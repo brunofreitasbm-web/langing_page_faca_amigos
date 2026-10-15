@@ -137,7 +137,15 @@
           "telephone": "+5591992347673",
           "availableLanguage": "pt-BR",
           "areaServed": "BR",
-          "description": "WhatsApp do Playground e do Circuito"
+          "description": "WhatsApp do Playground (Parque Shopping) e do Circuito"
+        },
+        {
+          "@type": "ContactPoint",
+          "contactType": "customer service",
+          "telephone": "+5591991101215",
+          "availableLanguage": "pt-BR",
+          "areaServed": "BR",
+          "description": "WhatsApp do Playground (Shopping Bosque Grão-Pará)"
         },
         {
           "@type": "ContactPoint",
@@ -627,7 +635,11 @@
     /* Bloco Clínica — registro sóbrio */
     .clinica-block { background: var(--white); border-radius: 48px; margin: 40px 0; padding: 60px 0; }
     .clinica-grid { display: grid; gap: 44px; align-items: center; grid-template-columns: 1fr; }
-    @media (min-width: 860px) { .clinica-grid { grid-template-columns: 0.9fr 1.1fr; } }
+    @media (min-width: 860px) {
+      .clinica-grid { grid-template-columns: 0.9fr 1.1fr; align-items: stretch; }
+      .clinica-grid .clinica-photo { aspect-ratio: auto; min-height: 420px; min-width: 0; position: relative; }
+      .clinica-photo img { position: absolute; inset: 0; }
+    }
     .clinica-photo { border-radius: 32px; overflow: hidden; box-shadow: var(--shadow-lg); aspect-ratio: 4/3.4; }
     .clinica-photo img { width: 100%; height: 100%; object-fit: cover; }
     .clinica-badges { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
@@ -669,6 +681,16 @@
 
     /* Localização */
     .local-block { padding: 60px 0; text-align: center; }
+    .unit-grid { display: grid; gap: 16px; grid-template-columns: repeat(3, 1fr); margin: 26px 0 4px; text-align: left; }
+    .unit-card { background: var(--white); border-radius: 24px; padding: 22px 22px 20px; box-shadow: var(--shadow-sm); border-top: 5px solid var(--teal); }
+    .unit-card.u-pink { border-top-color: var(--pink); }
+    .unit-card.u-yellow { border-top-color: var(--yellow); }
+    .unit-card .u-pin { font-size: 1.3rem; line-height: 1; }
+    .unit-card .u-name { display: block; font-weight: 800; color: var(--dark); margin: 8px 0 2px; font-size: 1.02rem; }
+    .unit-card .u-role { display: block; font-weight: 700; color: var(--teal-dark); font-size: 0.85rem; margin-bottom: 10px; }
+    .unit-card .u-addr { margin: 0 0 8px; font-weight: 600; color: var(--dark-soft, var(--dark)); font-size: 0.93rem; line-height: 1.5; }
+    .unit-card .u-hours { margin: 0; font-weight: 800; font-size: 0.88rem; color: var(--teal-dark); }
+    @media (max-width: 860px) { .unit-grid { grid-template-columns: 1fr; } }
     .local-actions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
     .geo-facts { margin-top: 40px; text-align: left; }
     .geo-facts-head { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; margin-bottom: 18px; text-align: center; }
@@ -693,13 +715,13 @@
     }
 
     footer {
-      background: var(--dark); color: rgba(255, 255, 255, 0.75); padding: 52px 22px 100px;
+      background: var(--dark); color: rgba(255, 255, 255, 0.9); padding: 52px 22px 100px;
       text-align: center; font-size: 0.92rem; font-weight: 600;
     }
     footer .logo { color: #fff; justify-content: center; margin-bottom: 14px; }
     footer p { margin: 4px 0; }
     footer a { text-decoration: underline; text-underline-offset: 3px; }
-    footer .legal { margin-top: 18px; font-size: 0.8rem; opacity: 0.6; }
+    footer .legal { margin-top: 18px; font-size: 0.85rem; opacity: 0.85; }
 
     .wa-float {
       position: fixed; right: 22px; bottom: 22px; z-index: 100; width: 62px; height: 62px;
@@ -708,6 +730,15 @@
     }
     .wa-float:hover { transform: scale(1.08); }
     .wa-float svg { width: 30px; height: 30px; }
+    .wa-float { transition: transform var(--t-fast), opacity 0.25s ease; }
+    .wa-float.is-hidden { opacity: 0; pointer-events: none; transform: scale(0.8); }
+    @media (max-width: 760px) {
+      .wa-float { width: 54px; height: 54px; right: 14px; bottom: 14px; }
+      .wa-float svg { width: 26px; height: 26px; }
+      /* cabeçalho compacto: ao rolar para baixo some a linha de navegação, ao subir volta */
+      .navbar .nav-units { transition: max-height 0.25s ease, opacity 0.2s ease; max-height: 60px; overflow: hidden; }
+      .navbar.nav-compact .nav-units { max-height: 0; opacity: 0; pointer-events: none; }
+    }
 
     .fx { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
     .fx.on { opacity: 1; transform: translateY(0); }
@@ -1149,9 +1180,6 @@
               <blockquote>“Eu amei o espaço! Tem uma equipe muito acolhedora a Laura ficou super a vontade e nós também ficamos muito a vontade no local.”</blockquote>
               <figcaption>Marlucy P. · 1ª visita</figcaption></figure>
             <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
-              <blockquote>“Quero pacote especial de colônia de férias, por favor 🙏🏼😁”</blockquote>
-              <figcaption>Aline R. · 15ª visita</figcaption></figure>
-            <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
               <blockquote>“Eu Amei; Traz Muita Alegria e Momentos Excelente para Meu Filho 🩷”</blockquote>
               <figcaption>Thiene · 2ª visita</figcaption></figure>
             <figure class="rv"><div class="rv-stars" aria-label="5 estrelas">★★★★★</div>
@@ -1364,9 +1392,32 @@
   <section class="local-block" id="local">
     <div class="wrap fx">
       <h2 class="sec-title sec-title-sm">Nossas Unidades em Belém</h2>
-      <p class="sec-sub"><b>Parque Shopping Belém (Playground &amp; Circuito):</b> Rod. Augusto Montenegro, 4300 · Térreo <i>(todos os dias, 10h-22h)</i></p>
-      <p class="sec-sub" style="margin-top: 4px;"><b>Shopping Bosque Grão-Pará (Playground):</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner <i>(Aberto · seg-sáb 10h-22h, dom 10h-21h)</i></p>
-      <p class="sec-sub" style="margin-top: 4px;"><b>Centro de Terapia Comportamental (Clínica):</b> Rua Boaventura da Silva, 1573 · Umarizal <i>(Em breve · IASEP &amp; PROASA)</i></p>
+      <div class="unit-grid">
+        <div class="unit-card">
+          <span class="u-pin" aria-hidden="true">📍</span>
+          <b class="u-name">Parque Shopping Belém</b>
+          <span class="u-role">Playground &amp; Circuito</span>
+          <p class="u-addr">Rod. Augusto Montenegro, 4300 · Térreo</p>
+          <p class="u-hours">Todos os dias, 10h-22h</p>
+          <p class="u-hours" style="margin-top: 6px;">WhatsApp: <a href="https://wa.me/5591992347673?text=Oi!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Playground%20Parque%20Shopping." target="_blank" rel="noopener">(91) 99234-7673</a></p>
+        </div>
+        <div class="unit-card u-pink">
+          <span class="u-pin" aria-hidden="true">📍</span>
+          <b class="u-name">Shopping Bosque Grão-Pará</b>
+          <span class="u-role">Playground</span>
+          <p class="u-addr">Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner</p>
+          <p class="u-hours">Aberto · seg-sáb 10h-22h, dom 10h-21h</p>
+          <p class="u-hours" style="margin-top: 6px;">WhatsApp: <a href="https://wa.me/5591991101215?text=Oi!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Playground%20Gr%C3%A3o-Par%C3%A1." target="_blank" rel="noopener">(91) 99110-1215</a></p>
+        </div>
+        <div class="unit-card u-yellow">
+          <span class="u-pin" aria-hidden="true">📍</span>
+          <b class="u-name">Centro de Terapia Comportamental</b>
+          <span class="u-role">Clínica</span>
+          <p class="u-addr">Rua Boaventura da Silva, 1573 · Umarizal</p>
+          <p class="u-hours">Em breve · IASEP &amp; PROASA</p>
+          <p class="u-hours" style="margin-top: 6px;">WhatsApp: <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental." target="_blank" rel="noopener">(91) 99178-2027</a></p>
+        </div>
+      </div>
       <div class="local-actions">
         <a class="btn btn-ghost" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank"
           rel="noopener">Traçar rota Parque Shopping</a>
@@ -1507,8 +1558,8 @@
         <div class="fa-footer-col">
           <h4 class="fa-footer-title">Unidades &amp; Locais</h4>
           <ul class="fa-footer-list">
-            <li><strong>Parque Shopping Belém</strong><span>Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</span></li>
-            <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner)</span></li>
+            <li><strong>Parque Shopping Belém</strong><span>Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · WhatsApp: <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">(91) 99234-7673</a></span></li>
+            <li><strong>Shopping Bosque Grão-Pará</strong><span>Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner) · WhatsApp: <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">(91) 99110-1215</a></span></li>
             <li><strong><a href="https://clinica.institutofacaamigos.com.br/?utm_source=hub&amp;utm_medium=site&amp;utm_campaign=rodape">Centro de Terapia Comportamental</a></strong><span>Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA)</span></li>
             <li><strong>Funcionamento</strong><span>Parque Shopping: todos os dias, 10h às 22h · Grão-Pará: seg. a sáb. 10h às 22h, dom. 10h às 21h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a></span></li>
           </ul>
@@ -1700,6 +1751,34 @@
         });
         if (html) grid.innerHTML = html;
       }).catch(function () { /* fallback estático preservado */ });
+    })();
+  </script>
+    <script>
+    /* Refinos de UI: cabeçalho compacto no celular e botão flutuante que sai da frente dos CTAs de WhatsApp */
+    (function () {
+      var nav = document.querySelector('.navbar');
+      if (nav && window.matchMedia) {
+        var mq = window.matchMedia('(max-width: 760px)'), lastY = window.scrollY, ticking = false;
+        window.addEventListener('scroll', function () {
+          if (ticking) return; ticking = true;
+          requestAnimationFrame(function () {
+            var y = window.scrollY;
+            if (!mq.matches || y < 120) nav.classList.remove('nav-compact');
+            else if (y > lastY + 6) nav.classList.add('nav-compact');
+            else if (y < lastY - 6) nav.classList.remove('nav-compact');
+            lastY = y; ticking = false;
+          });
+        }, { passive: true });
+      }
+      var fab = document.querySelector('.wa-float');
+      if (fab && 'IntersectionObserver' in window) {
+        var seen = new Set();
+        var io = new IntersectionObserver(function (es) {
+          es.forEach(function (e) { e.isIntersecting ? seen.add(e.target) : seen.delete(e.target); });
+          fab.classList.toggle('is-hidden', seen.size > 0);
+        });
+        document.querySelectorAll('a.btn-wa:not(.wa-float), footer').forEach(function (el) { io.observe(el); });
+      }
     })();
   </script>
   <script src="/assets/fa-footer.js" defer></script>

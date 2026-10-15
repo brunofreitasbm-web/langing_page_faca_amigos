@@ -89,7 +89,7 @@
       },
       "image": "https://institutofacaamigos.com.br/img/hero-piscina-bolinhas.jpg",
       "url": "https://institutofacaamigos.com.br/playground",
-      "telephone": "+5591992347673",
+      "telephone": "+5591991101215",
       "priceRange": "$$",
       "hasMap": "https://www.google.com/maps/search/?api=1&query=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA",
       "address": {
@@ -2258,16 +2258,6 @@
           <div class="review">
             <div class="who">
               <div class="av">
-                <div>A</div>
-              </div>
-              <div><b>Aline Raniere</b><small>15ª visita · out/2026</small></div>
-            </div>
-            <div class="stars">★ ★ ★ ★ ★</div>
-            <p>"Quero pacote especial de colônia de férias, por favor 🙏🏼😁"</p>
-          </div>
-          <div class="review">
-            <div class="who">
-              <div class="av">
                 <div>T</div>
               </div>
               <div><b>Thiene</b><small>2ª visita · out/2026</small></div>
@@ -2479,7 +2469,17 @@
       .ebooks-strip p { margin: 0 0 14px; font-weight: 600; }
       .ebooks-strip .es-links { display: flex; flex-wrap: wrap; gap: 10px 22px; }
       .ebooks-strip .es-links a { font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
-    </style>
+    
+    /* Celular estreito: logo menor e botão WhatsApp compacto, sem um cobrir o outro */
+    @media (max-width: 480px) {
+      .navbar .wrap { gap: 8px; }
+      .logo { font-size: 1.3rem; gap: 7px; min-width: 0; }
+      .logo .simbolo { height: 32px; }
+      .logo .sub { font-size: 0.5rem; letter-spacing: 0.2em; white-space: nowrap; }
+      .nav-actions { flex-shrink: 0; }
+      .nav-actions .btn-wa { padding: 9px 14px; font-size: 0.85rem; gap: 6px; }
+    }
+  </style>
     <div class="wrap">
       <div class="es-card">
         <h2 id="ebooks-strip-h">Para ler em casa</h2>
@@ -2568,8 +2568,12 @@
           <h3 style="margin-top: 8px;">Parque Shopping Belém</h3>
           <p style="margin-bottom: 6px;"><b>Endereço:</b> Rod. Augusto Montenegro, 4300 · Térreo (próximo às Lojas Americanas)</p>
           <p style="margin-bottom: 6px;"><b>Horário:</b> Segunda a Domingo, 10h às 22h</p>
+          <p style="margin-bottom: 6px;"><b>WhatsApp:</b> <a href="https://wa.me/5591992347673?text=Oi!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Playground%20Parque%20Shopping." target="_blank" rel="noopener">(91) 99234-7673</a></p>
           <p>Piscina de bolinhas gigante, casa na árvore, cantinho de leitura, mediadores especializados e espaço sensorial completo.</p>
-          <a href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top: 14px;">Traçar rota no Maps</a>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
+            <a href="https://wa.me/5591992347673?text=Oi!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Playground%20Parque%20Shopping." target="_blank" rel="noopener" class="btn btn-wa btn-sm">Chamar no WhatsApp</a>
+            <a href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Traçar rota no Maps</a>
+          </div>
         </div>
         <!-- Unidade Bosque Grão-Pará -->
         <div class="partner" style="border: 2px solid var(--teal, #1f917f); background: #fff;">
@@ -2577,8 +2581,12 @@
           <h3 style="margin-top: 8px;">Shopping Bosque Grão-Pará</h3>
           <p style="margin-bottom: 6px;"><b>Endereço:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso (em frente à Renner)</p>
           <p style="margin-bottom: 6px;"><b>Horário:</b> Segunda a Sábado, 10h às 22h · Domingo, 10h às 21h</p>
+          <p style="margin-bottom: 6px;"><b>WhatsApp:</b> <a href="https://wa.me/5591991101215?text=Oi!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Playground%20Gr%C3%A3o-Par%C3%A1." target="_blank" rel="noopener">(91) 99110-1215</a></p>
           <p>Mesmos preços, mesma equipe qualificada e os mesmos atrativos inclusivos do Parque Shopping. Sem agendamento: é só chegar.</p>
-          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top: 14px;">Traçar rota no Maps</a>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px;">
+            <a href="https://wa.me/5591991101215?text=Oi!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20Playground%20Gr%C3%A3o-Par%C3%A1." target="_blank" rel="noopener" class="btn btn-wa btn-sm">Chamar no WhatsApp</a>
+            <a href="https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Traçar rota no Maps</a>
+          </div>
         </div>
       </div>
     </div>
@@ -2635,20 +2643,29 @@
   <!-- CTA FINAL -->
   <div class="final fx">
     <h2>A próxima tarde livre pode ser mais leve.</h2>
-    <p>Parque Shopping Belém, todos os dias das 10h às 22h. Vem viver um momento bom com o seu filho — e um descanso
+    <p>Parque Shopping Belém e Shopping Bosque Grão-Pará. Vem viver um momento bom com o seu filho — e um descanso
       pra você.</p>
     <div class="row">
       <a class="btn btn-wa"
-        href="https://wa.me/5591992347673?text=Oi!%20Gostaria%20de%20saber%20mais%20sobre%20o%20Fa%C3%A7aAmigos!"
+        href="https://wa.me/5591992347673?text=Oi!%20Gostaria%20de%20saber%20mais%20sobre%20o%20Fa%C3%A7aAmigos%20(Parque%20Shopping)!"
         target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" fill="currentColor">
           <path
             d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" />
         </svg>
-        Falar no WhatsApp
+        WhatsApp Parque Shopping
+      </a>
+      <a class="btn btn-wa"
+        href="https://wa.me/5591991101215?text=Oi!%20Gostaria%20de%20saber%20mais%20sobre%20o%20Fa%C3%A7aAmigos%20(Gr%C3%A3o-Par%C3%A1)!"
+        target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" />
+        </svg>
+        WhatsApp Grão-Pará
       </a>
       <a class="btn btn-ghost" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank"
-        rel="noopener">Traçar rota até aqui</a>
+        rel="noopener">Traçar rotas</a>
     </div>
   </div>
 
@@ -2658,8 +2675,8 @@
     <img src="img/logo-simbolo.png" width="460" height="416" alt="FaçaAmigos"
       style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
     <span class="logo" style="color: #fff;">Faça<span class="amigos">Amigos</span></span>
-    <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito)</p>
-    <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner)</p>
+    <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · WhatsApp: <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">(91) 99234-7673</a></p>
+    <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner) · WhatsApp: <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">(91) 99110-1215</a></p>
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica - Em Breve)</p>
     <p>Todos os dias, das 10h às 22h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank"
         rel="noopener">@facaamigos.belem</a></p>
