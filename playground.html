@@ -1985,7 +1985,7 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <div class="topbar">📍 Parque Shopping Belém · 10h às 22h · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h) · <b>Já aberto!</b></div>
+  <div class="topbar">📍 Parque Shopping Belém · 10h às 22h · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h) · <b id="topbar-status">Abre todos os dias às 10h</b></div>
 
   <nav class="navbar">
     <div class="wrap">
@@ -2782,6 +2782,21 @@
   </script>
   <script src="/assets/fa-footer.js" defer></script>
   <script src="/assets/fa-cta.js" defer data-label="Ver preços" data-href="#precos" data-event="ver_precos"></script>
+  <script>
+    // Estado de funcionamento pelo horário de Belém (UTC-3, sem horário de verão), referente ao Parque Shopping.
+    // Sem JS, o texto fixo "Abre todos os dias às 10h" continua verdadeiro.
+    (function () {
+      try {
+        var el = document.getElementById('topbar-status');
+        if (!el) return;
+        var now = new Date(Date.now() - 3 * 3600 * 1000);
+        var h = now.getUTCHours() + now.getUTCMinutes() / 60;
+        el.textContent = h < 10 ? 'Abrimos hoje às 10h'
+          : h < 22 ? 'Aberto agora até 22h (Parque Shopping)'
+          : 'Fechado agora, abrimos amanhã às 10h';
+      } catch (e) {}
+    })();
+  </script>
 </body>
 
 </html>

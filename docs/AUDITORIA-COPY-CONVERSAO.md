@@ -91,7 +91,7 @@ Troque também "Nada de spam" por "Só enviamos o seu resultado e, se você quis
 ### P7 — Estrutura de CTAs e navegação
 
 - O Hub apresenta 3 caminhos no hero (brincar / preocupação / clínica) e depois repete 5 CTAs com 4 destinos. Para quem chega do Google por "playground infantil Belém", o hero deveria vender **uma** coisa (a visita) e deixar as outras para depois.
-- `/circuito` não tem meta description e o vídeo "real, sem edição" fica depois do hero. Em celular, o vídeo é a prova mais forte; suba.
+- Em `/circuito`, o vídeo "real, sem edição" fica depois do hero. Em celular, o vídeo é a prova mais forte; suba. (Correção: uma versão anterior deste relatório dizia que a página não tinha meta description; tem, a leitura automática é que falhou.)
 - `/eventos` sem eventos exibe "Nenhum encontro com inscrições abertas": ótimo ter lista de espera, mas o texto "os próximos são anunciados primeiro para quem já participou ou fez o mapeamento" não oferece ação para quem não fez nenhum. Coloque um campo de e-mail "avise-me do próximo".
 - `/trabalhe-conosco`: 20 áreas em um único select e nenhuma proposta de valor (por que trabalhar aqui, salário/benefício/horário/trilha). O mesmo copy de acolhimento do site deveria estar aqui, pois a qualidade do atendimento é o produto.
 
