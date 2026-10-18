@@ -318,28 +318,6 @@
 
     .teste-nav .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 
-    .logo {
-      font-family: 'Fredoka One', sans-serif;
-      font-size: 1.5rem;
-      color: var(--dark);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo .simbolo { height: 36px; width: auto; flex-shrink: 0; }
-    .logo .amigos { color: var(--pink); }
-    .logo .sub {
-      display: block;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.56rem;
-      font-weight: 800;
-      letter-spacing: 0.3em;
-      color: var(--teal-dark);
-      text-transform: uppercase;
-      margin-top: -4px;
-    }
-
     .quiz-wrap { max-width: 640px; margin: 0 auto; padding: 0 22px; }
 
     .quiz-card {
@@ -910,6 +888,7 @@
   }
 }
 </script>
+<link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
 </head>
 
 <body>
@@ -921,9 +900,7 @@
 
   <nav class="teste-nav">
     <div class="wrap">
-      <a class="logo" href="https://institutofacaamigos.com.br/"><img class="simbolo" src="img/logo-simbolo.png"
-          width="460" height="416" alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span class="txt">Faça<span
-            class="amigos">Amigos</span><span class="sub">Instituto</span></span></a>
+      <a class="logo" href="https://institutofacaamigos.com.br/"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></a>
       <a href="https://wa.me/5591991782027?text=Oi!%20Tenho%20uma%20d%C3%BAvida%20sobre%20o%20Mapeamento%20Comportamental."
         target="_blank" rel="noopener" class="btn btn-wa btn-sm">
         <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1176,7 +1153,7 @@
   </main>
 
   <footer data-fa-footer="teste">
-    <img src="/img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
+    <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="lazy" decoding="async"></span>
     <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · Todos os dias, 10h às 22h · <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">WhatsApp: (91) 99234-7673</a></p>
     <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner (Playground · Aberto) · Seg. a sáb., 10h às 22h · dom., 10h às 21h · <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">WhatsApp: (91) 99110-1215</a></p>
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA) · <a href="https://wa.me/5591991782027" target="_blank" rel="noopener">WhatsApp: (91) 99178-2027</a> · <a href="https://institutofacaamigos.com.br/clinica" target="_blank" rel="noopener">Site da Clínica</a></p>
@@ -2030,7 +2007,7 @@
       });
     })();
   </script>
-  <script src="/assets/fa-footer.js?v=20261020" defer></script>
+  <script src="/assets/fa-footer.js?v=20261021" defer></script>
 </body>
 
 </html>

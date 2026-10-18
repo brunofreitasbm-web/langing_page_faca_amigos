@@ -99,10 +99,6 @@
       position: absolute; top: 0; left: 0; right: 0; padding: 18px var(--gutter);
       display: flex; align-items: center; justify-content: space-between;
     }
-    .logo-row { display: inline-flex; align-items: center; gap: 8px; }
-    .logo-row img { width: 38px; height: 38px; border-radius: 50%; box-shadow: var(--shadow-sm); background: var(--white); }
-    .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 18px; color: var(--white); text-shadow: 0 1px 6px rgba(0,0,0,0.35); }
-    .logo-row .amigos { color: var(--yellow); }
     .hero .content { position: relative; padding: 0 var(--gutter) 30px; max-width: var(--max); margin: 0 auto; width: 100%; }
     .pill {
       display: inline-flex; align-items: center; gap: 7px;
@@ -260,6 +256,7 @@
       .chips { grid-template-columns: 1fr 1fr; }
     }
   </style>
+<link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
 </head>
 
 <body>
@@ -273,10 +270,7 @@
     <div class="veil"></div>
     <div class="corner"></div>
     <div class="top">
-      <a class="logo-row" href="https://institutofacaamigos.com.br/">
-        <img src="img/logo-simbolo.png" width="460" height="416" alt="FaçaAmigos" loading="eager" decoding="async">
-        <span>Faça<span class="amigos">Amigos</span></span>
-      </a>
+      <a class="fa-logo-card" href="https://institutofacaamigos.com.br/"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></a>
     </div>
     <div class="content">
       <span class="pill">

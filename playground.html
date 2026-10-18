@@ -643,12 +643,6 @@
       gap: 10px;
     }
 
-    .logo-img {
-      height: 52px;
-      width: auto;
-      max-width: 100%;
-      display: block;
-    }
 
     .nav-actions {
       display: flex;
@@ -1958,6 +1952,7 @@
     .rel-legal { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
     @media (max-width: 760px) { .rel-grid { grid-template-columns: 1fr; } }
   </style>
+<link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
 </head>
 
 <body>
@@ -1971,7 +1966,7 @@
 
   <nav class="navbar">
     <div class="wrap">
-      <a class="logo" href="/" aria-label="FaçaAmigos Playground — página inicial"><img class="logo-img" src="img/logo-playground.png" width="1024" height="147" alt="FaçaAmigos Playground" loading="eager" decoding="async"></a>
+      <a class="logo" href="/" aria-label="FaçaAmigos Playground — página inicial"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></a>
       <div class="nav-actions">
         <a href="https://institutofacaamigos.com.br/" class="btn btn-ghost btn-sm">Instituto FaçaAmigos</a>
         <a href="https://institutofacaamigos.com.br/trabalhe-conosco" class="btn btn-ghost btn-sm">Venha fazer parte do nosso
@@ -2455,7 +2450,6 @@
     @media (max-width: 480px) {
       .navbar .wrap { gap: 8px; }
       .logo { min-width: 0; }
-      .logo-img { height: 42px; }
       .nav-actions { flex-shrink: 0; }
       .nav-actions .btn-wa { padding: 9px 14px; font-size: 0.85rem; gap: 6px; }
     }
@@ -2652,7 +2646,7 @@
   </main>
 
   <footer data-fa-footer="playground">
-    <img src="/img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
+    <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="lazy" decoding="async"></span>
     <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · Todos os dias, 10h às 22h · <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">WhatsApp: (91) 99234-7673</a></p>
     <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner (Playground · Aberto) · Seg. a sáb., 10h às 22h · dom., 10h às 21h · <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">WhatsApp: (91) 99110-1215</a></p>
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA) · <a href="https://wa.me/5591991782027" target="_blank" rel="noopener">WhatsApp: (91) 99178-2027</a> · <a href="https://institutofacaamigos.com.br/clinica" target="_blank" rel="noopener">Site da Clínica</a></p>
@@ -2753,7 +2747,7 @@
       }).catch(function () { /* preserva os cards já existentes */ });
     })();
   </script>
-  <script src="/assets/fa-footer.js?v=20261020" defer></script>
+  <script src="/assets/fa-footer.js?v=20261021" defer></script>
   <script src="/assets/fa-cta.js" defer data-label="Ver preços" data-href="#precos" data-event="ver_precos"></script>
   <script>
     // Estado de funcionamento pelo horário de Belém (UTC-3, sem horário de verão), referente ao Parque Shopping.

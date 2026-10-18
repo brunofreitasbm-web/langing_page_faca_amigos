@@ -421,40 +421,6 @@
       gap: 12px;
     }
 
-    .logo {
-      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif;
-      font-size: 1.65rem;
-      color: var(--dark);
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo .simbolo {
-      height: 40px;
-      width: auto;
-      flex-shrink: 0;
-    }
-
-    .logo .txt {
-      display: inline-block;
-    }
-
-    .logo .amigos {
-      color: var(--pink);
-    }
-
-    .logo .sub {
-      display: block;
-      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
-      font-size: 0.58rem;
-      font-weight: 800;
-      letter-spacing: 0.32em;
-      color: var(--teal-dark);
-      text-transform: uppercase;
-      margin-top: -4px;
-    }
-
     .nav-actions {
       display: flex;
       gap: 12px;
@@ -1159,6 +1125,7 @@
     .skip:focus { top: 8px; }
     picture { display: contents; }
   </style>
+<link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
 </head>
 
 <body>
@@ -1172,9 +1139,7 @@
 
   <nav class="navbar">
     <div class="wrap">
-      <a class="logo" href="https://institutofacaamigos.com.br/playground"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
-          alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span class="txt">Faça<span
-            class="amigos">Amigos</span><span class="sub">Circuito</span></span></a>
+      <a class="logo" href="https://institutofacaamigos.com.br/playground"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></a>
       <div class="nav-actions">
         <a href="https://institutofacaamigos.com.br/playground" class="btn btn-ghost btn-sm">Conhecer o Playground</a>
         <a href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20quero%20saber%20mais%20sobre%20o%20Fa%C3%A7aAmigos%20Circuito!"
@@ -1403,9 +1368,7 @@
     /* Celular estreito: logo menor e botão WhatsApp compacto, sem um cobrir o outro */
     @media (max-width: 480px) {
       .navbar .wrap { gap: 8px; }
-      .logo { font-size: 1.3rem; gap: 7px; min-width: 0; }
-      .logo .simbolo { height: 32px; }
-      .logo .sub { font-size: 0.5rem; letter-spacing: 0.2em; white-space: nowrap; }
+      .logo { min-width: 0; }
       .nav-actions { flex-shrink: 0; }
       .nav-actions .btn-wa { padding: 9px 14px; font-size: 0.85rem; gap: 6px; }
     }
@@ -1508,7 +1471,7 @@
   </main>
 
   <footer data-fa-footer="circuito">
-    <img src="/img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
+    <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="lazy" decoding="async"></span>
     <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · Todos os dias, 10h às 22h · <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">WhatsApp: (91) 99234-7673</a></p>
     <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner (Playground · Aberto) · Seg. a sáb., 10h às 22h · dom., 10h às 21h · <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">WhatsApp: (91) 99110-1215</a></p>
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA) · <a href="https://wa.me/5591991782027" target="_blank" rel="noopener">WhatsApp: (91) 99178-2027</a> · <a href="https://institutofacaamigos.com.br/clinica" target="_blank" rel="noopener">Site da Clínica</a></p>
@@ -1542,7 +1505,7 @@
     })();
   </script>
 
-  <script src="/assets/fa-footer.js?v=20261020" defer></script>
+  <script src="/assets/fa-footer.js?v=20261021" defer></script>
   <script src="/assets/fa-cta.js" defer data-label="Quero ir hoje" data-href="whatsapp" data-event="whatsapp"></script>
 </body>
 
