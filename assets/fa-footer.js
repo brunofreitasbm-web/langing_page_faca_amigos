@@ -51,7 +51,7 @@
       wa: '5591991782027',
       waTexto: 'Olá! Gostaria de informações sobre o FaçaAmigos - Centro de Terapia Comportamental.',
       mapa: 'https://maps.google.com/?q=Rua+Boaventura+da+Silva,+1573,+Bel%C3%A9m+PA',
-      paginas: [['Página da Clínica', '/clinica']]
+      paginas: []
     }
   };
   var ORDEM = ['parque', 'graopara', 'clinica'];
@@ -63,6 +63,7 @@
     playground: 'parque,graopara',
     circuito: 'parque',
     teste: 'clinica',
+    clinica: 'clinica',
     aprender: 'clinica',
     glossario: 'clinica',
     eventos: 'clinica',

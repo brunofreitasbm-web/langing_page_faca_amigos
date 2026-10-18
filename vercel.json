@@ -9,8 +9,6 @@
     { "source": "/playground/politica-privacidade.html", "destination": "/politica-privacidade", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/clinica", "destination": "https://clinica.institutofacaamigos.com.br/clinica" },
-    { "source": "/clinica-static/:path*", "destination": "https://clinica.institutofacaamigos.com.br/clinica-static/:path*" },
     { "source": "/eventos/:slug", "destination": "/evento" }
   ],
   "headers": [

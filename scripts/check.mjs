@@ -120,13 +120,8 @@ function htmlDoAlvo(rel) {
   return existsSync(join(root, f)) ? read(f) : null;
 }
 
-// Rotas servidas por OUTRO projeto da Vercel (rewrite em vercel.json): não têm arquivo aqui.
-// /clinica = landing da Clínica (projeto clinica-facaamigos); /clinica-static = JS, imagens e logos dela.
-const ROTAS_DE_OUTRO_PROJETO = ['clinica', 'clinica-static'];
-
 // cleanUrls: "" -> index.html, "guia" -> guia.html
 function existeNoSite(rel) {
-  if (ROTAS_DE_OUTRO_PROJETO.some((r) => rel === r || rel.startsWith(r + '/'))) return true;
   if (rel === '') return existsSync(join(root, 'index.html'));
   const p = join(root, rel);
   if (existsSync(p) && statSync(p).isFile()) return true;

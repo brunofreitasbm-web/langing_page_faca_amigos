@@ -48,7 +48,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  <!-- Clínica: landing e serviços, servida pelo projeto clinica-facaamigos (rewrite em vercel.json); lastmod à mão -->
+  <!-- Clínica: landing e serviços -->
   <url>
     <loc>https://institutofacaamigos.com.br/clinica</loc>
     <lastmod>2026-10-18</lastmod>

@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Centro de Terapia Comportamental Infantil em Belém | FaçaAmigos</title>
+  <meta name="description" content="Terapia comportamental infantil no Umarizal, Belém/PA. Equipe multidisciplinar, psicóloga CRP 10/4727 e convênios IASEP e PROASA. Entre na lista de espera.">
+  <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+  <link rel="canonical" href="https://institutofacaamigos.com.br/clinica">
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#065264">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="FaçaAmigos — Centro de Terapia Comportamental">
+  <meta property="og:title" content="Centro de Terapia Comportamental Infantil em Belém | FaçaAmigos">
+  <meta property="og:description" content="Terapia comportamental infantil no Umarizal, Belém/PA. Equipe multidisciplinar, psicóloga CRP 10/4727 e convênios IASEP e PROASA. Entre na lista de espera.">
+  <meta property="og:url" content="https://institutofacaamigos.com.br/clinica">
+  <meta property="og:image" content="https://institutofacaamigos.com.br/img/clinica-fachada.jpg">
+  <meta property="og:image:width" content="900">
+  <meta property="og:image:height" content="1080">
+  <meta property="og:image:alt" content="Fachada do Centro de Terapia Comportamental FaçaAmigos, em Umarizal, Belém">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Centro de Terapia Comportamental Infantil em Belém | FaçaAmigos">
+  <meta name="twitter:image" content="https://institutofacaamigos.com.br/img/clinica-fachada.jpg">
+  <meta name="twitter:image:alt" content="Fachada do Centro de Terapia Comportamental FaçaAmigos, em Umarizal, Belém">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <style>
+    /* Sistema visual do hub (cream, verde-escuro, rosa/turquesa/amarelo, Fredoka One + Nunito, botões pílula, cards 24px).
+       Submarca Clínica = petróleo (#065264) como assinatura + selo "Clínica" ao lado da logo. Mesmo petróleo do rodapé e do e-book Brincar. */
+    :root {
+      --pink: #F0196B; --pink-dark: #C81158; --teal: #2ECFB5; --teal-dark: #1FA893; --yellow: #FFE234;
+      --dark: #1A3F35; --ink-soft: #4C6B62; --cream: #FFF9F1; --white: #FFFFFF; --wa: #25D366;
+      --petrol: #065264; --petrol-deep: #043F4E; --teal-soft: #E3F8F4; --yellow-soft: #FFF6BF;
+      --r-card: 24px;
+      --shadow-sm: 0 4px 10px rgba(26, 63, 53, .08);
+      --shadow-lg: 0 18px 40px rgba(26, 63, 53, .14);
+      --shadow-pink: 0 10px 26px rgba(240, 25, 107, .32);
+      --t-fast: .2s cubic-bezier(.34, 1.4, .64, 1);
+      --font-display: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif;
+      --font-body: 'Nunito', 'Nunito Fallback', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; overflow-x: clip; -webkit-text-size-adjust: 100%; }
+    body { margin: 0; font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.6; color: var(--dark); background: var(--cream); overflow-x: clip; }
+    img { max-width: 100%; height: auto; display: block; }
+    h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.15; margin: 0; letter-spacing: .01em; text-wrap: balance; }
+    p { margin: 0; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 8px; }
+    .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: var(--petrol); padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 100; }
+    .skip:focus { top: 8px; }
+
+    .wrap { width: 100%; max-width: 1140px; margin: 0 auto; padding: 0 22px; position: relative; z-index: 1; }
+    .wrap-narrow { max-width: 860px; }
+    section { position: relative; overflow: hidden; padding: 64px 0; }
+    .bg-petrol { background: var(--petrol); color: #fff; }
+    .bg-white { background: var(--white); }
+    .bg-teal10 { background: var(--teal-soft); }
+    .center { text-align: center; }
+
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; background: var(--white); color: var(--petrol); border-radius: 9999px; padding: 8px 18px; font-size: .8rem; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; box-shadow: var(--shadow-sm); margin-bottom: 18px; }
+    .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--pink); flex: none; }
+    .bg-white .eyebrow { background: var(--teal-soft); box-shadow: none; }
+    .bg-petrol .eyebrow { background: var(--yellow); color: var(--petrol); box-shadow: none; }
+    h2.title { font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 14px; }
+    .lead { font-size: 1.1rem; font-weight: 600; color: var(--ink-soft); max-width: 42rem; }
+    .center .lead { margin-left: auto; margin-right: auto; }
+    .hl { position: relative; white-space: nowrap; z-index: 0; }
+    .hl::after { content: ''; position: absolute; left: -2px; right: -2px; bottom: 4px; height: .42em; background: var(--yellow); border-radius: 6px; z-index: -1; transform: rotate(-1.5deg); }
+    .bg-petrol .hl::after { background: var(--pink); opacity: .85; }
+
+    .circ { position: absolute; border-radius: 50%; z-index: 0; pointer-events: none; }
+
+    /* Botões: sempre pílula, mesmos do hub */
+    .btn-buy, .btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 48px; padding: 15px 30px; border-radius: 9999px; font-family: var(--font-body); font-weight: 800; font-size: 1.05rem; line-height: 1.2; text-align: center; text-decoration: none; cursor: pointer; transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast), background var(--t-fast); }
+    .btn-buy { background: var(--pink); color: #fff; border: 0; box-shadow: var(--shadow-pink); }
+    .btn-buy:hover, .btn-ghost:hover { transform: scale(1.03); filter: brightness(1.05); }
+    .btn-buy:active, .btn-ghost:active { transform: scale(.95); filter: brightness(.95); }
+    .btn-ghost { background: var(--white); color: var(--dark); border: 2.5px solid var(--dark); }
+    .btn-ghost:hover { background: var(--yellow); }
+    .btn-ghost.sm, .btn-buy.sm { padding: 10px 22px; font-size: .95rem; min-height: 44px; }
+    .bg-petrol .btn-ghost { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .7); }
+    .bg-petrol .btn-ghost:hover { background: #fff; color: var(--petrol); border-color: #fff; }
+    .btn-wa { background: var(--wa); color: #fff; box-shadow: 0 10px 26px rgba(37, 211, 102, .35); border: 0; }
+    .cta-row { margin-top: 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .cta-row .actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+    .cta-note { font-size: .92rem; font-weight: 700; opacity: .9; max-width: 38rem; }
+
+    /* Navbar do hub + selo da submarca */
+    .navbar { position: sticky; top: 0; z-index: 90; background: rgba(255, 249, 241, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(26, 63, 53, .07); padding: 12px 0; }
+    .navbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .logo { font-family: var(--font-display); font-size: 1.65rem; color: var(--dark); display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo .simbolo { height: 40px; width: auto; flex-shrink: 0; }
+    .logo .amigos { color: var(--pink); }
+    .logo .sub { font-family: var(--font-body); font-size: .72rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; background: var(--petrol); color: #fff; padding: 5px 11px; border-radius: 9999px; line-height: 1; }
+    .nav-units { display: flex; gap: 6px; align-items: center; }
+    .nav-units a { font-weight: 800; font-size: .95rem; padding: 9px 16px; border-radius: 9999px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: background var(--t-fast); }
+    .nav-units a:hover { background: var(--white); box-shadow: var(--shadow-sm); }
+    .nav-units a[aria-current] { background: var(--petrol); color: #fff; }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .nav-actions .btn-wa { padding: 10px 22px; font-size: .95rem; min-height: 44px; }
+    .nav-actions svg { width: 20px; height: 20px; flex-shrink: 0; }
+    @media (max-width: 760px) {
+      .navbar { padding: 6px 0 2px; }
+      .navbar .wrap { padding: 0 10px; row-gap: 0; }
+      .nav-units { order: 3; flex: 1 0 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
+      .nav-units a { white-space: nowrap; font-size: .84rem; padding: 0 2px; }
+      .logo { font-size: 1.35rem; }
+      .logo .simbolo { height: 32px; }
+      .logo .sub { font-size: .66rem; padding: 4px 9px; }
+      .nav-actions .btn-wa { padding: 0; width: 44px; font-size: 0; gap: 0; }
+      .navbar .wrap { flex-wrap: wrap; }
+      .eyebrow { font-size: .72rem; letter-spacing: .06em; padding: 7px 14px; text-align: left; }
+    }
+
+    /* Hero: faixa petróleo da Clínica, com as mesmas bolhas do hub */
+    .hero { padding: 56px 0 72px; position: relative; overflow: hidden; border-radius: 0 0 48px 48px; }
+    .hero .wrap { display: grid; gap: 22px; max-width: 900px; text-align: center; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.2rem); margin-bottom: 4px; color: #fff; }
+    .hero .sub { font-size: 1.15rem; font-weight: 600; color: rgba(255, 255, 255, .92); max-width: 40rem; margin: 0 auto; }
+    .seal { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .seal span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .13); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .88rem; }
+
+    /* Como funciona o 1º contato */
+    .steps { display: grid; gap: 16px; margin-top: 36px; }
+    .step { background: var(--white); border-radius: var(--r-card); padding: 26px; box-shadow: var(--shadow-sm); }
+    .step .ib { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; margin-bottom: 14px; background: var(--petrol); color: #fff; font-family: var(--font-display); font-size: 1.5rem; }
+    .step .n { font-weight: 900; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--pink-dark); margin-bottom: 6px; }
+    .step h3 { font-size: 1.3rem; margin-bottom: 8px; }
+    .step p:last-child { color: var(--ink-soft); font-weight: 600; }
+
+    /* Serviços: registro sóbrio, um único tom de ícone */
+    .services { display: grid; gap: 16px; margin-top: 36px; text-align: left; }
+    .svc { background: var(--cream); border-radius: var(--r-card); padding: 24px; box-shadow: var(--shadow-sm); scroll-margin-top: 90px; transition: transform var(--t-fast), box-shadow var(--t-fast); }
+    .svc:last-child { grid-column: 1 / -1; }
+    .svc:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+    .svc .ib { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; margin-bottom: 12px; background: var(--teal-soft); font-size: 1.5rem; }
+    .svc h3 { font-size: 1.25rem; margin-bottom: 10px; }
+    .svc dl { margin: 0; display: grid; gap: 8px; }
+    .svc dt { font-weight: 900; font-size: .74rem; letter-spacing: .08em; text-transform: uppercase; color: var(--petrol); }
+    .svc dd { margin: 0 0 4px; font-size: .96rem; font-weight: 600; color: var(--ink-soft); }
+    .svc dd a, .lead a { color: var(--petrol); }
+
+    /* Para quem é */
+    .signs { display: grid; gap: 12px; margin-top: 30px; max-width: 720px; margin-left: auto; margin-right: auto; }
+    .sign { display: flex; gap: 14px; align-items: flex-start; background: var(--white); border-radius: 18px; padding: 16px 18px; box-shadow: var(--shadow-sm); font-weight: 700; }
+    .sign .ck { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--petrol); display: grid; place-items: center; margin-top: 1px; color: #fff; font-size: .85rem; }
+    .reassure { margin-top: 28px; text-align: center; font-family: var(--font-display); font-size: clamp(1.2rem, 3.6vw, 1.6rem); color: var(--petrol); }
+    .reassure-sub { margin: 16px auto 0; max-width: 640px; text-align: center; font-weight: 600; color: var(--ink-soft); }
+
+    /* Quem cuida */
+    .about { display: grid; gap: 30px; align-items: center; }
+    .about .ph { position: relative; max-width: 300px; margin: 0 auto; }
+    .about .ph img { border-radius: 32px; box-shadow: var(--shadow-lg); width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: 50% 28%; }
+    .about .ph::before { content: ""; position: absolute; width: 100px; height: 100px; border-radius: 50%; background: var(--yellow); left: -24px; bottom: -24px; z-index: -1; }
+    .about .ph::after { content: ""; position: absolute; width: 60px; height: 60px; border-radius: 50%; background: var(--teal); right: -14px; top: -14px; z-index: -1; }
+    .about h2 { margin-bottom: 6px; font-size: clamp(1.8rem, 3.6vw, 2.4rem); }
+    .about .role { font-weight: 800; margin-bottom: 14px; color: var(--petrol); }
+    .about p a { color: var(--petrol); font-weight: 800; }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .tags span { background: var(--white); box-shadow: var(--shadow-sm); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .88rem; }
+
+    /* Convênios */
+    .plans { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; justify-content: center; }
+    .plans span { background: var(--white); box-shadow: var(--shadow-sm); border-radius: 999px; padding: 10px 22px; font-weight: 800; color: var(--petrol); }
+
+    /* Ambiente e "enquanto isso" */
+    .tiles { display: grid; gap: 16px; margin-top: 36px; }
+    .tiles.photos { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; text-align: left; }
+    .tile { background: var(--white); border-radius: var(--r-card); padding: 24px; box-shadow: var(--shadow-sm); text-align: center; }
+    .bg-white .tile { background: var(--cream); }
+    .tile.photo { padding: 0; overflow: hidden; text-align: left; }
+    .tile.photo img { width: 100%; height: 260px; object-fit: cover; }
+    .tile.photo .tx { padding: 20px 22px 24px; }
+    .tile .ib { width: 52px; height: 52px; margin: 0 auto 12px; border-radius: 50%; display: grid; place-items: center; font-size: 1.4rem; background: var(--teal-soft); }
+    .tile h3 { font-size: 1.2rem; margin-bottom: 8px; }
+    .tile p { font-size: .95rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 14px; }
+    .tile.photo p { margin-bottom: 0; }
+
+    /* FAQ (padrão .geo-faq-* do hub) */
+    .geo-faq-list { display: grid; gap: 12px; max-width: 56rem; margin: 36px auto 0; text-align: left; }
+    .geo-faq-item { background: var(--white); border-radius: 18px; padding: 18px 22px; box-shadow: var(--shadow-sm); }
+    .geo-faq-item summary { font-weight: 800; font-size: 1.02rem; color: var(--dark); cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+    .geo-faq-item summary::-webkit-details-marker { display: none; }
+    .geo-faq-item summary::after { content: '+'; font-size: 1.4rem; font-weight: 900; color: var(--pink-dark); flex: none; }
+    .geo-faq-item[open] summary::after { content: '−'; }
+    .geo-faq-ans { margin-top: 12px; font-size: .96rem; font-weight: 600; line-height: 1.55; color: var(--ink-soft); border-top: 1px solid rgba(26, 63, 53, .1); padding-top: 12px; }
+
+    @media (min-width: 720px) {
+      .steps { grid-template-columns: repeat(3, 1fr); }
+      .services { grid-template-columns: repeat(2, 1fr); }
+      .tiles.three { grid-template-columns: repeat(3, 1fr); }
+      .cta-row .btn-buy { min-width: 320px; }
+    }
+    @media (min-width: 980px) {
+      section { padding: 84px 0; }
+      .hero { padding: 72px 0 92px; }
+      .services { grid-template-columns: repeat(3, 1fr); }
+      .about { grid-template-columns: .7fr 1.3fr; gap: 56px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn-buy, .btn-ghost, .svc { transition: none; } }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://institutofacaamigos.com.br/clinica#webpage",
+        "name": "Serviços da Clínica — Centro de Terapia Comportamental",
+        "url": "https://institutofacaamigos.com.br/clinica",
+        "isPartOf": { "@id": "https://institutofacaamigos.com.br/#organization" },
+        "about": { "@id": "https://institutofacaamigos.com.br/#clinica" },
+        "inLanguage": "pt-BR"
+      },
+      {
+        "@type": "MedicalBusiness",
+        "@id": "https://institutofacaamigos.com.br/#clinica",
+        "name": "FaçaAmigos — Centro de Terapia Comportamental",
+        "url": "https://institutofacaamigos.com.br/clinica",
+        "telephone": "+55 91 99178-2027",
+        "email": "institutofacaamigos@gmail.com",
+        "openingHoursSpecification": [
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], "opens": "08:00", "closes": "18:00" },
+          { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "08:00", "closes": "12:00" }
+        ],
+        "parentOrganization": { "@id": "https://institutofacaamigos.com.br/#organization" },
+        "founder": {
+          "@type": "Person",
+          "name": "Isabella Gonçalves Freitas",
+          "jobTitle": "Psicóloga infantil",
+          "identifier": "CRP 10/4727"
+        },
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Rua Boaventura da Silva, 1573 — Umarizal",
+          "addressLocality": "Belém",
+          "addressRegion": "PA",
+          "postalCode": "66060-147",
+          "addressCountry": "BR"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Serviços da Clínica FaçaAmigos",
+          "itemListElement": [
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Avaliação inicial e acolhimento", "description": "Primeira conversa e observação para entender o dia a dia da criança e montar um plano com a família." } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Psicologia e terapia comportamental", "description": "Acompanhamento com psicóloga, apoiado em Análise do Comportamento Aplicada (ABA), para ensinar novas habilidades com afeto." } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fonoaudiologia", "description": "Acompanhamento da fala, da linguagem e da alimentação da criança." } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Terapia Ocupacional", "description": "Trabalho de coordenação motora, autonomia nas tarefas do dia e integração sensorial." } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Psicopedagogia", "description": "Apoio às dificuldades de aprendizagem, como leitura, escrita e matemática." } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Avaliação neuropsicológica", "description": "Testes de memória, atenção e raciocínio para orientar escola e terapia." } },
+            { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Orientação a pais e escola", "description": "Sessões de orientação familiar e apoio na conversa com a escola." } }
+          ]
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://institutofacaamigos.com.br/clinica#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Já dá para agendar uma consulta na Clínica?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Ainda não. A Clínica FaçaAmigos está em fase final de preparação. Você pode entrar na lista de espera pelo WhatsApp e é a primeira pessoa avisada assim que abrirmos." }
+          },
+          {
+            "@type": "Question",
+            "name": "A Clínica atende só crianças autistas?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Não. Atendemos crianças típicas e atípicas, com ou sem laudo, sempre que a família sente que precisa de apoio: birra frequente, atraso de fala, dificuldade na escola, entre outros motivos." }
+          },
+          {
+            "@type": "Question",
+            "name": "Preciso ter laudo para ser atendido?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Não é obrigatório. A avaliação inicial e o acolhimento servem justamente para entender o caso, com ou sem laudo prévio." }
+          },
+          {
+            "@type": "Question",
+            "name": "A Clínica atende convênio?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Vamos atender os convênios IASEP e PROASA assim que abrirmos, além do atendimento particular. Os detalhes de cada convênio são confirmados na abertura." }
+          },
+          {
+            "@type": "Question",
+            "name": "A partir de que idade a Clínica atende?",
+            "acceptedAnswer": { "@type": "Answer", "text": "O acompanhamento é voltado para crianças; a idade exata de cada caso é conversada na avaliação inicial, de acordo com o serviço." }
+          },
+          {
+            "@type": "Question",
+            "name": "A avaliação é um diagnóstico?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Não. A avaliação inicial e o acompanhamento são um apoio educativo e terapêutico. Eles não substituem, quando necessário, uma avaliação médica ou neuropsicológica formal." }
+          }
+        ]
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Início", "item": "https://institutofacaamigos.com.br/" },
+          { "@type": "ListItem", "position": 2, "name": "Clínica", "item": "https://institutofacaamigos.com.br/clinica" }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <a class="skip" href="#conteudo">Pular para o conteúdo</a>
+
+  <nav class="navbar" aria-label="Principal">
+    <div class="wrap">
+      <a class="logo" href="/" aria-label="FaçaAmigos Clínica — página inicial"><img class="simbolo" src="/img/logo-simbolo.png" width="460" height="416" alt="" loading="eager" decoding="async"><span>Faça<span class="amigos">Amigos</span></span><span class="sub">Clínica</span></a>
+      <div class="nav-units">
+        <a href="https://institutofacaamigos.com.br/playground">Playground</a>
+        <a href="/clinica" aria-current="page">Clínica</a>
+        <a href="/aprender">Para pais</a>
+        <a href="/eventos">Eventos</a>
+      </div>
+      <div class="nav-actions">
+        <a href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Quero%20entrar%20na%20lista%20de%20espera%20da%20Cl%C3%ADnica%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental%20(vim%20pelo%20site)." target="_blank" rel="noopener" class="btn-wa btn-buy sm" data-cta="nav_whatsapp">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>
+          WhatsApp</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="conteudo">
+    <!-- HERO -->
+    <header class="bg-petrol hero">
+      <span class="circ" style="width:280px;height:280px;right:-140px;top:-100px;background:var(--teal);opacity:.22"></span>
+      <span class="circ" style="width:140px;height:140px;left:-70px;bottom:-40px;background:var(--yellow);opacity:.2"></span>
+      <div class="wrap">
+        <span class="eyebrow">Centro de Terapia Comportamental · Em breve · IASEP &amp; PROASA</span>
+        <h1>Se você sente que algo está diferente, aqui você vai ser <span class="hl">ouvida</span>.</h1>
+        <p class="sub">Equipe multidisciplinar, terapia comportamental e um plano que cabe na rotina da sua família, conduzido por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727), em Umarizal, Belém.</p>
+        <div class="seal">
+          <span>👩‍⚕️ Psicóloga infantil · CRP 10/4727</span>
+          <span>🤝 Equipe multidisciplinar</span>
+          <span>📍 Umarizal, Belém/PA</span>
+        </div>
+        <div class="cta-row">
+          <div class="actions">
+            <a class="btn-buy" href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Quero%20entrar%20na%20lista%20de%20espera%20da%20Cl%C3%ADnica%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental%20(vim%20pelo%20site)." target="_blank" rel="noopener" data-cta="hero_lista">Entrar na lista de espera no WhatsApp</a>
+            <a data-fa-link="clinica_hero" class="btn-ghost" href="/teste">Fazer o mapeamento grátis (5 min)</a>
+          </div>
+          <span class="cta-note">Sem custo para entrar na lista · Você recebe o aviso em primeira mão</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- EMPATIA -->
+    <section class="bg-white" aria-labelledby="empatia-h">
+      <div class="wrap wrap-narrow center">
+        <span class="eyebrow">Para quem chega com dúvida</span>
+        <h2 class="title" id="empatia-h">Ninguém deveria passar por isso sem ser ouvida.</h2>
+        <p class="lead">Você percebe que algo está diferente e ninguém explica direito. As respostas vêm picadas, um profissional de cada vez, e nenhuma conversa com a outra. No meio disso, você ainda segura a casa, o trabalho e a própria cabeça.</p>
+        <p class="lead" style="margin-top:14px">Aqui, a primeira conversa não é um encaixe de agenda: é a hora de você ser ouvida. Sem rótulo e sem pressa. A gente entende a rotina da sua família, não só um sintoma, e monta com você um caminho possível.</p>
+      </div>
+    </section>
+
+    <!-- COMO VAI FUNCIONAR O 1º CONTATO -->
+    <section aria-labelledby="como-h">
+      <div class="wrap center">
+        <span class="eyebrow">Baixo atrito, sem prazo</span>
+        <h2 class="title" id="como-h">Como vai funcionar o primeiro contato</h2>
+        <p class="lead">Sem formulário longo, sem espera confusa. Três passos, no seu tempo.</p>
+      </div>
+      <div class="wrap">
+        <div class="steps">
+          <div class="step">
+            <div class="ib">1</div>
+            <p class="n">Passo 1</p>
+            <h3>Você chama no WhatsApp</h3>
+            <p>Conta em poucas palavras o que está acontecendo. Sem burocracia, sem formulário.</p>
+          </div>
+          <div class="step">
+            <div class="ib">2</div>
+            <p class="n">Passo 2</p>
+            <h3>Conversa de acolhimento, sem rótulo</h3>
+            <p>Você é ouvida antes de qualquer coisa. A gente entende a rotina da sua família, não só um sintoma.</p>
+          </div>
+          <div class="step">
+            <div class="ib">3</div>
+            <p class="n">Passo 3</p>
+            <h3>Um plano que cabe na sua rotina</h3>
+            <p>Sem prazo fechado, sem promessa de resultado. Um caminho possível, ajustado com você.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVIÇOS -->
+    <section class="bg-white" aria-labelledby="servicos-h">
+      <div class="wrap center">
+        <span class="eyebrow">O que a Clínica oferece</span>
+        <h2 class="title" id="servicos-h">Serviços</h2>
+        <p class="lead">Uma equipe, um plano só. Veja o que cada especialidade cuida — os termos técnicos estão explicados no <a href="/glossario">glossário</a>.</p>
+      </div>
+      <div class="wrap">
+        <div class="services">
+          <div class="svc" id="avaliacao">
+            <div class="ib">🌱</div>
+            <h3>Avaliação inicial e acolhimento</h3>
+            <dl>
+              <div><dt>Pra quem é</dt><dd>Toda família que quer entender melhor o que está acontecendo, com ou sem laudo.</dd></div>
+              <div><dt>O que acontece</dt><dd>Uma conversa e observação, sem pressa, para enxergar a rotina completa da criança.</dd></div>
+              <div><dt>O que muda pra você</dt><dd>Você sai com um primeiro plano, não com uma lista de exames.</dd></div>
+            </dl>
+          </div>
+          <div class="svc" id="psicologia">
+            <div class="ib">🧠</div>
+            <h3>Psicologia e terapia comportamental</h3>
+            <dl>
+              <div><dt>Pra quem é</dt><dd>Crianças com birras frequentes, dificuldade de comunicação ou comportamentos que preocupam a família.</dd></div>
+              <div><dt>O que acontece</dt><dd>Sessões que ensinam novas habilidades com repetição afetuosa, apoiadas em <a href="/glossario#aba">Análise do Comportamento</a>.</dd></div>
+              <div><dt>O que muda pra você</dt><dd>Menos "apagar incêndio", mais entender o porquê — e o que fazer a respeito.</dd></div>
+            </dl>
+          </div>
+          <div class="svc" id="fonoaudiologia">
+            <div class="ib">🗣️</div>
+            <h3>Fonoaudiologia</h3>
+            <dl>
+              <div><dt>Pra quem é</dt><dd>Crianças com fala atrasada, difícil de entender, ou seletividade alimentar.</dd></div>
+              <div><dt>O que acontece</dt><dd>Sessões de estímulo à fala, à linguagem e, quando necessário, à alimentação.</dd></div>
+              <div><dt>O que muda pra você</dt><dd>Mais formas de se entender com o seu filho, no dia a dia.</dd></div>
+            </dl>
+          </div>
+          <div class="svc" id="to">
+            <div class="ib">🤸</div>
+            <h3>Terapia Ocupacional</h3>
+            <dl>
+              <div><dt>Pra quem é</dt><dd>Crianças com dificuldade de coordenação, autonomia nas tarefas do dia, ou hipersensibilidade a som, luz ou toque.</dd></div>
+              <div><dt>O que acontece</dt><dd>Atividades que trabalham <a href="/glossario#integracao-sensorial">integração sensorial</a> e autonomia, do jeito de cada criança.</dd></div>
+              <div><dt>O que muda pra você</dt><dd>Tarefas do dia a dia (vestir, comer, escovar os dentes) ficam menos batalha.</dd></div>
+            </dl>
+          </div>
+          <div class="svc" id="psicopedagogia">
+            <div class="ib">📘</div>
+            <h3>Psicopedagogia</h3>
+            <dl>
+              <div><dt>Pra quem é</dt><dd>Crianças com dificuldade de aprendizagem: leitura, escrita ou matemática.</dd></div>
+              <div><dt>O que acontece</dt><dd>Estratégias criadas para o jeito de aprender do seu filho, não o contrário.</dd></div>
+              <div><dt>O que muda pra você</dt><dd>Menos "ele não presta atenção", mais um caminho que funciona pra ele.</dd></div>
+            </dl>
+          </div>
+          <div class="svc" id="neuro">
+            <div class="ib">🔍</div>
+            <h3>Avaliação neuropsicológica</h3>
+            <dl>
+              <div><dt>Pra quem é</dt><dd>Famílias com dúvidas sobre memória, atenção, foco ou desenvolvimento cognitivo.</dd></div>
+              <div><dt>O que acontece</dt><dd>Testes que mapeiam essas funções e orientam escola e terapia.</dd></div>
+              <div><dt>O que muda pra você</dt><dd>Um retrato mais completo, para decisões com mais clareza.</dd></div>
+            </dl>
+          </div>
+          <div class="svc" id="orientacao">
+            <div class="ib">👨‍👩‍👧</div>
+            <h3>Orientação a pais e escola</h3>
+            <dl>
+              <div><dt>Pra quem é</dt><dd>Toda família em acompanhamento, e também a escola do seu filho, quando fizer sentido.</dd></div>
+              <div><dt>O que acontece</dt><dd>Sessões só com você para ajustar a rotina em casa, e apoio na conversa com a coordenação pedagógica.</dd></div>
+              <div><dt>O que muda pra você</dt><dd>Você não sai sozinha da reunião com a escola, nem sozinha em casa.</dd></div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARA QUEM É -->
+    <section aria-labelledby="paraquem-h">
+      <div class="wrap center">
+        <span class="eyebrow">Sinais que valem uma conversa</span>
+        <h2 class="title" id="paraquem-h">Para quem é</h2>
+      </div>
+      <div class="wrap">
+        <div class="signs">
+          <div class="sign"><span class="ck">✓</span> Birras que não passam, ou que pioram com o tempo.</div>
+          <div class="sign"><span class="ck">✓</span> Seu filho não olha nos olhos ou não responde quando é chamado.</div>
+          <div class="sign"><span class="ck">✓</span> A escola já te chamou mais de uma vez pela mesma queixa.</div>
+          <div class="sign"><span class="ck">✓</span> A fala demora a aparecer, ou é difícil de entender.</div>
+          <div class="sign"><span class="ck">✓</span> Sons, luzes ou texturas comuns incomodam demais o seu filho.</div>
+        </div>
+        <p class="reassure">Nenhum desses é um rótulo. É um motivo pra conversar.</p>
+        <p class="reassure-sub">Cada mês sem uma estratégia é um mês de casa e escola sem um plano em comum, e isso pesa no tempo e no cansaço de quem cuida. Uma conversa de acolhimento já ajuda a organizar por onde começar.</p>
+      </div>
+    </section>
+
+    <!-- AMBIENTE & RECURSOS TERAPÊUTICOS -->
+    <section class="bg-white" aria-labelledby="recursos-h">
+      <div class="wrap center">
+        <span class="eyebrow">Estrutura & Metodologia</span>
+        <h2 class="title" id="recursos-h">Ambiente estruturado para o desenvolvimento real</h2>
+        <p class="lead">Recursos sensoriais e materiais pedagógicos pensados para intervenções que engajam a criança de forma lúdica e afetiva.</p>
+      </div>
+      <div class="wrap">
+        <div class="tiles photos">
+          <div class="tile photo">
+            <picture><source srcset="img/clinica-painel-sensorial.webp" type="image/webp"><img src="img/clinica-painel-sensorial.jpg" width="1440" height="1920" alt="Painel sensorial de parede para integração sensorial" loading="lazy" decoding="async"></picture>
+            <div class="tx">
+              <h3>Integração Sensorial</h3>
+              <p>Painéis táteis e quebra-cabeças em madeira que auxiliam na regulação sensorial e foco.</p>
+            </div>
+          </div>
+          <div class="tile photo">
+            <picture><source srcset="img/clinica-atividade-pedagogica.webp" type="image/webp"><img src="img/clinica-atividade-pedagogica.jpg" width="1440" height="1920" alt="Atividade pedagógica e motricidade no chão com profissional" loading="lazy" decoding="async"></picture>
+            <div class="tx">
+              <h3>Intervenção Lúdica</h3>
+              <p>Brinquedos de encaixe e pareamento que desenvolvem motricidade fina e raciocínio lógico no chão.</p>
+            </div>
+          </div>
+          <div class="tile photo">
+            <picture><source srcset="img/clinica-recursos-terapeuticos.webp" type="image/webp"><img src="img/clinica-recursos-terapeuticos.jpg" width="1440" height="1920" alt="Recursos terapêuticos e jogos estruturados" loading="lazy" decoding="async"></picture>
+            <div class="tx">
+              <h3>Jogos Estruturados</h3>
+              <p>Materiais adaptados e jogos de regulação para cada fase do desenvolvimento infantil.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- QUEM CUIDA -->
+    <section class="bg-teal10" aria-labelledby="quemcuida-h">
+      <div class="wrap about">
+        <div class="ph"><picture><source srcset="img/isabella-3.webp" type="image/webp"><img src="img/isabella-3.jpg" alt="Isabella Gonçalves Freitas, idealizadora do FaçaAmigos" width="800" height="1067" loading="lazy" decoding="async"></picture></div>
+        <div>
+          <span class="eyebrow">Quem cuida</span>
+          <h2 id="quemcuida-h">Isabella Gonçalves Freitas</h2>
+          <p class="role">Psicóloga infantil · CRP 10/4727</p>
+          <p>Idealizadora do FaçaAmigos e autora dos e-books <a data-fa-link="clinica_autora" href="/guia">O Brincar com Propósito</a> e <a data-fa-link="clinica_autora" href="/codigo">O Código do Desenvolvimento Infantil</a>. Acredita que entender o comportamento de uma criança é sempre o primeiro passo para acolhê-la.</p>
+          <div class="tags">
+            <span>Desenvolvimento infantil</span>
+            <span>Terapia comportamental</span>
+            <span>Inclusão</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONVÊNIOS: lista editada à mão conforme a clínica for credenciando (também no FAQ e no JSON-LD acima, e em assets/fa-footer.js) -->
+    <section class="center" aria-labelledby="convenios-h">
+      <div class="wrap wrap-narrow">
+        <span class="eyebrow">Como pagar</span>
+        <h2 class="title" id="convenios-h">Convênios e atendimento particular</h2>
+        <p class="lead">Vamos atender os convênios abaixo assim que a Clínica abrir, além do atendimento particular. Os detalhes de cada convênio são confirmados na abertura.</p>
+        <div class="plans">
+          <span>Convênio IASEP</span>
+          <span>Convênio PROASA</span>
+          <span>Atendimento particular</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ENQUANTO A CLÍNICA NÃO ABRE -->
+    <section class="bg-white" aria-labelledby="enquanto-h">
+      <div class="wrap center">
+        <span class="eyebrow">Enquanto isso</span>
+        <h2 class="title" id="enquanto-h">O que você pode fazer agora</h2>
+      </div>
+      <div class="wrap">
+        <div class="tiles three">
+          <div class="tile">
+            <div class="ib">🔎</div>
+            <h3>Mapeamento grátis</h3>
+            <p>Um primeiro retrato do dia a dia do seu filho, em 5 minutos, sem custo.</p>
+            <a data-fa-link="clinica_enquanto" class="btn-ghost sm" href="/teste">Fazer o mapeamento</a>
+          </div>
+          <div class="tile">
+            <div class="ib">🎡</div>
+            <h3>Playground inclusivo</h3>
+            <p>Horário Inclusivo das 10h às 16h, com menos gente e equipe reforçada.</p>
+            <a class="btn-ghost sm" href="https://institutofacaamigos.com.br/playground">Conhecer o Playground</a>
+          </div>
+          <div class="tile">
+            <div class="ib">📚</div>
+            <h3>Guias em Aprender</h3>
+            <p>Textos curtos sobre birra, rotina, laudo e mais, escritos por Isabella.</p>
+            <a class="btn-ghost sm" href="/aprender">Ver os guias</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-h">
+      <div class="wrap center">
+        <span class="eyebrow">Perguntas frequentes</span>
+        <h2 class="title" id="faq-h">Dúvidas sobre a Clínica</h2>
+      </div>
+      <div class="wrap">
+        <div class="geo-faq-list">
+          <details class="geo-faq-item">
+            <summary>Já dá para agendar uma consulta na Clínica?</summary>
+            <div class="geo-faq-ans"><div>Ainda não. A Clínica FaçaAmigos está em fase final de preparação. Você pode entrar na lista de espera pelo WhatsApp e é a primeira pessoa avisada assim que abrirmos.</div></div>
+          </details>
+          <details class="geo-faq-item">
+            <summary>A Clínica atende só crianças autistas?</summary>
+            <div class="geo-faq-ans"><div>Não. Atendemos crianças típicas e atípicas, com ou sem laudo, sempre que a família sente que precisa de apoio: birra frequente, atraso de fala, dificuldade na escola, entre outros motivos.</div></div>
+          </details>
+          <details class="geo-faq-item">
+            <summary>Preciso ter laudo para ser atendido?</summary>
+            <div class="geo-faq-ans"><div>Não é obrigatório. A avaliação inicial e o acolhimento servem justamente para entender o caso, com ou sem laudo prévio.</div></div>
+          </details>
+          <details class="geo-faq-item">
+            <summary>A Clínica atende convênio?</summary>
+            <div class="geo-faq-ans"><div>Vamos atender os convênios IASEP e PROASA assim que abrirmos, além do atendimento particular. Os detalhes de cada convênio são confirmados na abertura.</div></div>
+          </details>
+          <details class="geo-faq-item">
+            <summary>A partir de que idade a Clínica atende?</summary>
+            <div class="geo-faq-ans"><div>O acompanhamento é voltado para crianças; a idade exata de cada caso é conversada na avaliação inicial, de acordo com o serviço.</div></div>
+          </details>
+          <details class="geo-faq-item">
+            <summary>A avaliação é um diagnóstico?</summary>
+            <div class="geo-faq-ans"><div>Não. A avaliação inicial e o acompanhamento são um apoio educativo e terapêutico. Eles não substituem, quando necessário, uma avaliação médica ou neuropsicológica formal.</div></div>
+          </details>
+        </div>
+        <div class="cta-row">
+          <div class="actions">
+            <a class="btn-buy" href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Quero%20entrar%20na%20lista%20de%20espera%20da%20Cl%C3%ADnica%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental%20(vim%20pelo%20site)." target="_blank" rel="noopener" data-cta="faq_lista">Entrar na lista de espera no WhatsApp</a>
+            <a class="btn-ghost" href="/teste" data-cta="faq_mapeamento">Fazer o mapeamento grátis</a>
+          </div>
+          <span class="cta-note">Quem entra agora recebe o aviso em primeira mão, tem uma conversa de acolhimento sem rótulo e já pode fazer o Mapeamento grátis enquanto espera.</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer data-fa-footer="clinica">
+    <img src="/img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
+    <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · Todos os dias, 10h às 22h · <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">WhatsApp: (91) 99234-7673</a></p>
+    <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner (Playground · Aberto) · Seg. a sáb., 10h às 22h · dom., 10h às 21h · <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">WhatsApp: (91) 99110-1215</a></p>
+    <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA) · <a href="https://wa.me/5591991782027" target="_blank" rel="noopener">WhatsApp: (91) 99178-2027</a> · <a href="https://clinica.institutofacaamigos.com.br/" target="_blank" rel="noopener">Site da Clínica</a></p>
+    <p><a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a> · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a> · <a href="/politica-privacidade">Política de Privacidade</a> · <a href="/termos">Termos de Uso e de Compra</a></p>
+    <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>
+  </footer>
+
+  <a class="wa-float sr-only" href="https://wa.me/5591991782027?text=Ol%C3%A1!%20Quero%20entrar%20na%20lista%20de%20espera%20da%20Cl%C3%ADnica%20Fa%C3%A7aAmigos%20-%20Centro%20de%20Terapia%20Comportamental%20(vim%20pelo%20site)." target="_blank" rel="noopener" aria-label="Fale conosco no WhatsApp"></a>
+  <script src="/assets/fa-cta.js" defer data-label="Entrar na lista de espera" data-href="whatsapp" data-event="whatsapp"></script>
+  <script src="/assets/fa-footer.js?v=20261020" defer></script>
+  <script>
+    (function () {
+      function push(o) { try { (window.dataLayer = window.dataLayer || []).push(o); } catch (e) { } }
+      document.querySelectorAll('[data-cta]').forEach(function (a) {
+        var where = a.getAttribute('data-cta');
+        a.addEventListener('click', function () { push({ event: 'clinica_cta_click', cta_location: where }); });
+      });
+    })();
+  </script>
+</body>
+
+</html>

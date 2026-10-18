@@ -49,9 +49,6 @@ for (const nome of SITEMAPS) {
   const xml = antes.replace(/<url>[\s\S]*?<\/url>/g, (bloco) => {
     const loc = /<loc>([^<]+)<\/loc>/.exec(bloco)?.[1]?.trim();
     if (!loc) return bloco;
-    // /clinica é servida pelo projeto da clínica (rewrite em vercel.json): sem arquivo aqui, o lastmod
-    // dela é mantido à mão no sitemap.xml quando a landing mudar de forma relevante.
-    if (new URL(loc).pathname === '/clinica') return bloco;
     const arq = arquivoDaUrl(loc);
     if (!existsSync(join(root, arq))) {
       console.warn(`AVISO: ${loc} aponta para ${arq}, que não existe.`);
