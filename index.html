@@ -984,10 +984,10 @@
         var h = t.getUTCHours() + t.getUTCMinutes() / 60;
         var ABRE = 10, FECHA_PARQUE = 22, FECHA_GRAO = dia === 0 ? 21 : 22;
         var msg, longo = ' · Parque Shopping e Grão-Pará', curto = ' · Parque e Grão-Pará', aberto = false;
-        if (h < ABRE) msg = 'Playground abre hoje às 10h';
+        if (h < ABRE) msg = 'Playground fechado agora';
         else if (h < FECHA_GRAO) { aberto = true; msg = 'Playground aberto|agora|até 22h'; if (dia === 0) longo = ' · Parque Shopping (no Grão-Pará, até 21h)'; }
         else if (h < FECHA_PARQUE) { aberto = true; msg = 'Playground aberto|agora|até 22h'; longo = ' · só no Parque Shopping'; curto = ' · no Parque Shopping'; }
-        else msg = 'Playground abre amanhã às 10h';
+        else msg = 'Playground fechado agora';
         // "agora" só aparece em telas largas (no celular a linha precisa caber em 360px)
         var partes = msg.split('|'), el = document.getElementById('tb-msg');
         el.textContent = partes[0];
