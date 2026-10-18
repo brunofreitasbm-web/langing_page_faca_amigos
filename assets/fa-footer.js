@@ -32,7 +32,6 @@
     graopara: {
       nome: 'Shopping Bosque Grão-Pará',
       papel: 'Playground',
-      status: 'Aberto',
       endereco: 'Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner',
       horario: '',
       waRotulo: 'Grão-Pará',
