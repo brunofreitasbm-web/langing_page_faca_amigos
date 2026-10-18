@@ -643,29 +643,10 @@
       gap: 10px;
     }
 
-    .logo .simbolo {
-      height: 40px;
+    .logo-img {
+      height: 44px;
       width: auto;
-      flex-shrink: 0;
-    }
-
-    .logo .txt {
-      display: inline-block;
-    }
-
-    .logo .amigos {
-      color: var(--pink);
-    }
-
-    .logo .sub {
       display: block;
-      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
-      font-size: 0.58rem;
-      font-weight: 800;
-      letter-spacing: 0.32em;
-      color: var(--teal-dark);
-      text-transform: uppercase;
-      margin-top: -4px;
     }
 
     .nav-actions {
@@ -1989,9 +1970,7 @@
 
   <nav class="navbar">
     <div class="wrap">
-      <a class="logo" href="/" aria-label="FaçaAmigos — página inicial"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
-          alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span class="txt">Faça<span
-            class="amigos">Amigos</span><span class="sub">Playground Inclusivo</span></span></a>
+      <a class="logo" href="/" aria-label="FaçaAmigos Playground Inclusivo — página inicial"><img class="logo-img" src="img/logo-playground.png" width="1040" height="179" alt="FaçaAmigos Playground Inclusivo" loading="eager" decoding="async"></a>
       <div class="nav-actions">
         <a href="https://institutofacaamigos.com.br/" class="btn btn-ghost btn-sm">Instituto FaçaAmigos</a>
         <a href="https://institutofacaamigos.com.br/trabalhe-conosco" class="btn btn-ghost btn-sm">Venha fazer parte do nosso
@@ -2474,9 +2453,8 @@
     /* Celular estreito: logo menor e botão WhatsApp compacto, sem um cobrir o outro */
     @media (max-width: 480px) {
       .navbar .wrap { gap: 8px; }
-      .logo { font-size: 1.3rem; gap: 7px; min-width: 0; }
-      .logo .simbolo { height: 32px; }
-      .logo .sub { font-size: 0.5rem; letter-spacing: 0.2em; white-space: nowrap; }
+      .logo { min-width: 0; }
+      .logo-img { height: 34px; }
       .nav-actions { flex-shrink: 0; }
       .nav-actions .btn-wa { padding: 9px 14px; font-size: 0.85rem; gap: 6px; }
     }
