@@ -102,9 +102,7 @@
     .navbar { position: sticky; top: 0; z-index: 90; background: rgba(255, 249, 241, .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid rgba(26, 63, 53, .07); padding: 12px 0; }
     .navbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
     .logo { font-family: var(--font-display); font-size: 1.65rem; color: var(--dark); display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
-    .logo .simbolo { height: 40px; width: auto; flex-shrink: 0; }
-    .logo .amigos { color: var(--pink); }
-    .logo .sub { font-family: var(--font-body); font-size: .72rem; font-weight: 900; letter-spacing: .14em; text-transform: uppercase; background: var(--petrol); color: #fff; padding: 5px 11px; border-radius: 9999px; line-height: 1; }
+    .logo-img { height: 44px; width: auto; display: block; }
     .nav-units { display: flex; gap: 6px; align-items: center; }
     .nav-units a { font-weight: 800; font-size: .95rem; padding: 9px 16px; border-radius: 9999px; min-height: 44px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: background var(--t-fast); }
     .nav-units a:hover { background: var(--white); box-shadow: var(--shadow-sm); }
@@ -117,9 +115,7 @@
       .navbar .wrap { padding: 0 10px; row-gap: 0; }
       .nav-units { order: 3; flex: 1 0 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
       .nav-units a { white-space: nowrap; font-size: .84rem; padding: 0 2px; }
-      .logo { font-size: 1.35rem; }
-      .logo .simbolo { height: 32px; }
-      .logo .sub { font-size: .66rem; padding: 4px 9px; }
+      .logo-img { height: 34px; }
       .nav-actions .btn-wa { padding: 0; width: 44px; font-size: 0; gap: 0; }
       .navbar .wrap { flex-wrap: wrap; }
       .eyebrow { font-size: .72rem; letter-spacing: .06em; padding: 7px 14px; text-align: left; }
@@ -320,7 +316,7 @@
 
   <nav class="navbar" aria-label="Principal">
     <div class="wrap">
-      <a class="logo" href="/" aria-label="FaçaAmigos Clínica — página inicial"><img class="simbolo" src="/img/logo-simbolo.png" width="460" height="416" alt="" loading="eager" decoding="async"><span>Faça<span class="amigos">Amigos</span></span><span class="sub">Clínica</span></a>
+      <a class="logo" href="/" aria-label="FaçaAmigos Centro de Terapia Comportamental — página inicial"><img class="logo-img" src="/img/logo-clinica.png" width="520" height="89" alt="FaçaAmigos Centro de Terapia Comportamental" loading="eager" decoding="async"></a>
       <div class="nav-units">
         <a href="https://institutofacaamigos.com.br/playground">Playground</a>
         <a href="/clinica" aria-current="page">Clínica</a>
