@@ -9,8 +9,9 @@ Atualizado em 30/09/2026, a partir do código do repositório (não foi conferid
 | `institutofacaamigos.com.br` | Hub: institucional, conteúdo, funil de e-books, eventos, Wi-Fi | este repositório (Vercel) | sim |
 | `playground.institutofacaamigos.com.br` | Host antigo: só redireciona (308) para `/playground` e `/circuito` do hub. Nunca remover o domínio | este repositório (mesmo deploy) | não (redireciona) |
 | `gestao.institutofacaamigos.com.br` | Hub de Gestão (login único, só Bruno e Isabella) | este repositório (mesmo deploy) | não (noindex + robots Disallow) |
-| `clinica.institutofacaamigos.com.br` | Site e sistema da Clínica | projeto "Clinica Faça Amigos" (Next.js) | site público sim; áreas logadas não |
-| `sistema.institutofacaamigos.com.br` | Sistema citado no código da Clínica | não verificado aqui | ? |
+| `institutofacaamigos.com.br/clinica` | Landing pública da Clínica (serviços, lista de espera, convênios) | projeto `clinica-facaamigos` (Next.js); o hub faz rewrite de `/clinica` e `/clinica-static/*` (vercel.json) | sim |
+| `clinica.institutofacaamigos.com.br` | Host antigo da landing: só redireciona (301) para `/clinica`; o resto vai (308) para `sistema.` | projeto `clinica-facaamigos` | não (redireciona). Manter o domínio apontado |
+| `sistema.institutofacaamigos.com.br` | Sistema de gestão da Clínica (login, agenda, prontuário, portal da família) | projeto `clinica-facaamigos` | nunca (noindex, robots Disallow, sem link nas páginas públicas) |
 
 Desde 09/10/2026 o Playground e o Circuito moram no hub (`/playground` e `/circuito`). O `middleware.js` faz o host
 `playground.` redirecionar (308) tudo para o hub (`/` vira `/playground`; o resto mantém o caminho e a query).
@@ -23,7 +24,7 @@ Arquivos (`.txt`, `.xml`, `.ico`, `.well-known`) passam em qualquer host; `playg
 flowchart LR
   subgraph HUB["institutofacaamigos.com.br (hub)"]
     H["/ (Hub)"]
-    S["/servicos"]
+    S["/clinica (rewrite)"]
     A["/aprender"]
     AR["9 artigos /aprender/*"]
     G["/glossario"]
@@ -43,7 +44,7 @@ flowchart LR
   subgraph GESTAO["gestao. (privado)"]
     GE["/ (Hub de Gestão)"]
   end
-  CL["clinica. (app da Clínica)"]
+  CL["clinica-facaamigos (Next.js)"]
   WA(("WhatsApp"))
   HM(("Hotmart"))
 
@@ -75,7 +76,7 @@ flowchart LR
 | `/trabalhe-conosco` | trabalhe-conosco.html | Carreiras: áreas, tipos de vaga e formulário de candidatura com currículo em PDF | sim | envia para a função `job-application-webhook` (mesmo endpoint do antigo modal); no `playground.` redireciona (308) para o hub |
 | `/playground` | playground.html | Playground Inclusivo (antes em `playground.`) | sim | canonical no hub |
 | `/circuito` | circuito.html | Circuito de Carrinhos (antes em `playground.`) | sim | canonical no hub |
-| `/servicos` | servicos.html | Serviços da Clínica, FAQ, lista de espera | sim | CTA para o site da Clínica |
+| `/clinica` | (projeto clinica-facaamigos) | Landing da Clínica: serviços detalhados, ambiente, convênios, FAQ, lista de espera | sim | rewrite para o app da Clínica; `/servicos` redireciona (301) para cá |
 | `/aprender` | aprender.html | Índice de artigos | sim | |
 | `/aprender/*` (9) | aprender/*.html | Artigos: birra-ou-crise, sinais-para-observar, primeira-vez-no-playground, rotina-visual-em-casa, como-e-a-terapia-comportamental, laudo-e-ciptea, conversar-com-a-escola, brincar-com-proposito-10-minutos, e-para-todas-as-criancas | sim | cada um leva ao /teste, à Clínica e ao WhatsApp |
 | `/glossario` | glossario.html | Termos explicados | sim | |
@@ -109,7 +110,7 @@ Funções: `behavior-test-webhook`, `behavior-test-admin`, `guia-sequence`, `hot
 
 1. **Pai/mãe que chega pelo Google:** artigo em `/aprender/*` → `/teste` → `/guia` ou `/codigo` (Hotmart) ou WhatsApp.
 2. **Quem está no shopping (Maps/Instagram):** `/playground` → guia/código/teste ou WhatsApp; o botão "Instituto FaçaAmigos" leva ao hub.
-3. **Quem procura terapia:** `/servicos` → lista de espera (WhatsApp) ou site da Clínica.
+3. **Quem procura terapia:** `/clinica` → lista de espera (WhatsApp).
 4. **Quem se inscreve em evento:** hub (seção de eventos) → `/eventos` → `/eventos/:slug` → voucher em `/ingresso`.
 5. **Quem quer trabalhar no FaçaAmigos:** link "Faça parte do nosso time" (rodapé de todas as páginas via `fa-footer.js`, topo do playground) → `/trabalhe-conosco` → candidatura → e-mail com o teste de perfil comportamental.
 6. **Equipe:** `gestao.` → login único → Clínica e demais sistemas via `/sso`.

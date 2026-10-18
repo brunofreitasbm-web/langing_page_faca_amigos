@@ -8,7 +8,7 @@
  *    Grão-Pará, Clínica) com endereço, horário, WhatsApp e site próprios. KIND só alimenta o tracking (utm).
  * 2. O bloco "Contato desta unidade" aparece acima do rodapé nas páginas de uma operação. Escolha por
  *    data-fa-ops (lista separada por vírgula de: parque, graopara, clinica) ou, sem o atributo, pelo KIND:
- *    playground → parque+graopara · circuito → parque · teste/servicos/aprender/glossario/eventos/ebook → clinica.
+ *    playground → parque+graopara · circuito → parque · teste/aprender/glossario/eventos/ebook → clinica.
  *    Use data-fa-ops="" (ou KIND hub/legal) para não mostrar o bloco.
  *
  * Dados de cada operação: só em UNITS (abaixo). Ao editar este arquivo, atualize o ?v= dos <script> nas páginas.
@@ -51,8 +51,7 @@
       wa: '5591991782027',
       waTexto: 'Olá! Gostaria de informações sobre o FaçaAmigos - Centro de Terapia Comportamental.',
       mapa: 'https://maps.google.com/?q=Rua+Boaventura+da+Silva,+1573,+Bel%C3%A9m+PA',
-      site: 'https://clinica.institutofacaamigos.com.br/',
-      paginas: [['Serviços da Clínica', '/servicos']]
+      paginas: [['Página da Clínica', '/clinica']]
     }
   };
   var ORDEM = ['parque', 'graopara', 'clinica'];
@@ -64,7 +63,6 @@
     playground: 'parque,graopara',
     circuito: 'parque',
     teste: 'clinica',
-    servicos: 'clinica',
     aprender: 'clinica',
     glossario: 'clinica',
     eventos: 'clinica',
@@ -156,8 +154,7 @@
     '  <h4 class="fa-footer-title">Navegação</h4>',
     '  <ul class="fa-footer-list">',
     '    <li>' + link(hub('/'), 'Início') + '</li>',
-    '    <li>' + link(hub('/servicos'), 'Serviços da Clínica') + '</li>',
-    '    <li>' + link(siteUrl(UNITS.clinica), 'Site da Clínica', EXT) + '</li>',
+    '    <li>' + link(hub('/clinica'), 'Clínica: serviços e lista de espera') + '</li>',
     '    <li>' + link(hub('/playground'), 'Playground Inclusivo') + '</li>',
     '    <li>' + link(hub('/circuito'), 'Circuito de Carrinhos') + '</li>',
     '    <li>' + link(hub('/teste'), 'Mapeamento Gratuito', ' data-fa-link="rodape_' + kind + '"') + '</li>',
