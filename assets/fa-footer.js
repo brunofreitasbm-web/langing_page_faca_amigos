@@ -46,7 +46,7 @@
       papel: 'Clínica',
       status: 'Em breve · IASEP &amp; PROASA',
       endereco: 'Rua Boaventura da Silva, 1573 · Umarizal',
-      horario: '',
+      horario: 'Seg. a sex., 8h às 18h · sáb., 8h às 11h',
       waRotulo: 'Clínica',
       wa: '5591991782027',
       waTexto: 'Olá! Gostaria de informações sobre o FaçaAmigos - Centro de Terapia Comportamental.',
