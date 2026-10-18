@@ -3,6 +3,8 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "redirects": [
+    { "source": "/servicos", "destination": "/clinica", "permanent": true },
+    { "source": "/servicos.html", "destination": "/clinica", "permanent": true },
     { "source": "/playground/politica-privacidade", "destination": "/politica-privacidade", "permanent": true },
     { "source": "/playground/politica-privacidade.html", "destination": "/politica-privacidade", "permanent": true }
   ],
