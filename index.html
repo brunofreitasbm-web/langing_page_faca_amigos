@@ -512,12 +512,6 @@
       border-bottom: 1px solid rgba(26, 63, 53, 0.07); padding: 12px 0;
     }
     .navbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
-    .logo {
-      font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif; font-size: 1.65rem; color: var(--dark);
-      display: inline-flex; align-items: center; gap: 10px;
-    }
-    .logo .simbolo { height: 40px; width: auto; flex-shrink: 0; }
-    .logo .amigos { color: var(--pink); }
     .nav-units { display: flex; gap: 6px; align-items: center; }
     .nav-units a {
       font-weight: 800; font-size: 0.95rem; padding: 9px 16px; border-radius: 9999px; min-height: 44px;
@@ -533,8 +527,6 @@
       .navbar .wrap { padding: 0 10px; row-gap: 0; }
       .nav-units { order: 3; flex: 1 0 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
       .nav-units a { white-space: nowrap; font-size: 0.84rem; padding: 0 2px; }
-      .navbar .logo { font-size: 1.35rem; }
-      .navbar .logo .simbolo { height: 32px; }
       .nav-actions .btn-wa { padding: 8px 16px; }
       .hl { white-space: normal; } /* o destaque do título passava da tela em 390px */
     }
@@ -965,7 +957,8 @@
     .skip:focus { top: 8px; }
     picture { display: contents; }
   </style>
-  </head>
+  <link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
+</head>
 
 <body>
   <a class="skip" href="#conteudo">Ir para o conteúdo</a>
@@ -1011,8 +1004,7 @@
 
   <nav class="navbar" aria-label="Principal">
     <div class="wrap">
-      <a class="logo" href="/"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
-          alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span>Faça<span class="amigos">Amigos</span></span></a>
+      <a class="logo" href="/"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></a>
       <div class="nav-units">
         <a href="https://institutofacaamigos.com.br/playground">Playground</a>
         <a href="/clinica">Clínica</a>
@@ -1550,7 +1542,7 @@
   </main>
 
   <footer data-fa-footer="hub">
-    <img src="/img/guia/logo-branca.png" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">
+    <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="lazy" decoding="async"></span>
     <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · Todos os dias, 10h às 22h · <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">WhatsApp: (91) 99234-7673</a></p>
     <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner (Playground · Aberto) · Seg. a sáb., 10h às 22h · dom., 10h às 21h · <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">WhatsApp: (91) 99110-1215</a></p>
     <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve · IASEP &amp; PROASA) · <a href="https://wa.me/5591991782027" target="_blank" rel="noopener">WhatsApp: (91) 99178-2027</a> · <a href="https://institutofacaamigos.com.br/clinica" target="_blank" rel="noopener">Site da Clínica</a></p>
@@ -1743,7 +1735,7 @@
       }
     })();
   </script>
-  <script src="/assets/fa-footer.js?v=20261020" defer></script>
+  <script src="/assets/fa-footer.js?v=20261021" defer></script>
   <script src="/assets/fa-cta.js" defer data-label="Fazer o mapeamento grátis" data-href="/teste" data-event="mapeamento"></script>
 </body>
 

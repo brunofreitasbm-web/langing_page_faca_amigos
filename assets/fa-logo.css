@@ -1,0 +1,23 @@
+/* Logos FaçaAmigos: tamanhos únicos para o site todo (design system, sempre colorido).
+   Fundo claro: .fa-logo-img direto. Fundo escuro (topbar/rodapé petróleo): dentro de .fa-logo-card (selo creme). */
+.fa-logo-img { display: block; height: 52px !important; width: auto !important; flex-shrink: 0; }
+.logo:has(> .fa-logo-img) { flex-shrink: 0; }
+a:has(> .fa-logo-card) { flex-shrink: 0; }
+.fa-logo-card { display: inline-flex; align-items: center; background: #FFF9F1; border-radius: 14px; padding: 7px 14px; line-height: 0; max-width: 100%; box-sizing: border-box; text-decoration: none; }
+.fa-logo-card .fa-logo-img { height: 34px !important; }
+.fa-logo-card--footer { display: flex; width: max-content; margin: 0 0 10px; }
+.fa-logo-card--footer .fa-logo-img { height: 40px !important; }
+.fa-logo-card--center { margin-left: auto; margin-right: auto; }
+@media (max-width: 760px) {
+  .fa-logo-img { height: 40px !important; }
+  /* WhatsApp do header vira só o ícone (44px), para o logo inteiro caber ao lado sem achatar */
+  .navbar .nav-actions .btn-wa, .teste-nav .btn-wa.btn-sm { padding: 0 !important; width: 44px; min-height: 44px; font-size: 0 !important; gap: 0 !important; justify-content: center; flex-shrink: 0; }
+  .navbar .nav-actions .btn-wa svg, .teste-nav .btn-wa.btn-sm svg { width: 20px; height: 20px; flex-shrink: 0; }
+  .fa-logo-card .fa-logo-img { height: 28px !important; }
+  .fa-logo-card--footer .fa-logo-img { height: 34px !important; }
+}
+@media (max-width: 359px) {
+  .fa-logo-img { height: 34px !important; }
+  .fa-logo-card .fa-logo-img { height: 24px !important; }
+  .fa-logo-card--footer .fa-logo-img { height: 30px !important; }
+}

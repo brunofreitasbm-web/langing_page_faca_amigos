@@ -98,7 +98,6 @@
     style.textContent = [
       'footer[data-fa-footer] { box-sizing: border-box; display: block; width: 100%; max-width: none; margin: 0; padding: 48px 20px 100px; background: #065264; color: #fff; text-align: left; font-family: inherit; font-size: 1rem; font-weight: 400; line-height: 1.5; border: 0; border-top: 1px solid rgba(255, 255, 255, 0.14); }',
       'footer[data-fa-footer] .fa-footer-wrap { width: 100%; max-width: 1120px; margin: 0 auto; box-sizing: border-box; }',
-      'footer[data-fa-footer] .fa-footer-logo { display: block; width: 190px; max-width: 70%; height: auto; margin: 0 0 8px; }',
       'footer[data-fa-footer] .fa-footer-units { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 20px 0 8px; }',
       'footer[data-fa-footer] .fa-unit { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 14px; padding: 18px 18px 16px; }',
       'footer[data-fa-footer] .fa-unit h4 { margin: 0; font-size: 1.02rem; font-weight: 800; line-height: 1.3; color: #fff; }',
@@ -191,7 +190,7 @@
 
   var htmlGrid = [
     '<div class="fa-footer-wrap">',
-    '  <img class="fa-footer-logo" src="' + hub('/img/guia/logo-branca.png') + '" alt="FaçaAmigos — Centro de Terapia Comportamental" width="190" height="33" loading="lazy">',
+    '  <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="' + hub('/img/logo-facaamigos.png') + '" alt="FaçaAmigos" width="1024" height="147" loading="lazy" decoding="async"></span>',
     '  <div class="fa-footer-units">',
     ORDEM.map(unitCard).join('\n'),
     '  </div>',
