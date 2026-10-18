@@ -104,7 +104,7 @@
     '    <li>' + link(hub('/guia'), 'E-book: O Brincar com Propósito', ' data-fa-link="rodape_' + kind + '"') + '</li>',
     '    <li>' + link(hub('/codigo'), 'E-book: O Código do Desenvolvimento Infantil', ' data-fa-link="rodape_' + kind + '"') + '</li>',
     '    <li>' + link('https://wa.me/' + wa.n + '?text=' + encodeURIComponent(wa.t), 'Fale conosco no WhatsApp', EXT) + '</li>',
-    '    <li>' + link(hub('/trabalhe-conosco'), 'Trabalhe Conosco') + '</li>',
+    '    <li>' + link(hub('/trabalhe-conosco'), 'Faça parte do nosso time') + '</li>',
     '    <li>' + link(hub('/politica-privacidade'), 'Política de Privacidade') + '</li>',
     '    <li>' + link(hub('/termos'), 'Termos de Uso e de Compra') + '</li>',
     '  </ul>',

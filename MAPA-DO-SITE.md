@@ -111,12 +111,12 @@ Funções: `behavior-test-webhook`, `behavior-test-admin`, `guia-sequence`, `hot
 2. **Quem está no shopping (Maps/Instagram):** `/playground` → guia/código/teste ou WhatsApp; o botão "Instituto FaçaAmigos" leva ao hub.
 3. **Quem procura terapia:** `/servicos` → lista de espera (WhatsApp) ou site da Clínica.
 4. **Quem se inscreve em evento:** hub (seção de eventos) → `/eventos` → `/eventos/:slug` → voucher em `/ingresso`.
-5. **Quem quer trabalhar no FaçaAmigos:** link "Trabalhe Conosco" (rodapé de todas as páginas via `fa-footer.js`, topo do playground) → `/trabalhe-conosco` → candidatura → e-mail com o teste de perfil comportamental.
+5. **Quem quer trabalhar no FaçaAmigos:** link "Faça parte do nosso time" (rodapé de todas as páginas via `fa-footer.js`, topo do playground) → `/trabalhe-conosco` → candidatura → e-mail com o teste de perfil comportamental.
 6. **Equipe:** `gestao.` → login único → Clínica e demais sistemas via `/sso`.
 
 ## 7. Pontos de atenção (28/09 a 08/10/2026)
 
-- 08/10/2026: o formulário "Trabalhe Conosco" saiu dos modais (`#jobModalOverlay`) do playground e do circuito e virou a
+- 08/10/2026: o formulário "Faça parte do nosso time" saiu dos modais (`#jobModalOverlay`) do playground e do circuito e virou a
   página `/trabalhe-conosco`. Os links do playground/circuito e do rodapé (`fa-footer.js`) apontam para
   `https://institutofacaamigos.com.br/trabalhe-conosco`. `assets/fa-modal.js` foi removido (nenhuma página tem mais modal).
 
