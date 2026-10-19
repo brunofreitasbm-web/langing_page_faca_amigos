@@ -5,7 +5,7 @@
   <script src="/assets/fa-track.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Playground Inclusivo em Belém | FaçaAmigos no Parque Shopping</title>
+  <title>Playground em Belém | FaçaAmigos no Parque Shopping</title>
   <meta name="description" content="Playground inclusivo no Parque Shopping Belém, para todas as crianças, com ou sem laudo. A partir de R$ 60, sem agendamento, todos os dias das 10h às 22h.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/playground">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
@@ -17,7 +17,7 @@
   <!-- Open Graph / redes sociais (Instagram, WhatsApp, Facebook) -->
   <meta property="og:type" content="business.business">
   <meta property="og:site_name" content="FaçaAmigos">
-  <meta property="og:title" content="Playground Inclusivo em Belém | FaçaAmigos no Parque Shopping">
+  <meta property="og:title" content="Playground em Belém | FaçaAmigos no Parque Shopping">
   <meta property="og:description" content="Playground inclusivo no Parque Shopping Belém, para todas as crianças, com ou sem laudo. A partir de R$ 60, sem agendamento, todos os dias das 10h às 22h.">
   <meta property="og:url" content="https://institutofacaamigos.com.br/playground">
   <meta property="og:image" content="https://institutofacaamigos.com.br/img/og/og-playground.jpg">
@@ -29,7 +29,7 @@
 
   <!-- Twitter/X Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Playground Inclusivo em Belém | FaçaAmigos no Parque Shopping">
+  <meta name="twitter:title" content="Playground em Belém | FaçaAmigos no Parque Shopping">
   <meta name="twitter:description" content="Playground inclusivo no Parque Shopping Belém, para todas as crianças, com ou sem laudo. A partir de R$ 60, sem agendamento, todos os dias das 10h às 22h.">
   <meta name="twitter:image" content="https://institutofacaamigos.com.br/img/og/og-playground.jpg">
   <meta name="twitter:image:alt" content="Playground inclusivo FaçaAmigos em Belém: piscina de bolinhas e casa na árvore">
@@ -61,7 +61,7 @@
       "@type": "WebPage",
       "@id": "https://institutofacaamigos.com.br/playground#webpage",
       "url": "https://institutofacaamigos.com.br/playground",
-      "name": "Playground Inclusivo em Belém | FaçaAmigos no Parque Shopping",
+      "name": "Playground em Belém | FaçaAmigos no Parque Shopping",
       "description": "Playground inclusivo no Parque Shopping Belém, para todas as crianças, com ou sem laudo. A partir de R$ 60, sem agendamento, todos os dias das 10h às 22h.",
       "inLanguage": "pt-BR",
       "isPartOf": {
@@ -83,7 +83,7 @@
         "EntertainmentBusiness"
       ],
       "@id": "https://institutofacaamigos.com.br/playground#bosquegraopara",
-      "name": "FaçaAmigos — Playground Inclusivo (Shopping Bosque Grão-Pará)",
+      "name": "FaçaAmigos — Playground (Shopping Bosque Grão-Pará)",
       "parentOrganization": {
         "@id": "https://institutofacaamigos.com.br/#organization"
       },
@@ -130,7 +130,7 @@
         "EntertainmentBusiness"
       ],
       "@id": "https://institutofacaamigos.com.br/playground#parqueshopping",
-      "name": "FaçaAmigos — Playground Inclusivo (Parque Shopping Belém)",
+      "name": "FaçaAmigos — Playground (Parque Shopping Belém)",
       "parentOrganization": {
         "@id": "https://institutofacaamigos.com.br/#organization"
       },
@@ -643,30 +643,6 @@
       gap: 10px;
     }
 
-    .logo .simbolo {
-      height: 40px;
-      width: auto;
-      flex-shrink: 0;
-    }
-
-    .logo .txt {
-      display: inline-block;
-    }
-
-    .logo .amigos {
-      color: var(--pink);
-    }
-
-    .logo .sub {
-      display: block;
-      font-family: 'Nunito', 'Nunito Fallback', sans-serif;
-      font-size: 0.58rem;
-      font-weight: 800;
-      letter-spacing: 0.32em;
-      color: var(--teal-dark);
-      text-transform: uppercase;
-      margin-top: -4px;
-    }
 
     .nav-actions {
       display: flex;
@@ -1976,6 +1952,7 @@
     .rel-legal { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
     @media (max-width: 760px) { .rel-grid { grid-template-columns: 1fr; } }
   </style>
+<link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
 </head>
 
 <body>
@@ -1985,13 +1962,11 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <div class="topbar">📍 Parque Shopping Belém · 10h às 22h · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h) · <b>Já aberto!</b></div>
+  <div class="topbar">📍 Parque Shopping Belém · 10h às 22h · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h) · <b id="topbar-status">Abre todos os dias às 10h</b></div>
 
   <nav class="navbar">
     <div class="wrap">
-      <a class="logo" href="/" aria-label="FaçaAmigos — página inicial"><img class="simbolo" src="img/logo-simbolo.png" width="460" height="416"
-          alt="Símbolo FaçaAmigos" loading="eager" decoding="async"><span class="txt">Faça<span
-            class="amigos">Amigos</span><span class="sub">Playground Inclusivo</span></span></a>
+      <a class="logo" href="/" aria-label="FaçaAmigos Playground — página inicial"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></a>
       <div class="nav-actions">
         <a href="https://institutofacaamigos.com.br/" class="btn btn-ghost btn-sm">Instituto FaçaAmigos</a>
         <a href="https://institutofacaamigos.com.br/trabalhe-conosco" class="btn btn-ghost btn-sm">Venha fazer parte do nosso
@@ -2019,9 +1994,9 @@
           as que brincam soltas e as que precisam de um pouco mais de cuidado. Você passeia pelo Parque Shopping
           sabendo exatamente onde e com quem seu filho está.</p>
         <div class="hero-actions">
+          <a data-fa-link="hero_como_chegar" href="#unidades" class="btn btn-pink">Como chegar</a>
           <a href="https://wa.me/5591992347673?text=Oi!%20Quero%20levar%20meu%20filho%20para%20brincar%20no%20Fa%C3%A7aAmigos!"
-            target="_blank" rel="noopener" class="btn btn-pink">Quero levar meu filho</a>
-          <a href="#espaco" class="btn btn-ghost">Conhecer o espaço</a>
+            target="_blank" rel="noopener" class="btn btn-ghost">Tirar dúvida no WhatsApp</a>
           <span class="price-chip"><small>a partir de</small><span>R$ 60</span></span>
         </div>
         <div class="trust">
@@ -2039,7 +2014,8 @@
             </svg> Sem agendamento</span>
         </div>
         <p class="hero-proof">Mais de 1.100 famílias de Belém já confiaram o filho à nossa equipe ·
-          <a href="#avaliacoes">ver o que os pais dizem</a></p>
+          <a href="#avaliacoes">ver o que os pais dizem</a> ·
+          <a href="#espaco">conhecer o espaço</a></p>
       </div>
       <div class="hero-photo fx on">
         <div class="frame"><picture><source srcset="img/playground-piscina-casinha.webp" type="image/webp"><img src="img/playground-piscina-casinha.jpg" width="1440" height="1920"
@@ -2160,7 +2136,7 @@
       </div>
       <div class="gal">
         <figure><picture><source srcset="img/playground-fachada-recepcao.webp" type="image/webp"><img src="img/playground-fachada-recepcao.jpg" width="1920" height="1160"
-            alt="Fachada oficial e recepção do FaçaAmigos Playground Inclusivo no shopping" loading="lazy" decoding="async"></picture>
+            alt="Fachada oficial e recepção do FaçaAmigos Playground no shopping" loading="lazy" decoding="async"></picture>
           <figcaption>Nossa Fachada e Recepção</figcaption>
         </figure>
         <figure><picture><source srcset="img/playground-oficina-camiseta.webp" type="image/webp"><img src="img/playground-oficina-camiseta.jpg" width="1440" height="1920" alt="Criança na oficina de pintura criativa de camiseta do FaçaAmigos"
@@ -2473,9 +2449,7 @@
     /* Celular estreito: logo menor e botão WhatsApp compacto, sem um cobrir o outro */
     @media (max-width: 480px) {
       .navbar .wrap { gap: 8px; }
-      .logo { font-size: 1.3rem; gap: 7px; min-width: 0; }
-      .logo .simbolo { height: 32px; }
-      .logo .sub { font-size: 0.5rem; letter-spacing: 0.2em; white-space: nowrap; }
+      .logo { min-width: 0; }
       .nav-actions { flex-shrink: 0; }
       .nav-actions .btn-wa { padding: 9px 14px; font-size: 0.85rem; gap: 6px; }
     }
@@ -2558,7 +2532,7 @@
     <div class="wrap fx">
       <div class="center">
         <span class="eyebrow" style="background: var(--white, #fff);">Nossas Unidades</span>
-        <h2 class="sec-title">Playground Inclusivo FaçaAmigos em Belém</h2>
+        <h2 class="sec-title">Playground FaçaAmigos em Belém</h2>
         <p class="sec-sub">Estruturas completas pensadas em cada detalhe para acolher todas as famílias com segurança e carinho.</p>
       </div>
       <div class="partner-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 30px;">
@@ -2672,18 +2646,11 @@
   </main>
 
   <footer data-fa-footer="playground">
-    <img src="img/logo-simbolo.png" width="460" height="416" alt="FaçaAmigos"
-      style="height: 52px; width: auto; margin: 0 auto 14px; display: block;" loading="lazy" decoding="async">
-    <span class="logo" style="color: #fff;">Faça<span class="amigos">Amigos</span></span>
-    <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · WhatsApp: <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">(91) 99234-7673</a></p>
-    <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans (Playground · Aberto · 1º piso, em frente à Renner) · WhatsApp: <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">(91) 99110-1215</a></p>
-    <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica - Em Breve)</p>
-    <p>Todos os dias, das 10h às 22h · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank"
-        rel="noopener">@facaamigos.belem</a></p>
-    <p style="margin-top: 18px;"><a
-        href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20gostaria%20de%20tirar%20uma%20d%C3%BAvida."
-        target="_blank" rel="noopener">Fale conosco</a> · <a href="https://institutofacaamigos.com.br/trabalhe-conosco">Venha
-        fazer parte do nosso time</a> · <a href="https://institutofacaamigos.com.br/politica-privacidade">Política de privacidade</a></p>
+    <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="lazy" decoding="async"></span>
+    <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">WhatsApp: (91) 99234-7673</a></p>
+    <p><b>Shopping Bosque Grão-Pará:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner (Playground) · <a href="https://wa.me/5591991101215" target="_blank" rel="noopener">WhatsApp: (91) 99110-1215</a></p>
+    <p><b>Centro de Terapia Comportamental:</b> Rua Boaventura da Silva, 1573 · Umarizal (Clínica · Em breve) · <a href="https://wa.me/5591991782027" target="_blank" rel="noopener">WhatsApp: (91) 99178-2027</a> · <a href="https://institutofacaamigos.com.br/clinica" target="_blank" rel="noopener">Site da Clínica</a></p>
+    <p><a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a> · <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a> · <a href="/politica-privacidade">Política de Privacidade</a> · <a href="/termos">Termos de Uso e de Compra</a></p>
     <p class="legal">FaçaAmigos Playground Inclusivo · CNPJ 66.318.630/0001-17 (Playground e Circuito)<br>Instituto Faça Amigos Ltda · CNPJ 22.161.197/0001-83 (Clínica, Mapeamento Comportamental e e-books) · Belém/PA</p>
   </footer>
 
@@ -2780,8 +2747,23 @@
       }).catch(function () { /* preserva os cards já existentes */ });
     })();
   </script>
-  <script src="/assets/fa-footer.js" defer></script>
+  <script src="/assets/fa-footer.js?v=20261023" defer></script>
   <script src="/assets/fa-cta.js" defer data-label="Ver preços" data-href="#precos" data-event="ver_precos"></script>
+  <script>
+    // Estado de funcionamento pelo horário de Belém (UTC-3, sem horário de verão), referente ao Parque Shopping.
+    // Sem JS, o texto fixo "Abre todos os dias às 10h" continua verdadeiro.
+    (function () {
+      try {
+        var el = document.getElementById('topbar-status');
+        if (!el) return;
+        var now = new Date(Date.now() - 3 * 3600 * 1000);
+        var h = now.getUTCHours() + now.getUTCMinutes() / 60;
+        el.textContent = h < 10 ? 'Fechado agora'
+          : h < 22 ? 'Aberto agora até 22h (Parque Shopping)'
+          : 'Fechado agora';
+      } catch (e) {}
+    })();
+  </script>
 </body>
 
 </html>

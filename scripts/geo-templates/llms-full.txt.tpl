@@ -5,7 +5,7 @@
 - [Início — visão geral do ecossistema](https://institutofacaamigos.com.br/): Playground, Circuito e Clínica, endereços, horários e perguntas frequentes.
 - [Playground Inclusivo](https://institutofacaamigos.com.br/playground): preços, Horário Inclusivo, meia-entrada inclusiva, como funciona e perguntas frequentes.
 - [Circuito de Carrinhos Elétricos](https://institutofacaamigos.com.br/circuito): passeios, preço e perguntas frequentes.
-- [Serviços da Clínica](https://institutofacaamigos.com.br/servicos): avaliação inicial, psicologia e terapia comportamental, fonoaudiologia, terapia ocupacional, psicopedagogia, avaliação neuropsicológica e orientação a pais e escola.
+- [Serviços da Clínica](https://institutofacaamigos.com.br/clinica): avaliação inicial, psicologia e terapia comportamental, fonoaudiologia, terapia ocupacional, psicopedagogia, avaliação neuropsicológica e orientação a pais e escola.
 - [Eventos — palestras, encontros e treinamentos](https://institutofacaamigos.com.br/eventos): agenda do Instituto para famílias e profissionais em Belém, com inscrição gratuita ou paga, vagas limitadas reais e lista de espera.
 - [Aprender — guias educativos](https://institutofacaamigos.com.br/aprender): guias curtos sobre birra e crise, rotina visual, laudo e CIPTEA e mais, escritos pela psicóloga Isabella Gonçalves Freitas.
 - [Glossário](https://institutofacaamigos.com.br/glossario): cerca de 40 termos de desenvolvimento infantil e inclusão (TEA, ABA, CIPTEA, integração sensorial...) explicados em linguagem simples.
@@ -14,7 +14,7 @@
 - [E-book O Código do Desenvolvimento Infantil](https://institutofacaamigos.com.br/codigo): guia curto e acolhedor sobre o comportamento infantil.
 - [Política de Privacidade](https://institutofacaamigos.com.br/politica-privacidade): tratamento de dados pessoais e de crianças, conforme a LGPD.
 - [Termos de Uso e de Compra](https://institutofacaamigos.com.br/termos): entrega, garantia de 7 dias e licença de uso dos e-books.
-- [Trabalhe Conosco](https://institutofacaamigos.com.br/trabalhe-conosco): vagas na Clínica, no Playground e no Circuito (Saúde, Educação e Operação; CLT, PJ e Estágio) e formulário de candidatura com currículo em PDF.
+- [Faça parte do nosso time](https://institutofacaamigos.com.br/trabalhe-conosco): vagas na Clínica, no Playground e no Circuito (Saúde, Educação e Operação; CLT, PJ e Estágio) e formulário de candidatura com currículo em PDF.
 
 ---
 
@@ -24,7 +24,7 @@ O Instituto FaçaAmigos é uma organização sediada em Belém do Pará dedicada
 **Autoria e responsabilidade técnica**: os conteúdos educativos (Mapeamento Comportamental e e-books) foram criados pela psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), idealizadora do FaçaAmigos. São materiais educativos e não substituem avaliação e acompanhamento profissional.
 
 ### Pilares de Atuação
-1. **Saúde & Terapia (Clínica FaçaAmigos)**: intervenção em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia. Lista completa de serviços em [/servicos](https://institutofacaamigos.com.br/servicos).
+1. **Saúde & Terapia (Clínica FaçaAmigos)**: intervenção em Análise do Comportamento Aplicada (ABA), Terapia Ocupacional, Fonoaudiologia e Psicopedagogia. Lista completa de serviços em [/clinica](https://institutofacaamigos.com.br/clinica).
 2. **Brincar Inclusivo (Playground FaçaAmigos)**: ambientes de recreação com acessibilidade, apoio sensorial e equipe treinada para crianças típicas e atípicas.
 3. **Mobilidade & Autonomia (Circuito FaçaAmigos)**: passeios com carrinhos elétricos infantis que trabalham coordenação motora e diversão em família no shopping.
 
@@ -103,6 +103,6 @@ R: Não. O Playground é para todas as crianças de 0 a 12 anos, com ou sem laud
   - Parque Shopping (Playground &amp; Circuito): +55 (91) 99234-7673 (WhatsApp)
   - Shopping Bosque Grão-Pará (Playground): +55 (91) 99110-1215 (WhatsApp)
   - Clínica de Terapia Comportamental: +55 (91) 99178-2027 (WhatsApp)
-- **Outros conteúdos**: `/servicos` (serviços da Clínica), `/eventos` (agenda de palestras e treinamentos), `/aprender` (guias educativos), `/glossario` (glossário de termos), `/teste` (Mapeamento Comportamental gratuito), `/guia` (e-book O Brincar com Propósito), `/codigo` (e-book O Código do Desenvolvimento Infantil)
+- **Outros conteúdos**: `/clinica` (serviços da Clínica), `/eventos` (agenda de palestras e treinamentos), `/aprender` (guias educativos), `/glossario` (glossário de termos), `/teste` (Mapeamento Comportamental gratuito), `/guia` (e-book O Brincar com Propósito), `/codigo` (e-book O Código do Desenvolvimento Infantil)
 - **Resumo curto**: `https://institutofacaamigos.com.br/llms.txt`
 - **Fatos legíveis por máquina**: `https://institutofacaamigos.com.br/geo-facts.json`
