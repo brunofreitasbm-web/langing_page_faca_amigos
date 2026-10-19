@@ -211,6 +211,18 @@ Ordem: (1) migração `20261013120000_gestao_contas_niveis.sql` (aditiva; promov
 
 Teste: entrar como owner e conferir que tudo segue igual; cadastrar uma gerência de teste (Eventos = visualizar, Mapeamento = sem acesso), receber o convite, definir a senha, entrar e confirmar que só aparece Eventos, que o /admin abre direto em Eventos e que fazer check-in dá "sem permissão"; chamar `launch` de outro módulo direto na API e ver 403; desativar a pessoa e ver a sessão cair.
 
+## Lote 11: TV do salão, Hora da Criança (/tv), 19/10/2026 (pendente, feito só no código)
+
+Só o turno das 16h às 22h do `tv.html` mudou (a equipe das 10h às 15h59, o modo noturno e a `/tv2` ficaram como estavam).
+Arquivos novos: `img/amigos/*.webp` (18 poses), `audio/voz/` (vazia até as vozes existirem), `conteudo/tv-salao-roteiro-de-vozes.md`
+(fica fora do ar pelo `.vercelignore`).
+
+1. Gerar as 42 falas no Gemini com o roteiro em `conteudo/tv-salao-roteiro-de-vozes.md` e salvar em `audio/voz/<id>.mp3`.
+   Sem os arquivos a TV funciona, só sem voz.
+2. Subir junto `tv.html`, `img/amigos/`, `audio/voz/` e `contexto.md`. Depois de publicar, abrir `/tv?modo=crianca` na TV e dar
+   1 clique (libera o som e aceita os cookies). No Chrome em modo quiosque, usar `--autoplay-policy=no-user-gesture-required`.
+3. Testar uma cena: `/tv?cena=estatua&dia=5` (cenas: oi, cor, estatua, bicho, resp, pausa).
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.

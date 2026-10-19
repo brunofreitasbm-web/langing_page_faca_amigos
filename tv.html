@@ -5,8 +5,8 @@
   <script src="/assets/fa-track.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FaçaAmigos TV — Vitrine Digital e Cultura</title>
-  <meta name="description" content="Vitrine Digital e Canal Interno das operações FaçaAmigos no Parque Shopping Belém.">
+  <title>FaçaAmigos TV — Salão</title>
+  <meta name="description" content="TV do salão do Playground FaçaAmigos no Parque Shopping Belém: cultura da equipe de dia e brincadeiras para as crianças à tarde e à noite.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/tv">
   <meta name="robots" content="noindex, follow">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
@@ -353,202 +353,238 @@
     }
 
     /* ==========================================================================
-       TURNO 2: CRIANÇAS & VITRINE DIGITAL (16h - 22h)
+       TURNO 2: HORA DA CRIANÇA (16h - 22h)
+       Cenas curtas em blocos de ~10 min, para quem já está no salão: fixar,
+       brincar e acolher. Sem preço, sem clínica, sem rótulos. Só transform e
+       opacity (leve para TV), nenhuma troca mais rápida que meio segundo.
        ========================================================================== */
     #mode-kids {
-      background: radial-gradient(circle at 10% 15%, rgba(255, 226, 52, 0.25) 0%, transparent 40%),
-                  radial-gradient(circle at 90% 20%, rgba(240, 25, 107, 0.2) 0%, transparent 45%),
-                  radial-gradient(circle at 50% 85%, rgba(46, 207, 181, 0.22) 0%, transparent 55%),
-                  #FFFDF7;
+      background: radial-gradient(circle at 12% 18%, rgba(255, 226, 52, 0.20) 0%, transparent 42%),
+                  radial-gradient(circle at 88% 86%, rgba(46, 207, 181, 0.24) 0%, transparent 50%),
+                  #E4F1E8;
     }
 
     .kids-container {
-      width: 100%;
-      height: 100%;
-      padding: 11vh 3vw 3vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-    }
-
-    .kids-slide-host {
       position: absolute;
-      top: 11vh; /* abaixo do cabeçalho (10vh) */
-      width: 94vw;
-      height: 86vh;
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 3vw;
-      align-items: center;
-      opacity: 0;
-      transform: scale(0.96) translateX(40px);
-      transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
-      pointer-events: none;
+      inset: 0;
     }
 
-    .kids-slide-host.active {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-      pointer-events: auto;
-    }
-
-    .kids-content {
+    .kscene {
+      position: absolute;
+      inset: 0;
+      padding: 12vh 5vw 4vh;
       display: flex;
       flex-direction: column;
-      gap: 2.4vh;
-      justify-content: center;
-    }
-
-    .kids-badge-row {
-      display: flex;
       align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+      justify-content: center;
+      gap: 3.4vh;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.9s ease;
     }
 
-    .kids-badge {
-      padding: 0.45em 1.2em;
-      border-radius: 999px;
-      font-family: 'Fredoka', cursive;
-      font-weight: 700;
-      font-size: clamp(0.9rem, 1.55vw, 3.4rem);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
-    }
+    .kscene.active { opacity: 1; }
 
-    .badge-pink {
-      background: var(--pink);
-      color: var(--white);
-    }
-
-    .badge-yellow {
-      background: var(--yellow);
-      color: var(--dark);
-    }
-
-    .badge-teal {
-      background: var(--teal);
-      color: var(--dark);
-    }
-
-    .kids-title {
+    .khead {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(2.3rem, 4.6vw, 10rem);
+      font-size: clamp(2.4rem, 5.6vw, 12rem);
       line-height: 1.05;
       color: var(--dark);
       letter-spacing: -1px;
+      max-width: 88vw;
     }
 
-    .kids-title span.pop {
+    .khead em, .ksub em {
+      font-style: normal;
       color: var(--pink);
-      text-shadow: 0 4px 20px rgba(240, 25, 107, 0.2);
     }
 
-    .kids-desc {
-      font-size: clamp(1.15rem, 2.05vw, 4.6rem);
-      line-height: 1.34;
+    .ksub {
+      font-family: 'Fredoka', cursive;
+      font-weight: 600;
+      font-size: clamp(1.2rem, 2.5vw, 5.4rem);
       color: var(--ink-soft);
-      font-weight: 700;
+      max-width: 80vw;
+      line-height: 1.25;
     }
 
-    .kids-feature-list {
+    .krow {
       display: flex;
-      flex-direction: column;
-      gap: 1.4vh;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3vw;
+    }
+
+    .krow.mid { align-items: center; }
+
+    .ksprite {
+      height: 32vh;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 1.2vh 1.6vh rgba(26, 63, 53, 0.18));
+      -webkit-user-drag: none;
+    }
+
+    .ksprite.big { height: 40vh; }
+    .ksprite.small { height: 24vh; }
+
+    /* movimentos (sempre suaves: nenhum passa de ~1 ciclo por segundo) */
+    .k-wave { transform-origin: 50% 90%; animation: k-wave 2.4s ease-in-out infinite; }
+    .k-hop { animation: k-hop 1.2s ease-in-out infinite; }
+    .k-hop.d1 { animation-delay: 0.3s; }
+    .k-hop.d2 { animation-delay: 0.6s; }
+    .k-sway { transform-origin: 50% 85%; animation: k-sway 2.6s ease-in-out infinite; }
+    .k-flap { transform-origin: 50% 90%; animation: k-flap 1.8s ease-in-out infinite; }
+    .k-creep { animation: k-creep 9s ease-in-out infinite alternate; }
+    .k-float { animation: k-float 7s ease-in-out infinite alternate; }
+
+    .frozen .k-hop, .frozen .k-flap, .frozen .k-sway {
+      animation-play-state: paused;
+    }
+
+    @keyframes k-wave { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg); } }
+    @keyframes k-hop { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-3.2vh) rotate(3deg); } }
+    @keyframes k-sway { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+    @keyframes k-flap { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-1.6vh) rotate(3deg); } }
+    @keyframes k-creep { from { transform: translateX(-9vw); } to { transform: translateX(9vw); } }
+    @keyframes k-float { from { transform: translateY(0); } to { transform: translateY(-3vh); } }
+
+    .k-breathe { transform: scale(0.85); transition: transform 4s ease-in-out; }
+
+    /* Oi, amigo!: rotina em 4 passos */
+    .ksteps {
+      display: flex;
+      gap: 3vw;
       margin-top: 1vh;
     }
 
-    .kids-feature-item {
+    .kstep {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0.8em;
-      font-size: clamp(1.05rem, 1.75vw, 3.8rem);
-      font-weight: 800;
+      gap: 1.2vh;
+      font-family: 'Fredoka', cursive;
+      font-weight: 700;
+      font-size: clamp(1.1rem, 2.1vw, 4.6rem);
       color: var(--dark);
+      opacity: 0.55;
+      transform: scale(0.94);
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
 
-    .kids-feature-icon {
-      width: clamp(34px, 3.2vw, 120px);
-      height: clamp(34px, 3.2vw, 120px);
+    .kstep.on { opacity: 1; transform: scale(1.1); }
+
+    .kstep i {
+      width: clamp(60px, 9vw, 200px);
+      height: clamp(60px, 9vw, 200px);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--white);
-      box-shadow: 0 6px 16px rgba(26, 63, 53, 0.1);
-      font-size: clamp(1.1rem, 1.8vw, 4rem);
-      flex-shrink: 0;
+      background: var(--c);
+      box-shadow: 0 1vh 2vh rgba(26, 63, 53, 0.15);
     }
 
-    .kids-visual-card {
-      position: relative;
-      width: 100%;
-      height: 84vh;
-      border-radius: var(--r-xl);
-      overflow: hidden;
-      box-shadow: var(--shadow-lg), var(--shadow-glow);
-      border: 8px solid var(--white);
-      background: #fedbe9;
+    .kstep svg {
+      width: 56%;
+      height: 56%;
+      fill: var(--ic, var(--dark));
     }
 
-    .kids-visual-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(1.03);
-      transition: transform 10s ease-out;
-    }
-
-    .kids-slide-host.active .kids-visual-card img {
-      transform: scale(1.12);
-    }
-
-    .kids-sticker {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      background: var(--yellow);
-      color: var(--dark);
-      padding: 0.6em 1.1em;
+    /* Ache a cor */
+    .kcolor {
+      min-width: 38vw;
+      padding: 3.2vh 3vw;
       border-radius: 999px;
+      background: var(--bg);
+      color: var(--fg);
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.1rem, 1.9vw, 4.2rem);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      transform: rotate(4deg);
-      animation: float-sticker 3s ease-in-out infinite alternate;
+      font-size: clamp(2.6rem, 6.4vw, 14rem);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      box-shadow: 0 1.4vh 3vh rgba(26, 63, 53, 0.18);
     }
 
-    @keyframes float-sticker {
-      0% { transform: rotate(3deg) translateY(0); }
-      100% { transform: rotate(-3deg) translateY(-8px); }
-    }
-
-    .kids-sticker-bottom {
-      position: absolute;
-      bottom: 24px;
-      left: 24px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      padding: 0.9vw 1.5vw;
-      border-radius: 20px;
-      border: 2px solid var(--pink);
+    .kring {
+      width: 17vh;
+      height: 17vh;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 30px rgba(26, 63, 53, 0.15);
+      justify-content: center;
+      background: conic-gradient(var(--c) calc(var(--p, 1) * 360deg), rgba(26, 63, 53, 0.12) 0);
     }
 
-    .kids-sticker-bottom-icon {
-      font-size: clamp(1.6rem, 2.6vw, 5.6rem);
-    }
-
-    .kids-sticker-bottom-text {
-      font-family: 'Fredoka', cursive;
-      font-weight: 700;
-      font-size: clamp(1rem, 1.6vw, 3.6rem);
+    .kring > b {
+      width: 13vh;
+      height: 13vh;
+      border-radius: 50%;
+      background: #E4F1E8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: 6vh;
       color: var(--dark);
+    }
+
+    /* Estátua / Imite o bicho: texto que troca */
+    .kswap { transition: opacity 0.45s ease; }
+    .kswap.out { opacity: 0; }
+    .khead.freeze { color: var(--pink); font-size: clamp(3.4rem, 8.4vw, 18rem); }
+
+    /* Pausa do rio: tela baixa, sem texto */
+    .kwater {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, #123A33 0%, #0B2722 100%);
+    }
+
+    .kwater i {
+      position: absolute;
+      width: 70vw;
+      height: 70vw;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46, 207, 181, 0.22) 0%, transparent 65%);
+      animation: k-drift 26s ease-in-out infinite alternate;
+    }
+
+    .kwater i:nth-child(1) { left: -20vw; top: -10vh; }
+    .kwater i:nth-child(2) { right: -25vw; top: 20vh; animation-duration: 34s; animation-delay: -9s; }
+    .kwater i:nth-child(3) { left: 15vw; bottom: -35vh; animation-duration: 40s; animation-delay: -17s; }
+
+    @keyframes k-drift {
+      from { transform: translate(0, 0) scale(1); }
+      to { transform: translate(8vw, 6vh) scale(1.15); }
+    }
+
+    .kpausa { position: relative; height: 26vh; opacity: 0.9; }
+
+    .tv-header { transition: opacity 1s ease; }
+    body.calm .tv-header { opacity: 0.25; }
+    body[data-mode="kids"] .tv-progress-track { display: none; }
+
+    #soundHint {
+      position: absolute;
+      bottom: 3vh;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0.7em 1.6em;
+      border-radius: 999px;
+      background: var(--dark);
+      color: var(--white);
+      font-family: 'Fredoka', cursive;
+      font-weight: 600;
+      font-size: clamp(0.9rem, 1.4vw, 3rem);
+      z-index: 150;
+      display: none;
+    }
+
+    #soundHint.on { display: block; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .k-wave, .k-hop, .k-sway, .k-flap, .k-creep, .k-float, .kwater i { animation: none; }
     }
 
     /* ==========================================================================
@@ -832,11 +868,11 @@
   </section>
 
   <!-- ========================================================================
-       TURNO 2: CRIANÇAS & VITRINE DIGITAL (16h00 às 22h00) — Renderizado Dinamicamente
+       TURNO 2: HORA DA CRIANÇA (16h00 às 22h00) — cenas em blocos, renderizadas por JS
        ======================================================================== -->
   <section class="tv-screen" id="mode-kids">
     <div class="kids-container" id="kidsContainer">
-      <!-- Inserido dinamicamente via JS a partir do Ciclo de 5 Dias randômico -->
+      <!-- Cenas inseridas pelo motor da Hora da Criança (img/amigos + audio/voz) -->
     </div>
   </section>
 
@@ -865,16 +901,19 @@
     <div class="tv-progress-fill" id="progressFill"></div>
   </div>
 
+  <div id="soundHint" role="status">Toque ou aperte uma tecla para ligar o som</div>
+
   <!-- ========================================================================
        PAINEL HUD DE CONTROLE DISCRETO (Para Teste, Ciclos e Fullscreen)
        ======================================================================== -->
   <nav class="tv-hud" id="tvHud" aria-label="Controles da Tela">
     <button class="hud-btn" id="btnModeTeam" title="Forçar Turno da Equipe (10h-16h)">🌱 [1] Equipe</button>
-    <button class="hud-btn" id="btnModeKids" title="Forçar Turno da Vitrine (16h-22h)">⭐ [2] Vitrine</button>
+    <button class="hud-btn" id="btnModeKids" title="Forçar Hora da Criança (16h-22h)">⭐ [2] Crianças</button>
     <button class="hud-btn active" id="btnModeAuto" title="Alternar Automaticamente pelo Horário">⏰ [0] Auto</button>
     <button class="hud-btn" id="btnCyclePrev" title="Dia Anterior do Ciclo">◀ [</button>
     <button class="hud-btn" id="btnCycleNext" title="Próximo Dia do Ciclo">] ▶</button>
     <button class="hud-btn" id="btnFullscreen" title="Alternar Tela Cheia">⛶ [F] Tela Cheia</button>
+    <button class="hud-btn" id="btnSound" title="Ligar ou desligar o som">🔊 [S] Som</button>
     <button class="hud-btn" id="btnGameToggle" title="Abrir Mini-Game Interativo">🎮 [G] Jogos</button>
   </nav>
 
@@ -900,7 +939,7 @@
   </div>
 
   <!-- ========================================================================
-       BANCO DE DADOS COMPLETO — CICLO ROTATIVO DE 5 DIAS (NÃO REPETE EM < 5 DIAS)
+       BANCO DA EQUIPE (10h às 15h59) — CICLO ROTATIVO DE 5 DIAS (NÃO REPETE EM < 5 DIAS)
        ======================================================================== -->
   <script>
     const FACA_AMIGOS_DATABASE = {
@@ -1222,401 +1261,6 @@
             caption: "Cores, texturas e descobertas a cada minuto."
           }
         ]
-      },
-
-      // ----------------------------------------------------------------------
-      // BANCO DAS CRIANÇAS & VITRINE (16h00 às 22h00) — 5 Dias de Alto Encantamento
-      // ----------------------------------------------------------------------
-      kids: {
-        1: [
-          {
-            badges: ["⭐ As Mais Queridas de Belém", "Parque Shopping"],
-            title: "Vem abraçar a <span class=\"pop\">Capivara</span> e o <span class=\"pop\">Macaco</span>!",
-            desc: "Pelúcias gigantes e super macias prontas para passear com você e tirar as fotos mais fofas da sua vida!",
-            features: [
-              { icon: "✨", text: "Passeios motorizados com toda a segurança" },
-              { icon: "🧸", text: "Abraço fofinho e companheirismo que encanta" }
-            ],
-            imageWebp: "img/circuito-equipe-capivara.webp",
-            imageJpg: "img/circuito-equipe-capivara.jpg",
-            imageAlt: "A famosa Capivara gigante do Circuito FaçaAmigos",
-            sticker: "VEM BRINCAR! 🐾",
-            bottomIcon: "🏎️",
-            bottomText: "No Circuito de Carrinhos FaçaAmigos"
-          },
-          {
-            badges: ["🎈 Diversão Sem Limites", "0 a 12 Anos"],
-            title: "A maior <span class=\"pop\">piscina de bolinhas</span> e casinha do shopping!",
-            desc: "Salão amplo, casinha na árvore, amarelinha lúdica e monitores treinados para cuidar com todo amor.",
-            features: [
-              { icon: "🏰", text: "Casinha elevada com escorregador e túneis" },
-              { icon: "🌿", text: "Canto de descompressão e livros infantis" }
-            ],
-            imageWebp: "img/hero-piscina-bolinhas.webp",
-            imageJpg: "img/hero-piscina-bolinhas.jpg",
-            imageAlt: "Crianças brincando na piscina de bolinhas do FaçaAmigos",
-            sticker: "PULA-PULA & CORRER! 🎉",
-            bottomIcon: "📍",
-            bottomText: "Térreo • Próximo às Americanas"
-          },
-          {
-            badges: ["🚦 Pilote de Verdade!", "Controle Remoto dos Pais"],
-            title: "Range Rover, Lamborghini e <span class=\"pop\">Caminhão de Bombeiro</span>!",
-            desc: "A frota mais irada de Belém! A criança pilota no pedal ou os pais guiam com controle remoto total.",
-            features: [
-              { icon: "🚒", text: "Sirenes e luzes no caminhão de bombeiro" },
-              { icon: "⚡", text: "Passeios tranquilos pelos corredores" }
-            ],
-            imageWebp: "img/circuito-bombeiro.webp",
-            imageJpg: "img/circuito-bombeiro.jpg",
-            imageAlt: "Carrinho elétrico de bombeiro no shopping",
-            sticker: "SEJA O PILOTO! 🏁",
-            bottomIcon: "🏎️",
-            bottomText: "Passeio completo de 10 a 30 minutos"
-          },
-          {
-            badges: ["💙 Inclusão na Prática", "Sem Agendamento"],
-            title: "É para <span class=\"pop\">todas as crianças</span>!",
-            desc: "Com ou sem laudo: aqui todo mundo brinca junto no mesmo salão, com meia-entrada garantida por lei.",
-            features: [
-              { icon: "✅", text: "Não precisa de laudo para brincar: é só chegar!" },
-              { icon: "🏷️", text: "Meia-entrada inclusiva para laudo ou CIPTEA" }
-            ],
-            imageWebp: "img/galeria-oficinas.webp",
-            imageJpg: "img/galeria-oficinas.jpg",
-            imageAlt: "Oficinas infantis e brincadeiras",
-            sticker: "TODO MUNDO JUNTO! 🌈",
-            bottomIcon: "👨‍👩‍👧‍👦",
-            bottomText: "Ambiente seguro e acolhedor para a família"
-          },
-          {
-            badges: ["🩺 Clínica FaçaAmigos", "Umarizal • Belém"],
-            title: "Ciência, afeto e <span class=\"pop\">Terapia ABA</span> para o seu filho.",
-            desc: "Psicologia infantil, Terapia Ocupacional, Fonoaudiologia e Psicopedagogia com a Dra. Isabella Freitas (CRP 10/4727).",
-            features: [
-              { icon: "🧩", text: "Painel sensorial e recursos terapêuticos modernos" },
-              { icon: "📖", text: "Autora dos livros \"O Brincar com Propósito\"" }
-            ],
-            imageWebp: "img/clinica-painel-sensorial.webp",
-            imageJpg: "img/clinica-painel-sensorial.jpg",
-            imageAlt: "Painel sensorial e clínica FaçaAmigos",
-            sticker: "DESENVOLVIMENTO 💡",
-            bottomIcon: "🏥",
-            bottomText: "Conheça: clinica.institutofacaamigos.com.br"
-          }
-        ],
-
-        2: [
-          {
-            badges: ["🏰 O Reino da Diversão", "Parque Shopping Belém"],
-            title: "Mergulhe em mais de <span class=\"pop\">100 mil bolinhas</span> coloridas!",
-            desc: "O playground mais aconchegante e seguro de Belém esperando por você no térreo do shopping.",
-            features: [
-              { icon: "🌈", text: "Escorregador gigante e pontes de aventura" },
-              { icon: "🛡️", text: "Chão acolchoado e equipe de mediadores no salão" }
-            ],
-            imageWebp: "img/hero-piscina-bolinhas.webp",
-            imageJpg: "img/hero-piscina-bolinhas.jpg",
-            imageAlt: "Piscina gigante de bolinhas",
-            sticker: "MERGULHE FUNDO! 🌊",
-            bottomIcon: "🎈",
-            bottomText: "Piscina de Bolinhas FaçaAmigos"
-          },
-          {
-            badges: ["🐵 Mascote Aventureira", "Circuito de Carrinhos"],
-            title: "O <span class=\"pop\">Macaco FaçaAmigos</span> quer passear com você!",
-            desc: "A pelúcia gigante mais animada de Belém está pronta para ser sua copiloto num passeio inesquecível.",
-            features: [
-              { icon: "🏎️", text: "Passeie com o Macaco nos carrinhos elétricos" },
-              { icon: "📸", text: "Tire fotos incríveis e poste no Instagram" }
-            ],
-            imageWebp: "img/circuito-macaco.webp",
-            imageJpg: "img/circuito-macaco.jpg",
-            imageAlt: "Mascote Macaco no Circuito",
-            sticker: "AVENTURA TOTAL! 🍌",
-            bottomIcon: "⭐",
-            bottomText: "Disponível no quiosque do Circuito"
-          },
-          {
-            badges: ["🏡 Casinha na Árvore", "Túneis & Desafios"],
-            title: "Suba na casinha e <span class=\"pop\">veja o salão lá de cima</span>!",
-            desc: "Estrutura elevada com pontes seguras, túneis coloridos e um escorregador direto para as bolinhas.",
-            features: [
-              { icon: "🧗", text: "Subida adaptada e corrimãos suaves" },
-              { icon: "👀", text: "Vista panorâmica para muita imaginação" }
-            ],
-            imageWebp: "img/playground-piscina-casinha.webp",
-            imageJpg: "img/playground-piscina-casinha.jpg",
-            imageAlt: "Casinha e piscina do playground",
-            sticker: "CONQUISTE O TOPO! 🏰",
-            bottomIcon: "🎪",
-            bottomText: "No Playground Inclusivo"
-          },
-          {
-            badges: ["🌿 Horário Inclusivo", "10h às 16h"],
-            title: "Estímulos suaves para quem <span class=\"pop\">precisa de calma</span>.",
-            desc: "Som reduzido, iluminação tranquila e equipe com suporte extra para crianças com sensibilidade sensorial.",
-            features: [
-              { icon: "🎧", text: "Ambiente sereno sem barulho alto" },
-              { icon: "🧸", text: "Cantinho da descompressão com almofadas e livros" }
-            ],
-            imageWebp: "img/inclusao-cantinho-leitura.webp",
-            imageJpg: "img/inclusao-cantinho-leitura.jpg",
-            imageAlt: "Cantinho da descompressão",
-            sticker: "PAZ & CONFORTO 🕊️",
-            bottomIcon: "💙",
-            bottomText: "Espaço adaptado para autismo e TDAH"
-          },
-          {
-            badges: ["🎨 Arte & Criação", "Oficinas Diárias"],
-            title: "Pinte, desenhe e solte a <span class=\"pop\">sua imaginação</span>!",
-            desc: "Nossas mediadoras adoram inventar brincadeiras criativas que estimulam o foco e a coordenação motora.",
-            features: [
-              { icon: "✏️", text: "Oficinas de desenho e pintura criativa" },
-              { icon: "🤝", text: "Brincadeiras que ensinam a cooperar e dividir" }
-            ],
-            imageWebp: "img/galeria-oficinas.webp",
-            imageJpg: "img/galeria-oficinas.jpg",
-            imageAlt: "Oficinas criativas no playground",
-            sticker: "CRIE O SEU MUNDO! 🖍️",
-            bottomIcon: "🎨",
-            bottomText: "Atividades inclusivas todos os dias"
-          }
-        ],
-
-        3: [
-          {
-            badges: ["🚨 Emergência de Alegria!", "Caminhão de Bombeiro"],
-            title: "Ligue as sirenes no <span class=\"pop\">Caminhão de Bombeiro</span>!",
-            desc: "Com luzes que piscam de verdade e som de sirene para salvar o dia com muita diversão no shopping!",
-            features: [
-              { icon: "🚒", text: "Design realista com mangueira de mentirinha" },
-              { icon: "🎮", text: "Controle remoto de longo alcance para os pais" }
-            ],
-            imageWebp: "img/circuito-bombeiro.webp",
-            imageJpg: "img/circuito-bombeiro.jpg",
-            imageAlt: "Carrinho de bombeiro FaçaAmigos",
-            sticker: "SIRENES LIGADAS! 🚨",
-            bottomIcon: "🚒",
-            bottomText: "O favorito dos pequenos pilotos"
-          },
-          {
-            badges: ["🏁 Frota de Luxo", "Parque Shopping Belém"],
-            title: "Pilote uma <span class=\"pop\">Lamborghini Urus</span> ou Range Rover!",
-            desc: "Mini-veículos elétricos de primeira linha com cinto de segurança e conforto total para passear.",
-            features: [
-              { icon: "⚡", text: "Aceleração suave sem solavancos" },
-              { icon: "🛡️", text: "Velocidade controlada para segurança absoluta" }
-            ],
-            imageWebp: "img/circuito-frota-alinhada.webp",
-            imageJpg: "img/circuito-frota-alinhada.jpg",
-            imageAlt: "Frota esportiva alinhada",
-            sticker: "SUPER MÁQUINAS! 🏎️",
-            bottomIcon: "🚦",
-            bottomText: "No térreo próximo às Americanas"
-          },
-          {
-            badges: ["💖 O Maior Abraço", "Capivara FaçaAmigos"],
-            title: "Você já abraçou a <span class=\"pop\">Capivara gigante</span> hoje?",
-            desc: "Ela é fofinha, dócil e adora tirar selfies com toda a família. Venha conhecer a mascote de Belém!",
-            features: [
-              { icon: "🐾", text: "Pelúcia antialérgica gigante e macia" },
-              { icon: "✨", text: "Pronta para um passeio no carrinho elétrico" }
-            ],
-            imageWebp: "img/circuito-equipe-capivara.webp",
-            imageJpg: "img/circuito-equipe-capivara.jpg",
-            imageAlt: "Capivara com a equipe",
-            sticker: "MUITO AMOR! 🐾",
-            bottomIcon: "🧸",
-            bottomText: "Vem tirar sua foto na recepção"
-          },
-          {
-            badges: ["🌈 Inclusão de Verdade", "Sem Agendamento"],
-            title: "Aqui, <span class=\"pop\">ninguém fica de fora</span>!",
-            desc: "Playground 100% acessível, projetado para acolher crianças com e sem laudo com o mesmo amor e dignidade.",
-            features: [
-              { icon: "🏷️", text: "Meia-entrada garantida para laudo ou CIPTEA" },
-              { icon: "👥", text: "Monitores treinados em acolhimento neurodivergente" }
-            ],
-            imageWebp: "img/playground-mediadora-tapete.webp",
-            imageJpg: "img/playground-mediadora-tapete.jpg",
-            imageAlt: "Mediadora com a criança",
-            sticker: "LUGAR DE TODOS! 🤝",
-            bottomIcon: "💙",
-            bottomText: "Espaço preparado com amor em Belém"
-          },
-          {
-            badges: ["🎈 Pula e Brinca", "Piscina Gigante"],
-            title: "Mergulhe na alegria da <span class=\"pop\">piscina de bolinhas</span>!",
-            desc: "Deixe a energia fluir com segurança enquanto os pequenos exploram cada cantinho do nosso salão.",
-            features: [
-              { icon: "🛡️", text: "Higienização constante de todas as bolinhas" },
-              { icon: "🏰", text: "Casinha na árvore com pontes e desafios" }
-            ],
-            imageWebp: "img/hero-piscina-bolinhas.webp",
-            imageJpg: "img/hero-piscina-bolinhas.jpg",
-            imageAlt: "Crianças na piscina",
-            sticker: "PURA ALEGRIA! 🎉",
-            bottomIcon: "📍",
-            bottomText: "Aberto todos os dias até as 22h"
-          }
-        ],
-
-        4: [
-          {
-            badges: ["💙 Para Todo Mundo!", "Sem Preconceito"],
-            title: "Com ou sem laudo: <span class=\"pop\">todos brincam juntos</span>!",
-            desc: "Inclusão real é quando o espaço foi feito para que toda criança encontre diversão, carinho e respeito.",
-            features: [
-              { icon: "✅", text: "Seu filho não tem laudo? É só chegar e brincar!" },
-              { icon: "🏷️", text: "Tem laudo ou CIPTEA? Apresente e ganhe meia-entrada" }
-            ],
-            imageWebp: "img/galeria-oficinas.webp",
-            imageJpg: "img/galeria-oficinas.jpg",
-            imageAlt: "Oficinas e brinquedos",
-            sticker: "SOMOS IGUAIS! 🌈",
-            bottomIcon: "👨‍👩‍👧‍👦",
-            bottomText: "Parque Shopping Belém • Todos os dias"
-          },
-          {
-            badges: ["🐾 Dupla de Mascotes", "Capivara & Macaco"],
-            title: "A turma mais <span class=\"pop\">fofa e divertida</span> do shopping!",
-            desc: "Passeie motorizado com as mascotes gigantes que conquistaram o coração das crianças e dos pais em Belém.",
-            features: [
-              { icon: "🧸", text: "Pelúcias de tamanho gigante para abraçar" },
-              { icon: "🏎️", text: "Acompanham os pequenos em todo o trajeto" }
-            ],
-            imageWebp: "img/circuito-equipe-capivara.webp",
-            imageJpg: "img/circuito-equipe-capivara.jpg",
-            imageAlt: "Capivara FaçaAmigos",
-            sticker: "VEM ABRAÇAR! 💖",
-            bottomIcon: "⭐",
-            bottomText: "No Circuito de Carrinhos Elétricos"
-          },
-          {
-            badges: ["🏰 Diversão no Salão", "0 a 12 Anos"],
-            title: "Casinha suspensa, pontes e <span class=\"pop\">milhares de bolinhas</span>!",
-            desc: "Um castelo lúdico onde cada minuto é uma nova história cheia de imaginação e risadas.",
-            features: [
-              { icon: "🏰", text: "Casinha na árvore com janelas panorâmicas" },
-              { icon: "🎯", text: "Amarelinha e pistas lúdicas no piso" }
-            ],
-            imageWebp: "img/playground-piscina-casinha.webp",
-            imageJpg: "img/playground-piscina-casinha.jpg",
-            imageAlt: "Visão da casinha no salão",
-            sticker: "BRINCAR É VIDA! 🎈",
-            bottomIcon: "🎪",
-            bottomText: "No Playground Inclusivo"
-          },
-          {
-            badges: ["🚒 Pilotos de Coragem", "Circuito de Carrinhos"],
-            title: "Assuma o volante do <span class=\"pop\">Caminhão de Bombeiro</span>!",
-            desc: "Sirenes, volante macio e comandos fáceis para a criança dirigir com controle e segurança.",
-            features: [
-              { icon: "🚒", text: "Sirenes sonoras e luzes piscantes" },
-              { icon: "🎮", text: "Controle remoto total nas mãos dos pais" }
-            ],
-            imageWebp: "img/circuito-bombeiro.webp",
-            imageJpg: "img/circuito-bombeiro.jpg",
-            imageAlt: "Caminhão de bombeiro",
-            sticker: "HERÓI POR UM DIA! ⚡",
-            bottomIcon: "🏁",
-            bottomText: "Passeios de 10 a 30 minutos"
-          },
-          {
-            badges: ["🩺 Centro de Terapia", "Umarizal • Belém"],
-            title: "Clínica FaçaAmigos: <span class=\"pop\">ciência e carinho</span> para o seu filho.",
-            desc: "Terapia ABA, Fonoaudiologia, Terapia Ocupacional e Psicopedagogia com equipe multidisciplinar de referência.",
-            features: [
-              { icon: "🧠", text: "Análise do Comportamento Aplicada (ABA)" },
-              { icon: "📖", text: "Coordenação pela Dra. Isabella Freitas (CRP 10/4727)" }
-            ],
-            imageWebp: "img/clinica-painel-sensorial.webp",
-            imageJpg: "img/clinica-painel-sensorial.jpg",
-            imageAlt: "Painel sensorial da clínica",
-            sticker: "DESENVOLVIMENTO 💡",
-            bottomIcon: "🏥",
-            bottomText: "Rua Boaventura da Silva, 1573 • Umarizal"
-          }
-        ],
-
-        5: [
-          {
-            badges: ["🩺 Clínica FaçaAmigos", "Desenvolvimento & Afeto"],
-            title: "O amor que cuida, a <span class=\"pop\">ciência que desenvolve</span>.",
-            desc: "Nossa clínica em Belém é especializada em TEA, TDAH e marcos do desenvolvimento com a metodologia da Dra. Isabella Freitas.",
-            features: [
-              { icon: "🧩", text: "Salas equipadas com painéis e recursos sensoriais" },
-              { icon: "🤝", text: "Acolhimento humanizado para a família inteira" }
-            ],
-            imageWebp: "img/clinica-atividade-pedagogica.webp",
-            imageJpg: "img/clinica-atividade-pedagogica.jpg",
-            imageAlt: "Atividade pedagógica na clínica",
-            sticker: "EVOLUÇÃO REAL! 🌱",
-            bottomIcon: "🏥",
-            bottomText: "Acesse: clinica.institutofacaamigos.com.br"
-          },
-          {
-            badges: ["🎈 O Salão das Crianças", "Parque Shopping"],
-            title: "A maior e mais segura <span class=\"pop\">piscina de bolinhas</span> de Belém!",
-            desc: "Salão com piso amortecedor, casinha na árvore e escorregadores higienizados com todo rigor.",
-            features: [
-              { icon: "🌊", text: "Milhares de bolinhas para mergulhar à vontade" },
-              { icon: "🛡️", text: "Monitores atentos e carinhosos por todo o espaço" }
-            ],
-            imageWebp: "img/hero-piscina-bolinhas.webp",
-            imageJpg: "img/hero-piscina-bolinhas.jpg",
-            imageAlt: "Piscina de bolinhas gigante",
-            sticker: "DIVERSÃO TOTAL! 🎉",
-            bottomIcon: "📍",
-            bottomText: "Térreo • Próximo às Americanas"
-          },
-          {
-            badges: ["🏎️ Corrida da Alegria", "Circuito Elétrico"],
-            title: "Escolha seu carro e <span class=\"pop\">acelere nos corredores</span>!",
-            desc: "Frota moderna de veículos elétricos licenciados para passeios inesquecíveis pelo shopping.",
-            features: [
-              { icon: "🏎️", text: "Lamborghini, Range Rover e Bombeiro" },
-              { icon: "🎮", text: "Controle parental para total tranquilidade" }
-            ],
-            imageWebp: "img/circuito-frota-alinhada.webp",
-            imageJpg: "img/circuito-frota-alinhada.jpg",
-            imageAlt: "Frota de carrinhos elétricos",
-            sticker: "PILOTO EXPRESS! 🏁",
-            bottomIcon: "🚦",
-            bottomText: "Todos os dias das 10h às 22h"
-          },
-          {
-            badges: ["🐾 Nossa Mascote Amada", "Belém/PA"],
-            title: "A Capivara FaçaAmigos quer te dar um <span class=\"pop\">abraço quentinho</span>!",
-            desc: "Venha conhecer a mascote mais famosa da cidade e tire fotos inesquecíveis para guardar no coração.",
-            features: [
-              { icon: "🧸", text: "Pelúcia gigante fofinha e carinhosa" },
-              { icon: "📸", text: "O ponto mais fotografado do Parque Shopping" }
-            ],
-            imageWebp: "img/circuito-equipe-capivara.webp",
-            imageJpg: "img/circuito-equipe-capivara.jpg",
-            imageAlt: "Capivara gigante com a equipe",
-            sticker: "O MELHOR ABRAÇO! 💖",
-            bottomIcon: "🐾",
-            bottomText: "Vem abraçar a Capivara hoje!"
-          },
-          {
-            badges: ["🤝 Acolhimento Inclusivo", "Sem Agendamento"],
-            title: "O espaço onde <span class=\"pop\">todas as crianças são bem-vindas</span>!",
-            desc: "Traga seu filho para brincar em um ambiente preparado para acolher a singularidade de cada sorriso.",
-            features: [
-              { icon: "✅", text: "Com ou sem laudo: portas abertas para brincar" },
-              { icon: "🏷️", text: "Meia-entrada inclusiva garantida por lei" }
-            ],
-            imageWebp: "img/playground-mediadora-tapete.webp",
-            imageJpg: "img/playground-mediadora-tapete.jpg",
-            imageAlt: "Mediadora e criança no tapete",
-            sticker: "AMOR & INCLUSÃO 🌈",
-            bottomIcon: "👨‍👩‍👧‍👦",
-            bottomText: "FaçaAmigos • O brincar com propósito"
-          }
-        ]
       }
     };
 
@@ -1628,7 +1272,6 @@
 
       const CONFIG = {
         teamSlideDuration: 14000, // 14s por pílula de acolhimento
-        kidsSlideDuration: 9000,  // 9s por vitrine infantil
         timeCheckInterval: 1000,  // avalia relógio a cada segundo
         inactivityTimeout: 3500   // esconde cursor após 3.5s
       };
@@ -1741,63 +1384,13 @@
         fitAllSlides();
       }
 
-      function renderKidsSlides(cycleDay) {
-        const rawSlides = FACA_AMIGOS_DATABASE.kids[cycleDay] || FACA_AMIGOS_DATABASE.kids[1];
-        // Aplica randomização (shuffle)
-        state.currentPool = shuffleArray(rawSlides);
-        dom.kidsContainer.innerHTML = '';
-
-        state.currentPool.forEach((slide, idx) => {
-          const slideEl = document.createElement('div');
-          slideEl.className = 'kids-slide-host' + (idx === 0 ? ' active' : '');
-          slideEl.setAttribute('data-slide', idx);
-
-          const badgesHtml = slide.badges.map((b, i) => {
-            const cls = i === 0 ? 'badge-pink' : 'badge-yellow';
-            return `<span class="kids-badge ${cls}">${b}</span>`;
-          }).join('');
-
-          const featuresHtml = slide.features.map(f => `
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">${f.icon}</span>
-              <span>${f.text}</span>
-            </div>
-          `).join('');
-
-          const loadingAttr = idx === 0 ? 'loading="eager"' : 'loading="lazy"';
-
-          slideEl.innerHTML = `
-            <div class="kids-content">
-              <div class="kids-badge-row">${badgesHtml}</div>
-              <h1 class="kids-title">${slide.title}</h1>
-              <p class="kids-desc">${slide.desc}</p>
-              <div class="kids-feature-list">${featuresHtml}</div>
-            </div>
-            <div class="kids-visual-card">
-              <picture>
-                <source srcset="${slide.imageWebp}" type="image/webp">
-                <img src="${slide.imageJpg}" alt="${slide.imageAlt}" width="800" height="600" ${loadingAttr} decoding="async">
-              </picture>
-              <div class="kids-sticker">${slide.sticker}</div>
-              <div class="kids-sticker-bottom">
-                <span class="kids-sticker-bottom-icon">${slide.bottomIcon}</span>
-                <div class="kids-sticker-bottom-text">${slide.bottomText}</div>
-              </div>
-            </div>
-          `;
-
-          dom.kidsContainer.appendChild(slideEl);
-        });
-        fitAllSlides();
-      }
-
       // ----------------------------------------------------------------------
       // AJUSTE FINO: se um texto longo passar da altura do slide (TVs que
       // reportam 1280x720 ou 960x540 quebram linhas diferente), encolhe só
       // aquele bloco de texto em vez de deixá-lo vazar para fora da tela.
       // ----------------------------------------------------------------------
       function fitAllSlides() {
-        document.querySelectorAll('.team-content, .kids-content').forEach((content) => {
+        document.querySelectorAll('.team-content').forEach((content) => {
           content.style.transform = '';
           const available = content.parentElement.clientHeight;
           const needed = content.scrollHeight;
@@ -1870,7 +1463,7 @@
         if (state.currentMode === 'team') {
           renderTeamSlides(state.cycleDay);
         } else if (state.currentMode === 'kids') {
-          renderKidsSlides(state.cycleDay);
+          kidsStart();
         }
       }
 
@@ -1880,6 +1473,8 @@
       function switchMode(newMode) {
         state.currentMode = newMode;
         state.currentSlideIndex = 0;
+        document.body.dataset.mode = newMode;
+        kidsStop();
 
         clearTimeout(state.slideTimer);
         cancelAnimationFrame(state.progressTimer);
@@ -1898,13 +1493,11 @@
           state.currentSlideDuration = CONFIG.teamSlideDuration;
           startSlideCycle();
         } else if (newMode === 'kids') {
-          renderKidsSlides(state.cycleDay);
           dom.screenKids.classList.add('active');
-          dom.statusText.textContent = 'Vitrine Crianças';
+          dom.statusText.textContent = 'Hora da criança';
           dom.statusDot.style.background = 'var(--pink)';
           dom.statusDot.style.boxShadow = '0 0 10px var(--pink)';
-          state.currentSlideDuration = CONFIG.kidsSlideDuration;
-          startSlideCycle();
+          kidsStart();
         } else {
           dom.screenNight.classList.add('active');
           dom.statusText.textContent = 'Stand-by Noturno';
@@ -1922,6 +1515,7 @@
       function startSlideCycle() {
         clearTimeout(state.slideTimer);
         cancelAnimationFrame(state.progressTimer);
+        if (state.currentMode !== 'team') return; // a Hora da Criança tem motor próprio (cenas)
 
         state.progressStartTime = performance.now();
         animateProgressBar();
@@ -1933,7 +1527,7 @@
       }
 
       function advanceSlide() {
-        const activeContainer = state.currentMode === 'team' ? dom.teamContainer : dom.kidsContainer;
+        const activeContainer = dom.teamContainer;
         const slides = activeContainer.querySelectorAll('[data-slide]');
         if (slides.length <= 1) return;
 
@@ -1954,10 +1548,598 @@
         const percent = Math.min(100, (elapsed / state.currentSlideDuration) * 100);
         dom.progressFill.style.width = percent + '%';
 
-        if (percent < 100 && (state.currentMode === 'team' || state.currentMode === 'kids')) {
+        if (percent < 100 && state.currentMode === 'team') {
           state.progressTimer = requestAnimationFrame(animateProgressBar);
         }
       }
+
+      // ----------------------------------------------------------------------
+      // HORA DA CRIANÇA (16h–22h) — MOTOR DE CENAS
+      // A TV do salão não tem toque: a criança responde com o corpo, guiada pela
+      // voz. As cenas rodam em blocos de ~10 min (fixar, brincar, acolher e pausas).
+      // Voz: arquivos MP3 em audio/voz/<id>.mp3 (se um arquivo não existir, a cena
+      // roda só com imagem e trilha). Trilha e água são sintetizadas (zero download).
+      // ----------------------------------------------------------------------
+      dom.btnSound = document.getElementById('btnSound');
+      dom.soundHint = document.getElementById('soundHint');
+
+      const KCFG = {
+        soundKey: 'fa-tv-som',
+        bedLevel: 0.22,   // trilha sempre bem abaixo da voz
+        voiceDir: 'audio/voz/'
+      };
+
+      const IMG = (n) => `img/amigos/${n}.webp`;
+      const spr = (n, cls) => `<img class="ksprite ${cls || ''}" src="${IMG(n)}" alt="" draggable="false">`;
+      const SPRITE_NAMES = ['cachorro-acena', 'cachorro-sentado', 'cachorro-deitado', 'cachorro-pula',
+        'tucano-parado', 'tucano-asas', 'tucano-frente', 'tucano-joinha',
+        'macaco-corda', 'macaco-sentado', 'macaco-danca', 'macaco-bracos-cruzados', 'macaco-coracao', 'macaco-festa',
+        'tartaruga-anda', 'tartaruga-dorme', 'tartaruga-sorri', 'tartaruga-ri'];
+
+      // ---------------- SOM ----------------
+      // Volume por horário de Belém: sobe um pouco às 18h (salão cheio) e desce às 21h.
+      function volumeAgora(hora) {
+        if (hora >= 21) return 0.5;
+        if (hora >= 18) return 0.8;
+        return 0.6;
+      }
+
+      const CHORDS = [
+        { bass: 130.81, arp: [261.63, 329.63, 392.00, 523.25] }, // C
+        { bass: 110.00, arp: [220.00, 261.63, 329.63, 440.00] }, // Am
+        { bass:  87.31, arp: [174.61, 220.00, 261.63, 349.23] }, // F
+        { bass:  98.00, arp: [196.00, 246.94, 293.66, 392.00] }  // G
+      ];
+      const ARP_DANCE = [0, 1, 2, 3, 2, 1, 2, 1];
+      const ARP_SOFT = [0, 2, 3, 2];
+
+      const som = { ctx: null, master: null, bed: null, on: loadSoundPref(), mode: null, step: 0, nextAt: 0,
+        water: null, voice: null, missing: new Set(), unduckTimer: null };
+
+      function loadSoundPref() {
+        const fromUrl = new URLSearchParams(location.search).get('som');
+        if (fromUrl === '0' || fromUrl === '1') return fromUrl === '1';
+        try {
+          const saved = localStorage.getItem(KCFG.soundKey);
+          if (saved === '0' || saved === '1') return saved === '1';
+        } catch (e) { /* armazenamento bloqueado: segue ligado */ }
+        return true;
+      }
+
+      function initAudio() {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC || som.ctx) return;
+        const ctx = som.ctx = new AC();
+        // Compressor segura os picos para não estourar a caixa da TV
+        const comp = ctx.createDynamicsCompressor();
+        comp.threshold.value = -18;
+        comp.ratio.value = 6;
+        som.master = ctx.createGain();
+        som.bed = ctx.createGain();
+        som.bed.gain.value = KCFG.bedLevel;
+        som.bed.connect(som.master);
+        som.master.connect(comp).connect(ctx.destination);
+        applyVolume();
+        setInterval(scheduleBed, 150);
+      }
+
+      function soundRunning() {
+        return !!(som.ctx && som.ctx.state === 'running');
+      }
+
+      function updateSoundHint() {
+        const blocked = som.on && state.currentMode === 'kids' && !soundRunning();
+        dom.soundHint.classList.toggle('on', blocked);
+      }
+
+      function applyVolume() {
+        const v = som.on ? volumeAgora(belemNow().hours) : 0;
+        if (som.ctx) {
+          som.master.gain.setTargetAtTime(v, som.ctx.currentTime, 0.4);
+          // a água só começa quando o áudio já está liberado e ligado
+          if (som.on && som.mode === 'water' && soundRunning()) startWater();
+          else if (!som.on) stopWater();
+        }
+        if (som.voice) som.voice.volume = v;
+        dom.btnSound.textContent = som.on ? `🔊 [S] Som ${Math.round(v * 100)}%` : '🔇 [S] Som';
+      }
+
+      // Navegadores só liberam áudio após um gesto. Na TV, o Chrome em modo quiosque com
+      // --autoplay-policy=no-user-gesture-required começa direto; sem a flag, 1 clique/tecla destrava.
+      function unlockAudio() {
+        initAudio();
+        if (som.ctx && som.ctx.state === 'suspended') {
+          som.ctx.resume().then(() => { updateSoundHint(); applyVolume(); });
+        }
+        updateSoundHint();
+      }
+
+      function toggleSound() {
+        if (!soundRunning()) {
+          som.on = true;
+        } else {
+          som.on = !som.on;
+        }
+        try { localStorage.setItem(KCFG.soundKey, som.on ? '1' : '0'); } catch (e) { /* ignora */ }
+        if (!som.on) stopVoice();
+        unlockAudio();
+        applyVolume();
+        updateSoundHint();
+      }
+
+      ['pointerdown', 'keydown'].forEach((evt) => {
+        window.addEventListener(evt, () => { if (state.currentMode === 'kids') unlockAudio(); }, { passive: true });
+      });
+
+      function tone(freq, at, dur, opt) {
+        const o = Object.assign({ type: 'sine', gain: 0.2 }, opt);
+        const ctx = som.ctx;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = o.type;
+        osc.frequency.setValueAtTime(freq, at);
+        env.gain.setValueAtTime(0.0001, at);
+        env.gain.exponentialRampToValueAtTime(o.gain, at + 0.03);
+        env.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+        osc.connect(env).connect(som.bed);
+        osc.start(at);
+        osc.stop(at + dur + 0.05);
+      }
+
+      // Agendador com antecedência: marca as notas no relógio do áudio, que não atrasa
+      // quando a TV está ocupada (setInterval atrasa).
+      function scheduleBed() {
+        if (!soundRunning() || !som.on) return;
+        const mode = som.mode;
+        if (mode !== 'soft' && mode !== 'dance') return;
+        const eighth = 60 / (mode === 'dance' ? 104 : 72) / 2;
+        if (som.nextAt < som.ctx.currentTime) som.nextAt = som.ctx.currentTime + 0.1;
+        while (som.nextAt < som.ctx.currentTime + 0.5) {
+          const chord = CHORDS[Math.floor(som.step / 8) % CHORDS.length];
+          const pos = som.step % 8;
+          if (mode === 'dance') {
+            tone(chord.arp[ARP_DANCE[pos]], som.nextAt, eighth * 1.4, { type: 'triangle', gain: 0.1 });
+            if (pos === 0 || pos === 4) tone(chord.bass, som.nextAt, eighth * 3, { gain: 0.18 });
+          } else {
+            // caixinha de música: uma nota longa a cada duas colcheias
+            if (pos % 2 === 0) tone(chord.arp[ARP_SOFT[pos / 2]], som.nextAt, eighth * 4, { gain: 0.12 });
+            if (pos === 0) tone(chord.bass, som.nextAt, eighth * 8, { gain: 0.12 });
+          }
+          som.nextAt += eighth;
+          som.step++;
+        }
+      }
+
+      // Água: ruído marrom filtrado com ondulação lenta (vai e volta como maré)
+      function startWater() {
+        const ctx = som.ctx;
+        if (!ctx || som.water) return;
+        const len = ctx.sampleRate * 2;
+        const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+        const data = buf.getChannelData(0);
+        let last = 0;
+        for (let i = 0; i < len; i++) {
+          last = (last + 0.02 * (Math.random() * 2 - 1)) / 1.02;
+          data[i] = last * 3.5;
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = buf;
+        src.loop = true;
+        const lp = ctx.createBiquadFilter();
+        lp.type = 'lowpass';
+        lp.frequency.value = 700;
+        const g = ctx.createGain();
+        g.gain.value = 0.0001;
+        const lfo = ctx.createOscillator();
+        const lg = ctx.createGain();
+        lfo.frequency.value = 0.12;
+        lg.gain.value = 0.25;
+        lfo.connect(lg).connect(g.gain);
+        src.connect(lp).connect(g).connect(som.bed);
+        g.gain.setTargetAtTime(1.2, ctx.currentTime, 1.5);
+        src.start();
+        lfo.start();
+        som.water = { src, g, lfo };
+      }
+
+      function stopWater() {
+        const w = som.water;
+        if (!w) return;
+        som.water = null;
+        w.g.gain.setTargetAtTime(0.0001, som.ctx.currentTime, 0.4);
+        setTimeout(() => { try { w.src.stop(); w.lfo.stop(); } catch (e) { /* já parado */ } }, 1800);
+      }
+
+      // 'soft' (caixinha de música), 'dance' (ritmo da Estátua), 'water' (Pausa do rio) ou null (silêncio)
+      function setBed(mode) {
+        if (som.mode === mode) return;
+        som.mode = mode;
+        som.step = 0;
+        som.nextAt = 0;
+        stopWater();
+        if (mode === 'water' && soundRunning() && som.on) startWater();
+      }
+
+      function unduck() {
+        clearTimeout(som.unduckTimer);
+        if (som.ctx) som.bed.gain.setTargetAtTime(KCFG.bedLevel, som.ctx.currentTime, 0.4);
+      }
+
+      function stopVoice() {
+        if (som.voice) { som.voice.pause(); som.voice = null; }
+        unduck();
+      }
+
+      // Voz gravada. A trilha abaixa enquanto a voz fala. Sem arquivo, segue em silêncio.
+      function say(id) {
+        if (!som.on || !soundRunning() || som.missing.has(id)) return;
+        stopVoice();
+        const a = new Audio(`${KCFG.voiceDir}${id}.mp3`);
+        a.volume = volumeAgora(belemNow().hours);
+        a.addEventListener('error', () => { som.missing.add(id); unduck(); });
+        a.addEventListener('ended', unduck);
+        som.voice = a;
+        som.bed.gain.setTargetAtTime(KCFG.bedLevel * 0.35, som.ctx.currentTime, 0.1);
+        som.unduckTimer = setTimeout(unduck, 9000);
+        const p = a.play();
+        if (p && p.catch) p.catch(() => { /* gesto ainda não liberou: ignora */ });
+      }
+
+      // ---------------- CENAS ----------------
+      const STEP_ICONS = {
+        meias: '<svg viewBox="0 0 24 24"><path d="M8 3h8v9l5 3a3 3 0 0 1-1.5 5.6l-8-2.6A4 4 0 0 1 8 14z"/></svg>',
+        brincar: '<svg viewBox="0 0 24 24"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg>',
+        descansar: '<svg viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z"/></svg>',
+        tchau: '<svg viewBox="0 0 24 24"><path d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.5 3.4 5 6.8 5c2 0 3.5 1 5.2 3 1.7-2 3.2-3 5.2-3 3.4 0 5.6 3.5 4.3 6.8C19.5 16.4 12 21 12 21z"/></svg>'
+      };
+
+      const CORES = [
+        { id: 'amarelo', nome: 'amarela', bg: '#FFE234', fg: '#1A3F35' },
+        { id: 'rosa', nome: 'rosa', bg: '#F0196B', fg: '#FFFFFF' },
+        { id: 'verde', nome: 'verde', bg: '#2ECFB5', fg: '#1A3F35' },
+        { id: 'azul', nome: 'azul', bg: '#3B82F6', fg: '#FFFFFF' }
+      ];
+      let corIdx = Math.floor(Math.random() * CORES.length);
+
+      // Cada passo do Imite o bicho tem versão só de mãos (ninguém fica de fora).
+      const BICHOS_BASE = [
+        { img: 'tartaruga-anda', anim: 'k-creep', head: 'Devagar como a <em>tartaruga</em>', alt: 'Ou: mexe os braços bem devagarinho', say: 'bicho-tartaruga-lenta' },
+        { img: 'cachorro-pula', anim: 'k-hop', head: 'Pula como o <em>cachorro</em>', alt: 'Ou: bate os pés no chão', say: 'bicho-cachorro' },
+        { img: 'tucano-asas', anim: 'k-flap', head: 'Abre as asas como o <em>tucano</em>', alt: 'Ou: abre e fecha as mãos', say: 'bicho-tucano' },
+        { img: 'macaco-festa', anim: 'k-sway', head: 'Balança como o <em>macaco</em>', alt: 'Ou: balança só os braços', say: 'bicho-macaco' },
+        { img: 'tartaruga-dorme', anim: 'k-sway', head: 'Se esconde como a <em>tartaruga</em>', alt: 'Ou: cobre o rosto com as mãos', say: 'bicho-tartaruga' }
+      ];
+      const BICHOS_FLORESTA = [
+        { img: 'macaco-corda', anim: 'k-sway', head: 'Devagar como a <em>preguiça</em>', alt: 'Ou: mexe os braços bem devagarinho', say: 'bicho-preguica' },
+        { img: 'cachorro-deitado', anim: 'k-float', head: 'Quietinho como a <em>onça</em>', alt: 'Ou: anda com os dedinhos na mesa', say: 'bicho-onca' }
+      ];
+      const BICHOS_RIO = [
+        { img: 'tartaruga-sorri', anim: 'k-sway', head: 'Nada como o <em>boto</em>', alt: 'Ou: faz ondas com o braço', say: 'bicho-boto' },
+        { img: 'tartaruga-anda', anim: 'k-float', head: 'Tranquilo como o <em>peixe-boi</em>', alt: 'Ou: respira devagar', say: 'bicho-peixeboi' },
+        { img: 'tucano-parado', anim: 'k-float', head: 'Estica o pescoço como a <em>garça</em>', alt: 'Ou: estica os braços para cima', say: 'bicho-garca' }
+      ];
+
+      const THEMES = {
+        1: { nome: 'Bichos da floresta', prefer: 'bicho', extras: BICHOS_FLORESTA },
+        2: { nome: 'Bichos do rio', prefer: 'bicho', extras: BICHOS_RIO },
+        3: { nome: 'Cores e formas', prefer: 'cor', extras: [] },
+        4: { nome: 'Calma e sentimentos', prefer: 'resp', extras: [], extraAcolher: true },
+        5: { nome: 'Música e ritmo', prefer: 'estatua', extras: [] }
+      };
+
+      const SCENES = {
+        // FIXAR: boas-vindas e a rotina do salão em 4 passos
+        oi: {
+          types: ['fixar'], dur: 45,
+          html: () => `
+            <div class="krow">
+              ${spr('cachorro-acena', 'big k-wave')}${spr('macaco-festa', 'k-hop')}${spr('tucano-joinha', 'k-hop d1')}${spr('tartaruga-sorri', 'k-sway')}
+            </div>
+            <h1 class="khead">Oi! Que bom que você veio.</h1>
+            <div class="ksteps">
+              <div class="kstep"><i style="--c:#FFE234">${STEP_ICONS.meias}</i><span>Meias</span></div>
+              <div class="kstep"><i style="--c:#F0196B;--ic:#fff">${STEP_ICONS.brincar}</i><span>Brincar</span></div>
+              <div class="kstep"><i style="--c:#2ECFB5">${STEP_ICONS.descansar}</i><span>Descansar</span></div>
+              <div class="kstep"><i style="--c:#FFFFFF;--ic:#F0196B">${STEP_ICONS.tchau}</i><span>Tchau</span></div>
+            </div>`,
+          run(el, h) {
+            const steps = el.querySelectorAll('.kstep');
+            const light = (i) => steps.forEach((s, k) => s.classList.toggle('on', k === i));
+            h.later(() => h.say('oi-01'), 900);
+            h.later(() => h.say('oi-02'), 6000);
+            [0, 1, 2, 3].forEach((i) => h.later(() => light(i), 8000 + i * 4000));
+            h.later(() => { light(-1); h.say('oi-03'); }, 26000);
+          }
+        },
+
+        // FIXAR + BRINCAR: procurar uma cor no salão (pode só apontar)
+        cor: {
+          types: ['fixar', 'brincar'], dur: 30,
+          html: () => {
+            const c = CORES[corIdx % CORES.length];
+            return `
+              <h1 class="khead" id="corHead">Ache alguma coisa <em>${c.nome}</em> no salão!</h1>
+              <div class="krow mid">
+                ${spr('tucano-parado', 'k-flap')}
+                <div class="kcolor" style="--bg:${c.bg};--fg:${c.fg}">${c.nome}</div>
+                ${spr('macaco-sentado', 'k-sway')}
+              </div>
+              <div class="krow mid">
+                <div class="kring" id="corRing" style="--c:${c.bg}"><b id="corNum">20</b></div>
+                <p class="ksub" id="corSub">Pode apontar, olhar ou ir até lá</p>
+              </div>`;
+          },
+          run(el, h) {
+            const c = CORES[corIdx % CORES.length];
+            corIdx++;
+            let n = 20;
+            const paint = () => {
+              el.querySelector('#corRing').style.setProperty('--p', n / 20);
+              el.querySelector('#corNum').textContent = n > 0 ? n : '';
+            };
+            paint();
+            h.later(() => h.say('cor-' + c.id), 800);
+            h.every(() => {
+              if (n <= 0) return;
+              n--;
+              paint();
+              if (n === 0) {
+                el.querySelector('#corHead').innerHTML = `Quanta coisa <em>${c.nome}</em>!`;
+                el.querySelector('#corSub').textContent = 'Que olhar atento';
+                h.say('cor-fim');
+              }
+            }, 1000);
+          }
+        },
+
+        // BRINCAR: dança e congela, ninguém sai do jogo
+        estatua: {
+          types: ['brincar'], dur: 90, bed: null,
+          html: () => `
+            <div class="krow" id="estRow">
+              <img class="ksprite big k-hop" src="${IMG('cachorro-pula')}" data-dance="${IMG('cachorro-pula')}" data-freeze="${IMG('cachorro-sentado')}" alt="">
+              <img class="ksprite big k-hop d1" src="${IMG('macaco-danca')}" data-dance="${IMG('macaco-danca')}" data-freeze="${IMG('macaco-bracos-cruzados')}" alt="">
+              <img class="ksprite big k-flap" src="${IMG('tucano-asas')}" data-dance="${IMG('tucano-asas')}" data-freeze="${IMG('tucano-frente')}" alt="">
+            </div>
+            <h1 class="khead kswap" id="estHead">Vamos dançar!</h1>
+            <p class="ksub kswap" id="estSub">Do seu jeito: com o corpo todo ou só com as mãos</p>`,
+          run(el, h) {
+            const head = el.querySelector('#estHead');
+            const sub = el.querySelector('#estSub');
+            const imgs = el.querySelectorAll('img[data-dance]');
+            const pose = (frozen) => {
+              el.classList.toggle('frozen', frozen);
+              imgs.forEach((im) => { im.src = frozen ? im.dataset.freeze : im.dataset.dance; });
+            };
+            const dance = (again) => {
+              pose(false);
+              head.classList.remove('freeze');
+              head.textContent = 'Dança!';
+              sub.textContent = 'Do seu jeito: com o corpo todo ou só com as mãos';
+              h.bed('dance');
+              if (again) h.say('est-04');
+            };
+            const freeze = () => {
+              pose(true);
+              head.classList.add('freeze');
+              head.textContent = 'Estátua!';
+              sub.textContent = 'Fica paradinho... respira...';
+              h.bed(null);
+              h.say('est-02');
+              h.later(() => h.say('est-03'), 2200);
+            };
+            h.later(() => h.say('est-01'), 900);
+            // 3 rodadas: 20 s dançando + 6 s de estátua
+            let t = 6;
+            for (let r = 0; r < 3; r++) {
+              const start = t;
+              h.later(() => dance(r > 0), start * 1000);
+              h.later(freeze, (start + 20) * 1000);
+              t += 26;
+            }
+            h.later(() => {
+              pose(false);
+              head.classList.remove('freeze');
+              head.textContent = 'Que dança bonita!';
+              sub.textContent = 'Agora vamos descansar um pouquinho';
+              h.bed('soft');
+              h.say('est-fim');
+            }, t * 1000);
+          }
+        },
+
+        // BRINCAR: os amigos e os bichos da região (tema do dia)
+        bicho: {
+          types: ['brincar'], dur: 75,
+          html: () => `
+            <div class="krow mid kswap" id="bRow"></div>
+            <h1 class="khead kswap" id="bHead"></h1>
+            <p class="ksub kswap" id="bAlt"></p>`,
+          run(el, h) {
+            const theme = THEMES[state.cycleDay] || THEMES[1];
+            const base = shuffleArray(BICHOS_BASE);
+            const steps = shuffleArray(theme.extras).concat(base).slice(0, 5);
+            const row = el.querySelector('#bRow');
+            const head = el.querySelector('#bHead');
+            const alt = el.querySelector('#bAlt');
+            const swaps = [row, head, alt];
+            const show = (s) => {
+              row.innerHTML = spr(s.img, 'big ' + s.anim);
+              head.innerHTML = s.head;
+              alt.textContent = s.alt;
+              h.say(s.say);
+            };
+            steps.forEach((s, i) => {
+              h.later(() => {
+                swaps.forEach((n) => n.classList.add('out'));
+                h.later(() => { show(s); swaps.forEach((n) => n.classList.remove('out')); }, i === 0 ? 0 : 450);
+              }, i * 15000);
+            });
+            swaps.forEach((n) => n.classList.add('out'));
+          }
+        },
+
+        // ACOLHER: respirar com a tartaruga (4 s enchendo, 6 s soltando, 5 vezes)
+        resp: {
+          types: ['acolher'], dur: 60,
+          html: () => `
+            ${spr('tartaruga-sorri', 'big k-breathe')}
+            <h1 class="khead" id="rHead">Vamos respirar juntos?</h1>
+            <p class="ksub" id="rSub">Se quiser, respira junto com a tartaruga</p>`,
+          run(el, h) {
+            const turtle = el.querySelector('.k-breathe');
+            const head = el.querySelector('#rHead');
+            const sub = el.querySelector('#rSub');
+            const inhale = () => {
+              turtle.style.transition = 'transform 4s ease-in-out';
+              turtle.style.transform = 'scale(1.25)';
+              head.textContent = 'Enche a barriga...';
+              h.say('resp-in');
+            };
+            const exhale = () => {
+              turtle.style.transition = 'transform 6s ease-in-out';
+              turtle.style.transform = 'scale(0.85)';
+              head.textContent = 'Solta devagar...';
+              h.say('resp-out');
+            };
+            h.later(() => h.say('resp-01'), 900);
+            for (let i = 0; i < 5; i++) {
+              h.later(inhale, (6 + i * 10) * 1000);
+              h.later(exhale, (10 + i * 10) * 1000);
+            }
+            h.later(() => {
+              head.textContent = 'Pronto. O corpo fica mais calminho.';
+              sub.textContent = '';
+              h.say('resp-fim');
+            }, 56000);
+          }
+        },
+
+        // PAUSA: tela baixa, sem texto, com som de água. Descanso para os olhos.
+        pausa: {
+          types: ['pausa'], dur: 120, bed: 'water',
+          html: () => `
+            <div class="kwater"><i></i><i></i><i></i></div>
+            ${spr('tartaruga-dorme', 'k-float kpausa')}`,
+          run(el, h) {
+            document.body.classList.add('calm');
+            h.later(() => h.say('pausa-01'), 1200);
+            return () => document.body.classList.remove('calm');
+          }
+        }
+      };
+
+      // Receitas dos blocos (~10 min). 'energia' = 16h–19h, 'calma' = 19h–22h.
+      const RECIPES = {
+        energia: [{ id: 'oi' }, { t: 'fixar', s: 30 }, { t: 'brincar', s: 170 }, { id: 'pausa', dur: 120 }, { t: 'brincar', s: 120 }, { t: 'acolher', s: 60 }],
+        calma: [{ id: 'oi' }, { t: 'brincar', s: 90 }, { id: 'pausa', dur: 150 }, { t: 'acolher', s: 60 }, { t: 'brincar', s: 75 }, { id: 'pausa', dur: 150 }]
+      };
+
+      const kids = { queue: [], idx: 0, timer: null, running: false, current: null, lastId: null, only: null };
+
+      function sceneHelpers() {
+        const timers = [];
+        return {
+          later: (fn, ms) => { const t = setTimeout(fn, ms); timers.push(t); return t; },
+          every: (fn, ms) => { const t = setInterval(fn, ms); timers.push(t); return t; },
+          clear: () => { timers.forEach((t) => { clearTimeout(t); clearInterval(t); }); timers.length = 0; },
+          say: say,
+          bed: setBed
+        };
+      }
+
+      function pickScenes(type, seconds, prev) {
+        const ids = Object.keys(SCENES).filter((id) => id !== 'oi' && id !== 'pausa' && SCENES[id].types.includes(type));
+        const prefer = (THEMES[state.cycleDay] || THEMES[1]).prefer;
+        let pool = shuffleArray(ids);
+        if (pool.includes(prefer)) pool = [prefer].concat(pool.filter((i) => i !== prefer));
+        const out = [];
+        let acc = 0;
+        for (let k = 0; k < 8 && acc < seconds * 0.85; k++) {
+          let id = pool[k % pool.length];
+          if (id === prev && pool.length > 1) id = pool[(k + 1) % pool.length];
+          out.push({ id: id, dur: SCENES[id].dur });
+          acc += SCENES[id].dur;
+          prev = id;
+        }
+        return out;
+      }
+
+      function buildBlock() {
+        if (kids.only) return [{ id: kids.only, dur: SCENES[kids.only].dur }];
+        const theme = THEMES[state.cycleDay] || THEMES[1];
+        let recipe = RECIPES[belemNow().hours >= 19 ? 'calma' : 'energia'];
+        if (theme.extraAcolher) recipe = recipe.concat([{ t: 'acolher', s: 60 }]);
+        const out = [];
+        let prev = kids.lastId;
+        recipe.forEach((seg) => {
+          const picked = seg.id ? [{ id: seg.id, dur: seg.dur || SCENES[seg.id].dur }] : pickScenes(seg.t, seg.s, prev);
+          picked.forEach((p) => { out.push(p); prev = p.id; });
+        });
+        return out;
+      }
+
+      function endScene(immediate) {
+        const c = kids.current;
+        if (!c) return;
+        kids.current = null;
+        c.h.clear();
+        if (typeof c.cleanup === 'function') c.cleanup();
+        stopVoice();
+        c.el.classList.remove('active');
+        if (immediate) c.el.remove();
+        else setTimeout(() => c.el.remove(), 1000);
+      }
+
+      function showScene(item) {
+        const def = SCENES[item.id];
+        endScene(false);
+        const el = document.createElement('div');
+        el.className = 'kscene';
+        el.innerHTML = def.html();
+        dom.kidsContainer.appendChild(el);
+        void el.offsetWidth; // força o início da transição de opacidade
+        el.classList.add('active');
+        const h = sceneHelpers();
+        setBed('bed' in def ? def.bed : 'soft');
+        kids.current = { el: el, h: h, cleanup: def.run(el, h, item) };
+        kids.lastId = item.id;
+      }
+
+      function playNext() {
+        if (!kids.running) return;
+        if (kids.idx >= kids.queue.length) {
+          kids.queue = buildBlock();
+          kids.idx = 0;
+        }
+        const item = kids.queue[kids.idx++];
+        showScene(item);
+        kids.timer = setTimeout(playNext, item.dur * 1000);
+      }
+
+      function kidsStart() {
+        kidsStop();
+        SPRITE_NAMES.forEach((n) => { new Image().src = IMG(n); });
+        kids.running = true;
+        kids.queue = [];
+        kids.idx = 0;
+        unlockAudio();
+        applyVolume();
+        playNext();
+      }
+
+      function kidsStop() {
+        kids.running = false;
+        clearTimeout(kids.timer);
+        endScene(true);
+        dom.kidsContainer.innerHTML = '';
+        setBed(null);
+        stopVoice();
+        document.body.classList.remove('calm');
+        updateSoundHint();
+      }
+
+      setInterval(applyVolume, 60000);
 
       // ----------------------------------------------------------------------
       // CURSOR AUTO-HIDE
@@ -2042,6 +2224,8 @@
           setCycleDay(state.cycleDay + 1);
         } else if (key === 'F') {
           toggleFullscreen();
+        } else if (key === 'S') {
+          toggleSound();
         } else if (key === 'G') {
           toggleGame();
         } else if (key === 'ESCAPE' && state.gameActive) {
@@ -2069,11 +2253,13 @@
           dom.gameScoreText.textContent = 'Pontos: 0';
           clearTimeout(state.slideTimer);
           cancelAnimationFrame(state.progressTimer);
+          kidsStop();
           startGameSession();
         } else {
           dom.gameLayer.classList.remove('active');
           stopGameSession();
-          startSlideCycle();
+          if (state.currentMode === 'kids') kidsStart();
+          else startSlideCycle();
         }
       }
 
@@ -2139,6 +2325,7 @@
         }, 150);
       }
 
+      dom.btnSound.addEventListener('click', toggleSound);
       dom.btnGameToggle.addEventListener('click', toggleGame);
       dom.btnGameClose.addEventListener('click', toggleGame);
       dom.gameCanvas.addEventListener('pointerdown', resetGameInactivity);
@@ -2148,16 +2335,24 @@
         setCycleDay: setCycleDay,
         toggleFullscreen: toggleFullscreen,
         launchGame: toggleGame,
+        toggleSound: toggleSound,
         getState: () => state
       };
 
       // Demonstração por URL: /tv?modo=equipe|vitrine|noite&dia=1..5 (sem parâmetro = automático)
       const params = new URLSearchParams(location.search);
-      const urlMode = { equipe: 'team', vitrine: 'kids', noite: 'night' }[params.get('modo')];
+      let urlMode = { equipe: 'team', crianca: 'kids', vitrine: 'kids', noite: 'night' }[params.get('modo')];
       const urlDay = parseInt(params.get('dia'), 10);
       if (urlDay >= 1 && urlDay <= 5) {
         state.cycleDay = urlDay;
         state.forcedCycleDay = urlDay;
+      }
+
+      // Pré-visualização de uma cena só, em laço: /tv?cena=oi|cor|estatua|bicho|resp|pausa
+      const urlCena = params.get('cena');
+      if (SCENES[urlCena]) {
+        kids.only = urlCena;
+        if (!urlMode) urlMode = 'kids';
       }
 
       // Inicialização: o 1º updateClock() já ativa o turno do horário e inicia o ciclo de slides

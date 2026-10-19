@@ -81,15 +81,17 @@ Para que a experiência seja sempre fresca, interessante e nunca cansativa tanto
   - **Dia 4 — Apoio às Famílias & Escuta Ativa:** Compreensão com os pais que chegam cansados; escuta sem julgamento; acolher a família inteira como parceira.
   - **Dia 5 — Cooperação & Propósito:** Crianças típicas e atípicas aprendem juntas; o orgulho de construir memórias felizes na infância de alguém.
 
-### 4.2. Turno Tarde / Noite (16h00 às 22h00) — Foco nas Crianças & Famílias
-* **Contexto do Shopping:** Horário de pico de movimento. Mães, pais, avós e crianças passeando pelo corredor e pela praça.
-* **Abordagem:** Atração visual de alto impacto (Hero dinâmico), fotos reais das atrações em alta resolução, selos divertidos e mensagens de segurança para os pais.
-* **Os 5 Temas Diários da Vitrine:**
-  - **Dia 1 — O Reino das Mascotes:** A Capivara e o Macaco em pelúcias gigantes para abraçar e passear pelo shopping.
-  - **Dia 2 — Aventura na Piscina Gigante:** A maior piscina de bolinhas, casinha na árvore, escorregadores e monitores treinados.
-  - **Dia 3 — Circuito & Frota Esportiva:** Range Rover, Lamborghini e Caminhão de Bombeiro elétricos para os pequenos pilotos.
-  - **Dia 4 — Inclusão Real:** É para todas as crianças! Com ou sem laudo, todo mundo brinca junto. Meia-entrada inclusiva garantida por lei.
-  - **Dia 5 — Clínica & Desenvolvimento:** O centro especializado em Terapia ABA, Terapia Ocupacional e Fonoaudiologia no Umarizal pela Dra. Isabella Freitas.
+### 4.2. Turno Tarde / Noite (16h00 às 22h00) — Hora da Criança
+* **Público:** a criança que já está dentro do salão. A tela deixou de ser vitrine (sem preço, clínica, laudo ou fotos das atrações; isso é papel da `/tv2` e do site). Ela fala com a criança para **fixar** (saber onde está e o que vem depois), **brincar** (convites ao corpo, sem vencedor) e **acolher** (respirar, descansar).
+* **TV sem toque:** a criança responde com o corpo, guiada pela voz. Toda proposta de movimento tem versão sentada ou só com as mãos.
+* **Personagens:** cachorro (anfitrião, colete FaçaAmigos), tucano (música), macaco (movimento) e tartaruga (calma). 18 poses em `img/amigos/` (recortadas da folha do Drive; peça versões maiores e as poses "bravo" e "triste" quando houver).
+* **Blocos de ~10 min:** `16h–19h` mais brincar; `19h–22h` mais pausa e acolher. Cada bloco: Oi, amigo! → cenas sorteadas por tipo → Pausa do rio → Respira com a tartaruga. A mesma cena nunca repete em sequência.
+* **Cenas do lote 1 (`?cena=`):** `oi`, `cor`, `estatua`, `bicho`, `resp`, `pausa`. Abra `/tv?cena=estatua&dia=5` para ver uma cena em laço.
+* **Tema do dia (ciclo de 5 dias):** 1 bichos da floresta, 2 bichos do rio, 3 cores, 4 calma, 5 música. O tema muda quais cenas e quais bichos aparecem primeiro.
+* **Som:** voz gravada (MP3 gerado no Gemini, em `audio/voz/<id>.mp3`; roteiro em `conteudo/tv-salao-roteiro-de-vozes.md`), trilha "caixinha de música" e som de água sintetizados na página. A lógica de volume por horário e compressor é a mesma da `/tv2`, copiada (a `/tv2` não foi alterada): 0,6 até 18h, 0,8 das 18h às 21h, 0,5 depois. Sem o arquivo de voz, a cena roda só com imagem e trilha.
+* **Primeira vez que a TV liga:** o navegador pode segurar o som até um clique ou tecla (aparece o aviso "Toque ou aperte uma tecla para ligar o som"). No Chrome em modo quiosque, a flag `--autoplay-policy=no-user-gesture-required` dispensa o clique. Tecla `S` liga e desliga o som; `?som=0|1` força.
+* **Cuidados sensoriais:** sem flash, nenhuma troca mais rápida que meio segundo, só `transform` e `opacity`, sem sirene ou buzina, voz calma e lenta.
+* **Fora do lote 1 (lote 2):** "Hora de ir", "Hora da calma" e "Festa" acionadas pela equipe pelo celular (Supabase), Como você está?, Missão FaçaAmigos, Ritmo do carimbó, Onde está o tucano? e as historinhas.
 
 ### 4.3. Turno Noturno (22h00 às 09h59) — Stand-by Suave
 * Tela escura relaxante para Smart TV (proteção de tela contra burn-in), relógio digital grande e aviso: *"Até amanhã! Abrimos às 10h00."*
@@ -103,10 +105,11 @@ Para facilitar testes, reuniões de equipe e demonstrações a investidores sem 
 | Tecla / Ação | Função |
 |---|---|
 | **`1`** | Força o **Turno da Equipe (10h–16h)** |
-| **`2`** | Força o **Turno das Crianças & Vitrine (16h–22h)** |
+| **`2`** | Força a **Hora da Criança (16h–22h)** |
 | **`0`** ou **`A`** | Retorna ao **Modo Automático** por relógio |
 | **`[` e `]`** | Alterna manualmente entre os **Dias 1 a 5 do Ciclo** |
 | **`F`** ou Duplo Clique | Alterna modo **Tela Cheia (Fullscreen)** |
+| **`S`** | Liga ou desliga o **som** (Hora da Criança) |
 | **`G`** | Abre o **Mini-Game Interativo** (Roadmap) |
 
 ---
@@ -127,6 +130,7 @@ Para facilitar testes, reuniões de equipe e demonstrações a investidores sem 
 | `img/galeria-oficinas.webp` | Oficinas criativas e integração infantil |
 | `img/clinica-painel-sensorial.webp` | Painel sensorial do Centro de Terapia |
 | `img/logo-simbolo.png` | Símbolo e ícone oficial da marca |
+| `img/amigos/*.webp` | 18 poses dos personagens (cachorro, tucano, macaco, tartaruga) usadas na Hora da Criança |
 
 ---
 
