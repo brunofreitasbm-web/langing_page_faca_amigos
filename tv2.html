@@ -445,6 +445,7 @@
       <button class="c-hud-btn" id="btnRotate">🔄 [R] Giro</button>
       <button class="c-hud-btn" id="btnFullscreen">⛶ [F] Tela Cheia</button>
       <button class="c-hud-btn" id="btnNext">⏭ [→] Próximo</button>
+      <button class="c-hud-btn" id="btnSound">🔊 [S] Som</button>
     </nav>
   </div>
 
@@ -459,28 +460,32 @@
       // plan: qual cartão de preço acende junto com a foto (20 = pelúcias, 30 = carrinhos).
       // ----------------------------------------------------------------------
       const SLIDES = [
-        { image: 'img/circuito-bombeiro', pos: '50% 40%', plan: 30,
+        { image: 'img/circuito-bombeiro', pos: '50% 40%', plan: 30, sfx: 'sirene',
           kicker: '🚨 Sirene ligada', headline: 'Hoje ele é o <em>herói</em> do shopping.' },
-        { image: 'img/circuito-frota-quiosque', pos: '50% 60%', plan: 30,
+        { image: 'img/circuito-frota-quiosque', pos: '50% 60%', plan: 30, sfx: 'buzina',
           kicker: 'Range Rover ou Lamborghini?', headline: 'Qual ele vai <em>escolher</em> hoje?' },
-        { image: 'img/circuito-macaco', pos: '50% 55%', plan: 30,
+        { image: 'img/circuito-macaco', pos: '50% 55%', plan: 30, sfx: 'vroom',
           kicker: '🎮 Controle remoto com você', headline: 'Ele no volante.<br><em>Você no controle.</em>' },
-        { image: 'img/circuito-equipe-capivara', pos: '50% 40%', plan: 20,
+        { image: 'img/circuito-equipe-capivara', pos: '50% 40%', plan: 20, sfx: 'plim',
           kicker: '🐾 Pelúcias gigantes', headline: 'Um abraço desse tamanho cabe em <em>20 minutos</em>.' },
-        { image: 'img/circuito-bombeiro-h', pos: '50% 40%', plan: 30,
+        { image: 'img/circuito-bombeiro-h', pos: '50% 40%', plan: 30, sfx: 'plim',
           kicker: '📸 Guarda esse momento', headline: 'Essa fase passa rápido.<br><em>Esse sorriso fica.</em>' },
-        { image: 'img/circuito-lamborghini-urus', pos: '50% 60%', plan: 30,
+        { image: 'img/circuito-lamborghini-urus', pos: '50% 60%', plan: 30, sfx: 'vroom',
           kicker: '🏁 Passeio pelo shopping', headline: 'Você respira.<br><em>Ele acelera.</em>' },
-        { image: 'img/circuito-frota-alinhada', pos: '50% 55%', plan: 20,
+        { image: 'img/circuito-frota-alinhada', pos: '50% 55%', plan: 20, sfx: 'buzina',
           kicker: '👉 Está tudo pronto aqui', headline: 'Pode deixar ele <em>escolher</em>.' },
-        { image: 'img/circuito-carrinhos', pos: '30% 60%', plan: 30,
+        { image: 'img/circuito-carrinhos', pos: '30% 60%', plan: 30, sfx: 'tada',
           kicker: '⏱️ Daqui a 30 minutos…', headline: 'Você vai ouvir:<br><em>“De novo!”</em>' }
       ];
 
       const CONFIG = {
         slideDuration: 7000,     // 7s: tempo de um pai cruzar a frente do quiosque
         inactivityTimeout: 3500,
-        rotationKey: 'fa-tv2-giro'
+        rotationKey: 'fa-tv2-giro',
+        soundKey: 'fa-tv2-som',
+        bedLevel: 0.30,          // trilha de fundo bem abaixo dos efeitos
+        sfxLevel: 0.90,
+        bpm: 112                 // andamento alegre, mas sem pressa
       };
 
       const ROTATIONS = ['auto', '90', '270', '0'];
@@ -494,8 +499,162 @@
         plans: document.querySelectorAll('.c-plan'),
         btnRotate: document.getElementById('btnRotate'),
         btnFullscreen: document.getElementById('btnFullscreen'),
-        btnNext: document.getElementById('btnNext')
+        btnNext: document.getElementById('btnNext'),
+        btnSound: document.getElementById('btnSound')
       };
+
+      // ----------------------------------------------------------------------
+      // SOM AMBIENTE — tudo sintetizado com Web Audio (zero arquivo para baixar)
+      // Trilha: arpejo I–vi–IV–V em Dó (a progressão "feliz" de música infantil).
+      // Efeitos: um por foto, sincronizado com a troca — a mudança de som é o que
+      // faz a cabeça de quem passa virar (som constante o cérebro ignora em segundos).
+      // Prioridade: ?som=0|1 na URL > escolha salva com a tecla S > ligado.
+      // ----------------------------------------------------------------------
+      const CHORDS = [
+        { bass: 130.81, arp: [261.63, 329.63, 392.00, 523.25] }, // C
+        { bass: 110.00, arp: [220.00, 261.63, 329.63, 440.00] }, // Am
+        { bass:  87.31, arp: [174.61, 220.00, 261.63, 349.23] }, // F
+        { bass:  98.00, arp: [196.00, 246.94, 293.66, 392.00] }  // G
+      ];
+      const ARP_PATTERN = [0, 1, 2, 3, 2, 1, 2, 1];
+
+      const audio = { ctx: null, master: null, bed: null, sfx: null, on: loadSound(), step: 0, nextAt: 0, timer: null };
+
+      function loadSound() {
+        const fromUrl = new URLSearchParams(location.search).get('som');
+        if (fromUrl === '0' || fromUrl === '1') return fromUrl === '1';
+        try {
+          const saved = localStorage.getItem(CONFIG.soundKey);
+          if (saved === '0' || saved === '1') return saved === '1';
+        } catch (e) { /* armazenamento bloqueado: segue ligado */ }
+        return true;
+      }
+
+      function belemHour() {
+        return new Date(Date.now() - 3 * 3600000).getUTCHours();
+      }
+
+      // Volume geral (0 a 1) conforme a hora de Belém (0–23).
+      function volumeAgora(hora) {
+        // TODO(human): definir a curva de volume ao longo do dia
+        return 0.6;
+      }
+
+      function initAudio() {
+        const AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC || audio.ctx) return;
+        const ctx = audio.ctx = new AC();
+        // Compressor segura os picos: buzina e sirene não estouram a caixa da TV
+        const comp = ctx.createDynamicsCompressor();
+        comp.threshold.value = -18;
+        comp.ratio.value = 6;
+        audio.master = ctx.createGain();
+        audio.bed = ctx.createGain();
+        audio.sfx = ctx.createGain();
+        audio.bed.gain.value = CONFIG.bedLevel;
+        audio.sfx.gain.value = CONFIG.sfxLevel;
+        audio.bed.connect(audio.master);
+        audio.sfx.connect(audio.master);
+        audio.master.connect(comp).connect(ctx.destination);
+        applyVolume();
+      }
+
+      // Navegadores só liberam áudio após um gesto. Na TV, o Chrome em modo
+      // quiosque com --autoplay-policy=no-user-gesture-required começa direto;
+      // sem a flag, qualquer toque/tecla destrava.
+      function unlockAudio() {
+        initAudio();
+        if (audio.ctx && audio.ctx.state === 'suspended') audio.ctx.resume();
+      }
+
+      function applyVolume() {
+        if (!audio.ctx) return;
+        const v = audio.on ? Math.max(0, Math.min(1, volumeAgora(belemHour()))) : 0;
+        audio.master.gain.setTargetAtTime(v, audio.ctx.currentTime, 0.4);
+        dom.btnSound.textContent = audio.on ? `🔊 [S] Som ${Math.round(v * 100)}%` : '🔇 [S] Som';
+      }
+
+      function toggleSound() {
+        audio.on = !audio.on;
+        try { localStorage.setItem(CONFIG.soundKey, audio.on ? '1' : '0'); } catch (e) { /* ignora */ }
+        unlockAudio();
+        applyVolume();
+      }
+
+      function tone(freq, at, dur, opt) {
+        const o = Object.assign({ type: 'sine', gain: 0.2, to: null, dest: audio.sfx }, opt);
+        const ctx = audio.ctx;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = o.type;
+        osc.frequency.setValueAtTime(freq, at);
+        if (o.to) osc.frequency.exponentialRampToValueAtTime(o.to, at + dur);
+        env.gain.setValueAtTime(0.0001, at);
+        env.gain.exponentialRampToValueAtTime(o.gain, at + 0.015);
+        env.gain.exponentialRampToValueAtTime(0.0001, at + dur);
+        osc.connect(env).connect(o.dest);
+        osc.start(at);
+        osc.stop(at + dur + 0.05);
+        return osc;
+      }
+
+      const SFX = {
+        sirene(t) {
+          for (let i = 0; i < 2; i++) {
+            tone(650, t + i * 0.6, 0.3, { type: 'triangle', gain: 0.25, to: 980 });
+            tone(980, t + i * 0.6 + 0.3, 0.3, { type: 'triangle', gain: 0.25, to: 650 });
+          }
+        },
+        buzina(t) {
+          [0, 0.2].forEach(d => {
+            tone(440, t + d, 0.13, { type: 'square', gain: 0.09 });
+            tone(554, t + d, 0.13, { type: 'square', gain: 0.07 });
+          });
+        },
+        vroom(t) {
+          const ctx = audio.ctx;
+          const lp = ctx.createBiquadFilter();
+          lp.type = 'lowpass';
+          lp.frequency.value = 900;
+          lp.connect(audio.sfx);
+          const osc = tone(70, t, 1.1, { type: 'sawtooth', gain: 0.3, dest: lp });
+          osc.frequency.exponentialRampToValueAtTime(240, t + 0.45);
+          osc.frequency.exponentialRampToValueAtTime(130, t + 1.1);
+        },
+        plim(t) {
+          tone(1318.5, t, 0.9, { gain: 0.18 });
+          tone(1975.5, t + 0.08, 0.8, { gain: 0.12 });
+        },
+        tada(t) {
+          [523.25, 659.25, 783.99, 1046.5].forEach((f, i) =>
+            tone(f, t + i * 0.09, i === 3 ? 0.7 : 0.18, { type: 'triangle', gain: 0.2 }));
+        }
+      };
+
+      function playSfx(name) {
+        if (!audio.ctx || audio.ctx.state !== 'running' || !audio.on || !SFX[name]) return;
+        const t = audio.ctx.currentTime + 0.05;
+        // "Ducking": a trilha abaixa enquanto o efeito toca, como em locução de rádio
+        audio.bed.gain.setTargetAtTime(CONFIG.bedLevel * 0.35, t, 0.05);
+        audio.bed.gain.setTargetAtTime(CONFIG.bedLevel, t + 1.2, 0.4);
+        SFX[name](t);
+      }
+
+      // Agendador com antecedência: marca as notas no relógio do áudio (preciso)
+      // em vez de confiar no setInterval (que atrasa quando a TV está ocupada).
+      function scheduleBed() {
+        if (!audio.ctx || audio.ctx.state !== 'running') return;
+        const eighth = 60 / CONFIG.bpm / 2;
+        if (audio.nextAt < audio.ctx.currentTime) audio.nextAt = audio.ctx.currentTime + 0.1;
+        while (audio.nextAt < audio.ctx.currentTime + 0.5) {
+          const chord = CHORDS[Math.floor(audio.step / 8) % CHORDS.length];
+          const pos = audio.step % 8;
+          tone(chord.arp[ARP_PATTERN[pos]], audio.nextAt, eighth * 1.6, { type: 'triangle', gain: 0.12, dest: audio.bed });
+          if (pos === 0 || pos === 4) tone(chord.bass, audio.nextAt, eighth * 3.5, { gain: 0.22, dest: audio.bed });
+          audio.nextAt += eighth;
+          audio.step++;
+        }
+      }
 
       // ----------------------------------------------------------------------
       // GIRO 90º + ESCALA DO PALCO 1080x1920
@@ -581,6 +740,7 @@
         const slide = SLIDES[state.order[state.index]];
         slide.el.classList.add('active');
         dom.plans.forEach(p => p.classList.toggle('on', Number(p.dataset.plan) === slide.plan));
+        playSfx(slide.sfx);
 
         // Reinicia a animação da barra (CSS, sem custo de JS por frame)
         dom.progress.classList.remove('run');
@@ -604,10 +764,15 @@
       dom.btnRotate.addEventListener('click', cycleRotation);
       dom.btnFullscreen.addEventListener('click', toggleFullscreen);
       dom.btnNext.addEventListener('click', show);
+      dom.btnSound.addEventListener('click', toggleSound);
+
+      ['pointerdown', 'keydown', 'touchstart'].forEach(ev =>
+        window.addEventListener(ev, unlockAudio, { passive: true }));
 
       window.addEventListener('keydown', (e) => {
         const k = e.key.toUpperCase();
-        if (k === 'R') cycleRotation();
+        if (k === 'S') toggleSound();
+        else if (k === 'R') cycleRotation();
         else if (k === 'F') toggleFullscreen();
         else if (k === 'ARROWRIGHT' || k === 'N') show();
       });
@@ -638,6 +803,9 @@
       document.documentElement.style.setProperty('--slide-ms', CONFIG.slideDuration + 'ms');
       fitCanvas();
       resetCursorTimer();
+      unlockAudio();
+      setInterval(scheduleBed, 150);
+      setInterval(applyVolume, 60000);
       buildSlides();
       state.order = nextOrder();
       show();
