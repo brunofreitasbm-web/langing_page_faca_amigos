@@ -148,6 +148,85 @@
       font-weight: 700;
     }
 
+    .tv-header-center {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .tv-music-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 4px 16px rgba(26, 63, 53, 0.08);
+      border: 1px solid rgba(46, 207, 181, 0.35);
+      font-family: 'Fredoka', cursive;
+      font-weight: 600;
+      font-size: clamp(0.75rem, 1.1vw, 2.2rem);
+      color: var(--dark);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      max-width: 32vw;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      outline: none;
+    }
+
+    .tv-music-badge:hover {
+      background: #FFFFFF;
+      border-color: var(--teal);
+      transform: translateY(-1px);
+    }
+
+    .tv-music-bars {
+      display: inline-flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 14px;
+      width: 14px;
+      flex-shrink: 0;
+    }
+
+    .tv-music-bars span {
+      width: 2.5px;
+      height: 100%;
+      background: var(--teal-dark);
+      border-radius: 2px;
+      transform-origin: bottom;
+    }
+
+    .tv-music-badge.playing .tv-music-bars span:nth-child(1) {
+      animation: music-bar 0.85s ease-in-out infinite alternate;
+    }
+    .tv-music-badge.playing .tv-music-bars span:nth-child(2) {
+      animation: music-bar 0.6s ease-in-out 0.15s infinite alternate;
+    }
+    .tv-music-badge.playing .tv-music-bars span:nth-child(3) {
+      animation: music-bar 0.75s ease-in-out 0.3s infinite alternate;
+    }
+
+    @keyframes music-bar {
+      0% { height: 25%; opacity: 0.5; }
+      100% { height: 100%; opacity: 1; }
+    }
+
+    .tv-music-badge.muted .tv-music-bars span {
+      height: 25%;
+      background: var(--ink-soft);
+      animation: none;
+      opacity: 0.4;
+    }
+
+    .tv-music-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
     @keyframes pulse-dot {
       0%, 100% { transform: scale(1); opacity: 1; }
       50% { transform: scale(1.35); opacity: 0.6; }
@@ -907,10 +986,19 @@
       </div>
     </div>
 
-    <div class="tv-status-badge">
-      <span class="tv-status-dot" id="statusDot"></span>
-      <span id="statusText">Modo Equipe</span>
-      <span class="tv-cycle-badge" id="cycleBadge">Dia 1/5</span>
+    <div class="tv-header-center">
+      <div class="tv-status-badge">
+        <span class="tv-status-dot" id="statusDot"></span>
+        <span id="statusText">Modo Equipe</span>
+        <span class="tv-cycle-badge" id="cycleBadge">Dia 1/5</span>
+      </div>
+
+      <button class="tv-music-badge muted" id="musicBadge" type="button" title="Música ambiente FaçaAmigos — Clique para próxima faixa [M]">
+        <span class="tv-music-bars" id="musicBars" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+        <span class="tv-music-text" id="musicText">Música ambiente</span>
+      </button>
     </div>
 
     <div class="tv-clock">
@@ -983,6 +1071,7 @@
     <button class="hud-btn" id="btnFullscreen" title="Alternar Tela Cheia">⛶ [F] Tela Cheia</button>
     <button class="hud-btn" id="btnPair" title="Código do controle da equipe (celular)">📱 [C] Controle</button>
     <button class="hud-btn" id="btnSound" title="Ligar ou desligar o som">🔊 [S] Som</button>
+    <button class="hud-btn" id="btnMusicNext" title="Pular para a próxima música ambiente">⏭ [M] Música</button>
     <button class="hud-btn" id="btnGameToggle" title="Abrir Mini-Game Interativo">🎮 [G] Jogos</button>
   </nav>
 
@@ -1403,6 +1492,9 @@
         btnCyclePrev: document.getElementById('btnCyclePrev'),
         btnCycleNext: document.getElementById('btnCycleNext'),
         btnFullscreen: document.getElementById('btnFullscreen'),
+        btnMusicNext: document.getElementById('btnMusicNext'),
+        musicBadge: document.getElementById('musicBadge'),
+        musicText: document.getElementById('musicText'),
         btnGameToggle: document.getElementById('btnGameToggle'),
         btnGameClose: document.getElementById('btnGameClose'),
         gameLayer: document.getElementById('game-layer'),
@@ -1561,11 +1653,15 @@
           dom.statusDot.style.boxShadow = '0 0 10px var(--teal)';
           state.currentSlideDuration = CONFIG.teamSlideDuration;
           startSlideCycle();
+          ambient.pausedByScene = false;
+          if (som.on) playCurrentTrack();
         } else if (newMode === 'kids') {
           dom.screenKids.classList.add('active');
           dom.statusText.textContent = 'Hora da criança';
           dom.statusDot.style.background = 'var(--pink)';
           dom.statusDot.style.boxShadow = '0 0 10px var(--pink)';
+          ambient.pausedByScene = false;
+          if (som.on) playCurrentTrack();
           kidsStart();
         } else {
           dom.screenNight.classList.add('active');
@@ -1573,6 +1669,8 @@
           dom.statusDot.style.background = '#8B5CF6';
           dom.statusDot.style.boxShadow = '0 0 10px #8B5CF6';
           dom.progressFill.style.width = '0%';
+          ambient.audio.pause();
+          updateBadgeStatus(false);
         }
 
         updateHudButtons();
@@ -1623,11 +1721,7 @@
       }
 
       // ----------------------------------------------------------------------
-      // HORA DA CRIANÇA (16h–22h) — MOTOR DE CENAS
-      // A TV do salão não tem toque: a criança responde com o corpo, guiada pela
-      // voz. As cenas rodam em blocos de ~10 min (fixar, brincar, acolher e pausas).
-      // Voz: arquivos MP3 em audio/voz/<id>.mp3 (se um arquivo não existir, a cena
-      // roda só com imagem e trilha). Trilha e água são sintetizadas (zero download).
+      // HORA DA CRIANÇA (16h–22h) — MOTOR DE CENAS & ÁUDIO
       // ----------------------------------------------------------------------
       dom.btnSound = document.getElementById('btnSound');
       dom.soundHint = document.getElementById('soundHint');
@@ -1646,6 +1740,145 @@
         'tucano-parado', 'tucano-asas', 'tucano-frente', 'tucano-joinha',
         'macaco-corda', 'macaco-sentado', 'macaco-danca', 'macaco-bracos-cruzados', 'macaco-coracao', 'macaco-festa',
         'tartaruga-anda', 'tartaruga-dorme', 'tartaruga-sorri', 'tartaruga-ri'];
+
+      // ---------------- MÚSICA AMBIENTE FAÇA AMIGOS ----------------
+      // Playlist rotativa de 20 faixas originais do playground
+      const AMBIENT_TRACKS = [
+        { title: "Abraço de Brincar", file: "abraco-de-brincar.mp3" },
+        { title: "De um Lado pro Outro", file: "de-um-lado-pro-outro.mp3" },
+        { title: "Jardim de Amigos", file: "jardim-de-amigos.mp3" },
+        { title: "Lugar de Ser Feliz", file: "lugar-de-ser-feliz.mp3" },
+        { title: "Mittens in the Toy Chest", file: "mittens-in-the-toy-chest.mp3" },
+        { title: "Nosso Recreio", file: "nosso-recreio.mp3" },
+        { title: "Nuvem Mansa", file: "nuvem-mansa.mp3" },
+        { title: "Open Palms", file: "open-palms.mp3" },
+        { title: "O Chão É Sol", file: "o-chao-e-sol.mp3" },
+        { title: "O Chão É um Convite", file: "o-chao-e-um-convite.mp3" },
+        { title: "O Mundo É um Jardim", file: "o-mundo-e-um-jardim.mp3" },
+        { title: "O Nosso Papel", file: "o-nosso-papel.mp3" },
+        { title: "O Passo Miúdo", file: "o-passo-miudo.mp3" },
+        { title: "O Playground da Gente", file: "o-playground-da-gente.mp3" },
+        { title: "Passo Miúdo", file: "passo-miudo.mp3" },
+        { title: "Small Footsteps on Cedar", file: "small-footsteps-on-cedar.mp3" },
+        { title: "Sunlight on the Conservatory", file: "sunlight-on-the-conservatory.mp3" },
+        { title: "Sunlight on the Slide", file: "sunlight-on-the-slide.mp3" },
+        { title: "The Highest Arc", file: "the-highest-arc.mp3" },
+        { title: "Through the Garden Gate", file: "through-the-garden-gate.mp3" }
+      ];
+
+      const ambient = {
+        audio: new Audio(),
+        tracks: [...AMBIENT_TRACKS],
+        order: [],
+        index: 0,
+        ducked: false,
+        pausedByScene: false,
+        volumeLevel: 0.35, // nível suave de fundo no salão
+        fadeInterval: null
+      };
+
+      function shuffleAmbientOrder() {
+        ambient.order = Array.from({ length: ambient.tracks.length }, (_, i) => i);
+        for (let i = ambient.order.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [ambient.order[i], ambient.order[j]] = [ambient.order[j], ambient.order[i]];
+        }
+        ambient.index = 0;
+      }
+
+      function getCurrentTrack() {
+        if (!ambient.order.length) shuffleAmbientOrder();
+        return ambient.tracks[ambient.order[ambient.index]];
+      }
+
+      function getTargetAmbientVolume() {
+        if (!som.on || state.currentMode === 'night' || ambient.pausedByScene) return 0;
+        const hour = belemNow().hours;
+        const base = volumeAgora(hour);
+        let v = base * ambient.volumeLevel;
+        if (ambient.ducked) v *= 0.25; // voz em primeiro plano
+        return Math.max(0, Math.min(1, v));
+      }
+
+      function updateAmbientVolume(smooth) {
+        const target = getTargetAmbientVolume();
+        if (!smooth) {
+          ambient.audio.volume = target;
+          return;
+        }
+        clearInterval(ambient.fadeInterval);
+        const start = ambient.audio.volume;
+        const diff = target - start;
+        const steps = 12;
+        let s = 0;
+        ambient.fadeInterval = setInterval(() => {
+          s++;
+          ambient.audio.volume = Math.max(0, Math.min(1, start + diff * (s / steps)));
+          if (s >= steps) {
+            clearInterval(ambient.fadeInterval);
+            if (target === 0 && !som.on) {
+              ambient.audio.pause();
+            }
+          }
+        }, 35);
+      }
+
+      function updateBadgeStatus(isPlaying) {
+        if (!dom.musicBadge) return;
+        const active = !!isPlaying && som.on && state.currentMode !== 'night' && !ambient.pausedByScene;
+        dom.musicBadge.classList.toggle('playing', active);
+        dom.musicBadge.classList.toggle('muted', !som.on || state.currentMode === 'night');
+      }
+
+      function updateBadgeTitle(title) {
+        if (dom.musicText) {
+          dom.musicText.textContent = title ? `🎵 ${title}` : 'Música ambiente';
+        }
+      }
+
+      function playCurrentTrack() {
+        const track = getCurrentTrack();
+        if (!track) return;
+        const targetSrc = `audio/musica/${track.file}`;
+        if (!ambient.audio.src.endsWith(track.file)) {
+          ambient.audio.src = targetSrc;
+        }
+        updateBadgeTitle(track.title);
+
+        if (!som.on || state.currentMode === 'night' || ambient.pausedByScene) {
+          ambient.audio.pause();
+          updateBadgeStatus(false);
+          return;
+        }
+
+        ambient.audio.volume = getTargetAmbientVolume();
+        const p = ambient.audio.play();
+        if (p && p.catch) {
+          p.then(() => {
+            updateBadgeStatus(true);
+            updateSoundHint();
+          }).catch(() => {
+            updateBadgeStatus(false);
+            updateSoundHint();
+          });
+        } else {
+          updateBadgeStatus(true);
+        }
+      }
+
+      function nextAmbientTrack() {
+        ambient.index++;
+        if (ambient.index >= ambient.order.length) {
+          shuffleAmbientOrder();
+        }
+        playCurrentTrack();
+      }
+
+      ambient.audio.addEventListener('ended', nextAmbientTrack);
+      ambient.audio.addEventListener('error', (err) => {
+        console.warn('Erro ao reproduzir faixa de áudio, avançando...', err);
+        nextAmbientTrack();
+      });
 
       // ---------------- SOM ----------------
       // Volume por horário de Belém: sobe um pouco às 18h (salão cheio) e desce às 21h.
@@ -1699,7 +1932,7 @@
       }
 
       function updateSoundHint() {
-        const blocked = som.on && state.currentMode === 'kids' && !soundRunning();
+        const blocked = som.on && state.currentMode !== 'night' && (!soundRunning() || ambient.audio.paused);
         dom.soundHint.classList.toggle('on', blocked);
       }
 
@@ -1712,6 +1945,7 @@
           else if (!som.on) stopWater();
         }
         if (som.voice) som.voice.volume = v;
+        updateAmbientVolume(true);
         dom.btnSound.textContent = som.on ? `🔊 [S] Som ${Math.round(v * 100)}%` : '🔇 [S] Som';
       }
 
@@ -1722,24 +1956,37 @@
         if (som.ctx && som.ctx.state === 'suspended') {
           som.ctx.resume().then(() => { updateSoundHint(); applyVolume(); });
         }
+        if (som.on && state.currentMode !== 'night') {
+          if (ambient.audio.paused) {
+            playCurrentTrack();
+          } else {
+            updateAmbientVolume(true);
+          }
+        }
         updateSoundHint();
       }
 
       function toggleSound() {
-        if (!soundRunning()) {
+        if (!som.on) {
           som.on = true;
         } else {
-          som.on = !som.on;
+          som.on = false;
         }
         try { localStorage.setItem(KCFG.soundKey, som.on ? '1' : '0'); } catch (e) { /* ignora */ }
-        if (!som.on) stopVoice();
-        unlockAudio();
+        if (!som.on) {
+          stopVoice();
+          ambient.audio.pause();
+          updateBadgeStatus(false);
+        } else {
+          unlockAudio();
+          playCurrentTrack();
+        }
         applyVolume();
         updateSoundHint();
       }
 
       ['pointerdown', 'keydown'].forEach((evt) => {
-        window.addEventListener(evt, () => { if (state.currentMode === 'kids') unlockAudio(); }, { passive: true });
+        window.addEventListener(evt, () => { unlockAudio(); }, { passive: true });
       });
 
       function tone(freq, at, dur, opt) {
@@ -1800,26 +2047,18 @@
       function scheduleBed() {
         if (!soundRunning() || !som.on) return;
         const mode = som.mode;
-        if (mode !== 'soft' && mode !== 'dance' && mode !== 'rhythm') return;
-        const eighth = 60 / (mode === 'dance' ? 104 : mode === 'rhythm' ? som.bpm : 72) / 2;
+        // Agora a melodia ambiente é fornecida pelas 20 faixas orquestradas.
+        // O sintetizador é reservado exclusivamente para percussão de dinâmicas (ritmo).
+        if (mode !== 'rhythm') return;
+        const eighth = 60 / som.bpm / 2;
         if (som.nextAt < som.ctx.currentTime) som.nextAt = som.ctx.currentTime + 0.1;
         while (som.nextAt < som.ctx.currentTime + 0.5) {
-          const chord = CHORDS[Math.floor(som.step / 8) % CHORDS.length];
           const pos = som.step % 8;
-          if (mode === 'dance') {
-            tone(chord.arp[ARP_DANCE[pos]], som.nextAt, eighth * 1.4, { type: 'triangle', gain: 0.1 });
-            if (pos === 0 || pos === 4) tone(chord.bass, som.nextAt, eighth * 3, { gain: 0.18 });
-          } else if (mode === 'rhythm') {
-            // batida de carimbó: "tum . tá tá | tum . tá ." (tambor grave e palma curta, sem agudos duros)
-            if (pos === 0 || pos === 4) drum(som.nextAt, 0.5);
-            if (pos === 5) drum(som.nextAt, 0.22);
-            if (pos === 2 || pos === 6) clap(som.nextAt, 0.3);
-            if (pos === 3) clap(som.nextAt, 0.16);
-          } else {
-            // caixinha de música: uma nota longa a cada duas colcheias
-            if (pos % 2 === 0) tone(chord.arp[ARP_SOFT[pos / 2]], som.nextAt, eighth * 4, { gain: 0.12 });
-            if (pos === 0) tone(chord.bass, som.nextAt, eighth * 8, { gain: 0.12 });
-          }
+          // batida de carimbó: "tum . tá tá | tum . tá ." (tambor grave e palma curta, sem agudos duros)
+          if (pos === 0 || pos === 4) drum(som.nextAt, 0.5);
+          if (pos === 5) drum(som.nextAt, 0.22);
+          if (pos === 2 || pos === 6) clap(som.nextAt, 0.3);
+          if (pos === 3) clap(som.nextAt, 0.16);
           som.nextAt += eighth;
           som.step++;
         }
@@ -1865,7 +2104,7 @@
         setTimeout(() => { try { w.src.stop(); w.lfo.stop(); } catch (e) { /* já parado */ } }, 1800);
       }
 
-      // 'soft' (caixinha de música), 'dance' (ritmo da Estátua), 'water' (Pausa do rio) ou null (silêncio)
+      // 'soft' (retoma ambiente), 'dance' (retoma ambiente), 'water' (pausa com rio) ou null (congelamento)
       function setBed(mode) {
         if (som.mode === mode) return;
         som.mode = mode;
@@ -1873,10 +2112,26 @@
         som.nextAt = 0;
         stopWater();
         if (mode === 'water' && soundRunning() && som.on) startWater();
+
+        if (mode === null) {
+          // Congela a música ambiente durante o momento "Estátua!"
+          ambient.pausedByScene = true;
+          ambient.audio.pause();
+          updateBadgeStatus(false);
+        } else {
+          if (ambient.pausedByScene) {
+            ambient.pausedByScene = false;
+            if (som.on && state.currentMode !== 'night') {
+              playCurrentTrack();
+            }
+          }
+        }
       }
 
       function unduck() {
         clearTimeout(som.unduckTimer);
+        ambient.ducked = false;
+        updateAmbientVolume(true);
         if (som.ctx) som.bed.gain.setTargetAtTime(KCFG.bedLevel, som.ctx.currentTime, 0.4);
       }
 
@@ -1894,7 +2149,9 @@
         a.addEventListener('error', () => { som.missing.add(id); unduck(); });
         a.addEventListener('ended', unduck);
         som.voice = a;
-        som.bed.gain.setTargetAtTime(KCFG.bedLevel * 0.35, som.ctx.currentTime, 0.1);
+        ambient.ducked = true;
+        updateAmbientVolume(true);
+        if (som.ctx) som.bed.gain.setTargetAtTime(KCFG.bedLevel * 0.35, som.ctx.currentTime, 0.1);
         som.unduckTimer = setTimeout(unduck, 9000);
         const p = a.play();
         if (p && p.catch) p.catch(() => { /* gesto ainda não liberou: ignora */ });
@@ -1904,8 +2161,12 @@
       function playJingle() {
         if (!som.on || !soundRunning()) return;
         stopVoice();
+        ambient.ducked = true;
+        updateAmbientVolume(true);
         const a = new Audio(KCFG.jingle);
         a.volume = volumeAgora(belemNow().hours);
+        a.addEventListener('ended', unduck);
+        a.addEventListener('error', unduck);
         som.voice = a;
         const p = a.play();
         if (p && p.catch) p.catch(() => { /* gesto ainda não liberou: ignora */ });
@@ -2646,6 +2907,8 @@
           togglePair();
         } else if (key === 'S') {
           toggleSound();
+        } else if (key === 'M') {
+          nextAmbientTrack();
         } else if (key === 'G') {
           toggleGame();
         } else if (key === 'ESCAPE' && state.gameActive) {
@@ -2746,6 +3009,8 @@
       }
 
       dom.btnSound.addEventListener('click', toggleSound);
+      if (dom.btnMusicNext) dom.btnMusicNext.addEventListener('click', nextAmbientTrack);
+      if (dom.musicBadge) dom.musicBadge.addEventListener('click', nextAmbientTrack);
       dom.btnPair.addEventListener('click', togglePair);
       dom.btnGameToggle.addEventListener('click', toggleGame);
       dom.btnGameClose.addEventListener('click', toggleGame);
@@ -2757,6 +3022,9 @@
         toggleFullscreen: toggleFullscreen,
         launchGame: toggleGame,
         toggleSound: toggleSound,
+        nextTrack: nextAmbientTrack,
+        getCurrentTrack: getCurrentTrack,
+        getTracks: () => AMBIENT_TRACKS,
         command: (type) => onRemote('cmd', { type: type }),
         getState: () => state
       };
