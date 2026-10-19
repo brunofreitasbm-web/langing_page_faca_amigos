@@ -7,7 +7,7 @@ Se o arquivo não existir, a cena roda só com imagem e trilha (a TV não quebra
 
 > Leia em português do Brasil, com voz feminina calma e acolhedora, devagar, como uma professora de educação infantil falando com crianças pequenas. Sorriso na voz, sem gritar, com pausas curtas nas reticências.
 
-A cachorra golden se chama **Zoe** (já está escrito nas falas). Os nomes entre chaves ({Tucano}, {Macaco}, {Tartaruga}) devem ser trocados pelo nome do personagem quando ele tiver um. Sem nome: apagar as chaves e usar "o tucano", "o macaco", "a tartaruga". Falas de Acolher e Como você está? precisam da revisão da Isabella antes de gerar.
+Os personagens são a **Zoe** (cachorra golden), o **Tuco** (tucano), o **Cacao** (macaco) e a **Tati** (tartaruga). Os nomes já estão escritos nas falas. Falas de Acolher e Como você está? precisam da revisão da Isabella antes de gerar.
 
 
 ## Oi, amigo!
@@ -16,7 +16,7 @@ A cachorra golden se chama **Zoe** (já está escrito nas falas). Os nomes entre
 |---|---|
 | oi-01.mp3 | Oi! Que bom que você veio. |
 | oi-02.mp3 | Aqui a gente tira os sapatos, brinca, descansa... e depois dá tchau. |
-| oi-03.mp3 | A Zoe, o {Tucano}, o {Macaco} e a {Tartaruga} vão brincar com você hoje. |
+| oi-03.mp3 | A Zoe, o Tuco, o Cacao e a Tati vão brincar com você hoje. |
 
 ## Ache a cor
 
@@ -42,21 +42,21 @@ A cachorra golden se chama **Zoe** (já está escrito nas falas). Os nomes entre
 
 | Arquivo | Fala |
 |---|---|
-| bicho-tartaruga-lenta.mp3 | Vamos andar devagar como a {Tartaruga}? Bem devagarinho... |
-| bicho-tucano.mp3 | O {Tucano} abre as asas bem grandes. Abre também! Ou abre e fecha as mãos. |
-| bicho-macaco.mp3 | O {Macaco} balança, balança... balança os braços com ele. |
+| bicho-tartaruga-lenta.mp3 | Vamos andar devagar como a Tati? Bem devagarinho... |
+| bicho-tucano.mp3 | O Tuco abre as asas bem grandes. Abre também! Ou abre e fecha as mãos. |
+| bicho-macaco.mp3 | O Cacao balança, balança... balança os braços com ele. |
 | bicho-zoe.mp3 | A Zoe pula de alegria! Pula também... ou bate os pés no chão. |
-| bicho-macaco-corda.mp3 | O {Macaco} balança na corda, bem devagarinho... Balança os braços com ele. |
-| bicho-tartaruga.mp3 | A tartaruga se esconde no casco... cadê você? |
-| bicho-tartaruga-nada.mp3 | A {Tartaruga} nada no rio. Faz ondas com o braço. |
+| bicho-macaco-corda.mp3 | O Cacao balança na corda, bem devagarinho... Balança os braços com ele. |
+| bicho-tartaruga.mp3 | A Tati se esconde no casco... cadê você? |
+| bicho-tartaruga-nada.mp3 | A Tati nada no rio. Faz ondas com o braço. |
 | bicho-zoe-quieta.mp3 | A Zoe fica quietinha... Anda de mansinho, nas pontas dos pés ou só com os dedinhos na mesa. |
-| bicho-tucano-estica.mp3 | O {Tucano} estica o pescoço bem alto... bem alto! Estica os braços também. |
+| bicho-tucano-estica.mp3 | O Tuco estica o pescoço bem alto... bem alto! Estica os braços também. |
 
-## Respira com a tartaruga
+## Respira com a Tati
 
 | Arquivo | Fala |
 |---|---|
-| resp-01.mp3 | Vamos respirar junto com a {Tartaruga}? |
+| resp-01.mp3 | Vamos respirar junto com a Tati? |
 | resp-in.mp3 | Enche a barriga... |
 | resp-out.mp3 | Solta devagar... |
 | resp-fim.mp3 | Pronto. O corpo fica mais calminho. |
