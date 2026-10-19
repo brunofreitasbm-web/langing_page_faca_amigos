@@ -84,10 +84,10 @@ Para que a experiência seja sempre fresca, interessante e nunca cansativa tanto
 ### 4.2. Turno Tarde / Noite (16h00 às 22h00) — Hora da Criança
 * **Público:** a criança que já está dentro do salão. A tela deixou de ser vitrine (sem preço, clínica, laudo ou fotos das atrações; isso é papel da `/tv2` e do site). Ela fala com a criança para **fixar** (saber onde está e o que vem depois), **brincar** (convites ao corpo, sem vencedor) e **acolher** (respirar, descansar).
 * **TV sem toque:** a criança responde com o corpo, guiada pela voz. Toda proposta de movimento tem versão sentada ou só com as mãos.
-* **Personagens:** cachorro (anfitrião, colete FaçaAmigos), tucano (música), macaco (movimento) e tartaruga (calma). 18 poses em `img/amigos/` (recortadas da folha do Drive; peça versões maiores e as poses "bravo" e "triste" quando houver).
+* **Personagens:** a cachorra golden **Zoe** (anfitriã, colete FaçaAmigos), o tucano (música), o macaco (movimento, ainda sem nome) e a tartaruga (calma). Cada um aparece sempre como ele mesmo, nunca como outro bicho. 18 poses em `img/amigos/` (recortadas da folha do Drive; peça versões maiores e as poses "bravo" e "triste" quando houver).
 * **Blocos de ~10 min:** `16h–19h` mais brincar; `19h–22h` mais pausa e acolher. Cada bloco: Oi, amigo! → cenas sorteadas por tipo → Pausa do rio → Respira com a tartaruga. A mesma cena nunca repete em sequência.
 * **Cenas do lote 1 (`?cena=`):** `oi`, `cor`, `estatua`, `bicho`, `resp`, `pausa`. Abra `/tv?cena=estatua&dia=5` para ver uma cena em laço.
-* **Tema do dia (ciclo de 5 dias):** 1 bichos da floresta, 2 bichos do rio, 3 cores, 4 calma, 5 música. O tema muda quais cenas e quais bichos aparecem primeiro.
+* **Tema do dia (ciclo de 5 dias):** 1 amigos da floresta, 2 amigos do rio, 3 cores, 4 calma, 5 música. O tema muda quais cenas e quais movimentos aparecem primeiro.
 * **Som:** voz gravada (MP3 gerado no Gemini, em `audio/voz/<id>.mp3`; roteiro em `conteudo/tv-salao-roteiro-de-vozes.md`), trilha "caixinha de música" e som de água sintetizados na página. A lógica de volume por horário e compressor é a mesma da `/tv2`, copiada (a `/tv2` não foi alterada): 0,6 até 18h, 0,8 das 18h às 21h, 0,5 depois. Sem o arquivo de voz, a cena roda só com imagem e trilha.
 * **Primeira vez que a TV liga:** o navegador pode segurar o som até um clique ou tecla (aparece o aviso "Toque ou aperte uma tecla para ligar o som"). No Chrome em modo quiosque, a flag `--autoplay-policy=no-user-gesture-required` dispensa o clique. Tecla `S` liga e desliga o som; `?som=0|1` força.
 * **Cuidados sensoriais:** sem flash, nenhuma troca mais rápida que meio segundo, só `transform` e `opacity`, sem sirene ou buzina, voz calma e lenta.
@@ -130,7 +130,7 @@ Para facilitar testes, reuniões de equipe e demonstrações a investidores sem 
 | `img/galeria-oficinas.webp` | Oficinas criativas e integração infantil |
 | `img/clinica-painel-sensorial.webp` | Painel sensorial do Centro de Terapia |
 | `img/logo-simbolo.png` | Símbolo e ícone oficial da marca |
-| `img/amigos/*.webp` | 18 poses dos personagens (cachorro, tucano, macaco, tartaruga) usadas na Hora da Criança |
+| `img/amigos/*.webp` | 18 poses dos personagens (Zoe, tucano, macaco, tartaruga) usadas na Hora da Criança |
 
 ---
 

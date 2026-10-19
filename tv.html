@@ -1804,24 +1804,23 @@
       // Cada passo do Imite o bicho tem versão só de mãos (ninguém fica de fora).
       const BICHOS_BASE = [
         { img: 'tartaruga-anda', anim: 'k-creep', head: 'Devagar como a <em>tartaruga</em>', alt: 'Ou: mexe os braços bem devagarinho', say: 'bicho-tartaruga-lenta' },
-        { img: 'cachorro-pula', anim: 'k-hop', head: 'Pula como o <em>cachorro</em>', alt: 'Ou: bate os pés no chão', say: 'bicho-cachorro' },
+        { img: 'cachorro-pula', anim: 'k-hop', head: 'Pula como a <em>Zoe</em>', alt: 'Ou: bate os pés no chão', say: 'bicho-zoe' },
         { img: 'tucano-asas', anim: 'k-flap', head: 'Abre as asas como o <em>tucano</em>', alt: 'Ou: abre e fecha as mãos', say: 'bicho-tucano' },
         { img: 'macaco-festa', anim: 'k-sway', head: 'Balança como o <em>macaco</em>', alt: 'Ou: balança só os braços', say: 'bicho-macaco' },
         { img: 'tartaruga-dorme', anim: 'k-sway', head: 'Se esconde como a <em>tartaruga</em>', alt: 'Ou: cobre o rosto com as mãos', say: 'bicho-tartaruga' }
       ];
       const BICHOS_FLORESTA = [
-        { img: 'macaco-corda', anim: 'k-sway', head: 'Devagar como a <em>preguiça</em>', alt: 'Ou: mexe os braços bem devagarinho', say: 'bicho-preguica' },
-        { img: 'cachorro-deitado', anim: 'k-float', head: 'Quietinho como a <em>onça</em>', alt: 'Ou: anda com os dedinhos na mesa', say: 'bicho-onca' }
+        { img: 'macaco-corda', anim: 'k-sway', head: 'Balança na corda como o <em>macaco</em>', alt: 'Ou: mexe os braços bem devagarinho', say: 'bicho-macaco-corda' },
+        { img: 'cachorro-deitado', anim: 'k-float', head: 'Quietinha como a <em>Zoe</em>', alt: 'Ou: anda com os dedinhos na mesa', say: 'bicho-zoe-quieta' }
       ];
       const BICHOS_RIO = [
-        { img: 'tartaruga-sorri', anim: 'k-sway', head: 'Nada como o <em>boto</em>', alt: 'Ou: faz ondas com o braço', say: 'bicho-boto' },
-        { img: 'tartaruga-anda', anim: 'k-float', head: 'Tranquilo como o <em>peixe-boi</em>', alt: 'Ou: respira devagar', say: 'bicho-peixeboi' },
-        { img: 'tucano-parado', anim: 'k-float', head: 'Estica o pescoço como a <em>garça</em>', alt: 'Ou: estica os braços para cima', say: 'bicho-garca' }
+        { img: 'tartaruga-sorri', anim: 'k-sway', head: 'Nada no rio como a <em>tartaruga</em>', alt: 'Ou: faz ondas com o braço', say: 'bicho-tartaruga-nada' },
+        { img: 'tucano-parado', anim: 'k-float', head: 'Estica o pescoço como o <em>tucano</em>', alt: 'Ou: estica os braços para cima', say: 'bicho-tucano-estica' }
       ];
 
       const THEMES = {
-        1: { nome: 'Bichos da floresta', prefer: 'bicho', extras: BICHOS_FLORESTA },
-        2: { nome: 'Bichos do rio', prefer: 'bicho', extras: BICHOS_RIO },
+        1: { nome: 'Amigos da floresta', prefer: 'bicho', extras: BICHOS_FLORESTA },
+        2: { nome: 'Amigos do rio', prefer: 'bicho', extras: BICHOS_RIO },
         3: { nome: 'Cores e formas', prefer: 'cor', extras: [] },
         4: { nome: 'Calma e sentimentos', prefer: 'resp', extras: [], extraAcolher: true },
         5: { nome: 'Música e ritmo', prefer: 'estatua', extras: [] }
@@ -1948,7 +1947,7 @@
           }
         },
 
-        // BRINCAR: os amigos e os bichos da região (tema do dia)
+        // BRINCAR: cada amigo faz o seu movimento (o tema do dia escolhe quais entram primeiro)
         bicho: {
           types: ['brincar'], dur: 75,
           html: () => `
