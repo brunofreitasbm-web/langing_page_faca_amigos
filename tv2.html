@@ -557,7 +557,8 @@
 
       // Volume geral (0 a 1) conforme a hora de Belém (0–23).
       function volumeAgora(hora) {
-        // TODO(human): definir a curva de volume ao longo do dia
+        // Pico do shopping (18h–22h): mais ruído e mais pais passando
+        if (hora >= 18 && hora < 22) return 0.8;
         return 0.6;
       }
 
