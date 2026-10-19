@@ -226,6 +226,18 @@ Arquivos novos: `img/amigos/*.webp` (18 poses), `audio/voz/*.mp3` (42 falas), `c
 4. Vinheta que avisa a dinâmica: `audio/vinheta-dinamica.mp3`, gerada por `python scripts/generate-vinheta.py` (precisa de numpy e ffmpeg).
 5. Manual de operação para a equipe: `conteudo/manual-tv-salao.png` (1080x1920, para enviar no WhatsApp).
 
+## Lote 12: controle da equipe pelo celular (/tv-controle), 19/10/2026
+
+Arquivos novos: `tv-controle.html` (a página do celular), `assets/fa-realtime.js` (cliente mínimo do Supabase Realtime) e
+`conteudo/manual-controle-celular.*`. O `tv.html` ganhou as cenas Hora de ir, Hora da calma e Festa e escuta o canal.
+
+- Não precisa de nada no Supabase: usa Realtime Broadcast pelo canal `tv-<código>`, com a chave pública (anon) do projeto.
+  Nenhuma tabela, função ou secret novos. Se o Realtime do projeto for desligado ou ficar só para canais privados, o
+  controle para de funcionar (a TV segue normal, só sem receber comandos).
+- 1ª vez em cada TV: abrir `/tv` (o código aparece por 90 s; depois, tecla `C`). No celular, abrir `/tv-controle` e digitar o código.
+  Para escolher o código: `/tv?canal=XXXXXXXX` (8 letras e números).
+- O endereço `/tv-controle` não está no sitemap e tem `noindex`.
+
 ## Links com origem (Instagram, QR, Google)
 
 Use sempre `utm_source`, `utm_medium` e `utm_campaign`. O site guarda a origem e a leva até o lead e o checkout.

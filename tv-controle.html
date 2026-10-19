@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Controle da TV do salão | FaçaAmigos</title>
+  <meta name="description" content="Controle da equipe para a TV do salão do Playground FaçaAmigos.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1A3F35">
+  <link rel="canonical" href="https://institutofacaamigos.com.br/tv-controle">
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pink: #F0196B;
+      --pink-dark: #C81158;
+      --teal: #2ECFB5;
+      --teal-dark: #1FA893;
+      --yellow: #FFE234;
+      --dark: #1A3F35;
+      --ink-soft: #4C6B62;
+      --sage: #E4F1E8;
+      --white: #FFFFFF;
+      --ok: #1B8F5A;
+      --warn: #B7791F;
+      --bad: #C53030;
+      color-scheme: light;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    html { background: var(--sage); }
+
+    body {
+      min-height: 100vh;
+      min-height: 100dvh;
+      font-family: 'Nunito', system-ui, sans-serif;
+      color: var(--dark);
+      background: radial-gradient(circle at 10% 6%, rgba(255, 226, 52, 0.28), transparent 38%),
+                  radial-gradient(circle at 92% 94%, rgba(46, 207, 181, 0.3), transparent 45%), var(--sage);
+      padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(24px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+    }
+
+    .wrap { max-width: 520px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+
+    header { display: flex; align-items: center; gap: 12px; }
+    header img { width: 52px; height: 52px; object-fit: contain; }
+    header b { display: block; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 28px; color: var(--pink); line-height: 1; }
+    header span { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--teal-dark); }
+
+    h1 { font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 30px; line-height: 1.1; text-wrap: balance; }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--white);
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-weight: 800;
+      font-size: 17px;
+      box-shadow: 0 6px 18px rgba(26, 63, 53, 0.1);
+    }
+
+    .status i { flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--warn); }
+    .status[data-s="ok"] i { background: var(--ok); }
+    .status[data-s="bad"] i { background: var(--bad); }
+    .status small { display: block; font-size: 14px; font-weight: 700; color: var(--ink-soft); }
+
+    .actions { display: flex; flex-direction: column; gap: 12px; }
+
+    .act {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+      min-height: 84px;
+      padding: 14px 20px;
+      border: 0;
+      border-radius: 28px;
+      background: var(--bg);
+      color: var(--fg);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(26, 63, 53, 0.16);
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+
+    .act:active { transform: scale(0.97); }
+    .act:disabled { opacity: 0.55; transform: none; }
+    .act:focus-visible, .link:focus-visible, .form button:focus-visible, .form input:focus-visible { outline: 4px solid var(--dark); outline-offset: 3px; }
+
+    .act svg { flex: none; width: 40px; height: 40px; fill: currentColor; }
+    .act b { display: block; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 23px; line-height: 1.1; }
+    .act span { display: block; font-size: 15px; font-weight: 700; opacity: 0.88; margin-top: 2px; }
+
+    .act.main { --bg: var(--pink); --fg: #fff; min-height: 104px; }
+    .act.main b { font-size: 27px; }
+    .act.ir { --bg: var(--teal); --fg: var(--dark); }
+    .act.calma { --bg: var(--dark); --fg: #fff; }
+    .act.festa { --bg: var(--yellow); --fg: var(--dark); }
+    .act.auto { --bg: #fff; --fg: var(--dark); min-height: 68px; box-shadow: inset 0 0 0 3px var(--dark); }
+    .act.auto b { font-size: 20px; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: max(24px, env(safe-area-inset-bottom, 0px));
+      transform: translate(-50%, 20px);
+      background: var(--dark);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 999px;
+      font-weight: 800;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+
+    .toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+    .foot { text-align: center; font-size: 14px; font-weight: 700; color: var(--ink-soft); line-height: 1.5; }
+    .link { background: none; border: 0; font: inherit; font-weight: 900; color: var(--pink-dark); text-decoration: underline; cursor: pointer; }
+
+    .card { background: var(--white); border-radius: 28px; padding: 22px; box-shadow: 0 8px 22px rgba(26, 63, 53, 0.12); display: flex; flex-direction: column; gap: 12px; }
+    .card p { font-size: 17px; font-weight: 700; line-height: 1.4; }
+    .form { display: flex; flex-direction: column; gap: 10px; }
+    .form input {
+      width: 100%;
+      padding: 16px 18px;
+      border: 3px solid var(--dark);
+      border-radius: 20px;
+      font: 900 26px 'Nunito', sans-serif;
+      letter-spacing: 3px;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--dark);
+      background: #fff;
+    }
+    .form button { min-height: 60px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: 400 22px 'Fredoka One', cursive; cursor: pointer; }
+    .err { color: var(--bad); font-weight: 800; font-size: 15px; min-height: 1.2em; }
+
+    [hidden] { display: none !important; }
+
+    @media (prefers-reduced-motion: reduce) { .act, .toast { transition: none; } }
+  </style>
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <div class="wrap">
+    <header>
+      <img src="img/logo-simbolo.png" alt="" width="52" height="52">
+      <div><b>FaçaAmigos</b><span>Controle da TV</span></div>
+    </header>
+
+    <!-- 1ª vez neste celular: código que aparece na TV (tecla C) -->
+    <section class="card" id="pairCard" hidden>
+      <h1>Qual é a TV?</h1>
+      <p>Na TV do salão, aperte a tecla <b>C</b>. Vai aparecer um código de 8 letras e números. Digite aqui.</p>
+      <form class="form" id="pairForm" autocomplete="off">
+        <label for="codeInput" hidden>Código da TV</label>
+        <input id="codeInput" type="text" inputmode="text" autocapitalize="characters" autocorrect="off" spellcheck="false" maxlength="9" placeholder="ABCD-EFGH">
+        <div class="err" id="pairErr" role="alert"></div>
+        <button type="submit">Conectar</button>
+      </form>
+    </section>
+
+    <!-- Painel de controle -->
+    <main id="panel" hidden>
+      <h1>O que a TV faz agora?</h1>
+      <div class="status" id="status" data-s="warn" role="status" aria-live="polite" style="margin-top:12px">
+        <i></i><div><span id="statusMain">Procurando a TV...</span><small id="statusSub">Confira se a TV está ligada em institutofacaamigos.com.br/tv</small></div>
+      </div>
+
+      <div class="actions" style="margin-top:16px">
+        <button class="act main" type="button" data-cmd="dinamica" data-say="Chamando para a dinâmica">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a2 2 0 0 1 2 2v.7A6.5 6.5 0 0 1 18.5 11v4l2 3H3.5l2-3v-4A6.5 6.5 0 0 1 10 4.7V4a2 2 0 0 1 2-2zm-2.2 18h4.4a2.2 2.2 0 0 1-4.4 0z"/></svg>
+          <div><b>Chamar para a dinâmica</b><span>Toca a musiquinha e começa uma brincadeira</span></div>
+        </button>
+        <button class="act ir" type="button" data-cmd="ir" data-say="Hora de ir: 5 minutos">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5v5.2l3.6 2.1-1 1.7L11 13V7h2z"/></svg>
+          <div><b>Hora de ir</b><span>Aviso de 5 minutos antes da saída</span></div>
+        </button>
+        <button class="act calma" type="button" data-cmd="calma" data-say="Hora da calma">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4 6.5 6.5 0 0 0 20 14.5z"/></svg>
+          <div><b>Hora da calma</b><span>Tela baixa e som de água, até você voltar</span></div>
+        </button>
+        <button class="act festa" type="button" data-cmd="festa" data-say="Festa!">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.7-5.2 4.6 1.5 6.8L12 17l-6.1 3.4 1.5-6.8L2.2 9l6.9-.7z"/></svg>
+          <div><b>Festa</b><span>Comemorar uma conquista</span></div>
+        </button>
+        <button class="act auto" type="button" data-cmd="auto" data-say="Voltando ao automático">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V2L7 6.5 12 11V8a5 5 0 1 1-5 5H5a7 7 0 1 0 7-8z"/></svg>
+          <div><b>Voltar ao automático</b><span>A TV segue a programação do horário</span></div>
+        </button>
+      </div>
+
+      <p class="foot" style="margin-top:18px">Código desta TV: <b id="codeShow"></b> · <button class="link" type="button" id="changeTv">Trocar de TV</button></p>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="/assets/fa-realtime.js"></script>
+  <script>
+    (function () {
+      'use strict';
+
+      var KEY = 'fa-tv-canal';
+      var rt = null;
+      var tvSeen = 0;
+      var tvState = null;
+      var timers = [];
+
+      var $ = function (id) { return document.getElementById(id); };
+      var norm = function (s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); };
+      var fmt = function (c) { return (c.slice(0, 4) + '-' + c.slice(4)).toUpperCase(); };
+
+      function save(code) { try { localStorage.setItem(KEY, code); } catch (e) { /* sem armazenamento: pede de novo */ } }
+      function load() { try { return norm(localStorage.getItem(KEY)); } catch (e) { return ''; } }
+      function forget() { try { localStorage.removeItem(KEY); } catch (e) { /* ignora */ } }
+
+      var LABELS = {
+        oi: 'Oi, amigo!', cor: 'Ache a cor', estatua: 'Estátua dos Amigos', bicho: 'Imite os amigos',
+        resp: 'Respira com a Tati', pausa: 'Pausa do rio', ir: 'Hora de ir', calma: 'Hora da calma', festa: 'Festa'
+      };
+
+      function whatTv() {
+        if (!tvState) return '';
+        if (tvState.mode === 'team') return 'Frases da equipe';
+        if (tvState.mode === 'night') return 'Stand-by da noite';
+        return LABELS[tvState.scene] || 'Hora da Criança';
+      }
+
+      function toast(msg) {
+        var t = $('toast');
+        t.textContent = msg;
+        t.classList.add('on');
+        clearTimeout(toast.t);
+        toast.t = setTimeout(function () { t.classList.remove('on'); }, 2200);
+      }
+
+      function render() {
+        var box = $('status');
+        var main = $('statusMain');
+        var sub = $('statusSub');
+        if (!rt || !rt.isOnline()) {
+          box.setAttribute('data-s', 'bad');
+          main.textContent = 'Sem conexão';
+          sub.textContent = 'Confira a internet do celular. Vou tentar de novo sozinho.';
+        } else if (Date.now() - tvSeen > 45000) {
+          box.setAttribute('data-s', 'warn');
+          main.textContent = 'Procurando a TV...';
+          sub.textContent = 'Confira se a TV está ligada em institutofacaamigos.com.br/tv e se o código é o mesmo.';
+        } else {
+          box.setAttribute('data-s', 'ok');
+          main.textContent = 'TV conectada';
+          sub.textContent = 'Agora: ' + whatTv();
+        }
+      }
+
+      function onMessage(event, data) {
+        if (event === 'tv') {
+          tvSeen = Date.now();
+          tvState = data || null;
+          render();
+        }
+      }
+
+      function onStatus(s) {
+        if (s === 'online' && rt) rt.send('ctl', { hello: 1 });
+        render();
+      }
+
+      function start(code) {
+        $('pairCard').hidden = true;
+        $('panel').hidden = false;
+        $('codeShow').textContent = fmt(code);
+        if (rt) rt.close();
+        tvSeen = 0;
+        tvState = null;
+        if (!window.FaRealtime) {
+          $('status').setAttribute('data-s', 'bad');
+          $('statusMain').textContent = 'Não consegui abrir o controle';
+          $('statusSub').textContent = 'Recarregue a página.';
+          return;
+        }
+        rt = window.FaRealtime.join(code, onMessage, onStatus);
+        timers.forEach(clearInterval);
+        timers = [
+          setInterval(render, 3000),
+          setInterval(function () { if (rt && rt.isOnline()) rt.send('ctl', { hello: 1 }); }, 20000)
+        ];
+        render();
+      }
+
+      function showPair() {
+        if (rt) { rt.close(); rt = null; }
+        timers.forEach(clearInterval);
+        $('panel').hidden = true;
+        $('pairCard').hidden = false;
+        $('codeInput').value = '';
+        $('pairErr').textContent = '';
+      }
+
+      $('pairForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        var code = norm($('codeInput').value);
+        if (code.length !== 8) {
+          $('pairErr').textContent = 'O código tem 8 letras e números. Confira na TV (tecla C).';
+          return;
+        }
+        save(code);
+        history.replaceState(null, '', location.pathname);
+        start(code);
+      });
+
+      $('changeTv').addEventListener('click', function () { forget(); showPair(); });
+
+      document.querySelectorAll('.act').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          if (!rt || !rt.isOnline()) {
+            toast('Sem conexão. Tente de novo em instantes.');
+            return;
+          }
+          rt.send('cmd', { type: btn.getAttribute('data-cmd'), t: Date.now() });
+          toast('Enviado: ' + btn.getAttribute('data-say'));
+          btn.disabled = true;
+          setTimeout(function () { btn.disabled = false; }, 1500);
+        });
+      });
+
+      // Código vindo no endereço (tv-controle#abcd-efgh) ou já guardado neste celular
+      var fromHash = norm(location.hash);
+      var code = fromHash.length === 8 ? fromHash : load();
+      if (code.length === 8) {
+        save(code);
+        if (fromHash) history.replaceState(null, '', location.pathname);
+        start(code);
+      } else {
+        showPair();
+      }
+    })();
+  </script>
+</body>
+
+</html>

@@ -3,6 +3,7 @@
 
 <head>
   <script src="/assets/fa-track.js"></script>
+  <script src="/assets/fa-realtime.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FaçaAmigos TV — Salão</title>
@@ -528,6 +529,32 @@
       color: var(--dark);
     }
 
+    .kring.big { width: 28vh; height: 28vh; }
+    .kring.big > b { width: 21vh; height: 21vh; font-size: 10vh; }
+
+    /* Código do controle da equipe (tecla C) */
+    #pairPanel {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 300;
+      display: none;
+      min-width: 38vw;
+      padding: 3.4vh 3vw;
+      border-radius: 36px;
+      background: var(--dark);
+      color: var(--white);
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    #pairPanel.on { display: block; }
+    #pairPanel b { font-family: 'Fredoka One', cursive; font-weight: 400; font-size: clamp(1.4rem, 2.6vw, 6rem); color: var(--yellow); }
+    #pairPanel p { font-weight: 800; font-size: clamp(1rem, 1.7vw, 3.8rem); margin: 1.2vh 0; line-height: 1.3; }
+    #pairPanel .pair-code { font-family: 'Fredoka One', cursive; font-size: clamp(2.6rem, 6vw, 13rem); letter-spacing: 0.08em; color: var(--white); margin: 1vh 0; }
+    #pairPanel small { font-weight: 800; font-size: clamp(0.9rem, 1.4vw, 3rem); color: var(--teal); }
+
     /* Aviso "Vai começar!" (vinheta) */
     .kintro {
       position: absolute;
@@ -922,6 +949,13 @@
 
   <div id="soundHint" role="status">Toque ou aperte uma tecla para ligar o som</div>
 
+  <div id="pairPanel" role="status">
+    <b>Controle da equipe</b>
+    <p>No celular, abra<br><strong>institutofacaamigos.com.br/tv-controle</strong><br>e digite o código:</p>
+    <div class="pair-code" id="pairCode">----</div>
+    <small id="pairState">Conectando...</small>
+  </div>
+
   <!-- ========================================================================
        PAINEL HUD DE CONTROLE DISCRETO (Para Teste, Ciclos e Fullscreen)
        ======================================================================== -->
@@ -932,6 +966,7 @@
     <button class="hud-btn" id="btnCyclePrev" title="Dia Anterior do Ciclo">◀ [</button>
     <button class="hud-btn" id="btnCycleNext" title="Próximo Dia do Ciclo">] ▶</button>
     <button class="hud-btn" id="btnFullscreen" title="Alternar Tela Cheia">⛶ [F] Tela Cheia</button>
+    <button class="hud-btn" id="btnPair" title="Código do controle da equipe (celular)">📱 [C] Controle</button>
     <button class="hud-btn" id="btnSound" title="Ligar ou desligar o som">🔊 [S] Som</button>
     <button class="hud-btn" id="btnGameToggle" title="Abrir Mini-Game Interativo">🎮 [G] Jogos</button>
   </nav>
@@ -2060,6 +2095,70 @@
         }
       };
 
+      // ---- Cenas chamadas pela equipe, pelo celular (/tv-controle). Ficam fora dos blocos (types vazio). ----
+      SCENES.ir = {
+        types: [], dur: 312,
+        html: () => `
+          <div class="krow mid">
+            ${spr('cachorro-acena', 'big k-wave')}
+            <div class="kring big" id="irRing" style="--c:#2ECFB5"><b id="irNum">5</b></div>
+          </div>
+          <h1 class="khead" id="irHead">Daqui a pouco é hora de ir</h1>
+          <p class="ksub" id="irSub">Escolhe a última brincadeira</p>`,
+        run(el, h) {
+          const total = 300; // 5 minutos; os 12 s finais são a despedida
+          let left = total;
+          const ring = el.querySelector('#irRing');
+          const num = el.querySelector('#irNum');
+          const head = el.querySelector('#irHead');
+          const sub = el.querySelector('#irSub');
+          const paint = () => {
+            ring.style.setProperty('--p', Math.max(0, left) / total);
+            const m = Math.ceil(Math.max(0, left) / 60);
+            num.textContent = left > 0 ? m : '';
+            if (left > 60) {
+              sub.textContent = 'Faltam ' + m + ' minutos. Escolhe a última brincadeira';
+            } else if (left > 0) {
+              head.textContent = 'Falta só um minutinho';
+              sub.textContent = 'Dá tchau para os amigos';
+            } else {
+              head.textContent = 'Tchau, amigo! Volta logo.';
+              sub.textContent = 'Os amigos esperam você';
+            }
+          };
+          paint();
+          h.every(() => { left--; paint(); }, 1000);
+          h.later(() => h.say('ir-05'), 1000);
+          h.later(() => h.say('ir-01'), (total - 60) * 1000);
+          h.later(() => h.say('ir-fim'), total * 1000);
+        }
+      };
+
+      // Hora da calma: a mesma tela da Pausa do rio, mas fica até a equipe voltar ao automático (segurança: 15 min)
+      SCENES.calma = {
+        types: [], dur: 900, bed: 'water',
+        html: SCENES.pausa.html,
+        run(el, h) {
+          document.body.classList.add('calm');
+          h.later(() => h.say('calma-01'), 1200);
+          return () => document.body.classList.remove('calm');
+        }
+      };
+
+      SCENES.festa = {
+        types: [], dur: 25, bed: 'dance',
+        html: () => `
+          <div class="krow">
+            ${spr('cachorro-pula', 'big k-hop')}${spr('macaco-festa', 'big k-hop d1')}${spr('tucano-asas', 'big k-flap')}${spr('tartaruga-ri', 'k-sway')}
+          </div>
+          <h1 class="khead freeze">Que conquista bonita!</h1>
+          <p class="ksub">Vamos comemorar juntos!</p>`,
+        run(el, h) {
+          h.later(() => h.say('festa-01'), 800);
+          h.later(() => h.bed('soft'), 20000);
+        }
+      };
+
       // Receitas dos blocos (~10 min). 'energia' = 16h–19h, 'calma' = 19h–22h.
       const RECIPES = {
         energia: [{ id: 'oi' }, { t: 'fixar', s: 30 }, { t: 'brincar', s: 170 }, { id: 'pausa', dur: 120 }, { t: 'brincar', s: 120 }, { t: 'acolher', s: 60 }],
@@ -2192,6 +2291,153 @@
         updateSoundHint();
       }
 
+      // ---------------- CONTROLE DA EQUIPE (celular, /tv-controle) ----------------
+      // A TV escuta o canal "tv-<código>" (Supabase Realtime). O código nasce na 1ª abertura, fica salvo na TV e
+      // aparece com a tecla C. Comandos: dinamica, ir, calma, festa, auto. A TV responde com o que está passando.
+      dom.pairPanel = document.getElementById('pairPanel');
+      dom.pairCode = document.getElementById('pairCode');
+      dom.pairState = document.getElementById('pairState');
+      dom.btnPair = document.getElementById('btnPair');
+
+      const RT_KEY = 'fa-tv-canal';
+      const DYNAMICS = ['estatua', 'bicho', 'cor'];
+      const rtState = { rt: null, code: '', fresh: false, controllerSeen: 0, hideTimer: null };
+      kids.remote = false;
+
+      function normCode(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, ''); }
+      function fmtCode(c) { return (c.slice(0, 4) + '-' + c.slice(4)).toUpperCase(); }
+
+      function newCode() {
+        const alphabet = 'abcdefghjkmnpqrstuvwxyz23456789'; // sem 0, 1, i, l, o (confundem no celular)
+        const bytes = new Uint8Array(8);
+        if (window.crypto && window.crypto.getRandomValues) window.crypto.getRandomValues(bytes);
+        else for (let i = 0; i < 8; i++) bytes[i] = Math.floor(Math.random() * 256);
+        let out = '';
+        for (let i = 0; i < 8; i++) out += alphabet[bytes[i] % alphabet.length];
+        return out;
+      }
+
+      // Prioridade: ?canal=XXXXXXXX na URL > código salvo na TV > código novo
+      function resolveCode() {
+        const fromUrl = normCode(new URLSearchParams(location.search).get('canal'));
+        let code = '';
+        try { code = normCode(localStorage.getItem(RT_KEY)); } catch (e) { /* sem armazenamento */ }
+        if (fromUrl.length === 8) { code = fromUrl; rtState.fresh = true; }
+        else if (code.length !== 8) { code = newCode(); rtState.fresh = true; }
+        try { localStorage.setItem(RT_KEY, code); } catch (e) { /* o código muda a cada abertura */ }
+        return code;
+      }
+
+      function updatePair() {
+        const online = rtState.rt && rtState.rt.isOnline();
+        const seen = Date.now() - rtState.controllerSeen < 60000;
+        dom.pairState.textContent = !online ? 'Conectando à internet...' : seen ? 'Controle conectado' : 'Aguardando o controle...';
+      }
+
+      function hidePair() {
+        clearTimeout(rtState.hideTimer);
+        dom.pairPanel.classList.remove('on');
+      }
+
+      function showPair(seconds) {
+        dom.pairCode.textContent = fmtCode(rtState.code);
+        updatePair();
+        dom.pairPanel.classList.add('on');
+        clearTimeout(rtState.hideTimer);
+        rtState.hideTimer = setTimeout(hidePair, (seconds || 30) * 1000);
+      }
+
+      function togglePair() {
+        if (dom.pairPanel.classList.contains('on')) hidePair();
+        else showPair(30);
+      }
+
+      function announce() {
+        if (!rtState.rt || !rtState.rt.isOnline()) return;
+        rtState.rt.send('tv', {
+          mode: state.currentMode,
+          scene: state.currentMode === 'kids' && kids.current ? kids.lastId : null,
+          remote: kids.remote
+        });
+      }
+
+      // Escolhe a dinâmica do próximo "Chamar para a dinâmica": nunca a mesma de agora, e o tema do dia pesa mais
+      function nextDynamic() {
+        const prefer = (THEMES[state.cycleDay] || THEMES[1]).prefer;
+        let pool = shuffleArray(DYNAMICS.filter((i) => i !== kids.lastId));
+        if (pool.includes(prefer) && Math.random() < 0.6) pool = [prefer].concat(pool.filter((i) => i !== prefer));
+        return pool[0];
+      }
+
+      function remoteScene(id) {
+        if (state.gameActive || state.currentMode === 'night') return;
+        if (state.currentMode !== 'kids') {
+          // Fora do horário da criança (ex.: 11h): vira Hora da Criança só durante esta cena
+          state.tempKids = true;
+          state.forcedMode = 'kids';
+          switchMode('kids');
+          updateHudButtons();
+        }
+        clearTimeout(kids.timer);
+        kids.remote = true;
+        const dur = sceneDur(id);
+        showScene({ id: id, dur: dur });
+        kids.timer = setTimeout(afterRemote, dur * 1000);
+        announce();
+      }
+
+      function afterRemote() {
+        kids.remote = false;
+        if (state.tempKids) {
+          state.tempKids = false;
+          state.forcedMode = null;
+          updateClock();
+          updateHudButtons();
+        } else {
+          // segue o bloco normal, sem repetir o "Oi, amigo!" de boas-vindas
+          kids.queue = buildBlock().filter((i) => i.id !== 'oi');
+          kids.idx = 0;
+          playNext();
+        }
+        announce();
+      }
+
+      function remoteAuto() {
+        if (!kids.remote) return;
+        clearTimeout(kids.timer);
+        afterRemote();
+      }
+
+      function onRemote(event, p) {
+        if (event === 'ctl') {
+          rtState.controllerSeen = Date.now();
+          updatePair();
+          announce();
+          return;
+        }
+        if (event !== 'cmd' || !p) return;
+        rtState.controllerSeen = Date.now();
+        updatePair();
+        if (p.type === 'dinamica') remoteScene(nextDynamic());
+        else if (p.type === 'ir' || p.type === 'calma' || p.type === 'festa') remoteScene(p.type);
+        else if (p.type === 'auto') remoteAuto();
+        else if (p.type === 'ping') announce();
+      }
+
+      function startRemote() {
+        rtState.code = resolveCode();
+        if (window.FaRealtime) {
+          rtState.rt = window.FaRealtime.join(rtState.code, onRemote, (s) => {
+            if (s === 'online') announce();
+            updatePair();
+          });
+          setInterval(announce, 15000);
+          setInterval(updatePair, 5000);
+        }
+        // Código novo (ou vindo na URL): mostra por 90 s para a equipe parear o celular
+        if (rtState.fresh) showPair(90);
+      }
+
       setInterval(applyVolume, 60000);
 
       // ----------------------------------------------------------------------
@@ -2277,6 +2523,8 @@
           setCycleDay(state.cycleDay + 1);
         } else if (key === 'F') {
           toggleFullscreen();
+        } else if (key === 'C') {
+          togglePair();
         } else if (key === 'S') {
           toggleSound();
         } else if (key === 'G') {
@@ -2379,6 +2627,7 @@
       }
 
       dom.btnSound.addEventListener('click', toggleSound);
+      dom.btnPair.addEventListener('click', togglePair);
       dom.btnGameToggle.addEventListener('click', toggleGame);
       dom.btnGameClose.addEventListener('click', toggleGame);
       dom.gameCanvas.addEventListener('pointerdown', resetGameInactivity);
@@ -2389,6 +2638,7 @@
         toggleFullscreen: toggleFullscreen,
         launchGame: toggleGame,
         toggleSound: toggleSound,
+        command: (type) => onRemote('cmd', { type: type }),
         getState: () => state
       };
 
@@ -2400,6 +2650,8 @@
         state.cycleDay = urlDay;
         state.forcedCycleDay = urlDay;
       }
+
+      startRemote();
 
       // Pré-visualização de uma cena só, em laço: /tv?cena=oi|cor|estatua|bicho|resp|pausa
       const urlCena = params.get('cena');

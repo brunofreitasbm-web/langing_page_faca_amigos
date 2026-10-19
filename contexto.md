@@ -92,7 +92,8 @@ Para que a experiência seja sempre fresca, interessante e nunca cansativa tanto
 * **Primeira vez que a TV liga:** o navegador pode segurar o som até um clique ou tecla (aparece o aviso "Toque ou aperte uma tecla para ligar o som"). No Chrome em modo quiosque, a flag `--autoplay-policy=no-user-gesture-required` dispensa o clique. Tecla `S` liga e desliga o som; `?som=0|1` força.
 * **Vinheta "Faça Amigos":** antes de cada dinâmica (Estátua, Imite o bicho e Ache a cor) a TV mostra "Vai começar!" com o Tuco e toca `audio/vinheta-dinamica.mp3` (~5 s, marimba com o ritmo de Fa-ça a-MI-gos e estalo de bolha de chiclete). Pausas, respiração e boas-vindas não têm vinheta. Gerada por `scripts/generate-vinheta.py` (numpy + ffmpeg). O aviso conta como parte da duração da dinâmica.
 * **Cuidados sensoriais:** sem flash, nenhuma troca mais rápida que meio segundo, só `transform` e `opacity`, sem sirene ou buzina, voz calma e lenta.
-* **Fora do lote 1 (lote 2):** "Hora de ir", "Hora da calma" e "Festa" acionadas pela equipe pelo celular (Supabase), Como você está?, Missão FaçaAmigos, Ritmo do carimbó, Onde está o Tuco? e as historinhas.
+* **Controle da equipe pelo celular (lote 2):** página `/tv-controle` (noindex, sem tracking) com 5 botões: Chamar para a dinâmica (vinheta + a próxima dinâmica, escolhida pelo tema do dia), Hora de ir (anel de 5 min, vozes ir-05 / ir-01 / ir-fim e a Zoe dando tchau), Hora da calma (tela baixa e água até voltar, no máximo 15 min), Festa (25 s com música) e Voltar ao automático. Fora do horário da criança (ex.: 11h) o comando abre a Hora da Criança só durante a cena e depois a TV volta ao horário. Comunicação: Supabase Realtime Broadcast, pelo cliente mínimo `assets/fa-realtime.js` (sem biblioteca, sem tabela, sem Edge Function). Cada TV tem um código de 8 letras e números: nasce na 1ª abertura, fica salvo na TV (localStorage `fa-tv-canal`), aparece por 90 s na 1ª vez e a qualquer momento com a tecla `C` (ou `/tv?canal=XXXXXXXX` para escolher o código). O celular digita o código uma vez e guarda. O canal é `tv-<código>`: quem não sabe o código não fala com a TV. A TV avisa o que está passando (a cada 15 s e a cada troca) e o celular mostra "TV conectada". Manual da equipe em imagem: `conteudo/manual-controle-celular.png`.
+* **Ainda fora do lote:** Como você está? (faltam poses bravo e triste), Missão FaçaAmigos, Ritmo do carimbó, Onde está o Tuco? e as historinhas.
 
 ### 4.3. Turno Noturno (22h00 às 09h59) — Stand-by Suave
 * Tela escura relaxante para Smart TV (proteção de tela contra burn-in), relógio digital grande e aviso: *"Até amanhã! Abrimos às 10h00."*
@@ -110,6 +111,7 @@ Para facilitar testes, reuniões de equipe e demonstrações a investidores sem 
 | **`0`** ou **`A`** | Retorna ao **Modo Automático** por relógio |
 | **`[` e `]`** | Alterna manualmente entre os **Dias 1 a 5 do Ciclo** |
 | **`F`** ou Duplo Clique | Alterna modo **Tela Cheia (Fullscreen)** |
+| **`C`** | Mostra o **código do controle** da equipe (celular) |
 | **`S`** | Liga ou desliga o **som** (Hora da Criança) |
 | **`G`** | Abre o **Mini-Game Interativo** (Roadmap) |
 
