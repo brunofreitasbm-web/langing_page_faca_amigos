@@ -74,7 +74,7 @@
       justify-content: space-between;
       padding: 0 4vw;
       z-index: 100;
-      background: linear-gradient(180deg, rgba(255,249,241,0.92) 0%, rgba(255,249,241,0.65) 75%, transparent 100%);
+      background: linear-gradient(180deg, rgba(255,249,241,0.95) 0%, rgba(255,249,241,0.7) 75%, transparent 100%);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
@@ -118,15 +118,15 @@
     .tv-status-badge {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 10px 22px;
+      gap: 12px;
+      padding: 10px 24px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 4px 16px rgba(26, 63, 53, 0.08);
       border: 1px solid rgba(240, 25, 107, 0.15);
       font-family: 'Fredoka', cursive;
       font-weight: 600;
-      font-size: clamp(0.85rem, 1.1vw, 1.25rem);
+      font-size: clamp(0.85rem, 1.15vw, 1.3rem);
       color: var(--dark);
     }
 
@@ -137,6 +137,15 @@
       background: var(--teal);
       box-shadow: 0 0 10px var(--teal);
       animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    .tv-cycle-badge {
+      background: var(--teal-soft);
+      color: var(--teal-dark);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.85em;
+      font-weight: 700;
     }
 
     @keyframes pulse-dot {
@@ -185,7 +194,7 @@
     }
 
     /* ==========================================================================
-       MODO 1: EQUIPE & ACOLHIMENTO (10h - 16h)
+       TURNO 1: EQUIPE & ACOLHIMENTO (10h - 16h)
        ========================================================================== */
     #mode-team {
       background: radial-gradient(circle at 15% 20%, rgba(46, 207, 181, 0.12) 0%, transparent 45%),
@@ -203,7 +212,7 @@
       position: relative;
     }
 
-    .team-slide {
+    .slide-host {
       position: absolute;
       width: 92vw;
       height: 78vh;
@@ -213,11 +222,11 @@
       align-items: center;
       opacity: 0;
       transform: scale(0.97) translateY(20px);
-      transition: opacity 1s ease-out, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      transition: opacity 0.9s ease-out, transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
       pointer-events: none;
     }
 
-    .team-slide.active {
+    .slide-host.active {
       opacity: 1;
       transform: scale(1) translateY(0);
       pointer-events: auto;
@@ -250,8 +259,8 @@
     .team-quote {
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: clamp(2rem, 3.4vw, 4.4rem);
-      line-height: 1.18;
+      font-size: clamp(1.9rem, 3.2vw, 4.2rem);
+      line-height: 1.2;
       color: var(--dark);
       letter-spacing: -0.8px;
     }
@@ -267,31 +276,31 @@
     }
 
     .team-subtext {
-      font-size: clamp(1.1rem, 1.6vw, 2rem);
+      font-size: clamp(1.1rem, 1.55vw, 1.9rem);
       line-height: 1.45;
       color: var(--ink-soft);
       font-weight: 600;
-      max-width: 90%;
+      max-width: 92%;
     }
 
-    .team-doctrine-pill {
+    .team-pill-box {
       margin-top: 1vh;
       display: flex;
       align-items: center;
       gap: 14px;
       padding: 14px 24px;
       border-radius: 20px;
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(46, 207, 181, 0.3);
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(46, 207, 181, 0.35);
       box-shadow: 0 8px 24px rgba(26, 63, 53, 0.05);
       width: fit-content;
     }
 
-    .team-doctrine-icon {
+    .team-pill-icon {
       font-size: clamp(1.5rem, 2vw, 2.4rem);
     }
 
-    .team-doctrine-text {
+    .team-pill-text {
       font-size: clamp(0.95rem, 1.2vw, 1.4rem);
       font-weight: 700;
       color: var(--dark);
@@ -313,11 +322,11 @@
       height: 100%;
       object-fit: cover;
       transform: scale(1.02);
-      transition: transform 12s ease-out;
+      transition: transform 14s ease-out;
     }
 
-    .team-slide.active .team-media-card img {
-      transform: scale(1.1);
+    .slide-host.active .team-media-card img {
+      transform: scale(1.12);
     }
 
     .team-media-overlay {
@@ -344,7 +353,7 @@
     }
 
     /* ==========================================================================
-       MODO 2: CRIANÇAS & VITRINE DIGITAL (16h - 22h)
+       TURNO 2: CRIANÇAS & VITRINE DIGITAL (16h - 22h)
        ========================================================================== */
     #mode-kids {
       background: radial-gradient(circle at 10% 15%, rgba(255, 226, 52, 0.25) 0%, transparent 40%),
@@ -363,7 +372,7 @@
       position: relative;
     }
 
-    .kids-slide {
+    .kids-slide-host {
       position: absolute;
       width: 92vw;
       height: 78vh;
@@ -377,7 +386,7 @@
       pointer-events: none;
     }
 
-    .kids-slide.active {
+    .kids-slide-host.active {
       opacity: 1;
       transform: scale(1) translateX(0);
       pointer-events: auto;
@@ -425,8 +434,8 @@
 
     .kids-title {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(2.4rem, 4.4vw, 5.6rem);
-      line-height: 1.08;
+      font-size: clamp(2.3rem, 4.2vw, 5.4rem);
+      line-height: 1.1;
       color: var(--dark);
       letter-spacing: -1px;
     }
@@ -437,7 +446,7 @@
     }
 
     .kids-desc {
-      font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+      font-size: clamp(1.15rem, 1.75vw, 2.1rem);
       line-height: 1.4;
       color: var(--ink-soft);
       font-weight: 700;
@@ -454,7 +463,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      font-size: clamp(1.05rem, 1.45vw, 1.7rem);
+      font-size: clamp(1.05rem, 1.4vw, 1.65rem);
       font-weight: 800;
       color: var(--dark);
     }
@@ -488,10 +497,10 @@
       height: 100%;
       object-fit: cover;
       transform: scale(1.03);
-      transition: transform 9s ease-out;
+      transition: transform 10s ease-out;
     }
 
-    .kids-slide.active .kids-visual-card img {
+    .kids-slide-host.active .kids-visual-card img {
       transform: scale(1.12);
     }
 
@@ -542,7 +551,7 @@
     }
 
     /* ==========================================================================
-       MODO 3: STAND-BY NOTURNO (22h - 10h)
+       TURNO 3: STAND-BY NOTURNO (22h - 10h)
        ========================================================================== */
     #mode-night {
       background: radial-gradient(circle at 50% 50%, #15322A 0%, #0A1B16 100%);
@@ -642,9 +651,9 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 8px 14px;
+      padding: 8px 16px;
       border-radius: 999px;
-      background: rgba(26, 63, 53, 0.75);
+      background: rgba(26, 63, 53, 0.78);
       backdrop-filter: blur(12px);
       box-shadow: 0 8px 30px rgba(0,0,0,0.25);
       z-index: 200;
@@ -803,6 +812,7 @@
     <div class="tv-status-badge">
       <span class="tv-status-dot" id="statusDot"></span>
       <span id="statusText">Modo Equipe</span>
+      <span class="tv-cycle-badge" id="cycleBadge">Dia 1/5</span>
     </div>
 
     <div class="tv-clock">
@@ -812,346 +822,25 @@
   </header>
 
   <!-- ========================================================================
-       MODO 1: EQUIPE & ACOLHIMENTO (10h00 às 15h59) — Foco em PNL e Cultura
+       TURNO 1: EQUIPE & ACOLHIMENTO (10h00 às 15h59) — Renderizado Dinamicamente
        ======================================================================== -->
   <section class="tv-screen" id="mode-team">
-    <div class="team-container">
-
-      <!-- Slide 1: Propósito & Memória -->
-      <div class="team-slide active" data-slide="0">
-        <div class="team-content">
-          <div class="team-tag">🌱 Propósito & Cultura</div>
-          <h1 class="team-quote">
-            O que você faz hoje se transforma na <span class="highlight">lembrança mais feliz</span> da infância de alguém.
-          </h1>
-          <p class="team-subtext">
-            Seu acolhimento e seu sorriso na recepção são o primeiro alívio para uma família que muitas vezes teve um dia exaustivo.
-          </p>
-          <div class="team-doctrine-pill">
-            <span class="team-doctrine-icon">✨</span>
-            <span class="team-doctrine-text">Princípio FaçaAmigos: Cada detalhe do seu olhar gera segurança imediata.</span>
-          </div>
-        </div>
-        <div class="team-media-card">
-          <picture>
-            <source srcset="img/playground-mediadora-tapete.webp" type="image/webp">
-            <img src="img/playground-mediadora-tapete.jpg" alt="Mediadora de inclusão FaçaAmigos acolhendo com carinho" width="800" height="600" loading="eager" decoding="async">
-          </picture>
-          <div class="team-media-overlay">
-            <div class="team-media-label">Acolhimento no Chão</div>
-            <div class="team-media-caption">Estar na altura da criança cria conexão imediata e respeito.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 2: Regra de Ouro da Linguagem (PNL) -->
-      <div class="team-slide" data-slide="1">
-        <div class="team-content">
-          <div class="team-tag">💬 Regra de Ouro da Recepção</div>
-          <h2 class="team-quote">
-            Nunca pergunte "qual é o problema dele?". <br>
-            Pergunte: <span class="highlight">"Tem algo que ajude a gente a cuidar melhor dele hoje?"</span>
-          </h2>
-          <p class="team-subtext">
-            A linguagem positiva desarma a ansiedade dos pais e abre espaço para uma relação de cumplicidade genuína.
-          </p>
-          <div class="team-doctrine-pill">
-            <span class="team-doctrine-icon">🤝</span>
-            <span class="team-doctrine-text">Doutrina: Não existe criança "normal" ou "especial" — usamos típica e atípica.</span>
-          </div>
-        </div>
-        <div class="team-media-card">
-          <picture>
-            <source srcset="img/equipe-recepcao.webp" type="image/webp">
-            <img src="img/equipe-recepcao.jpg" alt="Equipe de recepção FaçaAmigos unida" width="800" height="600" loading="lazy" decoding="async">
-          </picture>
-          <div class="team-media-overlay">
-            <div class="team-media-label">Nossa Recepção</div>
-            <div class="team-media-caption">A porta de entrada do carinho e da empatia em Belém.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 3: Regulação Sensorial e Empatia -->
-      <div class="team-slide" data-slide="2">
-        <div class="team-content">
-          <div class="team-tag">🧠 Empatia Sensorial</div>
-          <h2 class="team-quote">
-            Quando uma criança se agita ou chora, <span class="highlight-teal">ela não está fazendo birra</span>. Ela pede para o mundo desacelerar.
-          </h2>
-          <p class="team-subtext">
-            Ofereça o cantinho da calma, diminua o tom de voz e dê tempo para ela reencontrar o equilíbrio no próprio ritmo.
-          </p>
-          <div class="team-doctrine-pill">
-            <span class="team-doctrine-icon">🌿</span>
-            <span class="team-doctrine-text">Horário Inclusivo: som controlado e estímulos reduzidos para acolher melhor.</span>
-          </div>
-        </div>
-        <div class="team-media-card">
-          <picture>
-            <source srcset="img/inclusao-cantinho-leitura.webp" type="image/webp">
-            <img src="img/inclusao-cantinho-leitura.jpg" alt="Cantinho da calma e leitura inclusiva" width="800" height="600" loading="lazy" decoding="async">
-          </picture>
-          <div class="team-media-overlay">
-            <div class="team-media-label">Cantinho da Descompressão</div>
-            <div class="team-media-caption">Um refúgio tranquilo para respirar e voltar a brincar com alegria.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 4: Inclusão Verdadeira -->
-      <div class="team-slide" data-slide="3">
-        <div class="team-content">
-          <div class="team-tag">🌈 O Significado de Inclusão</div>
-          <h2 class="team-quote">
-            Inclusivo não é um espaço separado. É um ambiente onde <span class="highlight">todo mundo brinca junto</span>.
-          </h2>
-          <p class="team-subtext">
-            Crianças com e sem laudo aprendem a ter empatia dividindo a mesma piscina de bolinhas e a mesma pista de carrinhos.
-          </p>
-          <div class="team-doctrine-pill">
-            <span class="team-doctrine-icon">🎈</span>
-            <span class="team-doctrine-text">Doutrina: Ninguém fica de fora. O espaço se adapta à criança, não o oposto.</span>
-          </div>
-        </div>
-        <div class="team-media-card">
-          <picture>
-            <source srcset="img/hero-piscina-bolinhas.webp" type="image/webp">
-            <img src="img/hero-piscina-bolinhas.jpg" alt="Piscina de bolinhas e salão do Playground" width="800" height="600" loading="lazy" decoding="async">
-          </picture>
-          <div class="team-media-overlay">
-            <div class="team-media-label">Piscina de Bolinhas Inclusiva</div>
-            <div class="team-media-caption">O coração da socialização e do riso compartilhado.</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 5: Presença e Afeto (A Capivara e os Animais) -->
-      <div class="team-slide" data-slide="4">
-        <div class="team-content">
-          <div class="team-tag">🧸 Vínculo & Afeto</div>
-          <h2 class="team-quote">
-            Respire fundo. A sua presença calma é o <span class="highlight">porto seguro</span> de quem passa por aqui.
-          </h2>
-          <p class="team-subtext">
-            Cada pelúcia gigante, cada carrinho organizado e cada abraço da nossa Capivara ajudam a construir um dia inesquecível.
-          </p>
-          <div class="team-doctrine-pill">
-            <span class="team-doctrine-icon">💖</span>
-            <span class="team-doctrine-text">Dra. Isabella: "O brincar é a linguagem mais pura do desenvolvimento humano."</span>
-          </div>
-        </div>
-        <div class="team-media-card">
-          <picture>
-            <source srcset="img/circuito-equipe-capivara.webp" type="image/webp">
-            <img src="img/circuito-equipe-capivara.jpg" alt="Mascote Capivara FaçaAmigos com a equipe" width="800" height="1000" loading="lazy" decoding="async">
-          </picture>
-          <div class="team-media-overlay">
-            <div class="team-media-label">Nossos Mascotes</div>
-            <div class="team-media-caption">Amigos gigantes que geram sorrisos instantâneos.</div>
-          </div>
-        </div>
-      </div>
-
+    <div class="team-container" id="teamContainer">
+      <!-- Inserido dinamicamente via JS a partir do Ciclo de 5 Dias randômico -->
     </div>
   </section>
 
   <!-- ========================================================================
-       MODO 2: CRIANÇAS & VITRINE DIGITAL (16h00 às 22h00) — Foco em Encantamento
+       TURNO 2: CRIANÇAS & VITRINE DIGITAL (16h00 às 22h00) — Renderizado Dinamicamente
        ======================================================================== -->
   <section class="tv-screen" id="mode-kids">
-    <div class="kids-container">
-
-      <!-- Slide 1: Mascotes & Pelúcias Gigantes -->
-      <div class="kids-slide active" data-slide="0">
-        <div class="kids-content">
-          <div class="kids-badge-row">
-            <span class="kids-badge badge-pink">⭐ As Mais Queridas de Belém</span>
-            <span class="kids-badge badge-yellow">Parque Shopping</span>
-          </div>
-          <h1 class="kids-title">
-            Vem abraçar a <span class="pop">Capivara</span> e o <span class="pop">Macaco</span>!
-          </h1>
-          <p class="kids-desc">
-            Pelúcias gigantes e super macias prontas para passear com você e tirar as fotos mais fofas da sua vida!
-          </p>
-          <div class="kids-feature-list">
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">✨</span>
-              <span>Passeios motorizados com toda a segurança</span>
-            </div>
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">🧸</span>
-              <span>Abraço fofinho e companheirismo que encanta</span>
-            </div>
-          </div>
-        </div>
-        <div class="kids-visual-card">
-          <picture>
-            <source srcset="img/circuito-equipe-capivara.webp" type="image/webp">
-            <img src="img/circuito-equipe-capivara.jpg" alt="A famosa Capivara gigante do Circuito FaçaAmigos" width="800" height="1000" loading="lazy" decoding="async">
-          </picture>
-          <div class="kids-sticker">VEM BRINCAR! 🐾</div>
-          <div class="kids-sticker-bottom">
-            <span class="kids-sticker-bottom-icon">🏎️</span>
-            <div class="kids-sticker-bottom-text">No Circuito de Carrinhos FaçaAmigos</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 2: Playground Inclusivo & Piscina de Bolinhas -->
-      <div class="kids-slide" data-slide="1">
-        <div class="kids-content">
-          <div class="kids-badge-row">
-            <span class="kids-badge badge-yellow">🎈 Diversão Sem Limites</span>
-            <span class="kids-badge badge-teal">0 a 12 Anos</span>
-          </div>
-          <h2 class="kids-title">
-            A maior <span class="pop">piscina de bolinhas</span> e casinha do shopping!
-          </h2>
-          <p class="kids-desc">
-            Salão amplo, casinha na árvore, amarelinha lúdica e monitores treinados para cuidar com todo amor.
-          </p>
-          <div class="kids-feature-list">
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">🏰</span>
-              <span>Casinha elevada com escorregador e túneis</span>
-            </div>
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">🌿</span>
-              <span>Canto de descompressão e livros infantis</span>
-            </div>
-          </div>
-        </div>
-        <div class="kids-visual-card">
-          <picture>
-            <source srcset="img/hero-piscina-bolinhas.webp" type="image/webp">
-            <img src="img/hero-piscina-bolinhas.jpg" alt="Crianças brincando na piscina de bolinhas do FaçaAmigos" width="800" height="600" loading="lazy" decoding="async">
-          </picture>
-          <div class="kids-sticker">PULA-PULA & CORRER! 🎉</div>
-          <div class="kids-sticker-bottom">
-            <span class="kids-sticker-bottom-icon">📍</span>
-            <div class="kids-sticker-bottom-text">Térreo • Próximo às Americanas</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 3: Frota Esportiva do Circuito -->
-      <div class="kids-slide" data-slide="2">
-        <div class="kids-content">
-          <div class="kids-badge-row">
-            <span class="kids-badge badge-pink">🚦 Pilote de Verdade!</span>
-            <span class="kids-badge badge-yellow">Controle Remoto dos Pais</span>
-          </div>
-          <h2 class="kids-title">
-            Range Rover, Lamborghini e <span class="pop">Caminhão de Bombeiro</span>!
-          </h2>
-          <p class="kids-desc">
-            A frota mais irada de Belém! A criança pilota no pedal ou os pais guiam com controle remoto total.
-          </p>
-          <div class="kids-feature-list">
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">🚒</span>
-              <span>Sirenes e luzes no caminhão de bombeiro</span>
-            </div>
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">⚡</span>
-              <span>Passeios tranquilos pelos corredores</span>
-            </div>
-          </div>
-        </div>
-        <div class="kids-visual-card">
-          <picture>
-            <source srcset="img/circuito-bombeiro.webp" type="image/webp">
-            <img src="img/circuito-bombeiro.jpg" alt="Carrinho elétrico de bombeiro no shopping" width="800" height="600" loading="lazy" decoding="async">
-          </picture>
-          <div class="kids-sticker">SEJA O PILOTO! 🏁</div>
-          <div class="kids-sticker-bottom">
-            <span class="kids-sticker-bottom-icon">🏎️</span>
-            <div class="kids-sticker-bottom-text">Passeio completo de 10 a 30 minutos</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 4: Doutrina dos Pais (É para todas as crianças) -->
-      <div class="kids-slide" data-slide="3">
-        <div class="kids-content">
-          <div class="kids-badge-row">
-            <span class="kids-badge badge-teal">💙 Inclusão na Prática</span>
-            <span class="kids-badge badge-pink">Sem Agendamento</span>
-          </div>
-          <h2 class="kids-title">
-            É para <span class="pop">todas as crianças</span>!
-          </h2>
-          <p class="kids-desc">
-            Com ou sem laudo: aqui todo mundo brinca junto no mesmo salão, com meia-entrada inclusiva garantida por lei.
-          </p>
-          <div class="kids-feature-list">
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">✅</span>
-              <span>Não precisa de laudo para brincar: é só chegar!</span>
-            </div>
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">🏷️</span>
-              <span>Meia-entrada inclusiva para laudo ou CIPTEA</span>
-            </div>
-          </div>
-        </div>
-        <div class="kids-visual-card">
-          <picture>
-            <source srcset="img/galeria-oficinas.webp" type="image/webp">
-            <img src="img/galeria-oficinas.jpg" alt="Oficinas infantis e brincadeiras" width="800" height="600" loading="lazy" decoding="async">
-          </picture>
-          <div class="kids-sticker">TODO MUNDO JUNTO! 🌈</div>
-          <div class="kids-sticker-bottom">
-            <span class="kids-sticker-bottom-icon">👨‍👩‍👧‍👦</span>
-            <div class="kids-sticker-bottom-text">Ambiente seguro e acolhedor para a família</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Slide 5: Clínica & Desenvolvimento Terapêutico -->
-      <div class="kids-slide" data-slide="4">
-        <div class="kids-content">
-          <div class="kids-badge-row">
-            <span class="kids-badge badge-pink">🩺 Clínica FaçaAmigos</span>
-            <span class="kids-badge badge-yellow">Umarizal • Belém</span>
-          </div>
-          <h2 class="kids-title">
-            Ciência, afeto e <span class="pop">Terapia ABA</span> para o seu filho.
-          </h2>
-          <p class="kids-desc">
-            Psicologia infantil, Terapia Ocupacional, Fonoaudiologia e Psicopedagogia com a Dra. Isabella Freitas (CRP 10/4727).
-          </p>
-          <div class="kids-feature-list">
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">🧩</span>
-              <span>Painel sensorial e recursos terapêuticos modernos</span>
-            </div>
-            <div class="kids-feature-item">
-              <span class="kids-feature-icon">📖</span>
-              <span>Autora dos livros "O Brincar com Propósito"</span>
-            </div>
-          </div>
-        </div>
-        <div class="kids-visual-card">
-          <picture>
-            <source srcset="img/clinica-painel-sensorial.webp" type="image/webp">
-            <img src="img/clinica-painel-sensorial.jpg" alt="Painel sensorial e clínica FaçaAmigos" width="800" height="600" loading="lazy" decoding="async">
-          </picture>
-          <div class="kids-sticker">DESENVOLVIMENTO 💡</div>
-          <div class="kids-sticker-bottom">
-            <span class="kids-sticker-bottom-icon">🏥</span>
-            <div class="kids-sticker-bottom-text">Conheça: clinica.institutofacaamigos.com.br</div>
-          </div>
-        </div>
-      </div>
-
+    <div class="kids-container" id="kidsContainer">
+      <!-- Inserido dinamicamente via JS a partir do Ciclo de 5 Dias randômico -->
     </div>
   </section>
 
   <!-- ========================================================================
-       MODO 3: STAND-BY NOTURNO (22h00 às 09h59) — Iluminação Baixa para Smart TV
+       TURNO 3: STAND-BY NOTURNO (22h00 às 09h59) — Iluminação Baixa para Smart TV
        ======================================================================== -->
   <section class="tv-screen" id="mode-night">
     <div class="night-container">
@@ -1176,12 +865,14 @@
   </div>
 
   <!-- ========================================================================
-       PAINEL HUD DE CONTROLE DISCRETO (Para Teste, Treinamento e Fullscreen)
+       PAINEL HUD DE CONTROLE DISCRETO (Para Teste, Ciclos e Fullscreen)
        ======================================================================== -->
   <nav class="tv-hud" id="tvHud" aria-label="Controles da Tela">
-    <button class="hud-btn" id="btnModeTeam" title="Forçar Modo Equipe (10h-16h)">🌱 [1] Equipe</button>
-    <button class="hud-btn" id="btnModeKids" title="Forçar Modo Vitrine (16h-22h)">⭐ [2] Vitrine</button>
+    <button class="hud-btn" id="btnModeTeam" title="Forçar Turno da Equipe (10h-16h)">🌱 [1] Equipe</button>
+    <button class="hud-btn" id="btnModeKids" title="Forçar Turno da Vitrine (16h-22h)">⭐ [2] Vitrine</button>
     <button class="hud-btn active" id="btnModeAuto" title="Alternar Automaticamente pelo Horário">⏰ [0] Auto</button>
+    <button class="hud-btn" id="btnCyclePrev" title="Dia Anterior do Ciclo">◀ [</button>
+    <button class="hud-btn" id="btnCycleNext" title="Próximo Dia do Ciclo">] ▶</button>
     <button class="hud-btn" id="btnFullscreen" title="Alternar Tela Cheia">⛶ [F] Tela Cheia</button>
     <button class="hud-btn" id="btnGameToggle" title="Abrir Mini-Game Interativo">🎮 [G] Jogos</button>
   </nav>
@@ -1208,25 +899,762 @@
   </div>
 
   <!-- ========================================================================
-       SCRIPT DO MOTOR DA TV (TV ENGINE)
+       BANCO DE DADOS COMPLETO — CICLO ROTATIVO DE 5 DIAS (NÃO REPETE EM < 5 DIAS)
        ======================================================================== -->
   <script>
+    const FACA_AMIGOS_DATABASE = {
+      // ----------------------------------------------------------------------
+      // BANCO DA EQUIPE (10h00 às 15h59) — 5 Dias Temáticos Ricos
+      // ----------------------------------------------------------------------
+      team: {
+        1: [
+          {
+            tag: "🌱 Propósito & Memória",
+            title: "O que você faz hoje se transforma na <span class=\"highlight\">lembrança mais feliz</span> da infância de alguém.",
+            subtext: "Seu acolhimento e seu sorriso na recepção são o primeiro alívio para uma família que muitas vezes teve um dia exaustivo.",
+            pillIcon: "✨",
+            pillText: "Cultura FaçaAmigos: Cada detalhe do seu olhar gera segurança imediata.",
+            imageWebp: "img/playground-mediadora-tapete.webp",
+            imageJpg: "img/playground-mediadora-tapete.jpg",
+            imageAlt: "Mediadora de inclusão FaçaAmigos acolhendo com carinho no tapete",
+            label: "Acolhimento no Chão",
+            caption: "Estar na altura da criança cria conexão imediata e respeito."
+          },
+          {
+            tag: "💬 Pergunta de Ouro da Recepção",
+            title: "Nunca pergunte \"qual é o problema dele?\". <br>Pergunte: <span class=\"highlight\">\"Tem algo que ajude a gente a cuidar melhor dele hoje?\"</span>",
+            subtext: "A linguagem positiva desarma a ansiedade dos pais e abre espaço para uma relação de cumplicidade genuína.",
+            pillIcon: "🤝",
+            pillText: "Princípio: Não usamos termos como 'normal' ou 'especial'. Usamos típica e atípica.",
+            imageWebp: "img/equipe-recepcao.webp",
+            imageJpg: "img/equipe-recepcao.jpg",
+            imageAlt: "Equipe de recepção FaçaAmigos unida",
+            label: "Nossa Recepção",
+            caption: "A porta de entrada do carinho e da empatia em Belém."
+          },
+          {
+            tag: "👀 Contato Visual & Conexão",
+            title: "Abaixe-se sempre na <span class=\"highlight-teal\">altura dos olhos</span> da criança para falar com ela.",
+            subtext: "Olhar nos olhos no mesmo nível dissolve o medo de pessoas grandes e constrói um vínculo seguro antes da brincadeira começar.",
+            pillIcon: "🌿",
+            pillText: "Postura FaçaAmigos: O adulto se adapta ao mundo da criança, nunca o contrário.",
+            imageWebp: "img/inclusao-cantinho-leitura.webp",
+            imageJpg: "img/inclusao-cantinho-leitura.jpg",
+            imageAlt: "Cantinho da calma e acolhimento",
+            label: "Conexão Visual",
+            caption: "O respeito ao espaço e ao tempo de cada criança."
+          },
+          {
+            tag: "👨‍👩‍👧‍👦 Acolher Quem Cuida",
+            title: "Ao receber uma família, <span class=\"highlight\">acolha primeiro os pais</span>. A sua calma é o refúgio deles.",
+            subtext: "Muitos pais chegam tensos após olhares de julgamento em outros lugares. Aqui, eles encontram alívio e abraço.",
+            pillIcon: "💙",
+            pillText: "Princípio: Nós cuidamos da família inteira, não apenas da criança.",
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Piscina de bolinhas inclusiva",
+            label: "Família Segura",
+            caption: "Um ambiente onde os pais podem respirar aliviados."
+          },
+          {
+            tag: "🧸 Companheiros do Coração",
+            title: "A nossa Capivara gigante é uma <span class=\"highlight\">ponte mágica de afeto</span>.",
+            subtext: "Para crianças tímidas ou apreensivas, um abraço fofo na pelúcia quebra qualquer tensão e convida ao sorriso.",
+            pillIcon: "🐾",
+            pillText: "Cultura FaçaAmigos: Bichos e brinquedos são instrumentos de carinho e socialização.",
+            imageWebp: "img/circuito-equipe-capivara.webp",
+            imageJpg: "img/circuito-equipe-capivara.jpg",
+            imageAlt: "Mascote Capivara FaçaAmigos com a equipe",
+            label: "Vínculo Afetivo",
+            caption: "Pelúcias gigantes que transformam o dia de qualquer criança."
+          }
+        ],
+
+        2: [
+          {
+            tag: "🧠 Empatia Sensorial",
+            title: "Quando uma criança se agita ou chora, <span class=\"highlight-teal\">ela não está fazendo birra</span>. Ela pede para o mundo desacelerar.",
+            subtext: "Ofereça o cantinho da calma, diminua o tom de voz e dê tempo para ela reencontrar o equilíbrio no próprio ritmo.",
+            pillIcon: "🌿",
+            pillText: "Horário Inclusivo: som controlado e estímulos reduzidos para acolher melhor.",
+            imageWebp: "img/inclusao-cantinho-leitura.webp",
+            imageJpg: "img/inclusao-cantinho-leitura.jpg",
+            imageAlt: "Cantinho da calma e leitura inclusiva",
+            label: "Cantinho da Descompressão",
+            caption: "Um refúgio tranquilo para respirar e voltar a brincar com alegria."
+          },
+          {
+            tag: "🕊️ O Poder da Serenidade",
+            title: "A sua calma tem a força de <span class=\"highlight\">tranquilizar um ambiente inteiro</span>.",
+            subtext: "Quando a equipe fala em tom suave e caminha sem correria, as crianças sentem que aquele espaço é seguro e relaxante.",
+            pillIcon: "✨",
+            pillText: "Cultura FaçaAmigos: O ritmo sereno do colaborador guia o comportamento do salão.",
+            imageWebp: "img/equipe-recepcao.webp",
+            imageJpg: "img/equipe-recepcao.jpg",
+            imageAlt: "Equipe acolhedora",
+            label: "Presença Atenta",
+            caption: "A paz que transmitimos transforma o ambiente."
+          },
+          {
+            tag: "🌈 Inclusão Sem Barreiras",
+            title: "Inclusivo não é um espaço separado. É onde <span class=\"highlight\">todo mundo brinca junto</span>.",
+            subtext: "Crianças com e sem laudo aprendem a ter empatia dividindo a mesma piscina de bolinhas e a mesma pista de carrinhos.",
+            pillIcon: "🎈",
+            pillText: "Princípio: Ninguém fica de fora. O espaço se adapta à criança.",
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Piscina de bolinhas e salão do Playground",
+            label: "Socialização Plena",
+            caption: "O coração da diversão compartilhada em Belém."
+          },
+          {
+            tag: "⏳ O Tempo de Cada Uma",
+            title: "Respeitar a pausa de uma criança é tão importante quanto <span class=\"highlight-teal\">celebrar o movimento</span>.",
+            subtext: "Algumas crianças precisam de 10 minutos apenas observando antes de entrar. Não force: apenas sorria e esteja por perto.",
+            pillIcon: "⏰",
+            pillText: "Cultura FaçaAmigos: Acolher é saber esperar o momento do outro.",
+            imageWebp: "img/playground-mediadora-tapete.webp",
+            imageJpg: "img/playground-mediadora-tapete.jpg",
+            imageAlt: "Mediadora com a criança",
+            label: "Tempo e Paciência",
+            caption: "Cada pequeno passo tem valor imenso."
+          },
+          {
+            tag: "🚒 Diversão que Conecta",
+            title: "No Circuito de Carrinhos, a criança descobre a alegria da <span class=\"highlight\">autonomia segura</span>.",
+            subtext: "Dirigir o bombeiro ou a Range Rover ajuda na coordenação motora e dá uma sensação maravilhosa de capacidade e orgulho.",
+            pillIcon: "🚦",
+            pillText: "Princípio: O brincar é o motor do desenvolvimento infantil.",
+            imageWebp: "img/circuito-bombeiro.webp",
+            imageJpg: "img/circuito-bombeiro.jpg",
+            imageAlt: "Carrinho de bombeiro do circuito",
+            label: "Pequenos Pilotos",
+            caption: "Autonomia e orgulho no volante."
+          }
+        ],
+
+        3: [
+          {
+            tag: "🎈 No Chão da Brincadeira",
+            title: "Estar com a criança no tapete vale mais do que <span class=\"highlight\">mil instruções técnicas</span>.",
+            subtext: "Quando você se senta no chão para encaixar uma peça ou rolar uma bolinha, a barreira do medo desaparece.",
+            pillIcon: "💖",
+            pillText: "Dra. Isabella: \"O brincar é a linguagem primária da infância.\"",
+            imageWebp: "img/playground-mediadora-tapete.webp",
+            imageJpg: "img/playground-mediadora-tapete.jpg",
+            imageAlt: "Mediadora no chão com a criança",
+            label: "Acolhimento no Chão",
+            caption: "A presença genuína transforma o dia da criança."
+          },
+          {
+            tag: "🌟 Celebrando Pequenos Passos",
+            title: "Um sorriso tímido, uma bolinha entregue com carinho: <span class=\"highlight\">cada conquista merece festa</span>.",
+            subtext: "Para uma criança atípica, entrar na piscina ou dar a mão a um colega é uma vitória gigantesca. Comemore com ela!",
+            pillIcon: "🎉",
+            pillText: "Cultura FaçaAmigos: Enxergamos o progresso que outros não veem.",
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Piscina de bolinhas inclusiva",
+            label: "Pequenas Vitórias",
+            caption: "Comemoramos cada sorriso conquistado."
+          },
+          {
+            tag: "🎨 Mediação Sem Imposição",
+            title: "O mediador não diz como brincar; <span class=\"highlight-teal\">ele apoia o que a criança imagina</span>.",
+            subtext: "Se ela quiser alinhar carrinhos ou apenas sentir a textura das bolinhas, acolha. Toda forma de brincar tem sentido.",
+            pillIcon: "🧩",
+            pillText: "Princípio: Respeitamos o interesse e o hiperfoco da criança.",
+            imageWebp: "img/galeria-oficinas.webp",
+            imageJpg: "img/galeria-oficinas.jpg",
+            imageAlt: "Oficinas criativas",
+            label: "Imaginação Livre",
+            caption: "O espaço se molda aos sonhos de quem brinca."
+          },
+          {
+            tag: "🤝 Parceria com os Pais",
+            title: "A família é a nossa maior parceira. <br><span class=\"highlight\">Pergunte, ouça e aprenda</span> com quem mais conhece a criança.",
+            subtext: "Quando os pais compartilham o que acalma o filho, a equipe toda ganha a chave para um atendimento perfeito.",
+            pillIcon: "💬",
+            pillText: "Cultura FaçaAmigos: Escuta humilde e cooperação mútua com os pais.",
+            imageWebp: "img/equipe-recepcao.webp",
+            imageJpg: "img/equipe-recepcao.jpg",
+            imageAlt: "Equipe FaçaAmigos",
+            label: "Escuta com o Coração",
+            caption: "Os pais encontram na nossa equipe parceiros dedicados."
+          },
+          {
+            tag: "🐵 Alegria Compartilhada",
+            title: "O Macaco e a Capivara são os <span class=\"highlight\">melhores amigos de quem passa pelo shopping</span>.",
+            subtext: "Cada foto tirada na recepção eterniza um momento especial na história de uma família em Belém.",
+            pillIcon: "📸",
+            pillText: "Princípio: Criamos memórias afetivas que duram uma vida inteira.",
+            imageWebp: "img/circuito-macaco.webp",
+            imageJpg: "img/circuito-macaco.jpg",
+            imageAlt: "Mascote Macaco no Circuito",
+            label: "Mascotes Queridas",
+            caption: "Companheiros gigantes de passeios e risadas."
+          }
+        ],
+
+        4: [
+          {
+            tag: "🛡️ O Porto Seguro de Quem Chega",
+            title: "Muitos pais chegam cansados após dias difíceis. <span class=\"highlight\">Seja a melhor parte do dia deles</span>.",
+            subtext: "Um olhar compreensivo e um \"fique tranquilo, estamos com vocês\" tira um peso enorme dos ombros da família.",
+            pillIcon: "💛",
+            pillText: "Cultura FaçaAmigos: Oferecemos alívio e acolhimento sem julgamentos.",
+            imageWebp: "img/inclusao-cantinho-leitura.webp",
+            imageJpg: "img/inclusao-cantinho-leitura.jpg",
+            imageAlt: "Canto de descompressão",
+            label: "Acolhimento Familiar",
+            caption: "Paz para os pais, diversão segura para a criança."
+          },
+          {
+            tag: "👂 Escuta Ativa e Afetuosa",
+            title: "Escute os pais sem pressa de responder. <br><span class=\"highlight-teal\">Ouvir de verdade já é um ato de cuidado</span>.",
+            subtext: "Eles conhecem cada detalhe da criança. Quando validamos seus sentimentos, criamos um espaço verdadeiramente acolhedor.",
+            pillIcon: "✨",
+            pillText: "Princípio: Acolhemos a angústia com paciência e gentileza.",
+            imageWebp: "img/equipe-recepcao.webp",
+            imageJpg: "img/equipe-recepcao.jpg",
+            imageAlt: "Equipe atenta na recepção",
+            label: "Atenção Total",
+            caption: "Uma equipe que sabe ouvir e agir com empatia."
+          },
+          {
+            tag: "🚪 Sem Barreiras, Sem Agendamento",
+            title: "A nossa porta está sempre aberta: <span class=\"highlight\">sem burocracia, é só chegar</span>.",
+            subtext: "Facilitar a vida da família com regras simples e transparência faz da FaçaAmigos a operação mais humana de Belém.",
+            pillIcon: "🏢",
+            pillText: "Cultura FaçaAmigos: Inclusão se faz com portas abertas e acolhimento imediato.",
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Salão aberto",
+            label: "Portas Abertas",
+            caption: "Todos os dias das 10h às 22h no Parque Shopping."
+          },
+          {
+            tag: "💙 Cuidando com o Coração",
+            title: "Cuidamos da criança com o mesmo carinho e zelo <span class=\"highlight\">com que cuidaríamos de um filho</span>.",
+            subtext: "Essa dedicação transparece em cada brinquedo higienizado, em cada tapete arrumado e em cada mão estendida.",
+            pillIcon: "🧸",
+            pillText: "Princípio: O amor e o zelo são os pilares da nossa segurança.",
+            imageWebp: "img/playground-mediadora-tapete.webp",
+            imageJpg: "img/playground-mediadora-tapete.jpg",
+            imageAlt: "Mediadora cuidando",
+            label: "Zelo e Proteção",
+            caption: "A segurança que permite a brincadeira fluir com leveza."
+          },
+          {
+            tag: "🏎️ Frota Alinhada e Pronta",
+            title: "A frota organizada e os carrinhos brilhando geram <span class=\"highlight\">encantamento no primeiro olhar</span>.",
+            subtext: "O capricho visual do quiosque reflete o nosso profissionalismo e o respeito profundo que temos por quem nos visita.",
+            pillIcon: "⚡",
+            pillText: "Cultura FaçaAmigos: A excelência operacional está em todos os detalhes.",
+            imageWebp: "img/circuito-frota-alinhada.webp",
+            imageJpg: "img/circuito-frota-alinhada.jpg",
+            imageAlt: "Frota de carrinhos elétricos alinhada",
+            label: "Frota Impecável",
+            caption: "Organização e brilho que encantam o corredor."
+          }
+        ],
+
+        5: [
+          {
+            tag: "🌈 Inclusão Sem Rótulos",
+            title: "Aqui, nenhuma criança carrega um rótulo. <span class=\"highlight\">Todas são crianças prontas para sorrir</span>.",
+            subtext: "Quando derrubamos estereótipos, permitimos que cada uma mostre sua beleza única e sua forma especial de se expressar.",
+            pillIcon: "🌟",
+            pillText: "Cultura FaçaAmigos: Olhamos o potencial, nunca a limitação.",
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Piscina de bolinhas e crianças brincando",
+            label: "Igualdade no Brincar",
+            caption: "O salão onde todas as crianças se encontram com alegria."
+          },
+          {
+            tag: "💪 O Valor da Nossa Equipe",
+            title: "Uma equipe afinada e empática faz da FaçaAmigos <span class=\"highlight-teal\">uma referência de amor em Belém</span>.",
+            subtext: "Apoiem-se uns aos outros. Um time que se ajuda mantém a energia leve e transmite paz para quem chega.",
+            pillIcon: "🤝",
+            pillText: "Princípio: A união da equipe é a força do nosso atendimento.",
+            imageWebp: "img/equipe-recepcao.webp",
+            imageJpg: "img/equipe-recepcao.jpg",
+            imageAlt: "Equipe unida e feliz",
+            label: "União e Força",
+            caption: "Juntos fazemos a diferença todos os dias."
+          },
+          {
+            tag: "🧬 Ciência, Psicologia e Afeto",
+            title: "Com a orientação da Dra. Isabella, unimos <span class=\"highlight\">embasamento científico e afeto humano</span>.",
+            subtext: "Da Análise do Comportamento ao carinho no tapete, tudo no FaçaAmigos tem propósito e estudo cuidadoso.",
+            pillIcon: "📚",
+            pillText: "Cultura FaçaAmigos: O afeto ganha força com a ciência do desenvolvimento.",
+            imageWebp: "img/clinica-painel-sensorial.webp",
+            imageJpg: "img/clinica-painel-sensorial.jpg",
+            imageAlt: "Painel sensorial da clínica",
+            label: "Ciência com Coração",
+            caption: "Desenvolvimento infantil fundamentado e respeitoso."
+          },
+          {
+            tag: "🏆 Orgulho do Nosso Papel",
+            title: "Você é parte essencial de um projeto que <span class=\"highlight\">muda a vida de milhares de crianças</span>.",
+            subtext: "Tenha orgulho de estar aqui hoje. Cada família que sai feliz leva um pedaço do seu carinho para casa.",
+            pillIcon: "💖",
+            pillText: "Princípio: O nosso trabalho tem impacto real e permanente.",
+            imageWebp: "img/circuito-equipe-capivara.webp",
+            imageJpg: "img/circuito-equipe-capivara.jpg",
+            imageAlt: "Equipe e mascote juntos",
+            label: "Missão Nobre",
+            caption: "Transformando o brincar em ferramenta de vida."
+          },
+          {
+            tag: "🎪 Oficinas e Criatividade",
+            title: "Criar, pintar e inventar: <span class=\"highlight-teal\">o salão é um palco de infinitas possibilidades</span>.",
+            subtext: "Estimule a curiosidade. Quando a criança tem espaço para criar, a autoconfiança floresce com leveza.",
+            pillIcon: "🎨",
+            pillText: "Cultura FaçaAmigos: O brincar livre alimenta a inteligência emocional.",
+            imageWebp: "img/galeria-oficinas.webp",
+            imageJpg: "img/galeria-oficinas.jpg",
+            imageAlt: "Oficinas criativas",
+            label: "Oficinas de Arte",
+            caption: "Cores, texturas e descobertas a cada minuto."
+          }
+        ]
+      },
+
+      // ----------------------------------------------------------------------
+      // BANCO DAS CRIANÇAS & VITRINE (16h00 às 22h00) — 5 Dias de Alto Encantamento
+      // ----------------------------------------------------------------------
+      kids: {
+        1: [
+          {
+            badges: ["⭐ As Mais Queridas de Belém", "Parque Shopping"],
+            title: "Vem abraçar a <span class=\"pop\">Capivara</span> e o <span class=\"pop\">Macaco</span>!",
+            desc: "Pelúcias gigantes e super macias prontas para passear com você e tirar as fotos mais fofas da sua vida!",
+            features: [
+              { icon: "✨", text: "Passeios motorizados com toda a segurança" },
+              { icon: "🧸", text: "Abraço fofinho e companheirismo que encanta" }
+            ],
+            imageWebp: "img/circuito-equipe-capivara.webp",
+            imageJpg: "img/circuito-equipe-capivara.jpg",
+            imageAlt: "A famosa Capivara gigante do Circuito FaçaAmigos",
+            sticker: "VEM BRINCAR! 🐾",
+            bottomIcon: "🏎️",
+            bottomText: "No Circuito de Carrinhos FaçaAmigos"
+          },
+          {
+            badges: ["🎈 Diversão Sem Limites", "0 a 12 Anos"],
+            title: "A maior <span class=\"pop\">piscina de bolinhas</span> e casinha do shopping!",
+            desc: "Salão amplo, casinha na árvore, amarelinha lúdica e monitores treinados para cuidar com todo amor.",
+            features: [
+              { icon: "🏰", text: "Casinha elevada com escorregador e túneis" },
+              { icon: "🌿", text: "Canto de descompressão e livros infantis" }
+            ],
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Crianças brincando na piscina de bolinhas do FaçaAmigos",
+            sticker: "PULA-PULA & CORRER! 🎉",
+            bottomIcon: "📍",
+            bottomText: "Térreo • Próximo às Americanas"
+          },
+          {
+            badges: ["🚦 Pilote de Verdade!", "Controle Remoto dos Pais"],
+            title: "Range Rover, Lamborghini e <span class=\"pop\">Caminhão de Bombeiro</span>!",
+            desc: "A frota mais irada de Belém! A criança pilota no pedal ou os pais guiam com controle remoto total.",
+            features: [
+              { icon: "🚒", text: "Sirenes e luzes no caminhão de bombeiro" },
+              { icon: "⚡", text: "Passeios tranquilos pelos corredores" }
+            ],
+            imageWebp: "img/circuito-bombeiro.webp",
+            imageJpg: "img/circuito-bombeiro.jpg",
+            imageAlt: "Carrinho elétrico de bombeiro no shopping",
+            sticker: "SEJA O PILOTO! 🏁",
+            bottomIcon: "🏎️",
+            bottomText: "Passeio completo de 10 a 30 minutos"
+          },
+          {
+            badges: ["💙 Inclusão na Prática", "Sem Agendamento"],
+            title: "É para <span class=\"pop\">todas as crianças</span>!",
+            desc: "Com ou sem laudo: aqui todo mundo brinca junto no mesmo salão, com meia-entrada garantida por lei.",
+            features: [
+              { icon: "✅", text: "Não precisa de laudo para brincar: é só chegar!" },
+              { icon: "🏷️", text: "Meia-entrada inclusiva para laudo ou CIPTEA" }
+            ],
+            imageWebp: "img/galeria-oficinas.webp",
+            imageJpg: "img/galeria-oficinas.jpg",
+            imageAlt: "Oficinas infantis e brincadeiras",
+            sticker: "TODO MUNDO JUNTO! 🌈",
+            bottomIcon: "👨‍👩‍👧‍👦",
+            bottomText: "Ambiente seguro e acolhedor para a família"
+          },
+          {
+            badges: ["🩺 Clínica FaçaAmigos", "Umarizal • Belém"],
+            title: "Ciência, afeto e <span class=\"pop\">Terapia ABA</span> para o seu filho.",
+            desc: "Psicologia infantil, Terapia Ocupacional, Fonoaudiologia e Psicopedagogia com a Dra. Isabella Freitas (CRP 10/4727).",
+            features: [
+              { icon: "🧩", text: "Painel sensorial e recursos terapêuticos modernos" },
+              { icon: "📖", text: "Autora dos livros \"O Brincar com Propósito\"" }
+            ],
+            imageWebp: "img/clinica-painel-sensorial.webp",
+            imageJpg: "img/clinica-painel-sensorial.jpg",
+            imageAlt: "Painel sensorial e clínica FaçaAmigos",
+            sticker: "DESENVOLVIMENTO 💡",
+            bottomIcon: "🏥",
+            bottomText: "Conheça: clinica.institutofacaamigos.com.br"
+          }
+        ],
+
+        2: [
+          {
+            badges: ["🏰 O Reino da Diversão", "Parque Shopping Belém"],
+            title: "Mergulhe em mais de <span class=\"pop\">100 mil bolinhas</span> coloridas!",
+            desc: "O playground mais aconchegante e seguro de Belém esperando por você no térreo do shopping.",
+            features: [
+              { icon: "🌈", text: "Escorregador gigante e pontes de aventura" },
+              { icon: "🛡️", text: "Chão acolchoado e equipe de mediadores no salão" }
+            ],
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Piscina gigante de bolinhas",
+            sticker: "MERGULHE FUNDO! 🌊",
+            bottomIcon: "🎈",
+            bottomText: "Piscina de Bolinhas FaçaAmigos"
+          },
+          {
+            badges: ["🐵 Mascote Aventureira", "Circuito de Carrinhos"],
+            title: "O <span class=\"pop\">Macaco FaçaAmigos</span> quer passear com você!",
+            desc: "A pelúcia gigante mais animada de Belém está pronta para ser sua copiloto num passeio inesquecível.",
+            features: [
+              { icon: "🏎️", text: "Passeie com o Macaco nos carrinhos elétricos" },
+              { icon: "📸", text: "Tire fotos incríveis e poste no Instagram" }
+            ],
+            imageWebp: "img/circuito-macaco.webp",
+            imageJpg: "img/circuito-macaco.jpg",
+            imageAlt: "Mascote Macaco no Circuito",
+            sticker: "AVENTURA TOTAL! 🍌",
+            bottomIcon: "⭐",
+            bottomText: "Disponível no quiosque do Circuito"
+          },
+          {
+            badges: ["🏡 Casinha na Árvore", "Túneis & Desafios"],
+            title: "Suba na casinha e <span class=\"pop\">veja o salão lá de cima</span>!",
+            desc: "Estrutura elevada com pontes seguras, túneis coloridos e um escorregador direto para as bolinhas.",
+            features: [
+              { icon: "🧗", text: "Subida adaptada e corrimãos suaves" },
+              { icon: "👀", text: "Vista panorâmica para muita imaginação" }
+            ],
+            imageWebp: "img/playground-piscina-casinha.webp",
+            imageJpg: "img/playground-piscina-casinha.jpg",
+            imageAlt: "Casinha e piscina do playground",
+            sticker: "CONQUISTE O TOPO! 🏰",
+            bottomIcon: "🎪",
+            bottomText: "No Playground Inclusivo"
+          },
+          {
+            badges: ["🌿 Horário Inclusivo", "10h às 16h"],
+            title: "Estímulos suaves para quem <span class=\"pop\">precisa de calma</span>.",
+            desc: "Som reduzido, iluminação tranquila e equipe com suporte extra para crianças com sensibilidade sensorial.",
+            features: [
+              { icon: "🎧", text: "Ambiente sereno sem barulho alto" },
+              { icon: "🧸", text: "Cantinho da descompressão com almofadas e livros" }
+            ],
+            imageWebp: "img/inclusao-cantinho-leitura.webp",
+            imageJpg: "img/inclusao-cantinho-leitura.jpg",
+            imageAlt: "Cantinho da descompressão",
+            sticker: "PAZ & CONFORTO 🕊️",
+            bottomIcon: "💙",
+            bottomText: "Espaço adaptado para autismo e TDAH"
+          },
+          {
+            badges: ["🎨 Arte & Criação", "Oficinas Diárias"],
+            title: "Pinte, desenhe e solte a <span class=\"pop\">sua imaginação</span>!",
+            desc: "Nossas mediadoras adoram inventar brincadeiras criativas que estimulam o foco e a coordenação motora.",
+            features: [
+              { icon: "✏️", text: "Oficinas de desenho e pintura criativa" },
+              { icon: "🤝", text: "Brincadeiras que ensinam a cooperar e dividir" }
+            ],
+            imageWebp: "img/galeria-oficinas.webp",
+            imageJpg: "img/galeria-oficinas.jpg",
+            imageAlt: "Oficinas criativas no playground",
+            sticker: "CRIE O SEU MUNDO! 🖍️",
+            bottomIcon: "🎨",
+            bottomText: "Atividades inclusivas todos os dias"
+          }
+        ],
+
+        3: [
+          {
+            badges: ["🚨 Emergência de Alegria!", "Caminhão de Bombeiro"],
+            title: "Ligue as sirenes no <span class=\"pop\">Caminhão de Bombeiro</span>!",
+            desc: "Com luzes que piscam de verdade e som de sirene para salvar o dia com muita diversão no shopping!",
+            features: [
+              { icon: "🚒", text: "Design realista com mangueira de mentirinha" },
+              { icon: "🎮", text: "Controle remoto de longo alcance para os pais" }
+            ],
+            imageWebp: "img/circuito-bombeiro.webp",
+            imageJpg: "img/circuito-bombeiro.jpg",
+            imageAlt: "Carrinho de bombeiro FaçaAmigos",
+            sticker: "SIRENES LIGADAS! 🚨",
+            bottomIcon: "🚒",
+            bottomText: "O favorito dos pequenos pilotos"
+          },
+          {
+            badges: ["🏁 Frota de Luxo", "Parque Shopping Belém"],
+            title: "Pilote uma <span class=\"pop\">Lamborghini Urus</span> ou Range Rover!",
+            desc: "Mini-veículos elétricos de primeira linha com cinto de segurança e conforto total para passear.",
+            features: [
+              { icon: "⚡", text: "Aceleração suave sem solavancos" },
+              { icon: "🛡️", text: "Velocidade controlada para segurança absoluta" }
+            ],
+            imageWebp: "img/circuito-frota-alinhada.webp",
+            imageJpg: "img/circuito-frota-alinhada.jpg",
+            imageAlt: "Frota esportiva alinhada",
+            sticker: "SUPER MÁQUINAS! 🏎️",
+            bottomIcon: "🚦",
+            bottomText: "No térreo próximo às Americanas"
+          },
+          {
+            badges: ["💖 O Maior Abraço", "Capivara FaçaAmigos"],
+            title: "Você já abraçou a <span class=\"pop\">Capivara gigante</span> hoje?",
+            desc: "Ela é fofinha, dócil e adora tirar selfies com toda a família. Venha conhecer a mascote de Belém!",
+            features: [
+              { icon: "🐾", text: "Pelúcia antialérgica gigante e macia" },
+              { icon: "✨", text: "Pronta para um passeio no carrinho elétrico" }
+            ],
+            imageWebp: "img/circuito-equipe-capivara.webp",
+            imageJpg: "img/circuito-equipe-capivara.jpg",
+            imageAlt: "Capivara com a equipe",
+            sticker: "MUITO AMOR! 🐾",
+            bottomIcon: "🧸",
+            bottomText: "Vem tirar sua foto na recepção"
+          },
+          {
+            badges: ["🌈 Inclusão de Verdade", "Sem Agendamento"],
+            title: "Aqui, <span class=\"pop\">ninguém fica de fora</span>!",
+            desc: "Playground 100% acessível, projetado para acolher crianças com e sem laudo com o mesmo amor e dignidade.",
+            features: [
+              { icon: "🏷️", text: "Meia-entrada garantida para laudo ou CIPTEA" },
+              { icon: "👥", text: "Monitores treinados em acolhimento neurodivergente" }
+            ],
+            imageWebp: "img/playground-mediadora-tapete.webp",
+            imageJpg: "img/playground-mediadora-tapete.jpg",
+            imageAlt: "Mediadora com a criança",
+            sticker: "LUGAR DE TODOS! 🤝",
+            bottomIcon: "💙",
+            bottomText: "Espaço preparado com amor em Belém"
+          },
+          {
+            badges: ["🎈 Pula e Brinca", "Piscina Gigante"],
+            title: "Mergulhe na alegria da <span class=\"pop\">piscina de bolinhas</span>!",
+            desc: "Deixe a energia fluir com segurança enquanto os pequenos exploram cada cantinho do nosso salão.",
+            features: [
+              { icon: "🛡️", text: "Higienização constante de todas as bolinhas" },
+              { icon: "🏰", text: "Casinha na árvore com pontes e desafios" }
+            ],
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Crianças na piscina",
+            sticker: "PURA ALEGRIA! 🎉",
+            bottomIcon: "📍",
+            bottomText: "Aberto todos os dias até as 22h"
+          }
+        ],
+
+        4: [
+          {
+            badges: ["💙 Para Todo Mundo!", "Sem Preconceito"],
+            title: "Com ou sem laudo: <span class=\"pop\">todos brincam juntos</span>!",
+            desc: "Inclusão real é quando o espaço foi feito para que toda criança encontre diversão, carinho e respeito.",
+            features: [
+              { icon: "✅", text: "Seu filho não tem laudo? É só chegar e brincar!" },
+              { icon: "🏷️", text: "Tem laudo ou CIPTEA? Apresente e ganhe meia-entrada" }
+            ],
+            imageWebp: "img/galeria-oficinas.webp",
+            imageJpg: "img/galeria-oficinas.jpg",
+            imageAlt: "Oficinas e brinquedos",
+            sticker: "SOMOS IGUAIS! 🌈",
+            bottomIcon: "👨‍👩‍👧‍👦",
+            bottomText: "Parque Shopping Belém • Todos os dias"
+          },
+          {
+            badges: ["🐾 Dupla de Mascotes", "Capivara & Macaco"],
+            title: "A turma mais <span class=\"pop\">fofa e divertida</span> do shopping!",
+            desc: "Passeie motorizado com as mascotes gigantes que conquistaram o coração das crianças e dos pais em Belém.",
+            features: [
+              { icon: "🧸", text: "Pelúcias de tamanho gigante para abraçar" },
+              { icon: "🏎️", text: "Acompanham os pequenos em todo o trajeto" }
+            ],
+            imageWebp: "img/circuito-equipe-capivara.webp",
+            imageJpg: "img/circuito-equipe-capivara.jpg",
+            imageAlt: "Capivara FaçaAmigos",
+            sticker: "VEM ABRAÇAR! 💖",
+            bottomIcon: "⭐",
+            bottomText: "No Circuito de Carrinhos Elétricos"
+          },
+          {
+            badges: ["🏰 Diversão no Salão", "0 a 12 Anos"],
+            title: "Casinha suspensa, pontes e <span class=\"pop\">milhares de bolinhas</span>!",
+            desc: "Um castelo lúdico onde cada minuto é uma nova história cheia de imaginação e risadas.",
+            features: [
+              { icon: "🏰", text: "Casinha na árvore com janelas panorâmicas" },
+              { icon: "🎯", text: "Amarelinha e pistas lúdicas no piso" }
+            ],
+            imageWebp: "img/playground-piscina-casinha.webp",
+            imageJpg: "img/playground-piscina-casinha.jpg",
+            imageAlt: "Visão da casinha no salão",
+            sticker: "BRINCAR É VIDA! 🎈",
+            bottomIcon: "🎪",
+            bottomText: "No Playground Inclusivo"
+          },
+          {
+            badges: ["🚒 Pilotos de Coragem", "Circuito de Carrinhos"],
+            title: "Assuma o volante do <span class=\"pop\">Caminhão de Bombeiro</span>!",
+            desc: "Sirenes, volante macio e comandos fáceis para a criança dirigir com controle e segurança.",
+            features: [
+              { icon: "🚒", text: "Sirenes sonoras e luzes piscantes" },
+              { icon: "🎮", text: "Controle remoto total nas mãos dos pais" }
+            ],
+            imageWebp: "img/circuito-bombeiro.webp",
+            imageJpg: "img/circuito-bombeiro.jpg",
+            imageAlt: "Caminhão de bombeiro",
+            sticker: "HERÓI POR UM DIA! ⚡",
+            bottomIcon: "🏁",
+            bottomText: "Passeios de 10 a 30 minutos"
+          },
+          {
+            badges: ["🩺 Centro de Terapia", "Umarizal • Belém"],
+            title: "Clínica FaçaAmigos: <span class=\"pop\">ciência e carinho</span> para o seu filho.",
+            desc: "Terapia ABA, Fonoaudiologia, Terapia Ocupacional e Psicopedagogia com equipe multidisciplinar de referência.",
+            features: [
+              { icon: "🧠", text: "Análise do Comportamento Aplicada (ABA)" },
+              { icon: "📖", text: "Coordenação pela Dra. Isabella Freitas (CRP 10/4727)" }
+            ],
+            imageWebp: "img/clinica-painel-sensorial.webp",
+            imageJpg: "img/clinica-painel-sensorial.jpg",
+            imageAlt: "Painel sensorial da clínica",
+            sticker: "DESENVOLVIMENTO 💡",
+            bottomIcon: "🏥",
+            bottomText: "Rua Boaventura da Silva, 1573 • Umarizal"
+          }
+        ],
+
+        5: [
+          {
+            badges: ["🩺 Clínica FaçaAmigos", "Desenvolvimento & Afeto"],
+            title: "O amor que cuida, a <span class=\"pop\">ciência que desenvolve</span>.",
+            desc: "Nossa clínica em Belém é especializada em TEA, TDAH e marcos do desenvolvimento com a metodologia da Dra. Isabella Freitas.",
+            features: [
+              { icon: "🧩", text: "Salas equipadas com painéis e recursos sensoriais" },
+              { icon: "🤝", text: "Acolhimento humanizado para a família inteira" }
+            ],
+            imageWebp: "img/clinica-atividade-pedagogica.webp",
+            imageJpg: "img/clinica-atividade-pedagogica.jpg",
+            imageAlt: "Atividade pedagógica na clínica",
+            sticker: "EVOLUÇÃO REAL! 🌱",
+            bottomIcon: "🏥",
+            bottomText: "Acesse: clinica.institutofacaamigos.com.br"
+          },
+          {
+            badges: ["🎈 O Salão das Crianças", "Parque Shopping"],
+            title: "A maior e mais segura <span class=\"pop\">piscina de bolinhas</span> de Belém!",
+            desc: "Salão com piso amortecedor, casinha na árvore e escorregadores higienizados com todo rigor.",
+            features: [
+              { icon: "🌊", text: "Milhares de bolinhas para mergulhar à vontade" },
+              { icon: "🛡️", text: "Monitores atentos e carinhosos por todo o espaço" }
+            ],
+            imageWebp: "img/hero-piscina-bolinhas.webp",
+            imageJpg: "img/hero-piscina-bolinhas.jpg",
+            imageAlt: "Piscina de bolinhas gigante",
+            sticker: "DIVERSÃO TOTAL! 🎉",
+            bottomIcon: "📍",
+            bottomText: "Térreo • Próximo às Americanas"
+          },
+          {
+            badges: ["🏎️ Corrida da Alegria", "Circuito Elétrico"],
+            title: "Escolha seu carro e <span class=\"pop\">acelere nos corredores</span>!",
+            desc: "Frota moderna de veículos elétricos licenciados para passeios inesquecíveis pelo shopping.",
+            features: [
+              { icon: "🏎️", text: "Lamborghini, Range Rover e Bombeiro" },
+              { icon: "🎮", text: "Controle parental para total tranquilidade" }
+            ],
+            imageWebp: "img/circuito-frota-alinhada.webp",
+            imageJpg: "img/circuito-frota-alinhada.jpg",
+            imageAlt: "Frota de carrinhos elétricos",
+            sticker: "PILOTO EXPRESS! 🏁",
+            bottomIcon: "🚦",
+            bottomText: "Todos os dias das 10h às 22h"
+          },
+          {
+            badges: ["🐾 Nossa Mascote Amada", "Belém/PA"],
+            title: "A Capivara FaçaAmigos quer te dar um <span class=\"pop\">abraço quentinho</span>!",
+            desc: "Venha conhecer a mascote mais famosa da cidade e tire fotos inesquecíveis para guardar no coração.",
+            features: [
+              { icon: "🧸", text: "Pelúcia gigante fofinha e carinhosa" },
+              { icon: "📸", text: "O ponto mais fotografado do Parque Shopping" }
+            ],
+            imageWebp: "img/circuito-equipe-capivara.webp",
+            imageJpg: "img/circuito-equipe-capivara.jpg",
+            imageAlt: "Capivara gigante com a equipe",
+            sticker: "O MELHOR ABRAÇO! 💖",
+            bottomIcon: "🐾",
+            bottomText: "Vem abraçar a Capivara hoje!"
+          },
+          {
+            badges: ["🤝 Acolhimento Inclusivo", "Sem Agendamento"],
+            title: "O espaço onde <span class=\"pop\">todas as crianças são bem-vindas</span>!",
+            desc: "Traga seu filho para brincar em um ambiente preparado para acolher a singularidade de cada sorriso.",
+            features: [
+              { icon: "✅", text: "Com ou sem laudo: portas abertas para brincar" },
+              { icon: "🏷️", text: "Meia-entrada inclusiva garantida por lei" }
+            ],
+            imageWebp: "img/playground-mediadora-tapete.webp",
+            imageJpg: "img/playground-mediadora-tapete.jpg",
+            imageAlt: "Mediadora e criança no tapete",
+            sticker: "AMOR & INCLUSÃO 🌈",
+            bottomIcon: "👨‍👩‍👧‍👦",
+            bottomText: "FaçaAmigos • O brincar com propósito"
+          }
+        ]
+      }
+    };
+
+    // ------------------------------------------------------------------------
+    // MOTOR DA TV (TV ENGINE): CICLO DE 5 DIAS & SHUFFLE RANDÔMICO
+    // ------------------------------------------------------------------------
     (function () {
       'use strict';
 
-      // Configurações dos Modos
       const CONFIG = {
-        teamSlideDuration: 14000, // 14 segundos por pílula cultural
-        kidsSlideDuration: 9000,  // 9 segundos por atração visual
-        timeCheckInterval: 1000,  // checa o relógio a cada 1s
-        inactivityTimeout: 3500   // esconde cursor após 3.5s parado
+        teamSlideDuration: 14000, // 14s por pílula de acolhimento
+        kidsSlideDuration: 9000,  // 9s por vitrine infantil
+        timeCheckInterval: 1000,  // avalia relógio a cada segundo
+        inactivityTimeout: 3500   // esconde cursor após 3.5s
       };
 
-      // Estado Global
+      // Embaralhamento Randômico (Fisher-Yates Shuffle)
+      function shuffleArray(array) {
+        const copy = [...array];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      // Calcula dia do ciclo de 1 a 5 baseado na data atual
+      function calculateCurrentCycleDay() {
+        const msPerDay = 1000 * 60 * 60 * 24;
+        const daysSinceEpoch = Math.floor(Date.now() / msPerDay);
+        return (daysSinceEpoch % 5) + 1;
+      }
+
       const state = {
+        cycleDay: calculateCurrentCycleDay(),
         forcedMode: null, // 'team', 'kids', 'night' ou null (auto)
         currentMode: 'team',
         currentSlideIndex: 0,
+        currentPool: [],
         slideTimer: null,
         progressTimer: null,
         progressStartTime: 0,
@@ -1237,30 +1665,125 @@
         gameInactivityTimer: null
       };
 
-      // Elementos do DOM
       const dom = {
         clockTime: document.getElementById('clockTime'),
         clockDate: document.getElementById('clockDate'),
         statusText: document.getElementById('statusText'),
         statusDot: document.getElementById('statusDot'),
+        cycleBadge: document.getElementById('cycleBadge'),
         tvSubTitle: document.getElementById('tvSubTitle'),
         progressFill: document.getElementById('progressFill'),
         screenTeam: document.getElementById('mode-team'),
         screenKids: document.getElementById('mode-kids'),
         screenNight: document.getElementById('mode-night'),
+        teamContainer: document.getElementById('teamContainer'),
+        kidsContainer: document.getElementById('kidsContainer'),
         btnModeTeam: document.getElementById('btnModeTeam'),
         btnModeKids: document.getElementById('btnModeKids'),
         btnModeAuto: document.getElementById('btnModeAuto'),
+        btnCyclePrev: document.getElementById('btnCyclePrev'),
+        btnCycleNext: document.getElementById('btnCycleNext'),
         btnFullscreen: document.getElementById('btnFullscreen'),
         btnGameToggle: document.getElementById('btnGameToggle'),
         btnGameClose: document.getElementById('btnGameClose'),
-        gameLayer: document.getElementById('gameLayer'),
+        gameLayer: document.getElementById('game-layer'),
         gameCanvas: document.getElementById('gameCanvas'),
         gameScoreText: document.getElementById('gameScoreText')
       };
 
       // ----------------------------------------------------------------------
-      // 1. Relógio Local (Belém/Brasília UTC-3)
+      // RENDERIZAÇÃO DINÂMICA DOS SLIDES COM EMBARALHAMENTO RANDÔMICO
+      // ----------------------------------------------------------------------
+      function renderTeamSlides(cycleDay) {
+        const rawSlides = FACA_AMIGOS_DATABASE.team[cycleDay] || FACA_AMIGOS_DATABASE.team[1];
+        // Aplica randomização (shuffle)
+        state.currentPool = shuffleArray(rawSlides);
+        dom.teamContainer.innerHTML = '';
+
+        state.currentPool.forEach((slide, idx) => {
+          const slideEl = document.createElement('div');
+          slideEl.className = 'slide-host' + (idx === 0 ? ' active' : '');
+          slideEl.setAttribute('data-slide', idx);
+
+          const loadingAttr = idx === 0 ? 'loading="eager"' : 'loading="lazy"';
+
+          slideEl.innerHTML = `
+            <div class="team-content">
+              <div class="team-tag">${slide.tag}</div>
+              <h1 class="team-quote">${slide.title}</h1>
+              <p class="team-subtext">${slide.subtext}</p>
+              <div class="team-pill-box">
+                <span class="team-pill-icon">${slide.pillIcon}</span>
+                <span class="team-pill-text">${slide.pillText}</span>
+              </div>
+            </div>
+            <div class="team-media-card">
+              <picture>
+                <source srcset="${slide.imageWebp}" type="image/webp">
+                <img src="${slide.imageJpg}" alt="${slide.imageAlt}" width="800" height="600" ${loadingAttr} decoding="async">
+              </picture>
+              <div class="team-media-overlay">
+                <div class="team-media-label">${slide.label}</div>
+                <div class="team-media-caption">${slide.caption}</div>
+              </div>
+            </div>
+          `;
+
+          dom.teamContainer.appendChild(slideEl);
+        });
+      }
+
+      function renderKidsSlides(cycleDay) {
+        const rawSlides = FACA_AMIGOS_DATABASE.kids[cycleDay] || FACA_AMIGOS_DATABASE.kids[1];
+        // Aplica randomização (shuffle)
+        state.currentPool = shuffleArray(rawSlides);
+        dom.kidsContainer.innerHTML = '';
+
+        state.currentPool.forEach((slide, idx) => {
+          const slideEl = document.createElement('div');
+          slideEl.className = 'kids-slide-host' + (idx === 0 ? ' active' : '');
+          slideEl.setAttribute('data-slide', idx);
+
+          const badgesHtml = slide.badges.map((b, i) => {
+            const cls = i === 0 ? 'badge-pink' : 'badge-yellow';
+            return `<span class="kids-badge ${cls}">${b}</span>`;
+          }).join('');
+
+          const featuresHtml = slide.features.map(f => `
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">${f.icon}</span>
+              <span>${f.text}</span>
+            </div>
+          `).join('');
+
+          const loadingAttr = idx === 0 ? 'loading="eager"' : 'loading="lazy"';
+
+          slideEl.innerHTML = `
+            <div class="kids-content">
+              <div class="kids-badge-row">${badgesHtml}</div>
+              <h1 class="kids-title">${slide.title}</h1>
+              <p class="kids-desc">${slide.desc}</p>
+              <div class="kids-feature-list">${featuresHtml}</div>
+            </div>
+            <div class="kids-visual-card">
+              <picture>
+                <source srcset="${slide.imageWebp}" type="image/webp">
+                <img src="${slide.imageJpg}" alt="${slide.imageAlt}" width="800" height="600" ${loadingAttr} decoding="async">
+              </picture>
+              <div class="kids-sticker">${slide.sticker}</div>
+              <div class="kids-sticker-bottom">
+                <span class="kids-sticker-bottom-icon">${slide.bottomIcon}</span>
+                <div class="kids-sticker-bottom-text">${slide.bottomText}</div>
+              </div>
+            </div>
+          `;
+
+          dom.kidsContainer.appendChild(slideEl);
+        });
+      }
+
+      // ----------------------------------------------------------------------
+      // RELÓGIO E AVALIAÇÃO DE HORÁRIOS
       // ----------------------------------------------------------------------
       function updateClock() {
         const now = new Date();
@@ -1271,7 +1794,16 @@
         const options = { weekday: 'long', day: 'numeric', month: 'long' };
         dom.clockDate.textContent = now.toLocaleDateString('pt-BR', options);
 
-        // Se estiver em modo automático, avalia qual modo deve rodar
+        // Atualiza dia do ciclo se mudou a meia-noite
+        const autoCycle = calculateCurrentCycleDay();
+        if (state.forcedCycleDay === undefined && autoCycle !== state.cycleDay) {
+          state.cycleDay = autoCycle;
+          renderCurrentModeSlides();
+        }
+
+        dom.cycleBadge.textContent = `Dia ${state.cycleDay}/5`;
+
+        // Se estiver em modo automático, gerencia o turno pelo horário
         if (!state.forcedMode) {
           evaluateAutoMode(now.getHours());
         }
@@ -1293,39 +1825,44 @@
         }
       }
 
+      function renderCurrentModeSlides() {
+        if (state.currentMode === 'team') {
+          renderTeamSlides(state.cycleDay);
+        } else if (state.currentMode === 'kids') {
+          renderKidsSlides(state.cycleDay);
+        }
+      }
+
       // ----------------------------------------------------------------------
-      // 2. Transição entre Modos
+      // TRANSIÇÃO DE MODOS
       // ----------------------------------------------------------------------
       function switchMode(newMode) {
         state.currentMode = newMode;
         state.currentSlideIndex = 0;
 
-        // Limpa transições anteriores
         clearTimeout(state.slideTimer);
         cancelAnimationFrame(state.progressTimer);
         dom.progressFill.style.width = '0%';
 
-        // Esconde todas as telas
         dom.screenTeam.classList.remove('active');
         dom.screenKids.classList.remove('active');
         dom.screenNight.classList.remove('active');
 
-        // Atualiza UI de status
         if (newMode === 'team') {
+          renderTeamSlides(state.cycleDay);
           dom.screenTeam.classList.add('active');
-          dom.statusText.textContent = 'Modo Equipe & PNL';
+          dom.statusText.textContent = 'Modo Equipe';
           dom.statusDot.style.background = 'var(--teal)';
           dom.statusDot.style.boxShadow = '0 0 10px var(--teal)';
           state.currentSlideDuration = CONFIG.teamSlideDuration;
-          setupSlides('mode-team');
           startSlideCycle();
         } else if (newMode === 'kids') {
+          renderKidsSlides(state.cycleDay);
           dom.screenKids.classList.add('active');
           dom.statusText.textContent = 'Vitrine Crianças';
           dom.statusDot.style.background = 'var(--pink)';
           dom.statusDot.style.boxShadow = '0 0 10px var(--pink)';
           state.currentSlideDuration = CONFIG.kidsSlideDuration;
-          setupSlides('mode-kids');
           startSlideCycle();
         } else {
           dom.screenNight.classList.add('active');
@@ -1338,16 +1875,8 @@
         updateHudButtons();
       }
 
-      function setupSlides(containerId) {
-        const slides = document.querySelectorAll(`#${containerId} [data-slide]`);
-        slides.forEach((s, idx) => {
-          if (idx === 0) s.classList.add('active');
-          else s.classList.remove('active');
-        });
-      }
-
       // ----------------------------------------------------------------------
-      // 3. Ciclo de Slides & Barra de Progresso
+      // CICLO DE SLIDES & BARRA DE PROGRESSO
       // ----------------------------------------------------------------------
       function startSlideCycle() {
         clearTimeout(state.slideTimer);
@@ -1363,13 +1892,19 @@
       }
 
       function advanceSlide() {
-        const activeContainer = state.currentMode === 'team' ? dom.screenTeam : dom.screenKids;
+        const activeContainer = state.currentMode === 'team' ? dom.teamContainer : dom.kidsContainer;
         const slides = activeContainer.querySelectorAll('[data-slide]');
         if (slides.length <= 1) return;
 
         slides[state.currentSlideIndex].classList.remove('active');
         state.currentSlideIndex = (state.currentSlideIndex + 1) % slides.length;
-        slides[state.currentSlideIndex].classList.add('active');
+        
+        // Se deu uma volta completa no pool, reembaralha para a próxima volta não ser igual
+        if (state.currentSlideIndex === 0) {
+          renderCurrentModeSlides();
+        } else {
+          slides[state.currentSlideIndex].classList.add('active');
+        }
       }
 
       function animateProgressBar() {
@@ -1384,7 +1919,7 @@
       }
 
       // ----------------------------------------------------------------------
-      // 4. Ocultação Automática do Cursor (TV Clean Interface)
+      // CURSOR AUTO-HIDE
       // ----------------------------------------------------------------------
       let cursorTimeout;
       function resetCursorTimer() {
@@ -1401,7 +1936,7 @@
       resetCursorTimer();
 
       // ----------------------------------------------------------------------
-      // 5. Controles Ocultos (HUD) & Teclas de Atalho
+      // CONTROLES HUD & ATALHOS DE TECLADO
       // ----------------------------------------------------------------------
       function updateHudButtons() {
         dom.btnModeTeam.classList.toggle('active', state.forcedMode === 'team');
@@ -1425,6 +1960,16 @@
         updateHudButtons();
       });
 
+      function setCycleDay(d) {
+        state.cycleDay = ((d - 1 + 5) % 5) + 1;
+        dom.cycleBadge.textContent = `Dia ${state.cycleDay}/5`;
+        renderCurrentModeSlides();
+        startSlideCycle();
+      }
+
+      dom.btnCyclePrev.addEventListener('click', () => setCycleDay(state.cycleDay - 1));
+      dom.btnCycleNext.addEventListener('click', () => setCycleDay(state.cycleDay + 1));
+
       dom.btnFullscreen.addEventListener('click', toggleFullscreen);
 
       function toggleFullscreen() {
@@ -1435,7 +1980,6 @@
         }
       }
 
-      // Atalhos no teclado / Controle Remoto
       window.addEventListener('keydown', (e) => {
         const key = e.key.toUpperCase();
         if (key === '1') {
@@ -1448,6 +1992,10 @@
           state.forcedMode = null;
           updateClock();
           updateHudButtons();
+        } else if (key === '[') {
+          setCycleDay(state.cycleDay - 1);
+        } else if (key === ']') {
+          setCycleDay(state.cycleDay + 1);
         } else if (key === 'F') {
           toggleFullscreen();
         } else if (key === 'G') {
@@ -1457,7 +2005,6 @@
         }
       });
 
-      // Clique duplo na tela entra em Fullscreen
       document.body.addEventListener('dblclick', (e) => {
         if (!e.target.closest('#tvHud') && !e.target.closest('#game-layer')) {
           toggleFullscreen();
@@ -1465,29 +2012,22 @@
       });
 
       // ----------------------------------------------------------------------
-      // 6. Roadmap: Mini-Game Interativo (Estourar Bolinhas)
+      // MINI-GAME INTERATIVO (ROADMAP)
       // ----------------------------------------------------------------------
-      const bubbleColors = [
-        '#F0196B', // Rosa FaçaAmigos
-        '#2ECFB5', // Verde-água
-        '#FFE234', // Amarelo
-        '#8B5CF6', // Roxo lúdico
-        '#FF7A00'  // Laranja energia
-      ];
+      const bubbleColors = ['#F0196B', '#2ECFB5', '#FFE234', '#8B5CF6', '#FF7A00'];
 
       function toggleGame() {
         state.gameActive = !state.gameActive;
-        const gameLayer = document.getElementById('game-layer');
 
         if (state.gameActive) {
-          gameLayer.classList.add('active');
+          dom.gameLayer.classList.add('active');
           state.gameScore = 0;
           dom.gameScoreText.textContent = 'Pontos: 0';
           clearTimeout(state.slideTimer);
           cancelAnimationFrame(state.progressTimer);
           startGameSession();
         } else {
-          gameLayer.classList.remove('active');
+          dom.gameLayer.classList.remove('active');
           stopGameSession();
           startSlideCycle();
         }
@@ -1507,7 +2047,6 @@
 
       function resetGameInactivity() {
         clearTimeout(state.gameInactivityTimer);
-        // Volta para a TV após 30 segundos de inatividade
         state.gameInactivityTimer = setTimeout(() => {
           if (state.gameActive) toggleGame();
         }, 30000);
@@ -1518,10 +2057,10 @@
         const bubble = document.createElement('div');
         bubble.className = 'bubble-target';
 
-        const size = Math.floor(Math.random() * 50) + 70; // 70px a 120px
+        const size = Math.floor(Math.random() * 50) + 70;
         const left = Math.floor(Math.random() * (dom.gameCanvas.clientWidth - size - 20)) + 10;
         const color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
-        const duration = (Math.random() * 3 + 5).toFixed(1); // 5s a 8s
+        const duration = (Math.random() * 3 + 5).toFixed(1);
 
         bubble.style.width = size + 'px';
         bubble.style.height = size + 'px';
@@ -1538,7 +2077,6 @@
 
         dom.gameCanvas.appendChild(bubble);
 
-        // Remove ao terminar a subida
         setTimeout(() => {
           if (bubble.parentNode) bubble.parentNode.removeChild(bubble);
         }, duration * 1000);
@@ -1561,17 +2099,16 @@
       dom.btnGameClose.addEventListener('click', toggleGame);
       dom.gameCanvas.addEventListener('pointerdown', resetGameInactivity);
 
-      // Expor API no escopo global para expansões futuras
       window.FacaAmigosTV = {
         switchMode: switchMode,
+        setCycleDay: setCycleDay,
         toggleFullscreen: toggleFullscreen,
         launchGame: toggleGame,
         getState: () => state
       };
 
-      // ----------------------------------------------------------------------
-      // 7. Inicialização do Sistema
-      // ----------------------------------------------------------------------
+      // Inicialização
+      renderCurrentModeSlides();
       updateClock();
       setInterval(updateClock, CONFIG.timeCheckInterval);
     })();

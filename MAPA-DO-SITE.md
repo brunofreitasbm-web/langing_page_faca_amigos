@@ -93,6 +93,7 @@ flowchart LR
 | `/admin` | admin.html | Painel do teste | não | noindex, no-store |
 | `/gestao` | gestao.html | Hub de Gestão | não | só pelo host `gestao.` |
 | `/tv` | tv.html | Vitrine Digital e canal de cultura para as Smart TVs das operações (/vitrine-digital) | não | noindex (uso interno nas lojas) |
+| `/tv2` | tv2.html | Vitrine Digital Vertical para a TV do Quiosque do Circuito (TV deitada 90º com tabela de planos) | não | noindex (uso interno quiosque) |
 | `/404` | 404.html | Erro | não | links para home, circuito, guia, código, playground, teste |
 
 ## 4. Arquivos técnicos e de descoberta
