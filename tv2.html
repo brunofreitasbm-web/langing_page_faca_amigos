@@ -389,6 +389,24 @@
     }
 
     .c-hud-btn:hover { background: var(--pink); }
+
+    /* Aviso de áudio bloqueado pelo navegador (some quando o som destrava) */
+    .c-sound-hint {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 20;
+      display: none;
+      background: rgba(26, 63, 53, 0.9);
+      color: var(--white);
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-family: 'Fredoka', cursive;
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .c-sound-hint.on { display: block; }
   </style>
 </head>
 
@@ -447,6 +465,8 @@
       <button class="c-hud-btn" id="btnNext">⏭ [→] Próximo</button>
       <button class="c-hud-btn" id="btnSound">🔊 [S] Som</button>
     </nav>
+
+    <div class="c-sound-hint" id="soundHint">🔇 Toque na tela para ligar o som</div>
   </div>
 
   <script>
@@ -500,7 +520,8 @@
         btnRotate: document.getElementById('btnRotate'),
         btnFullscreen: document.getElementById('btnFullscreen'),
         btnNext: document.getElementById('btnNext'),
-        btnSound: document.getElementById('btnSound')
+        btnSound: document.getElementById('btnSound'),
+        soundHint: document.getElementById('soundHint')
       };
 
       // ----------------------------------------------------------------------
@@ -564,7 +585,13 @@
       // sem a flag, qualquer toque/tecla destrava.
       function unlockAudio() {
         initAudio();
-        if (audio.ctx && audio.ctx.state === 'suspended') audio.ctx.resume();
+        if (audio.ctx && audio.ctx.state === 'suspended') audio.ctx.resume().then(updateSoundHint);
+        updateSoundHint();
+      }
+
+      function updateSoundHint() {
+        const blocked = audio.on && (!audio.ctx || audio.ctx.state !== 'running');
+        dom.soundHint.classList.toggle('on', blocked);
       }
 
       function applyVolume() {
@@ -575,6 +602,14 @@
       }
 
       function toggleSound() {
+        // Se o navegador ainda segurava o áudio, o 1º toque só destrava (e garante ligado)
+        if (!audio.ctx || audio.ctx.state !== 'running') {
+          audio.on = true;
+          try { localStorage.setItem(CONFIG.soundKey, '1'); } catch (e) { /* ignora */ }
+          unlockAudio();
+          applyVolume();
+          return;
+        }
         audio.on = !audio.on;
         try { localStorage.setItem(CONFIG.soundKey, audio.on ? '1' : '0'); } catch (e) { /* ignora */ }
         unlockAudio();
