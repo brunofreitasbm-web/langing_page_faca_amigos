@@ -84,7 +84,7 @@ Para que a experiência seja sempre fresca, interessante e nunca cansativa tanto
 ### 4.2. Turno Tarde / Noite (16h00 às 22h00) — Hora da Criança
 * **Público:** a criança que já está dentro do salão. A tela deixou de ser vitrine (sem preço, clínica, laudo ou fotos das atrações; isso é papel da `/tv2` e do site). Ela fala com a criança para **fixar** (saber onde está e o que vem depois), **brincar** (convites ao corpo, sem vencedor) e **acolher** (respirar, descansar).
 * **TV sem toque:** a criança responde com o corpo, guiada pela voz. Toda proposta de movimento tem versão sentada ou só com as mãos.
-* **Personagens:** a cachorra golden **Zoe** (anfitriã, colete FaçaAmigos), o **Tuco** (tucano, música), o **Cacao** (macaco, movimento) e a **Tati** (tartaruga, calma). Cada um aparece sempre como ele mesmo, nunca como outro bicho. 18 poses em `img/amigos/` (recortadas da folha do Drive; peça versões maiores e as poses "bravo" e "triste" quando houver).
+* **Personagens:** a cachorra golden **Zoe** (anfitriã, colete FaçaAmigos), o **Tuco** (tucano, música), o **Caco** (macaco, movimento) e a **Tati** (tartaruga, calma). Cada um aparece sempre como ele mesmo, nunca como outro bicho. 18 poses em `img/amigos/` (recortadas da folha do Drive; peça versões maiores e as poses "bravo" e "triste" quando houver).
 * **Blocos de ~10 min:** `16h–19h` mais brincar; `19h–22h` mais pausa e acolher. Cada bloco: Oi, amigo! → cenas sorteadas por tipo → Pausa do rio → Respira com a Tati. A mesma cena nunca repete em sequência.
 * **Cenas do lote 1 (`?cena=`):** `oi`, `cor`, `estatua`, `bicho`, `resp`, `pausa`. Abra `/tv?cena=estatua&dia=5` para ver uma cena em laço.
 * **Tema do dia (ciclo de 5 dias):** 1 amigos da floresta, 2 amigos do rio, 3 cores, 4 calma, 5 música. O tema muda quais cenas e quais movimentos aparecem primeiro.
@@ -130,7 +130,7 @@ Para facilitar testes, reuniões de equipe e demonstrações a investidores sem 
 | `img/galeria-oficinas.webp` | Oficinas criativas e integração infantil |
 | `img/clinica-painel-sensorial.webp` | Painel sensorial do Centro de Terapia |
 | `img/logo-simbolo.png` | Símbolo e ícone oficial da marca |
-| `img/amigos/*.webp` | 18 poses dos personagens (Zoe, Tuco, Cacao, Tati) usadas na Hora da Criança |
+| `img/amigos/*.webp` | 18 poses dos personagens (Zoe, Tuco, Caco, Tati) usadas na Hora da Criança |
 
 ---
 
