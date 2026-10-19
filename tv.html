@@ -529,6 +529,21 @@
       color: var(--dark);
     }
 
+    /* Ritmo do carimbó: anéis que pulsam no compasso (a duração é ajustada pelo JS a cada andamento) */
+    .kbeat { position: relative; display: grid; place-items: center; width: 44vh; height: 44vh; }
+    .kbeat .ksprite { position: relative; z-index: 2; }
+    .kbeat-ring {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      border: 1.2vh solid var(--pink);
+      opacity: 0;
+      animation: k-beat 0.83s ease-out infinite;
+    }
+    .kbeat-ring.d2 { animation-delay: 0.415s; border-color: var(--teal); }
+    .kbeat.off .kbeat-ring { animation: none; }
+    @keyframes k-beat { 0% { transform: scale(0.55); opacity: 0.55; } 100% { transform: scale(1.15); opacity: 0; } }
+
     .kring.big { width: 28vh; height: 28vh; }
     .kring.big > b { width: 21vh; height: 21vh; font-size: 10vh; }
 
@@ -630,7 +645,7 @@
     #soundHint.on { display: block; }
 
     @media (prefers-reduced-motion: reduce) {
-      .k-wave, .k-hop, .k-sway, .k-flap, .k-creep, .k-float, .kwater i { animation: none; }
+      .k-wave, .k-hop, .k-sway, .k-flap, .k-creep, .k-float, .kwater i, .kbeat-ring { animation: none; }
     }
 
     /* ==========================================================================
@@ -1650,7 +1665,7 @@
       const ARP_SOFT = [0, 2, 3, 2];
 
       const som = { ctx: null, master: null, bed: null, on: loadSoundPref(), mode: null, step: 0, nextAt: 0,
-        water: null, voice: null, missing: new Set(), unduckTimer: null };
+        water: null, voice: null, missing: new Set(), unduckTimer: null, bpm: 72, noise: null };
 
       function loadSoundPref() {
         const fromUrl = new URLSearchParams(location.search).get('som');
@@ -1742,13 +1757,51 @@
         osc.stop(at + dur + 0.05);
       }
 
+      // Percussão do Ritmo do carimbó: tambor (seno que cai de 150 para 60 Hz) e palma (ruído filtrado, 120 ms)
+      function drum(at, gain) {
+        const ctx = som.ctx;
+        const osc = ctx.createOscillator();
+        const env = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(150, at);
+        osc.frequency.exponentialRampToValueAtTime(60, at + 0.18);
+        env.gain.setValueAtTime(0.0001, at);
+        env.gain.exponentialRampToValueAtTime(gain, at + 0.012);
+        env.gain.exponentialRampToValueAtTime(0.0001, at + 0.28);
+        osc.connect(env).connect(som.bed);
+        osc.start(at);
+        osc.stop(at + 0.32);
+      }
+
+      function clap(at, gain) {
+        const ctx = som.ctx;
+        if (!som.noise) {
+          som.noise = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.3), ctx.sampleRate);
+          const data = som.noise.getChannelData(0);
+          for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
+        }
+        const src = ctx.createBufferSource();
+        src.buffer = som.noise;
+        const bp = ctx.createBiquadFilter();
+        bp.type = 'bandpass';
+        bp.frequency.value = 1800;
+        bp.Q.value = 0.9;
+        const env = ctx.createGain();
+        env.gain.setValueAtTime(0.0001, at);
+        env.gain.exponentialRampToValueAtTime(gain, at + 0.008);
+        env.gain.exponentialRampToValueAtTime(0.0001, at + 0.12);
+        src.connect(bp).connect(env).connect(som.bed);
+        src.start(at);
+        src.stop(at + 0.15);
+      }
+
       // Agendador com antecedência: marca as notas no relógio do áudio, que não atrasa
       // quando a TV está ocupada (setInterval atrasa).
       function scheduleBed() {
         if (!soundRunning() || !som.on) return;
         const mode = som.mode;
-        if (mode !== 'soft' && mode !== 'dance') return;
-        const eighth = 60 / (mode === 'dance' ? 104 : 72) / 2;
+        if (mode !== 'soft' && mode !== 'dance' && mode !== 'rhythm') return;
+        const eighth = 60 / (mode === 'dance' ? 104 : mode === 'rhythm' ? som.bpm : 72) / 2;
         if (som.nextAt < som.ctx.currentTime) som.nextAt = som.ctx.currentTime + 0.1;
         while (som.nextAt < som.ctx.currentTime + 0.5) {
           const chord = CHORDS[Math.floor(som.step / 8) % CHORDS.length];
@@ -1756,6 +1809,12 @@
           if (mode === 'dance') {
             tone(chord.arp[ARP_DANCE[pos]], som.nextAt, eighth * 1.4, { type: 'triangle', gain: 0.1 });
             if (pos === 0 || pos === 4) tone(chord.bass, som.nextAt, eighth * 3, { gain: 0.18 });
+          } else if (mode === 'rhythm') {
+            // batida de carimbó: "tum . tá tá | tum . tá ." (tambor grave e palma curta, sem agudos duros)
+            if (pos === 0 || pos === 4) drum(som.nextAt, 0.5);
+            if (pos === 5) drum(som.nextAt, 0.22);
+            if (pos === 2 || pos === 6) clap(som.nextAt, 0.3);
+            if (pos === 3) clap(som.nextAt, 0.16);
           } else {
             // caixinha de música: uma nota longa a cada duas colcheias
             if (pos % 2 === 0) tone(chord.arp[ARP_SOFT[pos / 2]], som.nextAt, eighth * 4, { gain: 0.12 });
@@ -1890,7 +1949,7 @@
         2: { nome: 'Amigos do rio', prefer: 'bicho', extras: BICHOS_RIO },
         3: { nome: 'Cores e formas', prefer: 'cor', extras: [] },
         4: { nome: 'Calma e sentimentos', prefer: 'resp', extras: [], extraAcolher: true },
-        5: { nome: 'Música e ritmo', prefer: 'estatua', extras: [] }
+        5: { nome: 'Música e ritmo', prefer: 'ritmo', extras: [] }
       };
 
       const SCENES = {
@@ -2092,6 +2151,65 @@
             h.later(() => h.say('pausa-01'), 1200);
             return () => document.body.classList.remove('calm');
           }
+        }
+      };
+
+      // BRINCAR: uma missão de amizade por vez. Só se a criança quiser, de longe ou de perto, nunca pede toque.
+      const MISSOES = [
+        { img: 'macaco-coracao', head: 'Acene para <em>alguém</em>!', say: 'missao-01' },
+        { img: 'macaco-sentado', head: 'Pergunte o <em>nome</em> de um amigo novo', say: 'missao-02' },
+        { img: 'macaco-festa', head: 'Brinque junto com alguém na <em>piscina de bolinhas</em>', say: 'missao-03' }
+      ];
+      let missaoIdx = Math.floor(Math.random() * MISSOES.length);
+
+      SCENES.missao = {
+        types: ['brincar'], dur: 30, intro: 'Missão FaçaAmigos',
+        html: () => {
+          const m = MISSOES[missaoIdx % MISSOES.length];
+          return `
+            <div class="krow mid">${spr('cachorro-sentado', 'small')}${spr(m.img, 'big k-sway')}${spr('tartaruga-sorri', 'small')}</div>
+            <h1 class="khead" id="mHead">${m.head}</h1>
+            <p class="ksub" id="mSub">Missão FaçaAmigos. Só se você quiser, do seu jeito.</p>`;
+        },
+        run(el, h) {
+          const m = MISSOES[missaoIdx % MISSOES.length];
+          missaoIdx++;
+          h.later(() => h.say(m.say), 900);
+          h.later(() => {
+            el.querySelector('#mHead').innerHTML = 'Cada amigo novo deixa o dia <em>mais legal</em>';
+            el.querySelector('#mSub').textContent = 'Pode olhar, acenar ou sorrir de longe';
+          }, 20000);
+        }
+      };
+
+      // BRINCAR: bater palmas no compasso, devagar, mais rápido e devagar de novo (versão: perna, mesa ou mãos no ar)
+      SCENES.ritmo = {
+        types: ['brincar'], dur: 90, bed: null, intro: 'Ritmo do carimbó',
+        html: () => `
+          <div class="kbeat off" id="rBeat"><i class="kbeat-ring"></i><i class="kbeat-ring d2"></i>${spr('tucano-joinha', 'big')}</div>
+          <h1 class="khead" id="rHead">Bata palmas com o Tuco!</h1>
+          <p class="ksub" id="rSub">Ou bata na perna, na mesa, ou balance as mãos no ar</p>`,
+        run(el, h) {
+          const beat = el.querySelector('#rBeat');
+          const rings = el.querySelectorAll('.kbeat-ring');
+          const head = el.querySelector('#rHead');
+          const sub = el.querySelector('#rSub');
+          const tempo = (bpm, title, text) => {
+            som.bpm = bpm;
+            rings.forEach((r) => { r.style.animationDuration = (60 / bpm) + 's'; });
+            head.textContent = title;
+            sub.textContent = text;
+          };
+          h.later(() => h.say('ritmo-01'), 900);
+          h.later(() => { beat.classList.remove('off'); tempo(72, 'Devagar', 'Bata junto com o círculo'); h.bed('rhythm'); }, 9000);
+          h.later(() => tempo(104, 'Mais rápido!', 'Acompanha o Tuco'), 35000);
+          h.later(() => tempo(72, 'Devagar de novo', 'Respira e bate de leve'), 60000);
+          h.later(() => {
+            beat.classList.add('off');
+            head.textContent = 'Que ritmo bonito!';
+            sub.textContent = 'Agora vamos descansar um pouquinho';
+            h.bed('soft');
+          }, 86000);
         }
       };
 
@@ -2300,7 +2418,7 @@
       dom.btnPair = document.getElementById('btnPair');
 
       const RT_KEY = 'fa-tv-canal';
-      const DYNAMICS = ['estatua', 'bicho', 'cor'];
+      const DYNAMICS = ['estatua', 'bicho', 'cor', 'missao', 'ritmo'];
       const rtState = { rt: null, code: '', fresh: false, controllerSeen: 0, hideTimer: null };
       kids.remote = false;
 
@@ -2435,7 +2553,8 @@
           setInterval(updatePair, 5000);
         }
         // Código novo (ou vindo na URL): mostra por 90 s para a equipe parear o celular
-        if (rtState.fresh) showPair(90);
+        // (na pré-visualização de uma cena, ?cena=, o painel não cobre a tela)
+        if (rtState.fresh && !new URLSearchParams(location.search).has('cena')) showPair(90);
       }
 
       setInterval(applyVolume, 60000);
