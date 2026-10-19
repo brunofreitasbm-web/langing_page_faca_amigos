@@ -130,21 +130,17 @@ Para facilitar testes, reuniões de equipe e demonstrações a investidores sem 
 
 ---
 
-## 7. TV2 — Vitrine Digital Vertical do Quiosque do Circuito (`/tv2`)
+## 7. TV2 — Vitrine Digital do Quiosque do Circuito (`/tv2`)
 
-O quiosque do Circuito de Carrinhos Elétricos conta com uma TV própria montada na vertical (totem / TV deitada a 90º no sentido horário).
+O quiosque do Circuito de Carrinhos Elétricos conta com uma **TV de 50" deitada (paisagem 16:9)**. Objetivo único: **fazer o pai/mãe que passa no corredor parar e alugar um carrinho.**
 
 ### 7.1. Características da TV2 (`tv2.html`):
-- **Canal Exclusivo:** Conteúdo 100% voltado para os carrinhos elétricos, caminhão de bombeiro, lamborghini, pelúcias gigantes (Capivara e Macaco) e pequenos pilotos.
-- **Orientação 90º com Seletor Inteligente:** Suporta TVs que transmitem sinal em paisagem física através da classe `.rotate-90` (tecla `R` no teclado ou botão no HUD para alternar rotação 90º, 0º e 270º).
-- **Barra Grande no Pé com Tabela de Valores de Planos:**
-  - **Pelúcias & Jeep:** R$ 48 por 20 minutos (minuto adicional: R$ 3,00).
-  - **Carros Esportivos & Moto:** R$ 48 por 30 minutos (minuto adicional: R$ 3,00).
-  - **Programa Fidelidade:** A cada 10 passeios registrados no CPF, a 10ª visita de 30 minutos é 100% gratuita!
-  - **Facilidade:** Sem agendamento prévio, pagamento via Pix e cartões no quiosque.
-- **Fontes de Mídia:** Fotos selecionadas das pastas compartilhadas do Google Drive (`Faça Amigos 🧩` e `Faça Amigos - Mídia 🧩`) armazenadas em `img/circuito-tv2/` e fotos oficiais do repositório.
-
----
+- **Só Circuito:** apenas fotos reais dos carrinhos, caminhão de bombeiro, Lamborghini, Range Rover e pelúcias motorizadas. Fotos de obra, playground ou clínica não entram.
+- **Palco fixo 1920x1080 escalado:** funciona igual em TV que reporta 720p, 1080p ou 4K. Sem rotação.
+- **Inicia sozinha:** abre a URL, entra em tela cheia (F / duplo clique) e roda em loop; recarrega 1x por dia às 06h para puxar atualizações.
+- **Preço em fundo claro, mínimo de texto:** `R$ 48,00` gigante + dois cartões `20 min · Pelúcias` e `30 min · Carrinhos`. O cartão do plano da foto da vez acende.
+- **Copy persuasivo (doutrina do alívio emocional, ver posicionamento):** pressuposição ("Qual ele vai escolher hoje?"), comando embutido ("Escolhe. Senta. Acelera!"), futuro vivido ("Daqui a 30 minutos você vai ouvir: 'De novo!'"), alívio de quem cuida ("Você respira. Ele acelera."). **Nunca usar as palavras promessa, confiança e oferta**, nem "garantido"/"cura".
+- **Atenção periférica:** brilho que atravessa o preço a cada 6s, pulso leve, palavras do mantra acendendo em sequência — tudo em `transform`/`opacity` (leve para TV).
 
 ## 8. Roadmap Futuro: Jogos Interativos na TV
 

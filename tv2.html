@@ -5,8 +5,8 @@
   <script src="/assets/fa-track.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FaçaAmigos Circuito TV2 — Vitrine Vertical do Quiosque</title>
-  <meta name="description" content="Vitrine Digital Vertical para a TV do Quiosque do Circuito de Carrinhos Elétricos FaçaAmigos no Parque Shopping Belém.">
+  <title>FaçaAmigos Circuito TV2</title>
+  <meta name="description" content="Vitrine Digital da TV 50&quot; do Quiosque do Circuito de Carrinhos Elétricos FaçaAmigos no Parque Shopping Belém.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/tv2">
   <meta name="robots" content="noindex, follow">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
@@ -14,26 +14,19 @@
   <!-- Fontes Oficiais da Marca -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --pink: #F0196B;
       --pink-dark: #C81158;
-      --pink-soft: rgba(240, 25, 107, 0.12);
       --teal: #2ECFB5;
       --teal-dark: #1FA893;
-      --teal-soft: rgba(46, 207, 181, 0.15);
       --yellow: #FFE234;
-      --yellow-gold: #F59E0B;
       --dark: #1A3F35;
-      --dark-card: #122822;
       --ink-soft: #4C6B62;
       --cream: #FFF9F1;
       --white: #FFFFFF;
-      --shadow-lg: 0 16px 40px rgba(26, 63, 53, 0.2);
-      --shadow-glow: 0 0 30px rgba(240, 25, 107, 0.3);
-      --r-xl: 28px;
     }
 
     * {
@@ -51,701 +44,456 @@
       background: #0E221C;
       font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       color: var(--dark);
-      cursor: default;
     }
 
-    body.hide-cursor {
-      cursor: none !important;
+    body.hide-cursor { cursor: none !important; }
+
+    /* ==========================================================================
+       PALCO FIXO 1920x1080 ESCALADO PARA QUALQUER TV 16:9 (50" DEITADA / PAISAGEM)
+       O navegador da TV pode reportar 1280x720, 1920x1080 ou 3840x2160 —
+       desenhamos em pixels fixos e escalamos o conjunto inteiro via transform.
+       ========================================================================== */
+    #tvCanvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: center center;
+      transform: translate(-50%, -50%) scale(var(--fit, 1));
+      overflow: hidden;
+      background: var(--cream);
     }
 
     /* ==========================================================================
-       CONTAINER DA TELA COM SUPORTE A ROTAÇÃO (TV 90º SENTIDO HORÁRIO)
+       LADO ESQUERDO — FOTO DO CIRCUITO + FRASE QUE PARA O PAI NO CORREDOR
        ========================================================================== */
-    #tvViewport {
+    .c-photo-zone {
       position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 1180px;
+      height: 1080px;
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      background: radial-gradient(circle at 50% 10%, #FFFDF7 0%, #FFF3E1 100%);
-      transition: transform 0.4s ease-out;
-      transform-origin: center center;
+      background: var(--dark);
+      clip-path: polygon(0 0, 100% 0, 91.5% 100%, 0 100%);
     }
 
-    /* Rotação 90º Horário quando a TV deitada fisicamente está em modo paisagem */
-    #tvViewport.rotate-90 {
-      width: 100vh;
-      height: 100vw;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(90deg);
+    .c-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1s ease-out;
     }
 
-    /* Rotação 270º (Anti-horário) caso necessário */
-    #tvViewport.rotate-270 {
-      width: 100vh;
-      height: 100vw;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) rotate(270deg);
-    }
+    .c-slide.active { opacity: 1; }
 
-    /* ==========================================================================
-       TOPBAR DO CIRCUITO (Vertical / Totem Friendly)
-       ========================================================================== */
-    .c-header {
+    .c-slide img {
       width: 100%;
-      height: 8.5%;
-      min-height: 80px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 4%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(255,249,241,0.85) 100%);
-      border-bottom: 2px solid rgba(240, 25, 107, 0.12);
-      box-shadow: 0 4px 20px rgba(26, 63, 53, 0.06);
-      z-index: 50;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.04);
+      transition: transform 8s ease-out;
+    }
+
+    .c-slide.active img { transform: scale(1.14); }
+
+    .c-slide::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(14, 34, 28, 0) 38%, rgba(14, 34, 28, 0.88) 100%);
+    }
+
+    .c-slide-copy {
+      position: absolute;
+      left: 72px;
+      right: 170px;
+      bottom: 92px;
+      z-index: 2;
+      color: var(--white);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease-out 0.35s, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) 0.35s;
+    }
+
+    .c-slide.active .c-slide-copy {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .c-kicker {
+      display: inline-block;
+      background: var(--yellow);
+      color: var(--dark);
+      font-family: 'Fredoka One', cursive;
+      font-size: 40px;
+      padding: 10px 30px;
+      border-radius: 999px;
+      margin-bottom: 22px;
+      transform: rotate(-2deg);
+    }
+
+    .c-headline {
+      font-family: 'Fredoka One', cursive;
+      font-size: 104px;
+      line-height: 1.02;
+      letter-spacing: -1px;
+      text-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .c-headline em {
+      font-style: normal;
+      color: var(--yellow);
     }
 
     .c-brand {
+      position: absolute;
+      top: 40px;
+      left: 48px;
+      z-index: 5;
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.95);
+      padding: 12px 30px 12px 14px;
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     }
 
-    .c-logo-img {
-      width: clamp(52px, 6vw, 75px);
-      height: clamp(52px, 6vw, 75px);
-      object-fit: contain;
-      filter: drop-shadow(0 4px 10px rgba(240, 25, 107, 0.25));
-    }
-
-    .c-brand-text {
-      display: flex;
-      flex-direction: column;
-    }
+    .c-brand img { width: 64px; height: 64px; object-fit: contain; }
 
     .c-brand-title {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.8rem, 3.2vw, 2.6rem);
+      font-size: 40px;
       color: var(--pink);
       line-height: 1;
     }
 
     .c-brand-sub {
       font-family: 'Fredoka', cursive;
-      font-size: clamp(0.85rem, 1.4vw, 1.2rem);
+      font-weight: 700;
+      font-size: 22px;
       color: var(--teal-dark);
-      font-weight: 700;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
-      margin-top: 2px;
     }
 
-    .c-header-badge {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 20px;
-      border-radius: 999px;
-      background: var(--yellow);
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(0.95rem, 1.4vw, 1.35rem);
-      color: var(--dark);
-    }
-
-    .c-clock-box {
-      text-align: right;
-    }
-
-    .c-clock-time {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.8rem, 3vw, 2.8rem);
-      color: var(--dark);
-      line-height: 1;
-    }
-
-    .c-clock-sub {
-      font-size: clamp(0.75rem, 1.1vw, 0.95rem);
-      font-weight: 700;
-      color: var(--ink-soft);
-      text-transform: capitalize;
-    }
-
-    /* ==========================================================================
-       CORPO PRINCIPAL — CARROSSEL VERTICAL DO CIRCUITO
-       ========================================================================== */
-    .c-stage {
-      flex: 1;
-      width: 100%;
-      position: relative;
-      overflow: hidden;
-      padding: 2.5% 4%;
-    }
-
-    .c-slide {
+    /* Barra de progresso no pé da foto */
+    .c-progress {
       position: absolute;
-      top: 2.5%;
-      left: 4%;
-      right: 4%;
-      bottom: 2.5%;
-      display: flex;
-      flex-direction: column;
-      gap: 3%;
-      opacity: 0;
-      transform: scale(0.96) translateY(20px);
-      transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-      pointer-events: none;
-    }
-
-    .c-slide.active {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      pointer-events: auto;
-    }
-
-    /* Card da Foto Principal do Circuito */
-    .c-photo-card {
-      flex: 1;
-      width: 100%;
-      border-radius: var(--r-xl);
-      overflow: hidden;
-      position: relative;
-      box-shadow: var(--shadow-lg), var(--shadow-glow);
-      border: 8px solid var(--white);
-      background: #fedbe9;
-    }
-
-    .c-photo-card img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: scale(1.02);
-      transition: transform 9s ease-out;
-    }
-
-    .c-slide.active .c-photo-card img {
-      transform: scale(1.1);
-    }
-
-    .c-sticker-tag {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: var(--yellow);
-      color: var(--dark);
-      padding: 12px 26px;
-      border-radius: 999px;
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.1rem, 2vw, 1.8rem);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-      transform: rotate(3deg);
-      animation: float-tag 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes float-tag {
-      0% { transform: rotate(2deg) translateY(0); }
-      100% { transform: rotate(-2deg) translateY(-8px); }
-    }
-
-    .c-sticker-pill {
-      position: absolute;
-      bottom: 20px;
-      left: 20px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(8px);
-      padding: 12px 24px;
-      border-radius: 999px;
-      border: 2px solid var(--pink);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Fredoka', cursive;
-      font-weight: 700;
-      font-size: clamp(0.95rem, 1.6vw, 1.4rem);
-      color: var(--dark);
-      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-    }
-
-    /* Conteúdo de Texto e Título do Slide */
-    .c-slide-info {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: var(--r-xl);
-      padding: 2.5% 4%;
-      box-shadow: 0 10px 30px rgba(26, 63, 53, 0.08);
-      border: 1px solid rgba(46, 207, 181, 0.3);
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .c-slide-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.8rem, 3.2vw, 2.9rem);
-      line-height: 1.15;
-      color: var(--dark);
-      letter-spacing: -0.5px;
-    }
-
-    .c-slide-title span.pop {
-      color: var(--pink);
-    }
-
-    .c-slide-desc {
-      font-size: clamp(1rem, 1.8vw, 1.6rem);
-      font-weight: 700;
-      color: var(--ink-soft);
-      line-height: 1.35;
-    }
-
-    /* ==========================================================================
-       BARRA GRANDE NO PÉ: TABELA DE VALORES E PLANOS DO CIRCUITO
-       ========================================================================== */
-    .c-footer-pricing {
-      width: 100%;
-      height: 29%;
-      min-height: 260px;
-      background: linear-gradient(135deg, #153830 0%, #0E2520 100%);
-      color: var(--white);
-      border-top: 6px solid var(--pink);
-      padding: 18px 4%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.35);
-      z-index: 60;
-      position: relative;
-    }
-
-    .c-pricing-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-      padding-bottom: 8px;
-    }
-
-    .c-pricing-headline {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.2rem, 2.2vw, 1.9rem);
-      color: var(--yellow);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      letter-spacing: 0.5px;
-    }
-
-    .c-pricing-meta {
-      font-family: 'Fredoka', cursive;
-      font-size: clamp(0.9rem, 1.4vw, 1.25rem);
-      color: var(--teal);
-      font-weight: 600;
-    }
-
-    .c-pricing-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin: 10px 0;
-    }
-
-    .c-plan-card {
-      background: rgba(255, 255, 255, 0.08);
-      border: 2px solid rgba(46, 207, 181, 0.35);
-      border-radius: 20px;
-      padding: 14px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      position: relative;
-      transition: all 0.3s ease;
-    }
-
-    .c-plan-card.highlight-card {
-      background: linear-gradient(135deg, rgba(240, 25, 107, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%);
-      border-color: var(--pink);
-    }
-
-    .c-plan-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .c-plan-name {
-      font-family: 'Fredoka', cursive;
-      font-size: clamp(1rem, 1.7vw, 1.5rem);
-      font-weight: 700;
-      color: var(--white);
-    }
-
-    .c-plan-badge {
-      background: var(--yellow);
-      color: var(--dark);
-      font-family: 'Fredoka One', cursive;
-      padding: 3px 12px;
-      border-radius: 999px;
-      font-size: clamp(0.75rem, 1.2vw, 1.05rem);
-    }
-
-    .c-plan-price-row {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .c-plan-price {
-      font-family: 'Fredoka One', cursive;
-      font-size: clamp(2rem, 3.8vw, 3.6rem);
-      color: var(--yellow);
-      line-height: 1;
-    }
-
-    .c-plan-time {
-      font-family: 'Fredoka', cursive;
-      font-size: clamp(1.1rem, 1.8vw, 1.7rem);
-      color: var(--white);
-      font-weight: 700;
-    }
-
-    .c-plan-extra {
-      font-size: clamp(0.75rem, 1.2vw, 1.05rem);
-      color: rgba(255, 255, 255, 0.75);
-      font-weight: 600;
-      margin-top: 2px;
-    }
-
-    /* Faixa de Fidelidade e Facilidades */
-    .c-pricing-footer-banner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: rgba(0, 0, 0, 0.28);
-      border-radius: 12px;
-      padding: 8px 16px;
-      font-size: clamp(0.8rem, 1.25vw, 1.15rem);
-      font-weight: 700;
-    }
-
-    .c-fidelidade-tag {
-      color: var(--yellow);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .c-pagamento-tag {
-      color: var(--teal);
-    }
-
-    /* Barra de Progresso do Slide */
-    .c-progress-bar {
-      position: absolute;
-      top: 0;
       left: 0;
-      right: 0;
-      height: 5px;
-      background: rgba(255, 255, 255, 0.2);
+      bottom: 0;
+      height: 10px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.15);
+      z-index: 6;
     }
 
     .c-progress-fill {
       height: 100%;
-      width: 0%;
+      width: 100%;
+      transform-origin: left center;
+      transform: scaleX(0);
       background: linear-gradient(90deg, var(--teal), var(--yellow), var(--pink));
-      transition: width 0.1s linear;
+    }
+
+    .c-progress-fill.run { animation: progress-run var(--slide-ms, 7000ms) linear forwards; }
+
+    @keyframes progress-run {
+      from { transform: scaleX(0); }
+      to { transform: scaleX(1); }
     }
 
     /* ==========================================================================
-       HUD DE CONTROLE DISCRETO (Para Giro, Fullscreen e Slides)
+       LADO DIREITO — PREÇO EM FUNDO CLARO, MÍNIMO DE TEXTO
        ========================================================================== */
-    .c-hud {
+    .c-price-zone {
       position: absolute;
-      top: 14px;
-      right: 18px;
+      top: 0;
+      right: 0;
+      width: 840px;
+      height: 1080px;
+      padding: 70px 70px 60px 150px;
+      clip-path: polygon(11.9% 0, 100% 0, 100% 100%, 0 100%); /* acompanha a borda inclinada da foto */
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 8px;
-      z-index: 200;
-      opacity: 0;
-      transform: translateY(-8px);
-      transition: all 0.3s ease;
+      justify-content: center;
+      background:
+        radial-gradient(circle at 70% 18%, rgba(255, 226, 52, 0.35) 0%, rgba(255, 226, 52, 0) 45%),
+        radial-gradient(circle at 30% 90%, rgba(46, 207, 181, 0.18) 0%, rgba(46, 207, 181, 0) 50%),
+        var(--cream);
     }
 
-    body:not(.hide-cursor) .c-hud,
-    .c-hud:hover {
-      opacity: 1;
-      transform: translateY(0);
+    .c-price {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      font-family: 'Fredoka One', cursive;
+      color: var(--pink);
+      line-height: 0.85;
+      overflow: hidden;
+      padding: 10px 6px;
+      animation: price-beat 6s ease-in-out infinite;
     }
+
+    .c-price-cur { font-size: 96px; margin-top: 34px; margin-right: 10px; }
+    .c-price-int { font-size: 300px; letter-spacing: -8px; }
+    .c-price-dec { font-size: 110px; margin-top: 34px; }
+
+    /* Brilho que atravessa o preço — movimento periférico capta o olhar de quem passa */
+    .c-price::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 40%;
+      background: linear-gradient(100deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.75) 50%, rgba(255, 255, 255, 0) 100%);
+      transform: translateX(-150%) skewX(-12deg);
+      animation: price-shine 6s ease-in-out infinite;
+    }
+
+    @keyframes price-shine {
+      0%, 55% { transform: translateX(-150%) skewX(-12deg); }
+      80%, 100% { transform: translateX(350%) skewX(-12deg); }
+    }
+
+    @keyframes price-beat {
+      0%, 82%, 100% { transform: scale(1); }
+      88% { transform: scale(1.05); }
+      94% { transform: scale(0.99); }
+    }
+
+    .c-plans {
+      display: flex;
+      gap: 28px;
+      width: 100%;
+      margin-top: 44px;
+    }
+
+    .c-plan {
+      flex: 1;
+      background: var(--white);
+      border: 5px solid rgba(26, 63, 53, 0.1);
+      border-radius: 34px;
+      padding: 26px 10px 24px;
+      text-align: center;
+      box-shadow: 0 14px 34px rgba(26, 63, 53, 0.1);
+      transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.6s ease, box-shadow 0.6s ease;
+    }
+
+    .c-plan.on {
+      border-color: var(--pink);
+      transform: translateY(-10px) scale(1.04);
+      box-shadow: 0 20px 44px rgba(240, 25, 107, 0.25);
+    }
+
+    .c-plan-icon { font-size: 64px; line-height: 1; }
+
+    .c-plan-time {
+      font-family: 'Fredoka One', cursive;
+      font-size: 108px;
+      color: var(--dark);
+      line-height: 1;
+      margin-top: 8px;
+    }
+
+    .c-plan-time small { font-size: 52px; }
+
+    .c-plan-name {
+      font-family: 'Fredoka', cursive;
+      font-weight: 700;
+      font-size: 36px;
+      color: var(--ink-soft);
+      margin-top: 4px;
+    }
+
+    .c-cta {
+      margin-top: 50px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 54px;
+      color: var(--teal-dark);
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .c-cta span {
+      display: inline-block;
+      opacity: 0.35;
+      animation: beat-word 3s ease-in-out infinite;
+    }
+
+    .c-cta span:nth-child(2) { animation-delay: 1s; }
+    .c-cta span:nth-child(3) { animation-delay: 2s; color: var(--pink); }
+
+    @keyframes beat-word {
+      0%, 100% { opacity: 0.35; transform: scale(1); }
+      15%, 30% { opacity: 1; transform: scale(1.1); }
+    }
+
+    .c-easy {
+      margin-top: 18px;
+      font-weight: 800;
+      font-size: 30px;
+      color: var(--ink-soft);
+    }
+
+    /* Faixa quadriculada de largada na borda inclinada */
+    .c-flag {
+      position: absolute;
+      top: -20px;
+      left: 1164px;
+      width: 34px;
+      height: 1120px;
+      transform: rotate(5.3deg);
+      transform-origin: top left;
+      background-image:
+        linear-gradient(45deg, var(--dark) 25%, transparent 25%, transparent 75%, var(--dark) 75%),
+        linear-gradient(45deg, var(--dark) 25%, transparent 25%, transparent 75%, var(--dark) 75%);
+      background-size: 34px 34px;
+      background-position: 0 0, 17px 17px;
+      background-color: var(--white);
+      z-index: 4;
+    }
+
+    /* HUD discreto: só aparece se mexer o mouse */
+    .c-hud {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      z-index: 50;
+      display: flex;
+      gap: 8px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    body:not(.hide-cursor) .c-hud { opacity: 1; }
 
     .c-hud-btn {
       background: rgba(26, 63, 53, 0.85);
-      backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.25);
       color: var(--white);
-      padding: 6px 14px;
+      padding: 8px 18px;
       border-radius: 999px;
       font-family: 'Fredoka', cursive;
-      font-size: 0.85rem;
+      font-size: 18px;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.2s ease;
     }
 
-    .c-hud-btn:hover, .c-hud-btn.active {
-      background: var(--pink);
-      border-color: var(--pink);
-      color: var(--white);
-      transform: scale(1.05);
-    }
+    .c-hud-btn:hover { background: var(--pink); }
   </style>
 </head>
 
 <body>
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-  <!-- VIEWPORT COM CONTROLE DE ROTAÇÃO 90º -->
-  <div id="tvViewport">
+  <div id="tvCanvas">
 
-    <!-- CABEÇALHO DO CIRCUITO -->
-    <header class="c-header">
+    <!-- FOTO + FRASE -->
+    <section class="c-photo-zone" id="photoZone">
       <div class="c-brand">
-        <img src="img/logo-simbolo.png" alt="FaçaAmigos Circuito" class="c-logo-img" width="70" height="70">
-        <div class="c-brand-text">
-          <span class="c-brand-title">FaçaAmigos</span>
-          <span class="c-brand-sub">Circuito de Carrinhos Elétricos</span>
+        <img src="img/logo-simbolo.png" alt="FaçaAmigos" width="64" height="64">
+        <div>
+          <div class="c-brand-title">FaçaAmigos</div>
+          <div class="c-brand-sub">Circuito de Carrinhos</div>
+        </div>
+      </div>
+      <!-- Slides inseridos via JavaScript -->
+      <div class="c-progress"><div class="c-progress-fill" id="progressFill"></div></div>
+    </section>
+
+    <div class="c-flag" aria-hidden="true"></div>
+
+    <!-- PREÇO -->
+    <aside class="c-price-zone">
+      <div class="c-price" aria-label="R$ 48,00">
+        <span class="c-price-cur">R$</span>
+        <span class="c-price-int">48</span>
+        <span class="c-price-dec">,00</span>
+      </div>
+
+      <div class="c-plans">
+        <div class="c-plan" data-plan="20">
+          <div class="c-plan-icon">🐾</div>
+          <div class="c-plan-time">20<small>min</small></div>
+          <div class="c-plan-name">Pelúcias</div>
+        </div>
+        <div class="c-plan" data-plan="30">
+          <div class="c-plan-icon">🏎️</div>
+          <div class="c-plan-time">30<small>min</small></div>
+          <div class="c-plan-name">Carrinhos</div>
         </div>
       </div>
 
-      <div class="c-header-badge">
-        <span>🏎️ PILOTE AQUI!</span>
-      </div>
+      <div class="c-cta"><span>Escolhe.</span> <span>Senta.</span> <span>Acelera!</span></div>
+      <div class="c-easy">Sem agendamento • é só chegar 👈</div>
+    </aside>
 
-      <div class="c-clock-box">
-        <div class="c-clock-time" id="clockTime">14:00</div>
-        <div class="c-clock-sub" id="clockDate">Segunda-feira</div>
-      </div>
-    </header>
-
-    <!-- PALCO CENTRAL DE SLIDES (100% CIRCUITO) -->
-    <main class="c-stage" id="stageContainer">
-      <!-- Slides do Circuito inseridos via JavaScript com rotação randômica -->
-    </main>
-
-    <!-- BARRA GRANDE NO PÉ: VALORES DOS PLANOS -->
-    <footer class="c-footer-pricing">
-      <!-- Linha de progresso no topo da barra -->
-      <div class="c-progress-bar">
-        <div class="c-progress-fill" id="progressFill"></div>
-      </div>
-
-      <div class="c-pricing-top">
-        <div class="c-pricing-headline">
-          <span>🏁 TABELA DE PASSEIOS NO CIRCUITO</span>
-        </div>
-        <div class="c-pricing-meta">
-          <span>Sem Agendamento • Parque Shopping Belém</span>
-        </div>
-      </div>
-
-      <!-- GRID DOS 2 PLANOS PRINCIPAIS -->
-      <div class="c-pricing-grid">
-        <!-- PLANO 1: PELÚCIAS GIGANTES E JEEP -->
-        <div class="c-plan-card highlight-card">
-          <div class="c-plan-header">
-            <span class="c-plan-name">🐾 Pelúcias & Jeep</span>
-            <span class="c-plan-badge">Capivara & Macaco</span>
-          </div>
-          <div class="c-plan-price-row">
-            <span class="c-plan-price">R$ 48</span>
-            <span class="c-plan-time">/ 20 minutos</span>
-          </div>
-          <div class="c-plan-extra">Minuto adicional: R$ 3,00 • Pelúcias motorizadas para abraçar</div>
-        </div>
-
-        <!-- PLANO 2: CARROS ESPORTIVOS E MOTO -->
-        <div class="c-plan-card">
-          <div class="c-plan-header">
-            <span class="c-plan-name">🏎️ Carros & Moto</span>
-            <span class="c-plan-badge">Lamborghini & Bombeiro</span>
-          </div>
-          <div class="c-plan-price-row">
-            <span class="c-plan-price">R$ 48</span>
-            <span class="c-plan-time">/ 30 minutos</span>
-          </div>
-          <div class="c-plan-extra">Minuto adicional: R$ 3,00 • Range Rover e esportivos licenciados</div>
-        </div>
-      </div>
-
-      <!-- FAIXA DE BENEFÍCIOS -->
-      <div class="c-pricing-footer-banner">
-        <div class="c-fidelidade-tag">
-          <span>⭐ <b>PROGRAMA FIDELIDADE:</b> A cada 10 passeios registrados no CPF, o 10º é <b>100% GRATUITO!</b></span>
-        </div>
-        <div class="c-pagamento-tag">
-          <span>💳 Pix • Débito • Crédito no Quiosque</span>
-        </div>
-      </div>
-    </footer>
-
-    <!-- HUD DE CONTROLES (Visível com mouse ou toque) -->
     <nav class="c-hud" aria-label="Controles de Exibição">
-      <button class="c-hud-btn" id="btnRotate" title="Alternar Rotação da TV (90º / 0º / 270º)">🔄 [R] Girar 90º</button>
-      <button class="c-hud-btn" id="btnFullscreen" title="Alternar Tela Cheia">⛶ [F] Tela Cheia</button>
-      <button class="c-hud-btn" id="btnShuffle" title="Embaralhar Slides">🎲 [S] Embaralhar</button>
+      <button class="c-hud-btn" id="btnFullscreen">⛶ [F] Tela Cheia</button>
+      <button class="c-hud-btn" id="btnNext">⏭ [→] Próximo</button>
     </nav>
-
   </div>
 
-  <!-- SCRIPT DO MOTOR DA TV2 (CIRCUITO) -->
   <script>
     (function () {
       'use strict';
 
       // ----------------------------------------------------------------------
-      // BANCO DE SLIDES 100% EXCLUSIVO DO CIRCUITO DE CARRINHOS
-      // Utiliza fotos reais baixadas do Google Drive e fotos do repositório
+      // SLIDES 100% CIRCUITO — cada frase usa um padrão de persuasão:
+      // pressuposição ("qual", não "se"), comando embutido, futuro vivido,
+      // e alívio para quem cuida (o pai descansa enquanto a criança brinca).
+      // plan: qual cartão de preço acende junto com a foto (20 = pelúcias, 30 = carrinhos).
       // ----------------------------------------------------------------------
-      const CIRCUITO_SLIDES = [
-        {
-          tag: "🐾 A MAIS AMADA DE BELÉM",
-          pill: "Pelúcia Gigante",
-          title: "Vem abraçar a <span class=\"pop\">Capivara</span> no Circuito!",
-          desc: "A mascote mais fofinha de Belém pronta para passear motorizada pelos corredores com muita alegria e carinho.",
-          image: "img/circuito-equipe-capivara.webp",
-          alt: "Capivara gigante do FaçaAmigos Circuito",
-          width: 800,
-          height: 1000
-        },
-        {
-          tag: "🚨 SIRENES LIGADAS!",
-          pill: "Caminhão de Bombeiro",
-          title: "Seja um herói no <span class=\"pop\">Caminhão de Bombeiro</span>!",
-          desc: "Luzes piscantes, sirene de verdade e comandos fáceis para a criança pilotar ou os pais guiarem no controle remoto.",
-          image: "img/circuito-bombeiro.webp",
-          alt: "Caminhão de bombeiro elétrico no quiosque",
-          width: 800,
-          height: 600
-        },
-        {
-          tag: "🏎️ SUPER MÁQUINAS",
-          pill: "Esportivos de Luxo",
-          title: "Acelere na <span class=\"pop\">Lamborghini Urus</span>!",
-          desc: "Mini-veículos elétricos de primeira linha com cinto de segurança e velocidade controlada para total tranquilidade.",
-          image: "img/circuito-lamborghini-urus.webp",
-          alt: "Lamborghini Urus elétrica infantil",
-          width: 800,
-          height: 600
-        },
-        {
-          tag: "🐵 DIVERSÃO MOTORIZADA",
-          pill: "Copiloto Especial",
-          title: "O <span class=\"pop\">Macaco FaçaAmigos</span> quer passear!",
-          desc: "Pelúcias gigantes que acompanham os pequenos pilotos em uma jornada cheia de imaginação e fotos lindas.",
-          image: "img/circuito-macaco.webp",
-          alt: "Mascote Macaco no Circuito de Carrinhos",
-          width: 800,
-          height: 1000
-        },
-        {
-          tag: "🏁 FROTA ALINHADA",
-          pill: "Parque Shopping Belém",
-          title: "A maior frota de <span class=\"pop\">carrinhos elétricos</span>!",
-          desc: "Modelos esportivos, Jeeps de aventura e caminhões. A criança escolhe seu favorito e pilota com segurança.",
-          image: "img/circuito-frota-alinhada.webp",
-          alt: "Frota alinhada no quiosque do Circuito",
-          width: 800,
-          height: 600
-        },
-        {
-          tag: "🚗 PASSEIO SEGURO",
-          pill: "Range Rover Oficial",
-          title: "Conforto e estabilidade na <span class=\"pop\">Range Rover</span>!",
-          desc: "Passeio suave e emocionante pelos corredores do shopping. A diversão que os pequenos nunca esquecem.",
-          image: "img/circuito-rangerover.webp",
-          alt: "Range Rover elétrica infantil",
-          width: 800,
-          height: 600
-        },
-        {
-          tag: "✨ PEQUENOS PILOTOS",
-          pill: "Momentos Mágicos",
-          title: "Sorrisos de orelha a orelha em <span class=\"pop\">cada curva</span>!",
-          desc: "Uma experiência divertida que estimula a coordenação motora, a autonomia e a autoconfiança da criança.",
-          image: "img/circuito-tv2/circuito-9.jpg",
-          alt: "Criança pilotando no Circuito FaçaAmigos",
-          width: 800,
-          height: 600
-        },
-        {
-          tag: "🎮 CONTROLE TOTAL DOS PAIS",
-          pill: "Segurança 100%",
-          title: "Os pais no controle ou <span class=\"pop\">a criança no volante</span>!",
-          desc: "Controle remoto de longo alcance que permite aos pais guiar o passeio com tranquilidade total.",
-          image: "img/circuito-tv2/circuito-10.jpg",
-          alt: "Controle remoto e carrinho elétrico",
-          width: 800,
-          height: 600
-        },
-        {
-          tag: "📸 FOTOS INESQUECÍVEIS",
-          pill: "Memórias de Infância",
-          title: "Tire as fotos mais fofas da <span class=\"pop\">sua visita</span>!",
-          desc: "O ponto mais alegre do shopping esperando por você e sua família todos os dias até as 22h.",
-          image: "img/circuito-tv2/circuito-12.jpg",
-          alt: "Família no quiosque do Circuito",
-          width: 800,
-          height: 600
-        },
-        {
-          tag: "🌈 INCLUSÃO PARA TODOS",
-          pill: "Sem Agendamento",
-          title: "Acolhimento especial para <span class=\"pop\">toda criança</span>!",
-          desc: "Carrinhos adaptados e equipe com carinho redobrado para que crianças com ou sem laudo brinquem felizes.",
-          image: "img/circuito-tv2/circuito-13.jpg",
-          alt: "Acolhimento no Circuito",
-          width: 800,
-          height: 600
-        }
+      const SLIDES = [
+        { image: 'img/circuito-bombeiro-h', pos: '50% 40%', plan: 30,
+          kicker: '🚨 Sirene ligada', headline: 'Hoje ele é o <em>herói</em> do shopping.' },
+        { image: 'img/circuito-carrinhos', pos: '50% 60%', plan: 30,
+          kicker: 'Range Rover ou Lamborghini?', headline: 'Qual ele vai <em>escolher</em> hoje?' },
+        { image: 'img/circuito-macaco', pos: '50% 65%', plan: 30,
+          kicker: '🎮 Controle remoto com você', headline: 'Ele no volante.<br><em>Você no controle.</em>' },
+        { image: 'img/circuito-equipe-capivara', pos: '50% 45%', plan: 20,
+          kicker: '🐾 Pelúcias gigantes', headline: 'Um abraço desse tamanho cabe em <em>20 minutos</em>.' },
+        { image: 'img/circuito-bombeiro', pos: '50% 55%', plan: 30,
+          kicker: '📸 Guarda esse momento', headline: 'Essa fase passa rápido.<br><em>Esse sorriso fica.</em>' },
+        { image: 'img/circuito-lamborghini-urus', pos: '50% 60%', plan: 30,
+          kicker: '🏁 Passeio pelo shopping', headline: 'Você respira.<br><em>Ele acelera.</em>' },
+        { image: 'img/circuito-frota-alinhada', pos: '50% 55%', plan: 20,
+          kicker: '👉 Está tudo pronto aqui', headline: 'Pode deixar ele <em>escolher</em>.' },
+        { image: 'img/circuito-frota-quiosque', pos: '50% 60%', plan: 30,
+          kicker: '⏱️ Daqui a 30 minutos…', headline: 'Você vai ouvir:<br><em>“De novo!”</em>' }
       ];
 
-      // ----------------------------------------------------------------------
-      // CONFIGURAÇÕES E ESTADO
-      // ----------------------------------------------------------------------
       const CONFIG = {
-        slideDuration: 8500,     // 8.5 segundos por slide
-        inactivityTimeout: 3500  // esconde cursor após 3.5s
+        slideDuration: 7000,     // 7s: tempo de um pai cruzar a frente do quiosque
+        inactivityTimeout: 3500
       };
 
-      const state = {
-        currentSlideIndex: 0,
-        pool: [],
-        slideTimer: null,
-        progressTimer: null,
-        progressStartTime: 0,
-        rotationMode: 'auto' // 'auto', '90', '0', '270'
-      };
+      const state = { index: -1, order: [], timer: null };
 
       const dom = {
-        viewport: document.getElementById('tvViewport'),
-        stage: document.getElementById('stageContainer'),
-        clockTime: document.getElementById('clockTime'),
-        clockDate: document.getElementById('clockDate'),
-        progressFill: document.getElementById('progressFill'),
-        btnRotate: document.getElementById('btnRotate'),
+        canvas: document.getElementById('tvCanvas'),
+        zone: document.getElementById('photoZone'),
+        progress: document.getElementById('progressFill'),
+        plans: document.querySelectorAll('.c-plan'),
         btnFullscreen: document.getElementById('btnFullscreen'),
-        btnShuffle: document.getElementById('btnShuffle')
+        btnNext: document.getElementById('btnNext')
       };
 
       // ----------------------------------------------------------------------
-      // EMBARALHAMENTO RANDÔMICO (Fisher-Yates)
+      // ESCALA DO PALCO 1920x1080 PARA A TELA REAL
+      // ----------------------------------------------------------------------
+      function fitCanvas() {
+        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+        dom.canvas.style.setProperty('--fit', scale);
+      }
+
+      // ----------------------------------------------------------------------
+      // EMBARALHAMENTO (Fisher-Yates) sem repetir a última foto na virada
       // ----------------------------------------------------------------------
       function shuffle(arr) {
         const copy = [...arr];
@@ -756,131 +504,58 @@
         return copy;
       }
 
-      // ----------------------------------------------------------------------
-      // RENDERIZAÇÃO DOS SLIDES
-      // ----------------------------------------------------------------------
-      function renderSlides() {
-        state.pool = shuffle(CIRCUITO_SLIDES);
-        dom.stage.innerHTML = '';
-
-        state.pool.forEach((slide, idx) => {
-          const slideEl = document.createElement('div');
-          slideEl.className = 'c-slide' + (idx === 0 ? ' active' : '');
-          slideEl.setAttribute('data-slide', idx);
-
-          const loadingAttr = idx === 0 ? 'loading="eager"' : 'loading="lazy"';
-
-          slideEl.innerHTML = `
-            <div class="c-photo-card">
-              <img src="${slide.image}" alt="${slide.alt}" width="${slide.width}" height="${slide.height}" ${loadingAttr} decoding="async">
-              <div class="c-sticker-tag">${slide.tag}</div>
-              <div class="c-sticker-pill">🏎️ ${slide.pill}</div>
-            </div>
-            <div class="c-slide-info">
-              <h2 class="c-slide-title">${slide.title}</h2>
-              <p class="c-slide-desc">${slide.desc}</p>
+      function buildSlides() {
+        SLIDES.forEach((s, i) => {
+          const el = document.createElement('div');
+          el.className = 'c-slide';
+          el.innerHTML = `
+            <img src="${s.image}.webp" alt="" width="1180" height="1080" decoding="async" style="object-position:${s.pos}">
+            <div class="c-slide-copy">
+              <div class="c-kicker">${s.kicker}</div>
+              <h1 class="c-headline">${s.headline}</h1>
             </div>
           `;
-
-          dom.stage.appendChild(slideEl);
+          // Fallback para TVs sem suporte a WebP
+          el.querySelector('img').addEventListener('error', function onErr(e) {
+            e.target.removeEventListener('error', onErr);
+            e.target.src = s.image + '.jpg';
+          });
+          dom.zone.insertBefore(el, dom.zone.querySelector('.c-progress'));
+          SLIDES[i].el = el;
         });
-
-        state.currentSlideIndex = 0;
       }
 
-      // ----------------------------------------------------------------------
-      // TRANSIÇÃO DE SLIDES E PROGRESS BAR
-      // ----------------------------------------------------------------------
-      function startCycle() {
-        clearTimeout(state.slideTimer);
-        cancelAnimationFrame(state.progressTimer);
-
-        state.progressStartTime = performance.now();
-        animateProgress();
-
-        state.slideTimer = setTimeout(() => {
-          nextSlide();
-          startCycle();
-        }, CONFIG.slideDuration);
+      function nextOrder() {
+        let order = shuffle(SLIDES.map((_, i) => i));
+        const last = state.order[state.order.length - 1];
+        if (order[0] === last && order.length > 1) order.push(order.shift());
+        return order;
       }
 
-      function nextSlide() {
-        const slides = dom.stage.querySelectorAll('.c-slide');
-        if (slides.length <= 1) return;
+      function show() {
+        clearTimeout(state.timer);
 
-        slides[state.currentSlideIndex].classList.remove('active');
-        state.currentSlideIndex = (state.currentSlideIndex + 1) % slides.length;
-
-        // Ao completar o ciclo de todos os slides, reembaralha para a próxima volta
-        if (state.currentSlideIndex === 0) {
-          renderSlides();
-        } else {
-          slides[state.currentSlideIndex].classList.add('active');
+        if (state.index >= 0) SLIDES[state.order[state.index]].el.classList.remove('active');
+        state.index++;
+        if (state.index >= state.order.length) {
+          state.order = nextOrder();
+          state.index = 0;
         }
-      }
 
-      function animateProgress() {
-        const now = performance.now();
-        const elapsed = now - state.progressStartTime;
-        const percent = Math.min(100, (elapsed / CONFIG.slideDuration) * 100);
-        dom.progressFill.style.width = percent + '%';
+        const slide = SLIDES[state.order[state.index]];
+        slide.el.classList.add('active');
+        dom.plans.forEach(p => p.classList.toggle('on', Number(p.dataset.plan) === slide.plan));
 
-        if (percent < 100) {
-          state.progressTimer = requestAnimationFrame(animateProgress);
-        }
-      }
+        // Reinicia a animação da barra (CSS, sem custo de JS por frame)
+        dom.progress.classList.remove('run');
+        void dom.progress.offsetWidth;
+        dom.progress.classList.add('run');
 
-      // ----------------------------------------------------------------------
-      // GERENCIAMENTO DE ROTAÇÃO DA TV (TV DEITADA 90º SENTIDO HORÁRIO)
-      // ----------------------------------------------------------------------
-      function updateRotation() {
-        dom.viewport.classList.remove('rotate-90', 'rotate-270');
-
-        if (state.rotationMode === '90') {
-          dom.viewport.classList.add('rotate-90');
-          dom.btnRotate.textContent = '🔄 Giro: 90º Horário';
-        } else if (state.rotationMode === '270') {
-          dom.viewport.classList.add('rotate-270');
-          dom.btnRotate.textContent = '🔄 Giro: 270º';
-        } else if (state.rotationMode === '0') {
-          dom.btnRotate.textContent = '🔄 Giro: 0º (Retrato)';
-        } else {
-          // Modo Automático: se a tela for paisagem (TV deitada), gira 90º por padrão!
-          if (window.innerWidth > window.innerHeight) {
-            dom.viewport.classList.add('rotate-90');
-            dom.btnRotate.textContent = '🔄 Giro: Auto (90º)';
-          } else {
-            dom.btnRotate.textContent = '🔄 Giro: Auto (0º)';
-          }
-        }
-      }
-
-      function cycleRotation() {
-        if (state.rotationMode === 'auto') state.rotationMode = '90';
-        else if (state.rotationMode === '90') state.rotationMode = '0';
-        else if (state.rotationMode === '0') state.rotationMode = '270';
-        else state.rotationMode = 'auto';
-
-        updateRotation();
-      }
-
-      dom.btnRotate.addEventListener('click', cycleRotation);
-
-      // ----------------------------------------------------------------------
-      // RELÓGIO LOCAL
-      // ----------------------------------------------------------------------
-      function updateClock() {
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        dom.clockTime.textContent = `${hours}:${minutes}`;
-
-        const options = { weekday: 'long', day: 'numeric', month: 'short' };
-        dom.clockDate.textContent = now.toLocaleDateString('pt-BR', options);
+        state.timer = setTimeout(show, CONFIG.slideDuration);
       }
 
       // ----------------------------------------------------------------------
-      // ATALHOS DE TECLADO E FULLSCREEN
+      // CONTROLES
       // ----------------------------------------------------------------------
       function toggleFullscreen() {
         if (!document.fullscreenElement) {
@@ -891,45 +566,43 @@
       }
 
       dom.btnFullscreen.addEventListener('click', toggleFullscreen);
-      dom.btnShuffle.addEventListener('click', () => {
-        renderSlides();
-        startCycle();
-      });
+      dom.btnNext.addEventListener('click', show);
 
       window.addEventListener('keydown', (e) => {
         const k = e.key.toUpperCase();
-        if (k === 'R') cycleRotation();
-        else if (k === 'F') toggleFullscreen();
-        else if (k === 'S') {
-          renderSlides();
-          startCycle();
-        }
+        if (k === 'F') toggleFullscreen();
+        else if (k === 'ARROWRIGHT' || k === 'N') show();
       });
 
       document.body.addEventListener('dblclick', (e) => {
         if (!e.target.closest('.c-hud')) toggleFullscreen();
       });
 
-      // Cursor auto-hide
       let cursorTimeout;
       function resetCursorTimer() {
         document.body.classList.remove('hide-cursor');
         clearTimeout(cursorTimeout);
-        cursorTimeout = setTimeout(() => {
-          document.body.classList.add('hide-cursor');
-        }, CONFIG.inactivityTimeout);
+        cursorTimeout = setTimeout(() => document.body.classList.add('hide-cursor'), CONFIG.inactivityTimeout);
       }
       window.addEventListener('mousemove', resetCursorTimer);
       window.addEventListener('touchstart', resetCursorTimer, { passive: true });
-      window.addEventListener('resize', updateRotation);
-      resetCursorTimer();
+      window.addEventListener('resize', fitCanvas);
 
-      // Inicialização
-      renderSlides();
-      updateRotation();
-      updateClock();
-      setInterval(updateClock, 1000);
-      startCycle();
+      // Recarrega 1x por dia de madrugada (06h de Belém) para puxar atualizações e liberar memória
+      const bootDay = Math.floor((Date.now() - 3 * 3600000) / 86400000);
+      setInterval(() => {
+        const belem = new Date(Date.now() - 3 * 3600000);
+        const day = Math.floor(belem.getTime() / 86400000);
+        if (day !== bootDay && belem.getUTCHours() === 6) location.reload();
+      }, 60000);
+
+      // Inicialização — começa sozinha, sem nenhum comando
+      document.documentElement.style.setProperty('--slide-ms', CONFIG.slideDuration + 'ms');
+      fitCanvas();
+      resetCursorTimer();
+      buildSlides();
+      state.order = nextOrder();
+      show();
     })();
   </script>
 </body>

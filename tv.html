@@ -1642,17 +1642,23 @@
         return copy;
       }
 
-      // Calcula dia do ciclo de 1 a 5 baseado na data atual
+      // Hora oficial de Belém (UTC-3, sem horário de verão), independente do fuso configurado na TV
+      const BELEM_OFFSET_MS = -3 * 60 * 60 * 1000;
+      function belemNow() {
+        const d = new Date(Date.now() + BELEM_OFFSET_MS);
+        return { hours: d.getUTCHours(), minutes: d.getUTCMinutes(), dayIndex: Math.floor(d.getTime() / 86400000) };
+      }
+
+      // Calcula dia do ciclo de 1 a 5 baseado na data atual (vira à meia-noite de Belém)
       function calculateCurrentCycleDay() {
-        const msPerDay = 1000 * 60 * 60 * 24;
-        const daysSinceEpoch = Math.floor(Date.now() / msPerDay);
-        return (daysSinceEpoch % 5) + 1;
+        return (belemNow().dayIndex % 5) + 1;
       }
 
       const state = {
         cycleDay: calculateCurrentCycleDay(),
         forcedMode: null, // 'team', 'kids', 'night' ou null (auto)
-        currentMode: 'team',
+        currentMode: null, // null até a 1ª avaliação do relógio, para que o turno inicial sempre seja ativado
+        bootDayIndex: belemNow().dayIndex,
         currentSlideIndex: 0,
         currentPool: [],
         slideTimer: null,
@@ -1787,12 +1793,24 @@
       // ----------------------------------------------------------------------
       function updateClock() {
         const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const belem = belemNow();
+        const hours = String(belem.hours).padStart(2, '0');
+        const minutes = String(belem.minutes).padStart(2, '0');
         dom.clockTime.textContent = `${hours}:${minutes}`;
 
-        const options = { weekday: 'long', day: 'numeric', month: 'long' };
-        dom.clockDate.textContent = now.toLocaleDateString('pt-BR', options);
+        const options = { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Belem' };
+        try {
+          dom.clockDate.textContent = now.toLocaleDateString('pt-BR', options);
+        } catch (e) {
+          delete options.timeZone; // navegador de TV antigo sem suporte a timeZone
+          dom.clockDate.textContent = now.toLocaleDateString('pt-BR', options);
+        }
+
+        // Recarrega 1x por dia durante o stand-by (06h) para puxar atualizações e liberar memória
+        if (state.currentMode === 'night' && belem.hours === 6 && belem.dayIndex !== state.bootDayIndex) {
+          location.reload();
+          return;
+        }
 
         // Atualiza dia do ciclo se mudou a meia-noite
         const autoCycle = calculateCurrentCycleDay();
@@ -1805,7 +1823,7 @@
 
         // Se estiver em modo automático, gerencia o turno pelo horário
         if (!state.forcedMode) {
-          evaluateAutoMode(now.getHours());
+          evaluateAutoMode(belem.hours);
         }
       }
 
@@ -1956,12 +1974,14 @@
 
       dom.btnModeAuto.addEventListener('click', () => {
         state.forcedMode = null;
+        state.forcedCycleDay = undefined;
         updateClock();
         updateHudButtons();
       });
 
       function setCycleDay(d) {
         state.cycleDay = ((d - 1 + 5) % 5) + 1;
+        state.forcedCycleDay = state.cycleDay; // impede o relógio de desfazer a escolha manual no segundo seguinte
         dom.cycleBadge.textContent = `Dia ${state.cycleDay}/5`;
         renderCurrentModeSlides();
         startSlideCycle();
@@ -1990,6 +2010,7 @@
           switchMode('kids');
         } else if (key === '0' || key === 'A') {
           state.forcedMode = null;
+          state.forcedCycleDay = undefined;
           updateClock();
           updateHudButtons();
         } else if (key === '[') {
@@ -2107,8 +2128,7 @@
         getState: () => state
       };
 
-      // Inicialização
-      renderCurrentModeSlides();
+      // Inicialização: o 1º updateClock() já ativa o turno do horário e inicia o ciclo de slides
       updateClock();
       setInterval(updateClock, CONFIG.timeCheckInterval);
     })();
