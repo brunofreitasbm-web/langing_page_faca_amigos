@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FaçaAmigos TV — Vitrine Digital e Cultura</title>
+  <meta name="description" content="Vitrine Digital e Canal Interno das operações FaçaAmigos no Parque Shopping Belém.">
+  <link rel="canonical" href="https://institutofacaamigos.com.br/tv">
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+
+  <!-- Fontes Oficiais da Marca -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pink: #F0196B;
+      --pink-dark: #C81158;
+      --pink-soft: rgba(240, 25, 107, 0.12);
+      --teal: #2ECFB5;
+      --teal-dark: #1FA893;
+      --teal-soft: rgba(46, 207, 181, 0.15);
+      --yellow: #FFE234;
+      --yellow-gold: #F59E0B;
+      --dark: #1A3F35;
+      --dark-card: #122822;
+      --ink-soft: #4C6B62;
+      --cream: #FFF9F1;
+      --white: #FFFFFF;
+      --shadow-lg: 0 20px 50px rgba(26, 63, 53, 0.18);
+      --shadow-glow: 0 0 40px rgba(240, 25, 107, 0.35);
+      --r-xl: 36px;
+      --r-lg: 24px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--cream);
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--dark);
+      cursor: default;
+    }
+
+    body.hide-cursor {
+      cursor: none !important;
+    }
+
+    /* ==========================================================================
+       TOPBAR PERMANENTE (Smart TV Safe Area)
+       ========================================================================== */
+    .tv-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 10vh;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 4vw;
+      z-index: 100;
+      background: linear-gradient(180deg, rgba(255,249,241,0.92) 0%, rgba(255,249,241,0.65) 75%, transparent 100%);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .tv-brand {
+      display: flex;
+      align-items: center;
+      gap: 1.2vw;
+    }
+
+    .tv-logo-img {
+      width: clamp(48px, 4.5vw, 70px);
+      height: clamp(48px, 4.5vw, 70px);
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(240, 25, 107, 0.25));
+    }
+
+    .tv-brand-text {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tv-brand-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.4rem, 2vw, 2.4rem);
+      color: var(--pink);
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+
+    .tv-brand-sub {
+      font-family: 'Fredoka', cursive;
+      font-size: clamp(0.75rem, 1vw, 1.1rem);
+      color: var(--teal-dark);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 3px;
+    }
+
+    .tv-status-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 16px rgba(26, 63, 53, 0.08);
+      border: 1px solid rgba(240, 25, 107, 0.15);
+      font-family: 'Fredoka', cursive;
+      font-weight: 600;
+      font-size: clamp(0.85rem, 1.1vw, 1.25rem);
+      color: var(--dark);
+    }
+
+    .tv-status-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 10px var(--teal);
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.6; }
+    }
+
+    .tv-clock {
+      text-align: right;
+    }
+
+    .tv-clock-time {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.8rem, 2.8vw, 3.2rem);
+      color: var(--dark);
+      line-height: 1;
+    }
+
+    .tv-clock-date {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(0.75rem, 0.95vw, 1.1rem);
+      color: var(--ink-soft);
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    /* ==========================================================================
+       CONTAINER PRINCIPAL DOS MODOS
+       ========================================================================== */
+    .tv-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1), visibility 1.2s;
+    }
+
+    .tv-screen.active {
+      opacity: 1;
+      visibility: visible;
+      z-index: 10;
+    }
+
+    /* ==========================================================================
+       MODO 1: EQUIPE & ACOLHIMENTO (10h - 16h)
+       ========================================================================== */
+    #mode-team {
+      background: radial-gradient(circle at 15% 20%, rgba(46, 207, 181, 0.12) 0%, transparent 45%),
+                  radial-gradient(circle at 85% 80%, rgba(240, 25, 107, 0.1) 0%, transparent 50%),
+                  radial-gradient(circle at 50% 50%, #FFFDF9 0%, #FFF4E5 100%);
+    }
+
+    .team-container {
+      width: 100%;
+      height: 100%;
+      padding: 12vh 4vw 6vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .team-slide {
+      position: absolute;
+      width: 92vw;
+      height: 78vh;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 4vw;
+      align-items: center;
+      opacity: 0;
+      transform: scale(0.97) translateY(20px);
+      transition: opacity 1s ease-out, transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .team-slide.active {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+
+    .team-content {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 2vh, 26px);
+      justify-content: center;
+    }
+
+    .team-tag {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      border-radius: 999px;
+      background: var(--pink-soft);
+      border: 1px solid rgba(240, 25, 107, 0.25);
+      color: var(--pink);
+      font-family: 'Fredoka', cursive;
+      font-weight: 700;
+      font-size: clamp(0.85rem, 1.2vw, 1.35rem);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .team-quote {
+      font-family: 'Fredoka', cursive;
+      font-weight: 700;
+      font-size: clamp(2rem, 3.4vw, 4.4rem);
+      line-height: 1.18;
+      color: var(--dark);
+      letter-spacing: -0.8px;
+    }
+
+    .team-quote span.highlight {
+      color: var(--pink);
+      position: relative;
+      display: inline-block;
+    }
+
+    .team-quote span.highlight-teal {
+      color: var(--teal-dark);
+    }
+
+    .team-subtext {
+      font-size: clamp(1.1rem, 1.6vw, 2rem);
+      line-height: 1.45;
+      color: var(--ink-soft);
+      font-weight: 600;
+      max-width: 90%;
+    }
+
+    .team-doctrine-pill {
+      margin-top: 1vh;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 24px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(46, 207, 181, 0.3);
+      box-shadow: 0 8px 24px rgba(26, 63, 53, 0.05);
+      width: fit-content;
+    }
+
+    .team-doctrine-icon {
+      font-size: clamp(1.5rem, 2vw, 2.4rem);
+    }
+
+    .team-doctrine-text {
+      font-size: clamp(0.95rem, 1.2vw, 1.4rem);
+      font-weight: 700;
+      color: var(--dark);
+    }
+
+    .team-media-card {
+      position: relative;
+      width: 100%;
+      height: 72vh;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 6px solid var(--white);
+      background: #e2edea;
+    }
+
+    .team-media-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform 12s ease-out;
+    }
+
+    .team-slide.active .team-media-card img {
+      transform: scale(1.1);
+    }
+
+    .team-media-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 30px;
+      background: linear-gradient(0deg, rgba(26, 63, 53, 0.88) 0%, rgba(26, 63, 53, 0) 100%);
+      color: var(--white);
+    }
+
+    .team-media-label {
+      font-family: 'Fredoka', cursive;
+      font-size: clamp(1rem, 1.3vw, 1.6rem);
+      font-weight: 600;
+      color: var(--yellow);
+    }
+
+    .team-media-caption {
+      font-size: clamp(0.85rem, 1vw, 1.2rem);
+      opacity: 0.9;
+      margin-top: 4px;
+    }
+
+    /* ==========================================================================
+       MODO 2: CRIANÇAS & VITRINE DIGITAL (16h - 22h)
+       ========================================================================== */
+    #mode-kids {
+      background: radial-gradient(circle at 10% 15%, rgba(255, 226, 52, 0.25) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 20%, rgba(240, 25, 107, 0.2) 0%, transparent 45%),
+                  radial-gradient(circle at 50% 85%, rgba(46, 207, 181, 0.22) 0%, transparent 55%),
+                  #FFFDF7;
+    }
+
+    .kids-container {
+      width: 100%;
+      height: 100%;
+      padding: 12vh 4vw 6vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .kids-slide {
+      position: absolute;
+      width: 92vw;
+      height: 78vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4vw;
+      align-items: center;
+      opacity: 0;
+      transform: scale(0.96) translateX(40px);
+      transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .kids-slide.active {
+      opacity: 1;
+      transform: scale(1) translateX(0);
+      pointer-events: auto;
+    }
+
+    .kids-content {
+      display: flex;
+      flex-direction: column;
+      gap: clamp(16px, 2.2vh, 30px);
+      justify-content: center;
+    }
+
+    .kids-badge-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .kids-badge {
+      padding: 8px 22px;
+      border-radius: 999px;
+      font-family: 'Fredoka', cursive;
+      font-weight: 700;
+      font-size: clamp(0.9rem, 1.25vw, 1.45rem);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+
+    .badge-pink {
+      background: var(--pink);
+      color: var(--white);
+    }
+
+    .badge-yellow {
+      background: var(--yellow);
+      color: var(--dark);
+    }
+
+    .badge-teal {
+      background: var(--teal);
+      color: var(--dark);
+    }
+
+    .kids-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 4.4vw, 5.6rem);
+      line-height: 1.08;
+      color: var(--dark);
+      letter-spacing: -1px;
+    }
+
+    .kids-title span.pop {
+      color: var(--pink);
+      text-shadow: 0 4px 20px rgba(240, 25, 107, 0.2);
+    }
+
+    .kids-desc {
+      font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+      line-height: 1.4;
+      color: var(--ink-soft);
+      font-weight: 700;
+    }
+
+    .kids-feature-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 1vh;
+    }
+
+    .kids-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: clamp(1.05rem, 1.45vw, 1.7rem);
+      font-weight: 800;
+      color: var(--dark);
+    }
+
+    .kids-feature-icon {
+      width: clamp(34px, 2.8vw, 46px);
+      height: clamp(34px, 2.8vw, 46px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--white);
+      box-shadow: 0 6px 16px rgba(26, 63, 53, 0.1);
+      font-size: clamp(1.1rem, 1.5vw, 1.8rem);
+      flex-shrink: 0;
+    }
+
+    .kids-visual-card {
+      position: relative;
+      width: 100%;
+      height: 72vh;
+      border-radius: var(--r-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg), var(--shadow-glow);
+      border: 8px solid var(--white);
+      background: #fedbe9;
+    }
+
+    .kids-visual-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.03);
+      transition: transform 9s ease-out;
+    }
+
+    .kids-slide.active .kids-visual-card img {
+      transform: scale(1.12);
+    }
+
+    .kids-sticker {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: var(--yellow);
+      color: var(--dark);
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.1rem, 1.5vw, 1.8rem);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      transform: rotate(4deg);
+      animation: float-sticker 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes float-sticker {
+      0% { transform: rotate(3deg) translateY(0); }
+      100% { transform: rotate(-3deg) translateY(-8px); }
+    }
+
+    .kids-sticker-bottom {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 14px 26px;
+      border-radius: 20px;
+      border: 2px solid var(--pink);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(26, 63, 53, 0.15);
+    }
+
+    .kids-sticker-bottom-icon {
+      font-size: clamp(1.6rem, 2.2vw, 2.6rem);
+    }
+
+    .kids-sticker-bottom-text {
+      font-family: 'Fredoka', cursive;
+      font-weight: 700;
+      font-size: clamp(1rem, 1.35vw, 1.6rem);
+      color: var(--dark);
+    }
+
+    /* ==========================================================================
+       MODO 3: STAND-BY NOTURNO (22h - 10h)
+       ========================================================================== */
+    #mode-night {
+      background: radial-gradient(circle at 50% 50%, #15322A 0%, #0A1B16 100%);
+      color: var(--white);
+    }
+
+    .night-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 3vh;
+      padding: 4vw;
+    }
+
+    .night-logo-wrap {
+      width: clamp(90px, 10vw, 150px);
+      height: clamp(90px, 10vw, 150px);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 60px rgba(46, 207, 181, 0.2);
+      animation: breathe 5s infinite ease-in-out;
+    }
+
+    .night-logo-wrap img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+    }
+
+    @keyframes breathe {
+      0%, 100% { transform: scale(1); opacity: 0.85; }
+      50% { transform: scale(1.08); opacity: 1; }
+    }
+
+    .night-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 4.5vw, 5.5rem);
+      color: var(--cream);
+      letter-spacing: -0.5px;
+    }
+
+    .night-sub {
+      font-size: clamp(1.2rem, 1.9vw, 2.4rem);
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 700px;
+      line-height: 1.4;
+    }
+
+    .night-hours {
+      margin-top: 2vh;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 36px;
+      border-radius: 999px;
+      background: rgba(46, 207, 181, 0.15);
+      border: 1px solid rgba(46, 207, 181, 0.35);
+      font-family: 'Fredoka', cursive;
+      font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+      color: var(--teal);
+    }
+
+    /* ==========================================================================
+       PROGRESS BAR INFERIOR (Ciclo dos Slides)
+       ========================================================================== */
+    .tv-progress-track {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: rgba(26, 63, 53, 0.08);
+      z-index: 100;
+    }
+
+    .tv-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--pink));
+      transition: width 0.1s linear;
+    }
+
+    /* ==========================================================================
+       CONTROLES OCULTOS / HUD (Aparece com mouse ou toque)
+       ========================================================================== */
+    .tv-hud {
+      position: absolute;
+      bottom: 24px;
+      right: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(26, 63, 53, 0.75);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    body:not(.hide-cursor) .tv-hud,
+    .tv-hud:hover {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .hud-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: var(--white);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-family: 'Fredoka', cursive;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .hud-btn:hover, .hud-btn.active {
+      background: var(--pink);
+      border-color: var(--pink);
+      color: var(--white);
+      transform: scale(1.05);
+    }
+
+    /* ==========================================================================
+       ROADMAP: CAMADA DE JOGOS INTERATIVOS
+       ========================================================================== */
+    #game-layer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(26, 63, 53, 0.95);
+      backdrop-filter: blur(14px);
+      z-index: 500;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--white);
+    }
+
+    #game-layer.active {
+      display: flex;
+    }
+
+    .game-box {
+      width: 90vw;
+      max-width: 1200px;
+      height: 80vh;
+      background: var(--cream);
+      border-radius: var(--r-xl);
+      border: 8px solid var(--yellow);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.5);
+      color: var(--dark);
+      position: relative;
+    }
+
+    .game-header {
+      padding: 20px 30px;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid rgba(26, 63, 53, 0.08);
+    }
+
+    .game-header-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.8rem;
+      color: var(--pink);
+    }
+
+    .game-close-btn {
+      background: #ff4757;
+      color: var(--white);
+      border: none;
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-family: 'Fredoka', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .game-canvas-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      background: radial-gradient(circle at 50% 50%, #FFFFFF 0%, #FFF5EC 100%);
+    }
+
+    .bubble-target {
+      position: absolute;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      color: var(--white);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      cursor: pointer;
+      user-select: none;
+      animation: float-up linear forwards;
+    }
+
+    @keyframes float-up {
+      0% { transform: translateY(85vh) scale(0.8); opacity: 0; }
+      10% { opacity: 1; transform: translateY(75vh) scale(1); }
+      90% { opacity: 1; }
+      100% { transform: translateY(-20vh) scale(1.1); opacity: 0; }
+    }
+
+    .game-score-badge {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      color: var(--teal-dark);
+      background: var(--teal-soft);
+      padding: 6px 18px;
+      border-radius: 999px;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- ========================================================================
+       TOPBAR PERMANENTE (Informações do Cabeçalho)
+       ======================================================================== -->
+  <header class="tv-header" id="tvHeader">
+    <div class="tv-brand">
+      <img src="img/logo-simbolo.png" alt="FaçaAmigos" class="tv-logo-img" width="70" height="70">
+      <div class="tv-brand-text">
+        <span class="tv-brand-title">FaçaAmigos</span>
+        <span class="tv-brand-sub" id="tvSubTitle">Playground Inclusivo • Circuito • Clínica</span>
+      </div>
+    </div>
+
+    <div class="tv-status-badge">
+      <span class="tv-status-dot" id="statusDot"></span>
+      <span id="statusText">Modo Equipe</span>
+    </div>
+
+    <div class="tv-clock">
+      <div class="tv-clock-time" id="clockTime">10:00</div>
+      <div class="tv-clock-date" id="clockDate">Segunda, 19 de Outubro</div>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       MODO 1: EQUIPE & ACOLHIMENTO (10h00 às 15h59) — Foco em PNL e Cultura
+       ======================================================================== -->
+  <section class="tv-screen" id="mode-team">
+    <div class="team-container">
+
+      <!-- Slide 1: Propósito & Memória -->
+      <div class="team-slide active" data-slide="0">
+        <div class="team-content">
+          <div class="team-tag">🌱 Propósito & Cultura</div>
+          <h1 class="team-quote">
+            O que você faz hoje se transforma na <span class="highlight">lembrança mais feliz</span> da infância de alguém.
+          </h1>
+          <p class="team-subtext">
+            Seu acolhimento e seu sorriso na recepção são o primeiro alívio para uma família que muitas vezes teve um dia exaustivo.
+          </p>
+          <div class="team-doctrine-pill">
+            <span class="team-doctrine-icon">✨</span>
+            <span class="team-doctrine-text">Princípio FaçaAmigos: Cada detalhe do seu olhar gera segurança imediata.</span>
+          </div>
+        </div>
+        <div class="team-media-card">
+          <picture>
+            <source srcset="img/playground-mediadora-tapete.webp" type="image/webp">
+            <img src="img/playground-mediadora-tapete.jpg" alt="Mediadora de inclusão FaçaAmigos acolhendo com carinho" width="800" height="600" loading="eager" decoding="async">
+          </picture>
+          <div class="team-media-overlay">
+            <div class="team-media-label">Acolhimento no Chão</div>
+            <div class="team-media-caption">Estar na altura da criança cria conexão imediata e respeito.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Regra de Ouro da Linguagem (PNL) -->
+      <div class="team-slide" data-slide="1">
+        <div class="team-content">
+          <div class="team-tag">💬 Regra de Ouro da Recepção</div>
+          <h2 class="team-quote">
+            Nunca pergunte "qual é o problema dele?". <br>
+            Pergunte: <span class="highlight">"Tem algo que ajude a gente a cuidar melhor dele hoje?"</span>
+          </h2>
+          <p class="team-subtext">
+            A linguagem positiva desarma a ansiedade dos pais e abre espaço para uma relação de cumplicidade genuína.
+          </p>
+          <div class="team-doctrine-pill">
+            <span class="team-doctrine-icon">🤝</span>
+            <span class="team-doctrine-text">Doutrina: Não existe criança "normal" ou "especial" — usamos típica e atípica.</span>
+          </div>
+        </div>
+        <div class="team-media-card">
+          <picture>
+            <source srcset="img/equipe-recepcao.webp" type="image/webp">
+            <img src="img/equipe-recepcao.jpg" alt="Equipe de recepção FaçaAmigos unida" width="800" height="600" loading="lazy" decoding="async">
+          </picture>
+          <div class="team-media-overlay">
+            <div class="team-media-label">Nossa Recepção</div>
+            <div class="team-media-caption">A porta de entrada do carinho e da empatia em Belém.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Regulação Sensorial e Empatia -->
+      <div class="team-slide" data-slide="2">
+        <div class="team-content">
+          <div class="team-tag">🧠 Empatia Sensorial</div>
+          <h2 class="team-quote">
+            Quando uma criança se agita ou chora, <span class="highlight-teal">ela não está fazendo birra</span>. Ela pede para o mundo desacelerar.
+          </h2>
+          <p class="team-subtext">
+            Ofereça o cantinho da calma, diminua o tom de voz e dê tempo para ela reencontrar o equilíbrio no próprio ritmo.
+          </p>
+          <div class="team-doctrine-pill">
+            <span class="team-doctrine-icon">🌿</span>
+            <span class="team-doctrine-text">Horário Inclusivo: som controlado e estímulos reduzidos para acolher melhor.</span>
+          </div>
+        </div>
+        <div class="team-media-card">
+          <picture>
+            <source srcset="img/inclusao-cantinho-leitura.webp" type="image/webp">
+            <img src="img/inclusao-cantinho-leitura.jpg" alt="Cantinho da calma e leitura inclusiva" width="800" height="600" loading="lazy" decoding="async">
+          </picture>
+          <div class="team-media-overlay">
+            <div class="team-media-label">Cantinho da Descompressão</div>
+            <div class="team-media-caption">Um refúgio tranquilo para respirar e voltar a brincar com alegria.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Inclusão Verdadeira -->
+      <div class="team-slide" data-slide="3">
+        <div class="team-content">
+          <div class="team-tag">🌈 O Significado de Inclusão</div>
+          <h2 class="team-quote">
+            Inclusivo não é um espaço separado. É um ambiente onde <span class="highlight">todo mundo brinca junto</span>.
+          </h2>
+          <p class="team-subtext">
+            Crianças com e sem laudo aprendem a ter empatia dividindo a mesma piscina de bolinhas e a mesma pista de carrinhos.
+          </p>
+          <div class="team-doctrine-pill">
+            <span class="team-doctrine-icon">🎈</span>
+            <span class="team-doctrine-text">Doutrina: Ninguém fica de fora. O espaço se adapta à criança, não o oposto.</span>
+          </div>
+        </div>
+        <div class="team-media-card">
+          <picture>
+            <source srcset="img/hero-piscina-bolinhas.webp" type="image/webp">
+            <img src="img/hero-piscina-bolinhas.jpg" alt="Piscina de bolinhas e salão do Playground" width="800" height="600" loading="lazy" decoding="async">
+          </picture>
+          <div class="team-media-overlay">
+            <div class="team-media-label">Piscina de Bolinhas Inclusiva</div>
+            <div class="team-media-caption">O coração da socialização e do riso compartilhado.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Presença e Afeto (A Capivara e os Animais) -->
+      <div class="team-slide" data-slide="4">
+        <div class="team-content">
+          <div class="team-tag">🧸 Vínculo & Afeto</div>
+          <h2 class="team-quote">
+            Respire fundo. A sua presença calma é o <span class="highlight">porto seguro</span> de quem passa por aqui.
+          </h2>
+          <p class="team-subtext">
+            Cada pelúcia gigante, cada carrinho organizado e cada abraço da nossa Capivara ajudam a construir um dia inesquecível.
+          </p>
+          <div class="team-doctrine-pill">
+            <span class="team-doctrine-icon">💖</span>
+            <span class="team-doctrine-text">Dra. Isabella: "O brincar é a linguagem mais pura do desenvolvimento humano."</span>
+          </div>
+        </div>
+        <div class="team-media-card">
+          <picture>
+            <source srcset="img/circuito-equipe-capivara.webp" type="image/webp">
+            <img src="img/circuito-equipe-capivara.jpg" alt="Mascote Capivara FaçaAmigos com a equipe" width="800" height="1000" loading="lazy" decoding="async">
+          </picture>
+          <div class="team-media-overlay">
+            <div class="team-media-label">Nossos Mascotes</div>
+            <div class="team-media-caption">Amigos gigantes que geram sorrisos instantâneos.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       MODO 2: CRIANÇAS & VITRINE DIGITAL (16h00 às 22h00) — Foco em Encantamento
+       ======================================================================== -->
+  <section class="tv-screen" id="mode-kids">
+    <div class="kids-container">
+
+      <!-- Slide 1: Mascotes & Pelúcias Gigantes -->
+      <div class="kids-slide active" data-slide="0">
+        <div class="kids-content">
+          <div class="kids-badge-row">
+            <span class="kids-badge badge-pink">⭐ As Mais Queridas de Belém</span>
+            <span class="kids-badge badge-yellow">Parque Shopping</span>
+          </div>
+          <h1 class="kids-title">
+            Vem abraçar a <span class="pop">Capivara</span> e o <span class="pop">Macaco</span>!
+          </h1>
+          <p class="kids-desc">
+            Pelúcias gigantes e super macias prontas para passear com você e tirar as fotos mais fofas da sua vida!
+          </p>
+          <div class="kids-feature-list">
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">✨</span>
+              <span>Passeios motorizados com toda a segurança</span>
+            </div>
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">🧸</span>
+              <span>Abraço fofinho e companheirismo que encanta</span>
+            </div>
+          </div>
+        </div>
+        <div class="kids-visual-card">
+          <picture>
+            <source srcset="img/circuito-equipe-capivara.webp" type="image/webp">
+            <img src="img/circuito-equipe-capivara.jpg" alt="A famosa Capivara gigante do Circuito FaçaAmigos" width="800" height="1000" loading="lazy" decoding="async">
+          </picture>
+          <div class="kids-sticker">VEM BRINCAR! 🐾</div>
+          <div class="kids-sticker-bottom">
+            <span class="kids-sticker-bottom-icon">🏎️</span>
+            <div class="kids-sticker-bottom-text">No Circuito de Carrinhos FaçaAmigos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2: Playground Inclusivo & Piscina de Bolinhas -->
+      <div class="kids-slide" data-slide="1">
+        <div class="kids-content">
+          <div class="kids-badge-row">
+            <span class="kids-badge badge-yellow">🎈 Diversão Sem Limites</span>
+            <span class="kids-badge badge-teal">0 a 12 Anos</span>
+          </div>
+          <h2 class="kids-title">
+            A maior <span class="pop">piscina de bolinhas</span> e casinha do shopping!
+          </h2>
+          <p class="kids-desc">
+            Salão amplo, casinha na árvore, amarelinha lúdica e monitores treinados para cuidar com todo amor.
+          </p>
+          <div class="kids-feature-list">
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">🏰</span>
+              <span>Casinha elevada com escorregador e túneis</span>
+            </div>
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">🌿</span>
+              <span>Canto de descompressão e livros infantis</span>
+            </div>
+          </div>
+        </div>
+        <div class="kids-visual-card">
+          <picture>
+            <source srcset="img/hero-piscina-bolinhas.webp" type="image/webp">
+            <img src="img/hero-piscina-bolinhas.jpg" alt="Crianças brincando na piscina de bolinhas do FaçaAmigos" width="800" height="600" loading="lazy" decoding="async">
+          </picture>
+          <div class="kids-sticker">PULA-PULA & CORRER! 🎉</div>
+          <div class="kids-sticker-bottom">
+            <span class="kids-sticker-bottom-icon">📍</span>
+            <div class="kids-sticker-bottom-text">Térreo • Próximo às Americanas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3: Frota Esportiva do Circuito -->
+      <div class="kids-slide" data-slide="2">
+        <div class="kids-content">
+          <div class="kids-badge-row">
+            <span class="kids-badge badge-pink">🚦 Pilote de Verdade!</span>
+            <span class="kids-badge badge-yellow">Controle Remoto dos Pais</span>
+          </div>
+          <h2 class="kids-title">
+            Range Rover, Lamborghini e <span class="pop">Caminhão de Bombeiro</span>!
+          </h2>
+          <p class="kids-desc">
+            A frota mais irada de Belém! A criança pilota no pedal ou os pais guiam com controle remoto total.
+          </p>
+          <div class="kids-feature-list">
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">🚒</span>
+              <span>Sirenes e luzes no caminhão de bombeiro</span>
+            </div>
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">⚡</span>
+              <span>Passeios tranquilos pelos corredores</span>
+            </div>
+          </div>
+        </div>
+        <div class="kids-visual-card">
+          <picture>
+            <source srcset="img/circuito-bombeiro.webp" type="image/webp">
+            <img src="img/circuito-bombeiro.jpg" alt="Carrinho elétrico de bombeiro no shopping" width="800" height="600" loading="lazy" decoding="async">
+          </picture>
+          <div class="kids-sticker">SEJA O PILOTO! 🏁</div>
+          <div class="kids-sticker-bottom">
+            <span class="kids-sticker-bottom-icon">🏎️</span>
+            <div class="kids-sticker-bottom-text">Passeio completo de 10 a 30 minutos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4: Doutrina dos Pais (É para todas as crianças) -->
+      <div class="kids-slide" data-slide="3">
+        <div class="kids-content">
+          <div class="kids-badge-row">
+            <span class="kids-badge badge-teal">💙 Inclusão na Prática</span>
+            <span class="kids-badge badge-pink">Sem Agendamento</span>
+          </div>
+          <h2 class="kids-title">
+            É para <span class="pop">todas as crianças</span>!
+          </h2>
+          <p class="kids-desc">
+            Com ou sem laudo: aqui todo mundo brinca junto no mesmo salão, com meia-entrada inclusiva garantida por lei.
+          </p>
+          <div class="kids-feature-list">
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">✅</span>
+              <span>Não precisa de laudo para brincar: é só chegar!</span>
+            </div>
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">🏷️</span>
+              <span>Meia-entrada inclusiva para laudo ou CIPTEA</span>
+            </div>
+          </div>
+        </div>
+        <div class="kids-visual-card">
+          <picture>
+            <source srcset="img/galeria-oficinas.webp" type="image/webp">
+            <img src="img/galeria-oficinas.jpg" alt="Oficinas infantis e brincadeiras" width="800" height="600" loading="lazy" decoding="async">
+          </picture>
+          <div class="kids-sticker">TODO MUNDO JUNTO! 🌈</div>
+          <div class="kids-sticker-bottom">
+            <span class="kids-sticker-bottom-icon">👨‍👩‍👧‍👦</span>
+            <div class="kids-sticker-bottom-text">Ambiente seguro e acolhedor para a família</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 5: Clínica & Desenvolvimento Terapêutico -->
+      <div class="kids-slide" data-slide="4">
+        <div class="kids-content">
+          <div class="kids-badge-row">
+            <span class="kids-badge badge-pink">🩺 Clínica FaçaAmigos</span>
+            <span class="kids-badge badge-yellow">Umarizal • Belém</span>
+          </div>
+          <h2 class="kids-title">
+            Ciência, afeto e <span class="pop">Terapia ABA</span> para o seu filho.
+          </h2>
+          <p class="kids-desc">
+            Psicologia infantil, Terapia Ocupacional, Fonoaudiologia e Psicopedagogia com a Dra. Isabella Freitas (CRP 10/4727).
+          </p>
+          <div class="kids-feature-list">
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">🧩</span>
+              <span>Painel sensorial e recursos terapêuticos modernos</span>
+            </div>
+            <div class="kids-feature-item">
+              <span class="kids-feature-icon">📖</span>
+              <span>Autora dos livros "O Brincar com Propósito"</span>
+            </div>
+          </div>
+        </div>
+        <div class="kids-visual-card">
+          <picture>
+            <source srcset="img/clinica-painel-sensorial.webp" type="image/webp">
+            <img src="img/clinica-painel-sensorial.jpg" alt="Painel sensorial e clínica FaçaAmigos" width="800" height="600" loading="lazy" decoding="async">
+          </picture>
+          <div class="kids-sticker">DESENVOLVIMENTO 💡</div>
+          <div class="kids-sticker-bottom">
+            <span class="kids-sticker-bottom-icon">🏥</span>
+            <div class="kids-sticker-bottom-text">Conheça: clinica.institutofacaamigos.com.br</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       MODO 3: STAND-BY NOTURNO (22h00 às 09h59) — Iluminação Baixa para Smart TV
+       ======================================================================== -->
+  <section class="tv-screen" id="mode-night">
+    <div class="night-container">
+      <div class="night-logo-wrap">
+        <img src="img/logo-simbolo.png" alt="FaçaAmigos" width="100" height="100" loading="lazy" decoding="async">
+      </div>
+      <h1 class="night-title">Até amanhã! ✨</h1>
+      <p class="night-sub">
+        Nossas operações no Parque Shopping Belém e na Clínica retornam amanhã com muita alegria e inclusão.
+      </p>
+      <div class="night-hours">
+        <span>⏰ Abrimos às 10h00 da manhã</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================
+       BARRA DE PROGRESSO DO SLIDE ATUAL
+       ======================================================================== -->
+  <div class="tv-progress-track">
+    <div class="tv-progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- ========================================================================
+       PAINEL HUD DE CONTROLE DISCRETO (Para Teste, Treinamento e Fullscreen)
+       ======================================================================== -->
+  <nav class="tv-hud" id="tvHud" aria-label="Controles da Tela">
+    <button class="hud-btn" id="btnModeTeam" title="Forçar Modo Equipe (10h-16h)">🌱 [1] Equipe</button>
+    <button class="hud-btn" id="btnModeKids" title="Forçar Modo Vitrine (16h-22h)">⭐ [2] Vitrine</button>
+    <button class="hud-btn active" id="btnModeAuto" title="Alternar Automaticamente pelo Horário">⏰ [0] Auto</button>
+    <button class="hud-btn" id="btnFullscreen" title="Alternar Tela Cheia">⛶ [F] Tela Cheia</button>
+    <button class="hud-btn" id="btnGameToggle" title="Abrir Mini-Game Interativo">🎮 [G] Jogos</button>
+  </nav>
+
+  <!-- ========================================================================
+       ROADMAP: CAMADA DE JOGOS INTERATIVOS (Em espera / Demonstração)
+       ======================================================================== -->
+  <div id="game-layer" role="dialog" aria-modal="true" aria-label="Mini-game FaçaAmigos">
+    <div class="game-box">
+      <div class="game-header">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <span style="font-size:2rem;">🎈</span>
+          <span class="game-header-title">Estoure as Bolinhas FaçaAmigos!</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <span class="game-score-badge" id="gameScoreText">Pontos: 0</span>
+          <button class="game-close-btn" id="btnGameClose">Voltar para a TV ✕</button>
+        </div>
+      </div>
+      <div class="game-canvas-area" id="gameCanvas">
+        <!-- Bolinhas interativas criadas dinamicamente via JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       SCRIPT DO MOTOR DA TV (TV ENGINE)
+       ======================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+
+      // Configurações dos Modos
+      const CONFIG = {
+        teamSlideDuration: 14000, // 14 segundos por pílula cultural
+        kidsSlideDuration: 9000,  // 9 segundos por atração visual
+        timeCheckInterval: 1000,  // checa o relógio a cada 1s
+        inactivityTimeout: 3500   // esconde cursor após 3.5s parado
+      };
+
+      // Estado Global
+      const state = {
+        forcedMode: null, // 'team', 'kids', 'night' ou null (auto)
+        currentMode: 'team',
+        currentSlideIndex: 0,
+        slideTimer: null,
+        progressTimer: null,
+        progressStartTime: 0,
+        currentSlideDuration: CONFIG.teamSlideDuration,
+        gameActive: false,
+        gameScore: 0,
+        gameSpawner: null,
+        gameInactivityTimer: null
+      };
+
+      // Elementos do DOM
+      const dom = {
+        clockTime: document.getElementById('clockTime'),
+        clockDate: document.getElementById('clockDate'),
+        statusText: document.getElementById('statusText'),
+        statusDot: document.getElementById('statusDot'),
+        tvSubTitle: document.getElementById('tvSubTitle'),
+        progressFill: document.getElementById('progressFill'),
+        screenTeam: document.getElementById('mode-team'),
+        screenKids: document.getElementById('mode-kids'),
+        screenNight: document.getElementById('mode-night'),
+        btnModeTeam: document.getElementById('btnModeTeam'),
+        btnModeKids: document.getElementById('btnModeKids'),
+        btnModeAuto: document.getElementById('btnModeAuto'),
+        btnFullscreen: document.getElementById('btnFullscreen'),
+        btnGameToggle: document.getElementById('btnGameToggle'),
+        btnGameClose: document.getElementById('btnGameClose'),
+        gameLayer: document.getElementById('gameLayer'),
+        gameCanvas: document.getElementById('gameCanvas'),
+        gameScoreText: document.getElementById('gameScoreText')
+      };
+
+      // ----------------------------------------------------------------------
+      // 1. Relógio Local (Belém/Brasília UTC-3)
+      // ----------------------------------------------------------------------
+      function updateClock() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        dom.clockTime.textContent = `${hours}:${minutes}`;
+
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        dom.clockDate.textContent = now.toLocaleDateString('pt-BR', options);
+
+        // Se estiver em modo automático, avalia qual modo deve rodar
+        if (!state.forcedMode) {
+          evaluateAutoMode(now.getHours());
+        }
+      }
+
+      function evaluateAutoMode(currentHour) {
+        let desiredMode = 'team';
+
+        if (currentHour >= 10 && currentHour < 16) {
+          desiredMode = 'team'; // 10h00 às 15h59 -> Equipe & Acolhimento
+        } else if (currentHour >= 16 && currentHour < 22) {
+          desiredMode = 'kids'; // 16h00 às 21h59 -> Crianças & Vitrine Digital
+        } else {
+          desiredMode = 'night'; // 22h00 às 09h59 -> Stand-by Noturno
+        }
+
+        if (desiredMode !== state.currentMode) {
+          switchMode(desiredMode);
+        }
+      }
+
+      // ----------------------------------------------------------------------
+      // 2. Transição entre Modos
+      // ----------------------------------------------------------------------
+      function switchMode(newMode) {
+        state.currentMode = newMode;
+        state.currentSlideIndex = 0;
+
+        // Limpa transições anteriores
+        clearTimeout(state.slideTimer);
+        cancelAnimationFrame(state.progressTimer);
+        dom.progressFill.style.width = '0%';
+
+        // Esconde todas as telas
+        dom.screenTeam.classList.remove('active');
+        dom.screenKids.classList.remove('active');
+        dom.screenNight.classList.remove('active');
+
+        // Atualiza UI de status
+        if (newMode === 'team') {
+          dom.screenTeam.classList.add('active');
+          dom.statusText.textContent = 'Modo Equipe & PNL';
+          dom.statusDot.style.background = 'var(--teal)';
+          dom.statusDot.style.boxShadow = '0 0 10px var(--teal)';
+          state.currentSlideDuration = CONFIG.teamSlideDuration;
+          setupSlides('mode-team');
+          startSlideCycle();
+        } else if (newMode === 'kids') {
+          dom.screenKids.classList.add('active');
+          dom.statusText.textContent = 'Vitrine Crianças';
+          dom.statusDot.style.background = 'var(--pink)';
+          dom.statusDot.style.boxShadow = '0 0 10px var(--pink)';
+          state.currentSlideDuration = CONFIG.kidsSlideDuration;
+          setupSlides('mode-kids');
+          startSlideCycle();
+        } else {
+          dom.screenNight.classList.add('active');
+          dom.statusText.textContent = 'Stand-by Noturno';
+          dom.statusDot.style.background = '#8B5CF6';
+          dom.statusDot.style.boxShadow = '0 0 10px #8B5CF6';
+          dom.progressFill.style.width = '0%';
+        }
+
+        updateHudButtons();
+      }
+
+      function setupSlides(containerId) {
+        const slides = document.querySelectorAll(`#${containerId} [data-slide]`);
+        slides.forEach((s, idx) => {
+          if (idx === 0) s.classList.add('active');
+          else s.classList.remove('active');
+        });
+      }
+
+      // ----------------------------------------------------------------------
+      // 3. Ciclo de Slides & Barra de Progresso
+      // ----------------------------------------------------------------------
+      function startSlideCycle() {
+        clearTimeout(state.slideTimer);
+        cancelAnimationFrame(state.progressTimer);
+
+        state.progressStartTime = performance.now();
+        animateProgressBar();
+
+        state.slideTimer = setTimeout(() => {
+          advanceSlide();
+          startSlideCycle();
+        }, state.currentSlideDuration);
+      }
+
+      function advanceSlide() {
+        const activeContainer = state.currentMode === 'team' ? dom.screenTeam : dom.screenKids;
+        const slides = activeContainer.querySelectorAll('[data-slide]');
+        if (slides.length <= 1) return;
+
+        slides[state.currentSlideIndex].classList.remove('active');
+        state.currentSlideIndex = (state.currentSlideIndex + 1) % slides.length;
+        slides[state.currentSlideIndex].classList.add('active');
+      }
+
+      function animateProgressBar() {
+        const now = performance.now();
+        const elapsed = now - state.progressStartTime;
+        const percent = Math.min(100, (elapsed / state.currentSlideDuration) * 100);
+        dom.progressFill.style.width = percent + '%';
+
+        if (percent < 100 && (state.currentMode === 'team' || state.currentMode === 'kids')) {
+          state.progressTimer = requestAnimationFrame(animateProgressBar);
+        }
+      }
+
+      // ----------------------------------------------------------------------
+      // 4. Ocultação Automática do Cursor (TV Clean Interface)
+      // ----------------------------------------------------------------------
+      let cursorTimeout;
+      function resetCursorTimer() {
+        document.body.classList.remove('hide-cursor');
+        clearTimeout(cursorTimeout);
+        cursorTimeout = setTimeout(() => {
+          if (!state.gameActive) {
+            document.body.classList.add('hide-cursor');
+          }
+        }, CONFIG.inactivityTimeout);
+      }
+      window.addEventListener('mousemove', resetCursorTimer);
+      window.addEventListener('touchstart', resetCursorTimer, { passive: true });
+      resetCursorTimer();
+
+      // ----------------------------------------------------------------------
+      // 5. Controles Ocultos (HUD) & Teclas de Atalho
+      // ----------------------------------------------------------------------
+      function updateHudButtons() {
+        dom.btnModeTeam.classList.toggle('active', state.forcedMode === 'team');
+        dom.btnModeKids.classList.toggle('active', state.forcedMode === 'kids');
+        dom.btnModeAuto.classList.toggle('active', state.forcedMode === null);
+      }
+
+      dom.btnModeTeam.addEventListener('click', () => {
+        state.forcedMode = 'team';
+        switchMode('team');
+      });
+
+      dom.btnModeKids.addEventListener('click', () => {
+        state.forcedMode = 'kids';
+        switchMode('kids');
+      });
+
+      dom.btnModeAuto.addEventListener('click', () => {
+        state.forcedMode = null;
+        updateClock();
+        updateHudButtons();
+      });
+
+      dom.btnFullscreen.addEventListener('click', toggleFullscreen);
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      // Atalhos no teclado / Controle Remoto
+      window.addEventListener('keydown', (e) => {
+        const key = e.key.toUpperCase();
+        if (key === '1') {
+          state.forcedMode = 'team';
+          switchMode('team');
+        } else if (key === '2') {
+          state.forcedMode = 'kids';
+          switchMode('kids');
+        } else if (key === '0' || key === 'A') {
+          state.forcedMode = null;
+          updateClock();
+          updateHudButtons();
+        } else if (key === 'F') {
+          toggleFullscreen();
+        } else if (key === 'G') {
+          toggleGame();
+        } else if (key === 'ESCAPE' && state.gameActive) {
+          toggleGame();
+        }
+      });
+
+      // Clique duplo na tela entra em Fullscreen
+      document.body.addEventListener('dblclick', (e) => {
+        if (!e.target.closest('#tvHud') && !e.target.closest('#game-layer')) {
+          toggleFullscreen();
+        }
+      });
+
+      // ----------------------------------------------------------------------
+      // 6. Roadmap: Mini-Game Interativo (Estourar Bolinhas)
+      // ----------------------------------------------------------------------
+      const bubbleColors = [
+        '#F0196B', // Rosa FaçaAmigos
+        '#2ECFB5', // Verde-água
+        '#FFE234', // Amarelo
+        '#8B5CF6', // Roxo lúdico
+        '#FF7A00'  // Laranja energia
+      ];
+
+      function toggleGame() {
+        state.gameActive = !state.gameActive;
+        const gameLayer = document.getElementById('game-layer');
+
+        if (state.gameActive) {
+          gameLayer.classList.add('active');
+          state.gameScore = 0;
+          dom.gameScoreText.textContent = 'Pontos: 0';
+          clearTimeout(state.slideTimer);
+          cancelAnimationFrame(state.progressTimer);
+          startGameSession();
+        } else {
+          gameLayer.classList.remove('active');
+          stopGameSession();
+          startSlideCycle();
+        }
+      }
+
+      function startGameSession() {
+        dom.gameCanvas.innerHTML = '';
+        state.gameSpawner = setInterval(spawnBubble, 1100);
+        resetGameInactivity();
+      }
+
+      function stopGameSession() {
+        clearInterval(state.gameSpawner);
+        clearTimeout(state.gameInactivityTimer);
+        dom.gameCanvas.innerHTML = '';
+      }
+
+      function resetGameInactivity() {
+        clearTimeout(state.gameInactivityTimer);
+        // Volta para a TV após 30 segundos de inatividade
+        state.gameInactivityTimer = setTimeout(() => {
+          if (state.gameActive) toggleGame();
+        }, 30000);
+      }
+
+      function spawnBubble() {
+        if (!state.gameActive) return;
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble-target';
+
+        const size = Math.floor(Math.random() * 50) + 70; // 70px a 120px
+        const left = Math.floor(Math.random() * (dom.gameCanvas.clientWidth - size - 20)) + 10;
+        const color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
+        const duration = (Math.random() * 3 + 5).toFixed(1); // 5s a 8s
+
+        bubble.style.width = size + 'px';
+        bubble.style.height = size + 'px';
+        bubble.style.left = left + 'px';
+        bubble.style.background = color;
+        bubble.style.animationDuration = duration + 's';
+        bubble.innerHTML = '⭐';
+        bubble.style.fontSize = (size * 0.4) + 'px';
+
+        bubble.addEventListener('pointerdown', (e) => {
+          e.stopPropagation();
+          popBubble(bubble);
+        });
+
+        dom.gameCanvas.appendChild(bubble);
+
+        // Remove ao terminar a subida
+        setTimeout(() => {
+          if (bubble.parentNode) bubble.parentNode.removeChild(bubble);
+        }, duration * 1000);
+      }
+
+      function popBubble(bubble) {
+        resetGameInactivity();
+        state.gameScore += 10;
+        dom.gameScoreText.textContent = `Pontos: ${state.gameScore}`;
+
+        bubble.style.transform = 'scale(1.4)';
+        bubble.style.opacity = '0';
+        bubble.style.transition = 'all 0.15s ease-out';
+        setTimeout(() => {
+          if (bubble.parentNode) bubble.parentNode.removeChild(bubble);
+        }, 150);
+      }
+
+      dom.btnGameToggle.addEventListener('click', toggleGame);
+      dom.btnGameClose.addEventListener('click', toggleGame);
+      dom.gameCanvas.addEventListener('pointerdown', resetGameInactivity);
+
+      // Expor API no escopo global para expansões futuras
+      window.FacaAmigosTV = {
+        switchMode: switchMode,
+        toggleFullscreen: toggleFullscreen,
+        launchGame: toggleGame,
+        getState: () => state
+      };
+
+      // ----------------------------------------------------------------------
+      // 7. Inicialização do Sistema
+      // ----------------------------------------------------------------------
+      updateClock();
+      setInterval(updateClock, CONFIG.timeCheckInterval);
+    })();
+  </script>
+</body>
+
+</html>
