@@ -6,7 +6,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FaçaAmigos Circuito TV2</title>
-  <meta name="description" content="Vitrine Digital da TV 50&quot; do Quiosque do Circuito de Carrinhos Elétricos FaçaAmigos no Parque Shopping Belém.">
+  <meta name="description" content="Vitrine Digital da TV 50&quot; deitada (vertical) do Quiosque do Circuito de Carrinhos Elétricos FaçaAmigos no Parque Shopping Belém.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/tv2">
   <meta name="robots" content="noindex, follow">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
@@ -49,34 +49,34 @@
     body.hide-cursor { cursor: none !important; }
 
     /* ==========================================================================
-       PALCO FIXO 1920x1080 ESCALADO PARA QUALQUER TV 16:9 (50" DEITADA / PAISAGEM)
-       O navegador da TV pode reportar 1280x720, 1920x1080 ou 3840x2160 —
-       desenhamos em pixels fixos e escalamos o conjunto inteiro via transform.
+       PALCO FIXO 1080x1920 (RETRATO) PARA A TV 50" DEITADA 90º
+       A TV física fica em pé, mas o sinal chega em paisagem: o JS gira o palco
+       90º (ou 270º) e escala para caber, seja a TV 720p, 1080p ou 4K.
        ========================================================================== */
     #tvCanvas {
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 1920px;
-      height: 1080px;
+      width: 1080px;
+      height: 1920px;
       transform-origin: center center;
-      transform: translate(-50%, -50%) scale(var(--fit, 1));
+      transform: translate(-50%, -50%);
       overflow: hidden;
       background: var(--cream);
     }
 
     /* ==========================================================================
-       LADO ESQUERDO — FOTO DO CIRCUITO + FRASE QUE PARA O PAI NO CORREDOR
+       TOPO — FOTO DO CIRCUITO + FRASE QUE PARA O PAI NO CORREDOR
        ========================================================================== */
     .c-photo-zone {
       position: absolute;
       top: 0;
       left: 0;
-      width: 1180px;
-      height: 1080px;
+      width: 1080px;
+      height: 1180px;
       overflow: hidden;
       background: var(--dark);
-      clip-path: polygon(0 0, 100% 0, 91.5% 100%, 0 100%);
+      clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
     }
 
     .c-slide {
@@ -102,14 +102,14 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, rgba(14, 34, 28, 0) 38%, rgba(14, 34, 28, 0.88) 100%);
+      background: linear-gradient(180deg, rgba(14, 34, 28, 0) 45%, rgba(14, 34, 28, 0.9) 100%);
     }
 
     .c-slide-copy {
       position: absolute;
-      left: 72px;
-      right: 170px;
-      bottom: 92px;
+      left: 64px;
+      right: 64px;
+      bottom: 150px;
       z-index: 2;
       color: var(--white);
       opacity: 0;
@@ -136,7 +136,7 @@
 
     .c-headline {
       font-family: 'Fredoka One', cursive;
-      font-size: 104px;
+      font-size: 100px;
       line-height: 1.02;
       letter-spacing: -1px;
       text-shadow: 0 6px 30px rgba(0, 0, 0, 0.45);
@@ -149,8 +149,8 @@
 
     .c-brand {
       position: absolute;
-      top: 40px;
-      left: 48px;
+      top: 44px;
+      left: 44px;
       z-index: 5;
       display: flex;
       align-items: center;
@@ -179,11 +179,11 @@
       text-transform: uppercase;
     }
 
-    /* Barra de progresso no pé da foto */
+    /* Barra de progresso no topo da foto */
     .c-progress {
       position: absolute;
       left: 0;
-      bottom: 0;
+      top: 0;
       height: 10px;
       width: 100%;
       background: rgba(255, 255, 255, 0.15);
@@ -206,23 +206,23 @@
     }
 
     /* ==========================================================================
-       LADO DIREITO — PREÇO EM FUNDO CLARO, MÍNIMO DE TEXTO
+       BASE — PREÇO EM FUNDO CLARO, MÍNIMO DE TEXTO
        ========================================================================== */
     .c-price-zone {
       position: absolute;
-      top: 0;
-      right: 0;
-      width: 840px;
-      height: 1080px;
-      padding: 70px 70px 60px 150px;
-      clip-path: polygon(11.9% 0, 100% 0, 100% 100%, 0 100%); /* acompanha a borda inclinada da foto */
+      left: 0;
+      bottom: 0;
+      width: 1080px;
+      height: 834px;
+      padding: 130px 70px 50px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      clip-path: polygon(0 11.3%, 100% 0, 100% 100%, 0 100%); /* acompanha a borda inclinada da foto */
       background:
-        radial-gradient(circle at 70% 18%, rgba(255, 226, 52, 0.35) 0%, rgba(255, 226, 52, 0) 45%),
-        radial-gradient(circle at 30% 90%, rgba(46, 207, 181, 0.18) 0%, rgba(46, 207, 181, 0) 50%),
+        radial-gradient(circle at 80% 25%, rgba(255, 226, 52, 0.35) 0%, rgba(255, 226, 52, 0) 45%),
+        radial-gradient(circle at 15% 90%, rgba(46, 207, 181, 0.18) 0%, rgba(46, 207, 181, 0) 50%),
         var(--cream);
     }
 
@@ -238,9 +238,9 @@
       animation: price-beat 6s ease-in-out infinite;
     }
 
-    .c-price-cur { font-size: 96px; margin-top: 34px; margin-right: 10px; }
-    .c-price-int { font-size: 300px; letter-spacing: -8px; }
-    .c-price-dec { font-size: 110px; margin-top: 34px; }
+    .c-price-cur { font-size: 90px; margin-top: 30px; margin-right: 10px; }
+    .c-price-int { font-size: 270px; letter-spacing: -8px; }
+    .c-price-dec { font-size: 100px; margin-top: 30px; }
 
     /* Brilho que atravessa o preço — movimento periférico capta o olhar de quem passa */
     .c-price::after {
@@ -268,55 +268,57 @@
 
     .c-plans {
       display: flex;
-      gap: 28px;
+      gap: 32px;
       width: 100%;
-      margin-top: 44px;
+      margin-top: 30px;
     }
 
     .c-plan {
       flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
       background: var(--white);
       border: 5px solid rgba(26, 63, 53, 0.1);
       border-radius: 34px;
-      padding: 26px 10px 24px;
-      text-align: center;
+      padding: 22px 10px;
       box-shadow: 0 14px 34px rgba(26, 63, 53, 0.1);
       transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.6s ease, box-shadow 0.6s ease;
     }
 
     .c-plan.on {
       border-color: var(--pink);
-      transform: translateY(-10px) scale(1.04);
+      transform: translateY(-8px) scale(1.04);
       box-shadow: 0 20px 44px rgba(240, 25, 107, 0.25);
     }
 
-    .c-plan-icon { font-size: 64px; line-height: 1; }
+    .c-plan-icon { font-size: 60px; line-height: 1; }
 
     .c-plan-time {
       font-family: 'Fredoka One', cursive;
-      font-size: 108px;
+      font-size: 96px;
       color: var(--dark);
       line-height: 1;
-      margin-top: 8px;
     }
 
-    .c-plan-time small { font-size: 52px; }
+    .c-plan-time small { font-size: 46px; }
 
     .c-plan-name {
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: 36px;
+      font-size: 34px;
       color: var(--ink-soft);
-      margin-top: 4px;
     }
 
     .c-cta {
-      margin-top: 50px;
+      margin-top: 40px;
       font-family: 'Fredoka One', cursive;
-      font-size: 54px;
+      font-size: 64px;
       color: var(--teal-dark);
       letter-spacing: 1px;
       text-align: center;
+      white-space: nowrap;
     }
 
     .c-cta span {
@@ -334,21 +336,21 @@
     }
 
     .c-easy {
-      margin-top: 18px;
+      margin-top: 16px;
       font-weight: 800;
-      font-size: 30px;
+      font-size: 34px;
       color: var(--ink-soft);
     }
 
     /* Faixa quadriculada de largada na borda inclinada */
     .c-flag {
       position: absolute;
-      top: -20px;
-      left: 1164px;
-      width: 34px;
-      height: 1120px;
-      transform: rotate(5.3deg);
-      transform-origin: top left;
+      top: 1163px;
+      left: -10px;
+      width: 1120px;
+      height: 34px;
+      transform: rotate(-5deg);
+      transform-origin: left top;
       background-image:
         linear-gradient(45deg, var(--dark) 25%, transparent 25%, transparent 75%, var(--dark) 75%),
         linear-gradient(45deg, var(--dark) 25%, transparent 25%, transparent 75%, var(--dark) 75%);
@@ -361,10 +363,12 @@
     /* HUD discreto: só aparece se mexer o mouse */
     .c-hud {
       position: absolute;
-      top: 24px;
+      top: 140px;
       right: 24px;
       z-index: 50;
       display: flex;
+      flex-direction: column;
+      align-items: flex-end;
       gap: 8px;
       opacity: 0;
       transition: opacity 0.3s ease;
@@ -379,7 +383,7 @@
       padding: 8px 18px;
       border-radius: 999px;
       font-family: 'Fredoka', cursive;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
       cursor: pointer;
     }
@@ -419,21 +423,26 @@
       <div class="c-plans">
         <div class="c-plan" data-plan="20">
           <div class="c-plan-icon">🐾</div>
-          <div class="c-plan-time">20<small>min</small></div>
-          <div class="c-plan-name">Pelúcias</div>
+          <div>
+            <div class="c-plan-time">20<small>min</small></div>
+            <div class="c-plan-name">Pelúcias</div>
+          </div>
         </div>
         <div class="c-plan" data-plan="30">
           <div class="c-plan-icon">🏎️</div>
-          <div class="c-plan-time">30<small>min</small></div>
-          <div class="c-plan-name">Carrinhos</div>
+          <div>
+            <div class="c-plan-time">30<small>min</small></div>
+            <div class="c-plan-name">Carrinhos</div>
+          </div>
         </div>
       </div>
 
       <div class="c-cta"><span>Escolhe.</span> <span>Senta.</span> <span>Acelera!</span></div>
-      <div class="c-easy">Sem agendamento • é só chegar 👈</div>
+      <div class="c-easy">Sem agendamento • é só chegar 👉</div>
     </aside>
 
     <nav class="c-hud" aria-label="Controles de Exibição">
+      <button class="c-hud-btn" id="btnRotate">🔄 [R] Giro</button>
       <button class="c-hud-btn" id="btnFullscreen">⛶ [F] Tela Cheia</button>
       <button class="c-hud-btn" id="btnNext">⏭ [→] Próximo</button>
     </nav>
@@ -450,46 +459,73 @@
       // plan: qual cartão de preço acende junto com a foto (20 = pelúcias, 30 = carrinhos).
       // ----------------------------------------------------------------------
       const SLIDES = [
-        { image: 'img/circuito-bombeiro-h', pos: '50% 40%', plan: 30,
+        { image: 'img/circuito-bombeiro', pos: '50% 40%', plan: 30,
           kicker: '🚨 Sirene ligada', headline: 'Hoje ele é o <em>herói</em> do shopping.' },
-        { image: 'img/circuito-carrinhos', pos: '50% 60%', plan: 30,
+        { image: 'img/circuito-frota-quiosque', pos: '50% 60%', plan: 30,
           kicker: 'Range Rover ou Lamborghini?', headline: 'Qual ele vai <em>escolher</em> hoje?' },
-        { image: 'img/circuito-macaco', pos: '50% 65%', plan: 30,
+        { image: 'img/circuito-macaco', pos: '50% 55%', plan: 30,
           kicker: '🎮 Controle remoto com você', headline: 'Ele no volante.<br><em>Você no controle.</em>' },
-        { image: 'img/circuito-equipe-capivara', pos: '50% 45%', plan: 20,
+        { image: 'img/circuito-equipe-capivara', pos: '50% 40%', plan: 20,
           kicker: '🐾 Pelúcias gigantes', headline: 'Um abraço desse tamanho cabe em <em>20 minutos</em>.' },
-        { image: 'img/circuito-bombeiro', pos: '50% 55%', plan: 30,
+        { image: 'img/circuito-bombeiro-h', pos: '50% 40%', plan: 30,
           kicker: '📸 Guarda esse momento', headline: 'Essa fase passa rápido.<br><em>Esse sorriso fica.</em>' },
         { image: 'img/circuito-lamborghini-urus', pos: '50% 60%', plan: 30,
           kicker: '🏁 Passeio pelo shopping', headline: 'Você respira.<br><em>Ele acelera.</em>' },
         { image: 'img/circuito-frota-alinhada', pos: '50% 55%', plan: 20,
           kicker: '👉 Está tudo pronto aqui', headline: 'Pode deixar ele <em>escolher</em>.' },
-        { image: 'img/circuito-frota-quiosque', pos: '50% 60%', plan: 30,
+        { image: 'img/circuito-carrinhos', pos: '30% 60%', plan: 30,
           kicker: '⏱️ Daqui a 30 minutos…', headline: 'Você vai ouvir:<br><em>“De novo!”</em>' }
       ];
 
       const CONFIG = {
         slideDuration: 7000,     // 7s: tempo de um pai cruzar a frente do quiosque
-        inactivityTimeout: 3500
+        inactivityTimeout: 3500,
+        rotationKey: 'fa-tv2-giro'
       };
 
-      const state = { index: -1, order: [], timer: null };
+      const ROTATIONS = ['auto', '90', '270', '0'];
+
+      const state = { index: -1, order: [], timer: null, rotation: loadRotation() };
 
       const dom = {
         canvas: document.getElementById('tvCanvas'),
         zone: document.getElementById('photoZone'),
         progress: document.getElementById('progressFill'),
         plans: document.querySelectorAll('.c-plan'),
+        btnRotate: document.getElementById('btnRotate'),
         btnFullscreen: document.getElementById('btnFullscreen'),
         btnNext: document.getElementById('btnNext')
       };
 
       // ----------------------------------------------------------------------
-      // ESCALA DO PALCO 1920x1080 PARA A TELA REAL
+      // GIRO 90º + ESCALA DO PALCO 1080x1920
+      // Prioridade: ?giro=90|270|0 na URL > escolha salva com a tecla R > auto.
+      // Auto: sinal em paisagem (TV deitada) gira 90º horário; retrato não gira.
       // ----------------------------------------------------------------------
+      function loadRotation() {
+        const fromUrl = new URLSearchParams(location.search).get('giro');
+        if (ROTATIONS.indexOf(fromUrl) !== -1) return fromUrl;
+        try {
+          const saved = localStorage.getItem(CONFIG.rotationKey);
+          if (ROTATIONS.indexOf(saved) !== -1) return saved;
+        } catch (e) { /* armazenamento bloqueado: segue no auto */ }
+        return 'auto';
+      }
+
       function fitCanvas() {
-        const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
-        dom.canvas.style.setProperty('--fit', scale);
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        let deg = state.rotation === 'auto' ? (w > h ? 90 : 0) : Number(state.rotation);
+        const sideways = deg === 90 || deg === 270;
+        const scale = sideways ? Math.min(w / 1920, h / 1080) : Math.min(w / 1080, h / 1920);
+        dom.canvas.style.transform = `translate(-50%, -50%) rotate(${deg}deg) scale(${scale})`;
+        dom.btnRotate.textContent = `🔄 [R] Giro: ${state.rotation === 'auto' ? 'auto (' + deg + 'º)' : deg + 'º'}`;
+      }
+
+      function cycleRotation() {
+        state.rotation = ROTATIONS[(ROTATIONS.indexOf(state.rotation) + 1) % ROTATIONS.length];
+        try { localStorage.setItem(CONFIG.rotationKey, state.rotation); } catch (e) { /* ignora */ }
+        fitCanvas();
       }
 
       // ----------------------------------------------------------------------
@@ -509,7 +545,7 @@
           const el = document.createElement('div');
           el.className = 'c-slide';
           el.innerHTML = `
-            <img src="${s.image}.webp" alt="" width="1180" height="1080" decoding="async" style="object-position:${s.pos}">
+            <img src="${s.image}.webp" alt="" width="1080" height="1180" decoding="async" style="object-position:${s.pos}">
             <div class="c-slide-copy">
               <div class="c-kicker">${s.kicker}</div>
               <h1 class="c-headline">${s.headline}</h1>
@@ -565,12 +601,14 @@
         }
       }
 
+      dom.btnRotate.addEventListener('click', cycleRotation);
       dom.btnFullscreen.addEventListener('click', toggleFullscreen);
       dom.btnNext.addEventListener('click', show);
 
       window.addEventListener('keydown', (e) => {
         const k = e.key.toUpperCase();
-        if (k === 'F') toggleFullscreen();
+        if (k === 'R') cycleRotation();
+        else if (k === 'F') toggleFullscreen();
         else if (k === 'ARROWRIGHT' || k === 'N') show();
       });
 

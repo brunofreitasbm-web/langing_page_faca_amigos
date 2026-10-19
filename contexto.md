@@ -132,11 +132,11 @@ Para facilitar testes, reuniões de equipe e demonstrações a investidores sem 
 
 ## 7. TV2 — Vitrine Digital do Quiosque do Circuito (`/tv2`)
 
-O quiosque do Circuito de Carrinhos Elétricos conta com uma **TV de 50" deitada (paisagem 16:9)**. Objetivo único: **fazer o pai/mãe que passa no corredor parar e alugar um carrinho.**
+O quiosque do Circuito de Carrinhos Elétricos conta com uma **TV de 50" deitada 90º (fica em pé, em retrato)**. Objetivo único: **fazer o pai/mãe que passa no corredor parar e alugar um carrinho.**
 
 ### 7.1. Características da TV2 (`tv2.html`):
 - **Só Circuito:** apenas fotos reais dos carrinhos, caminhão de bombeiro, Lamborghini, Range Rover e pelúcias motorizadas. Fotos de obra, playground ou clínica não entram.
-- **Palco fixo 1920x1080 escalado:** funciona igual em TV que reporta 720p, 1080p ou 4K. Sem rotação.
+- **Palco fixo 1080x1920 (retrato) girado e escalado:** se o sinal chega em paisagem, gira 90º horário automaticamente; funciona igual em TV 720p, 1080p ou 4K. Se a imagem ficar de cabeça para baixo, aperte `R` (90º → 270º → 0º → auto; a escolha fica salva na TV) ou abra `/tv2?giro=270`.
 - **Inicia sozinha:** abre a URL, entra em tela cheia (F / duplo clique) e roda em loop; recarrega 1x por dia às 06h para puxar atualizações.
 - **Preço em fundo claro, mínimo de texto:** `R$ 48,00` gigante + dois cartões `20 min · Pelúcias` e `30 min · Carrinhos`. O cartão do plano da foto da vez acende.
 - **Copy persuasivo (doutrina do alívio emocional, ver posicionamento):** pressuposição ("Qual ele vai escolher hoje?"), comando embutido ("Escolhe. Senta. Acelera!"), futuro vivido ("Daqui a 30 minutos você vai ouvir: 'De novo!'"), alívio de quem cuida ("Você respira. Ele acelera."). **Nunca usar as palavras promessa, confiança e oferta**, nem "garantido"/"cura".
