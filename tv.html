@@ -528,6 +528,25 @@
       color: var(--dark);
     }
 
+    /* Aviso "Vai começar!" (vinheta) */
+    .kintro {
+      position: absolute;
+      inset: 0;
+      padding: 12vh 5vw 4vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3.4vh;
+      text-align: center;
+      background: #E4F1E8;
+      z-index: 5;
+      transition: opacity 0.9s ease;
+    }
+
+    .kintro.out { opacity: 0; }
+    .kintro .khead { color: var(--pink); font-size: clamp(3.4rem, 8.4vw, 18rem); }
+
     /* Estátua / Imite o bicho: texto que troca */
     .kswap { transition: opacity 0.45s ease; }
     .kswap.out { opacity: 0; }
@@ -1566,7 +1585,9 @@
       const KCFG = {
         soundKey: 'fa-tv-som',
         bedLevel: 0.22,   // trilha sempre bem abaixo da voz
-        voiceDir: 'audio/voz/'
+        voiceDir: 'audio/voz/',
+        jingle: 'audio/vinheta-dinamica.mp3', // vinheta "Faça Amigos" (5,4 s) que avisa que a dinâmica vai começar
+        introMs: 5500
       };
 
       const IMG = (n) => `img/amigos/${n}.webp`;
@@ -1785,6 +1806,17 @@
         if (p && p.catch) p.catch(() => { /* gesto ainda não liberou: ignora */ });
       }
 
+      // Vinheta: o gancho tem a métrica do nome (Fa-ça a-MI-gos). Sem o arquivo, a tela de aviso aparece em silêncio.
+      function playJingle() {
+        if (!som.on || !soundRunning()) return;
+        stopVoice();
+        const a = new Audio(KCFG.jingle);
+        a.volume = volumeAgora(belemNow().hours);
+        som.voice = a;
+        const p = a.play();
+        if (p && p.catch) p.catch(() => { /* gesto ainda não liberou: ignora */ });
+      }
+
       // ---------------- CENAS ----------------
       const STEP_ICONS = {
         meias: '<svg viewBox="0 0 24 24"><path d="M8 3h8v9l5 3a3 3 0 0 1-1.5 5.6l-8-2.6A4 4 0 0 1 8 14z"/></svg>',
@@ -1853,7 +1885,7 @@
 
         // FIXAR + BRINCAR: procurar uma cor no salão (pode só apontar)
         cor: {
-          types: ['fixar', 'brincar'], dur: 30,
+          types: ['fixar', 'brincar'], dur: 30, intro: 'Ache a cor',
           html: () => {
             const c = CORES[corIdx % CORES.length];
             return `
@@ -1893,7 +1925,7 @@
 
         // BRINCAR: dança e congela, ninguém sai do jogo
         estatua: {
-          types: ['brincar'], dur: 90, bed: null,
+          types: ['brincar'], dur: 90, bed: null, intro: 'Estátua dos Amigos',
           html: () => `
             <div class="krow" id="estRow">
               <img class="ksprite big k-hop" src="${IMG('cachorro-pula')}" data-dance="${IMG('cachorro-pula')}" data-freeze="${IMG('cachorro-sentado')}" alt="">
@@ -1949,7 +1981,7 @@
 
         // BRINCAR: cada amigo faz o seu movimento (o tema do dia escolhe quais entram primeiro)
         bicho: {
-          types: ['brincar'], dur: 75,
+          types: ['brincar'], dur: 75, intro: 'Imite os amigos',
           html: () => `
             <div class="krow mid kswap" id="bRow"></div>
             <h1 class="khead kswap" id="bHead"></h1>
@@ -2047,6 +2079,9 @@
         };
       }
 
+      // Dinâmicas com vinheta ganham o tempo do aviso (introMs) antes de começar
+      const sceneDur = (id) => SCENES[id].dur + (SCENES[id].intro ? KCFG.introMs / 1000 : 0);
+
       function pickScenes(type, seconds, prev) {
         const ids = Object.keys(SCENES).filter((id) => id !== 'oi' && id !== 'pausa' && SCENES[id].types.includes(type));
         const prefer = (THEMES[state.cycleDay] || THEMES[1]).prefer;
@@ -2057,22 +2092,22 @@
         for (let k = 0; k < 8 && acc < seconds * 0.85; k++) {
           let id = pool[k % pool.length];
           if (id === prev && pool.length > 1) id = pool[(k + 1) % pool.length];
-          out.push({ id: id, dur: SCENES[id].dur });
-          acc += SCENES[id].dur;
+          out.push({ id: id, dur: sceneDur(id) });
+          acc += sceneDur(id);
           prev = id;
         }
         return out;
       }
 
       function buildBlock() {
-        if (kids.only) return [{ id: kids.only, dur: SCENES[kids.only].dur }];
+        if (kids.only) return [{ id: kids.only, dur: sceneDur(kids.only) }];
         const theme = THEMES[state.cycleDay] || THEMES[1];
         let recipe = RECIPES[belemNow().hours >= 19 ? 'calma' : 'energia'];
         if (theme.extraAcolher) recipe = recipe.concat([{ t: 'acolher', s: 60 }]);
         const out = [];
         let prev = kids.lastId;
         recipe.forEach((seg) => {
-          const picked = seg.id ? [{ id: seg.id, dur: seg.dur || SCENES[seg.id].dur }] : pickScenes(seg.t, seg.s, prev);
+          const picked = seg.id ? [{ id: seg.id, dur: seg.dur || sceneDur(seg.id) }] : pickScenes(seg.t, seg.s, prev);
           picked.forEach((p) => { out.push(p); prev = p.id; });
         });
         return out;
@@ -2100,9 +2135,28 @@
         void el.offsetWidth; // força o início da transição de opacidade
         el.classList.add('active');
         const h = sceneHelpers();
-        setBed('bed' in def ? def.bed : 'soft');
-        kids.current = { el: el, h: h, cleanup: def.run(el, h, item) };
+        kids.current = { el: el, h: h, cleanup: null };
         kids.lastId = item.id;
+        const start = () => {
+          setBed('bed' in def ? def.bed : 'soft');
+          kids.current.cleanup = def.run(el, h, item);
+        };
+        if (def.intro) {
+          // Vinheta "Faça Amigos": avisa a todos que a dinâmica vai começar
+          setBed(null);
+          const intro = document.createElement('div');
+          intro.className = 'kintro';
+          intro.innerHTML = `${spr('tucano-joinha', 'big k-hop')}<h1 class="khead">Vai começar!</h1><p class="ksub">${def.intro}</p>`;
+          el.appendChild(intro);
+          playJingle();
+          h.later(() => {
+            intro.classList.add('out');
+            h.later(() => intro.remove(), 900);
+            start();
+          }, KCFG.introMs);
+        } else {
+          start();
+        }
       }
 
       function playNext() {

@@ -223,7 +223,8 @@ Arquivos novos: `img/amigos/*.webp` (18 poses), `audio/voz/*.mp3` (42 falas), `c
 2. Na TV, abrir `/tv?modo=crianca` e dar 1 clique (libera o som e aceita os cookies). No Chrome em modo quiosque, usar
    `--autoplay-policy=no-user-gesture-required`.
 3. Testar uma cena: `/tv?cena=estatua&dia=5` (cenas: oi, cor, estatua, bicho, resp, pausa).
-4. Manual de operação para a equipe: `conteudo/manual-tv-salao.png` (1080x1920, para enviar no WhatsApp).
+4. Vinheta que avisa a dinâmica: `audio/vinheta-dinamica.mp3`, gerada por `python scripts/generate-vinheta.py` (precisa de numpy e ffmpeg).
+5. Manual de operação para a equipe: `conteudo/manual-tv-salao.png` (1080x1920, para enviar no WhatsApp).
 
 ## Links com origem (Instagram, QR, Google)
 
