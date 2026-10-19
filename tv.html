@@ -68,7 +68,6 @@
       left: 0;
       right: 0;
       height: 10vh;
-      min-height: 80px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -86,8 +85,8 @@
     }
 
     .tv-logo-img {
-      width: clamp(48px, 4.5vw, 70px);
-      height: clamp(48px, 4.5vw, 70px);
+      width: clamp(48px, 5.2vw, 140px);
+      height: clamp(48px, 5.2vw, 140px);
       object-fit: contain;
       filter: drop-shadow(0 4px 12px rgba(240, 25, 107, 0.25));
     }
@@ -99,7 +98,7 @@
 
     .tv-brand-title {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.4rem, 2vw, 2.4rem);
+      font-size: clamp(1.4rem, 2.6vw, 6rem);
       color: var(--pink);
       line-height: 1;
       letter-spacing: -0.5px;
@@ -107,7 +106,7 @@
 
     .tv-brand-sub {
       font-family: 'Fredoka', cursive;
-      font-size: clamp(0.75rem, 1vw, 1.1rem);
+      font-size: clamp(0.75rem, 1.15vw, 2.6rem);
       color: var(--teal-dark);
       font-weight: 600;
       text-transform: uppercase;
@@ -126,7 +125,7 @@
       border: 1px solid rgba(240, 25, 107, 0.15);
       font-family: 'Fredoka', cursive;
       font-weight: 600;
-      font-size: clamp(0.85rem, 1.15vw, 1.3rem);
+      font-size: clamp(0.85rem, 1.4vw, 3rem);
       color: var(--dark);
     }
 
@@ -159,14 +158,14 @@
 
     .tv-clock-time {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.8rem, 2.8vw, 3.2rem);
+      font-size: clamp(1.8rem, 3.6vw, 8rem);
       color: var(--dark);
       line-height: 1;
     }
 
     .tv-clock-date {
       font-family: 'Nunito', sans-serif;
-      font-size: clamp(0.75rem, 0.95vw, 1.1rem);
+      font-size: clamp(0.75rem, 1.2vw, 2.6rem);
       color: var(--ink-soft);
       font-weight: 700;
       text-transform: capitalize;
@@ -205,7 +204,7 @@
     .team-container {
       width: 100%;
       height: 100%;
-      padding: 12vh 4vw 6vh;
+      padding: 11vh 3vw 3vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -214,11 +213,12 @@
 
     .slide-host {
       position: absolute;
-      width: 92vw;
-      height: 78vh;
+      top: 11vh; /* abaixo do cabeçalho (10vh) */
+      width: 94vw;
+      height: 86vh;
       display: grid;
       grid-template-columns: 1.15fr 0.85fr;
-      gap: 4vw;
+      gap: 3vw;
       align-items: center;
       opacity: 0;
       transform: scale(0.97) translateY(20px);
@@ -235,7 +235,7 @@
     .team-content {
       display: flex;
       flex-direction: column;
-      gap: clamp(14px, 2vh, 26px);
+      gap: 2.6vh;
       justify-content: center;
     }
 
@@ -244,14 +244,14 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      padding: 8px 20px;
+      padding: 0.5em 1.2em;
       border-radius: 999px;
       background: var(--pink-soft);
       border: 1px solid rgba(240, 25, 107, 0.25);
       color: var(--pink);
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: clamp(0.85rem, 1.2vw, 1.35rem);
+      font-size: clamp(0.85rem, 1.6vw, 3.4rem);
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
@@ -259,8 +259,8 @@
     .team-quote {
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: clamp(1.9rem, 3.2vw, 4.2rem);
-      line-height: 1.2;
+      font-size: clamp(1.9rem, 3.8vw, 8.6rem);
+      line-height: 1.12;
       color: var(--dark);
       letter-spacing: -0.8px;
     }
@@ -276,11 +276,11 @@
     }
 
     .team-subtext {
-      font-size: clamp(1.1rem, 1.55vw, 1.9rem);
-      line-height: 1.45;
+      font-size: clamp(1.1rem, 1.95vw, 4.4rem);
+      line-height: 1.38;
       color: var(--ink-soft);
       font-weight: 600;
-      max-width: 92%;
+      max-width: 100%;
     }
 
     .team-pill-box {
@@ -288,7 +288,7 @@
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 14px 24px;
+      padding: 0.8em 1.3em;
       border-radius: 20px;
       background: rgba(255, 255, 255, 0.9);
       border: 1px solid rgba(46, 207, 181, 0.35);
@@ -297,11 +297,11 @@
     }
 
     .team-pill-icon {
-      font-size: clamp(1.5rem, 2vw, 2.4rem);
+      font-size: clamp(1.5rem, 2.8vw, 6rem);
     }
 
     .team-pill-text {
-      font-size: clamp(0.95rem, 1.2vw, 1.4rem);
+      font-size: clamp(0.95rem, 1.6vw, 3.4rem);
       font-weight: 700;
       color: var(--dark);
     }
@@ -309,7 +309,7 @@
     .team-media-card {
       position: relative;
       width: 100%;
-      height: 72vh;
+      height: 84vh;
       border-radius: var(--r-xl);
       overflow: hidden;
       box-shadow: var(--shadow-lg);
@@ -334,20 +334,20 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 30px;
+      padding: 2.2vw;
       background: linear-gradient(0deg, rgba(26, 63, 53, 0.88) 0%, rgba(26, 63, 53, 0) 100%);
       color: var(--white);
     }
 
     .team-media-label {
       font-family: 'Fredoka', cursive;
-      font-size: clamp(1rem, 1.3vw, 1.6rem);
+      font-size: clamp(1rem, 2vw, 4.4rem);
       font-weight: 600;
       color: var(--yellow);
     }
 
     .team-media-caption {
-      font-size: clamp(0.85rem, 1vw, 1.2rem);
+      font-size: clamp(0.85rem, 1.45vw, 3.2rem);
       opacity: 0.9;
       margin-top: 4px;
     }
@@ -365,7 +365,7 @@
     .kids-container {
       width: 100%;
       height: 100%;
-      padding: 12vh 4vw 6vh;
+      padding: 11vh 3vw 3vh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -374,11 +374,12 @@
 
     .kids-slide-host {
       position: absolute;
-      width: 92vw;
-      height: 78vh;
+      top: 11vh; /* abaixo do cabeçalho (10vh) */
+      width: 94vw;
+      height: 86vh;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 4vw;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3vw;
       align-items: center;
       opacity: 0;
       transform: scale(0.96) translateX(40px);
@@ -395,7 +396,7 @@
     .kids-content {
       display: flex;
       flex-direction: column;
-      gap: clamp(16px, 2.2vh, 30px);
+      gap: 2.4vh;
       justify-content: center;
     }
 
@@ -407,11 +408,11 @@
     }
 
     .kids-badge {
-      padding: 8px 22px;
+      padding: 0.45em 1.2em;
       border-radius: 999px;
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: clamp(0.9rem, 1.25vw, 1.45rem);
+      font-size: clamp(0.9rem, 1.55vw, 3.4rem);
       letter-spacing: 0.5px;
       text-transform: uppercase;
       box-shadow: 0 4px 14px rgba(0,0,0,0.06);
@@ -434,8 +435,8 @@
 
     .kids-title {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(2.3rem, 4.2vw, 5.4rem);
-      line-height: 1.1;
+      font-size: clamp(2.3rem, 4.6vw, 10rem);
+      line-height: 1.05;
       color: var(--dark);
       letter-spacing: -1px;
     }
@@ -446,8 +447,8 @@
     }
 
     .kids-desc {
-      font-size: clamp(1.15rem, 1.75vw, 2.1rem);
-      line-height: 1.4;
+      font-size: clamp(1.15rem, 2.05vw, 4.6rem);
+      line-height: 1.34;
       color: var(--ink-soft);
       font-weight: 700;
     }
@@ -455,36 +456,36 @@
     .kids-feature-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 1.4vh;
       margin-top: 1vh;
     }
 
     .kids-feature-item {
       display: flex;
       align-items: center;
-      gap: 14px;
-      font-size: clamp(1.05rem, 1.4vw, 1.65rem);
+      gap: 0.8em;
+      font-size: clamp(1.05rem, 1.75vw, 3.8rem);
       font-weight: 800;
       color: var(--dark);
     }
 
     .kids-feature-icon {
-      width: clamp(34px, 2.8vw, 46px);
-      height: clamp(34px, 2.8vw, 46px);
+      width: clamp(34px, 3.2vw, 120px);
+      height: clamp(34px, 3.2vw, 120px);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       background: var(--white);
       box-shadow: 0 6px 16px rgba(26, 63, 53, 0.1);
-      font-size: clamp(1.1rem, 1.5vw, 1.8rem);
+      font-size: clamp(1.1rem, 1.8vw, 4rem);
       flex-shrink: 0;
     }
 
     .kids-visual-card {
       position: relative;
       width: 100%;
-      height: 72vh;
+      height: 84vh;
       border-radius: var(--r-xl);
       overflow: hidden;
       box-shadow: var(--shadow-lg), var(--shadow-glow);
@@ -510,10 +511,10 @@
       right: 24px;
       background: var(--yellow);
       color: var(--dark);
-      padding: 14px 24px;
+      padding: 0.6em 1.1em;
       border-radius: 999px;
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(1.1rem, 1.5vw, 1.8rem);
+      font-size: clamp(1.1rem, 1.9vw, 4.2rem);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       transform: rotate(4deg);
       animation: float-sticker 3s ease-in-out infinite alternate;
@@ -530,7 +531,7 @@
       left: 24px;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(8px);
-      padding: 14px 26px;
+      padding: 0.9vw 1.5vw;
       border-radius: 20px;
       border: 2px solid var(--pink);
       display: flex;
@@ -540,13 +541,13 @@
     }
 
     .kids-sticker-bottom-icon {
-      font-size: clamp(1.6rem, 2.2vw, 2.6rem);
+      font-size: clamp(1.6rem, 2.6vw, 5.6rem);
     }
 
     .kids-sticker-bottom-text {
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: clamp(1rem, 1.35vw, 1.6rem);
+      font-size: clamp(1rem, 1.6vw, 3.6rem);
       color: var(--dark);
     }
 
@@ -595,15 +596,15 @@
 
     .night-title {
       font-family: 'Fredoka One', cursive;
-      font-size: clamp(2.4rem, 4.5vw, 5.5rem);
+      font-size: clamp(2.4rem, 5.6vw, 12rem);
       color: var(--cream);
       letter-spacing: -0.5px;
     }
 
     .night-sub {
-      font-size: clamp(1.2rem, 1.9vw, 2.4rem);
+      font-size: clamp(1.2rem, 2.4vw, 5.2rem);
       color: rgba(255, 255, 255, 0.7);
-      max-width: 700px;
+      max-width: 60vw;
       line-height: 1.4;
     }
 
@@ -617,7 +618,7 @@
       background: rgba(46, 207, 181, 0.15);
       border: 1px solid rgba(46, 207, 181, 0.35);
       font-family: 'Fredoka', cursive;
-      font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+      font-size: clamp(1.2rem, 2.2vw, 4.8rem);
       color: var(--teal);
     }
 
@@ -1737,6 +1738,7 @@
 
           dom.teamContainer.appendChild(slideEl);
         });
+        fitAllSlides();
       }
 
       function renderKidsSlides(cycleDay) {
@@ -1786,7 +1788,28 @@
 
           dom.kidsContainer.appendChild(slideEl);
         });
+        fitAllSlides();
       }
+
+      // ----------------------------------------------------------------------
+      // AJUSTE FINO: se um texto longo passar da altura do slide (TVs que
+      // reportam 1280x720 ou 960x540 quebram linhas diferente), encolhe só
+      // aquele bloco de texto em vez de deixá-lo vazar para fora da tela.
+      // ----------------------------------------------------------------------
+      function fitAllSlides() {
+        document.querySelectorAll('.team-content, .kids-content').forEach((content) => {
+          content.style.transform = '';
+          const available = content.parentElement.clientHeight;
+          const needed = content.scrollHeight;
+          if (needed > available) {
+            content.style.transformOrigin = 'left center';
+            content.style.transform = `scale(${(available / needed).toFixed(3)})`;
+          }
+        });
+      }
+
+      window.addEventListener('resize', fitAllSlides);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllSlides);
 
       // ----------------------------------------------------------------------
       // RELÓGIO E AVALIAÇÃO DE HORÁRIOS
@@ -2128,7 +2151,20 @@
         getState: () => state
       };
 
+      // Demonstração por URL: /tv?modo=equipe|vitrine|noite&dia=1..5 (sem parâmetro = automático)
+      const params = new URLSearchParams(location.search);
+      const urlMode = { equipe: 'team', vitrine: 'kids', noite: 'night' }[params.get('modo')];
+      const urlDay = parseInt(params.get('dia'), 10);
+      if (urlDay >= 1 && urlDay <= 5) {
+        state.cycleDay = urlDay;
+        state.forcedCycleDay = urlDay;
+      }
+
       // Inicialização: o 1º updateClock() já ativa o turno do horário e inicia o ciclo de slides
+      if (urlMode) {
+        state.forcedMode = urlMode;
+        switchMode(urlMode);
+      }
       updateClock();
       setInterval(updateClock, CONFIG.timeCheckInterval);
     })();
