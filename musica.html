@@ -5,8 +5,8 @@
   <script src="/assets/fa-track.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>FaçaAmigos — Rádio & Player de Músicas</title>
-  <meta name="description" content="Player oficial de músicas do FaçaAmigos Playground. Ouça as faixas originais, versões dos personagens e trilhas do salão.">
+  <title>FaçaAmigos — Rádio de Músicas do Salão</title>
+  <meta name="description" content="Player único e automático de músicas do FaçaAmigos Playground. Rotação aleatória contínua e direta, sem complicações.">
   <link rel="canonical" href="https://institutofacaamigos.com.br/musica">
   <link rel="icon" type="image/png" href="img/logo-simbolo.png">
 
@@ -19,19 +19,17 @@
     :root {
       --pink: #F0196B;
       --pink-dark: #C81158;
-      --pink-soft: rgba(240, 25, 107, 0.12);
+      --pink-soft: rgba(240, 25, 107, 0.15);
       --teal: #2ECFB5;
       --teal-dark: #1FA893;
-      --teal-soft: rgba(46, 207, 181, 0.14);
+      --teal-soft: rgba(46, 207, 181, 0.15);
       --yellow: #FFE234;
       --yellow-dark: #F59E0B;
       --dark: #1A3F35;
-      --dark-card: rgba(26, 63, 53, 0.85);
-      --bg: #0E221C;
-      --ink-soft: #4C6B62;
-      --cream: #FFF9F1;
+      --dark-card: rgba(26, 63, 53, 0.92);
+      --bg: #0D201A;
       --white: #FFFFFF;
-      --border-glass: rgba(255, 255, 255, 0.12);
+      --border-glass: rgba(255, 255, 255, 0.14);
     }
 
     * {
@@ -42,9 +40,9 @@
     }
 
     body {
-      background: radial-gradient(circle at 15% 10%, rgba(240, 25, 107, 0.15), transparent 45%),
-                  radial-gradient(circle at 85% 90%, rgba(46, 207, 181, 0.2), transparent 45%),
-                  radial-gradient(circle at 50% 50%, rgba(255, 226, 52, 0.05), transparent 60%),
+      background: radial-gradient(circle at 20% 15%, rgba(240, 25, 107, 0.18), transparent 45%),
+                  radial-gradient(circle at 80% 85%, rgba(46, 207, 181, 0.22), transparent 45%),
+                  radial-gradient(circle at 50% 50%, rgba(255, 226, 52, 0.08), transparent 60%),
                   var(--bg);
       background-attachment: fixed;
       font-family: 'Nunito', sans-serif;
@@ -52,28 +50,25 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
+      align-items: center;
+      padding: 0 16px 40px;
     }
 
-    /* TOPBAR */
+    /* TOPBAR COMPACTA */
     .topbar {
+      width: 100%;
+      max-width: 660px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 28px;
-      background: rgba(14, 34, 28, 0.75);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border-glass);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      padding: 16px 0;
+      margin-bottom: 12px;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
       text-decoration: none;
       color: inherit;
     }
@@ -82,34 +77,27 @@
       width: 44px;
       height: 44px;
       object-fit: contain;
-      filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
     }
 
     .brand-text b {
       display: block;
       font-family: 'Fredoka One', cursive;
-      font-size: 1.55rem;
+      font-size: 1.5rem;
       color: var(--yellow);
       line-height: 1;
-      letter-spacing: 0.5px;
     }
 
     .brand-text span {
       font-family: 'Fredoka', cursive;
       font-weight: 700;
       font-size: 0.8rem;
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
       color: var(--teal);
       text-transform: uppercase;
     }
 
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-action {
+    .btn-tv {
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid var(--border-glass);
       color: var(--white);
@@ -117,78 +105,85 @@
       border-radius: 999px;
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       text-decoration: none;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      cursor: pointer;
+      gap: 6px;
       transition: all 0.2s ease;
     }
 
-    .btn-action:hover {
-      background: rgba(46, 207, 181, 0.25);
-      border-color: var(--teal);
-      transform: translateY(-1px);
-    }
-
-    .btn-action.tv-link {
+    .btn-tv:hover {
       background: var(--pink);
       border-color: var(--pink);
-      box-shadow: 0 4px 14px rgba(240, 25, 107, 0.35);
-    }
-    .btn-action.tv-link:hover {
-      background: var(--pink-dark);
       transform: translateY(-1px);
     }
 
-    /* MAIN CONTAINER */
-    .container {
-      max-width: 1200px;
-      width: 100%;
-      margin: 0 auto;
-      padding: 28px 20px 100px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 32px;
-      align-items: start;
-    }
-
-    @media (max-width: 900px) {
-      .container {
-        grid-template-columns: 1fr;
-        padding: 20px 16px 120px;
-        gap: 24px;
-      }
-    }
-
-    /* CARD DO PLAYER (ESQUERDA) */
+    /* CARD DO PLAYER ÚNICO (CENTRAL E SEM CONFUSÃO) */
     .player-card {
+      width: 100%;
+      max-width: 660px;
       background: var(--dark-card);
       border: 1px solid var(--border-glass);
-      border-radius: 28px;
+      border-radius: 32px;
       padding: 32px 28px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      position: sticky;
-      top: 96px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
     }
 
-    /* ARTWORK / ANIMAÇÃO */
-    .artwork-stage {
-      width: 220px;
-      height: 220px;
+    /* BADGE DE STATUS */
+    .radio-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(46, 207, 181, 0.35);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--teal);
+      margin-bottom: 22px;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: radial-gradient(circle at 35% 35%, rgba(255, 226, 52, 0.25), rgba(46, 207, 181, 0.15), rgba(26, 63, 53, 0.95));
+      background: var(--teal);
+      box-shadow: 0 0 10px var(--teal);
+      animation: pulseDot 1.5s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    /* PALCO CENTRAL UNIFICADO (ONDE TOCA A MÍDIA) */
+    .stage-wrapper {
+      width: 100%;
+      min-height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    /* Palco MP3 (Personagem FaçaAmigos Animado) */
+    .artwork-stage {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, rgba(255, 226, 52, 0.3), rgba(46, 207, 181, 0.2), rgba(26, 63, 53, 0.95));
       border: 4px solid var(--teal);
       box-shadow: 0 0 35px rgba(46, 207, 181, 0.35);
       position: relative;
-      margin-bottom: 24px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -204,14 +199,14 @@
 
     @keyframes pulseStage {
       0% { transform: scale(1); box-shadow: 0 0 35px rgba(46, 207, 181, 0.35); }
-      100% { transform: scale(1.03); box-shadow: 0 0 50px rgba(240, 25, 107, 0.5); }
+      100% { transform: scale(1.04); box-shadow: 0 0 50px rgba(240, 25, 107, 0.5); }
     }
 
     .artwork-char {
-      width: 140px;
-      height: 140px;
+      width: 125px;
+      height: 125px;
       object-fit: contain;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4));
+      filter: drop-shadow(0 10px 18px rgba(0,0,0,0.4));
       transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
@@ -221,34 +216,49 @@
 
     @keyframes bounceChar {
       0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(3deg); }
+      50% { transform: translateY(-7px) rotate(3deg); }
     }
 
+    /* Palco Suno Embed (Mesmíssimo Espaço Físico) */
+    .suno-stage {
+      width: 100%;
+      max-width: 480px;
+      height: 154px;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 2px solid var(--pink);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      background: #000;
+      display: none;
+    }
+
+    .suno-stage.active {
+      display: block;
+    }
+
+    .suno-stage iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* METADADOS DA MÚSICA */
     .type-pill {
+      display: inline-block;
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: 0.85rem;
-      padding: 4px 14px;
+      font-size: 0.8rem;
+      padding: 4px 16px;
       border-radius: 999px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
     }
 
-    .type-pill.mp3 {
-      background: var(--teal);
-      color: var(--dark);
-    }
-
-    .type-pill.suno {
-      background: var(--pink);
-      color: #fff;
-    }
-
-    .type-pill.ambient {
-      background: var(--yellow);
-      color: var(--dark);
-    }
+    .type-pill.mp3 { background: var(--teal); color: var(--dark); }
+    .type-pill.suno { background: var(--pink); color: #fff; }
+    .type-pill.ambient { background: var(--yellow); color: var(--dark); }
 
     .track-title {
       font-family: 'Fredoka One', cursive;
@@ -256,7 +266,7 @@
       line-height: 1.15;
       color: var(--white);
       margin-bottom: 8px;
-      min-height: 2.3em;
+      min-height: 2.2em;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -265,14 +275,15 @@
     .track-subtitle {
       font-size: 0.95rem;
       font-weight: 700;
-      color: #8BA89F;
-      margin-bottom: 24px;
+      color: #9EC0B6;
+      margin-bottom: 22px;
     }
 
-    /* CONTROLES DO PROGRESSO MP3 */
+    /* BARRA DE PROGRESSO DO MP3 */
     .scrubber-box {
       width: 100%;
-      margin-bottom: 20px;
+      max-width: 480px;
+      margin-bottom: 22px;
     }
 
     .scrubber-track {
@@ -290,7 +301,7 @@
       height: 100%;
       background: linear-gradient(90deg, var(--teal), var(--pink));
       border-radius: 999px;
-      transition: width 0.1s linear;
+      transition: width 0.15s linear;
     }
 
     .scrubber-times {
@@ -298,13 +309,44 @@
       justify-content: space-between;
       font-size: 0.85rem;
       font-weight: 700;
-      color: #8BA89F;
+      color: #9EC0B6;
       margin-top: 6px;
     }
 
-    /* BOTOES DE CONTROLE */
-    .controls-row {
+    /* BOTÃO PRINCIPAL DE INÍCIO DIRETO */
+    .btn-start-hero {
+      width: 100%;
+      max-width: 440px;
+      padding: 18px 32px;
+      background: linear-gradient(135deg, var(--pink), #FF4B8B);
+      border: none;
+      border-radius: 999px;
+      color: var(--white);
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.35rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(240, 25, 107, 0.45);
+      transition: all 0.25s ease;
+      margin-bottom: 20px;
       display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-start-hero:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 14px 40px rgba(240, 25, 107, 0.6);
+    }
+
+    .btn-start-hero.playing {
+      display: none;
+    }
+
+    /* CONTROLES UNIFICADOS (APENAS 1 CONJUNTO) */
+    .controls-row {
+      display: none;
       align-items: center;
       justify-content: center;
       gap: 18px;
@@ -316,40 +358,53 @@
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid var(--border-glass);
       color: var(--white);
-      width: 50px;
-      height: 50px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       display: grid;
       place-items: center;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       cursor: pointer;
       transition: all 0.2s ease;
     }
 
     .ctrl-btn:hover {
       background: rgba(255, 255, 255, 0.2);
-      transform: scale(1.08);
-    }
-
-    .ctrl-btn.active {
-      color: var(--yellow);
-      border-color: var(--yellow);
+      transform: scale(1.06);
     }
 
     .ctrl-btn-play {
-      width: 72px;
-      height: 72px;
+      width: 76px;
+      height: 76px;
       background: var(--pink);
       border: none;
       color: var(--white);
-      font-size: 2rem;
+      font-size: 2.2rem;
       box-shadow: 0 8px 24px rgba(240, 25, 107, 0.45);
     }
 
     .ctrl-btn-play:hover {
       background: var(--pink-dark);
       transform: scale(1.08);
-      box-shadow: 0 10px 30px rgba(240, 25, 107, 0.6);
+    }
+
+    .ctrl-btn-next {
+      width: auto;
+      padding: 0 24px;
+      border-radius: 999px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.15rem;
+      gap: 8px;
+      background: rgba(46, 207, 181, 0.2);
+      border-color: var(--teal);
+      color: var(--teal);
+      display: flex;
+      align-items: center;
+    }
+
+    .ctrl-btn-next:hover {
+      background: var(--teal);
+      color: var(--dark);
     }
 
     /* VOLUME */
@@ -358,11 +413,7 @@
       align-items: center;
       gap: 12px;
       width: 100%;
-      max-width: 260px;
-    }
-
-    .volume-row span {
-      font-size: 1.1rem;
+      max-width: 280px;
     }
 
     .volume-slider {
@@ -372,319 +423,90 @@
       height: 6px;
     }
 
-    /* SUNO EMBED CONTAINER */
-    .suno-embed-card {
+    /* SEÇÃO DISCRETA DE PRÓXIMAS FAIXAS (SEM BOTÕES DE CONFUSÃO) */
+    .upcoming-section {
       width: 100%;
-      margin-top: 20px;
-      background: #000;
-      border-radius: 16px;
-      overflow: hidden;
-      border: 2px solid var(--pink);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      display: none;
-      flex-direction: column;
-    }
-
-    .suno-embed-card.visible {
-      display: flex;
-    }
-
-    .suno-embed-header {
-      background: #1A3F35;
-      padding: 8px 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.85rem;
-      font-weight: 800;
-    }
-
-    .suno-embed-header a {
-      color: var(--yellow);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .suno-embed-header a:hover {
-      text-decoration: underline;
-    }
-
-    .suno-embed-card iframe {
-      width: 100%;
-      height: 140px;
-      border: none;
-    }
-
-    /* PLAYLIST (DIREITA) */
-    .playlist-section {
-      background: var(--dark-card);
+      max-width: 660px;
+      margin-top: 24px;
+      background: rgba(26, 63, 53, 0.6);
       border: 1px solid var(--border-glass);
-      border-radius: 28px;
-      padding: 28px 24px;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex;
-      flex-direction: column;
-      height: 820px;
+      border-radius: 24px;
+      padding: 20px 24px;
     }
 
-    .playlist-header {
-      margin-bottom: 20px;
-    }
-
-    .playlist-title-row {
+    .upcoming-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    .playlist-title-row h2 {
+    .upcoming-header h2 {
       font-family: 'Fredoka One', cursive;
-      font-size: 1.7rem;
+      font-size: 1.2rem;
       color: var(--yellow);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
 
-    .counter-badge {
-      background: rgba(255, 255, 255, 0.12);
-      padding: 4px 12px;
-      border-radius: 999px;
-      font-size: 0.85rem;
+    .upcoming-badge {
+      font-size: 0.8rem;
       font-weight: 800;
       color: var(--teal);
-    }
-
-    /* BUSCA */
-    .search-box {
-      width: 100%;
-      position: relative;
-      margin-bottom: 16px;
-    }
-
-    .search-box input {
-      width: 100%;
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid var(--border-glass);
-      color: var(--white);
-      padding: 12px 18px 12px 42px;
-      border-radius: 14px;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 0.95rem;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .search-box input:focus {
-      border-color: var(--teal);
-      background: rgba(0, 0, 0, 0.4);
-      box-shadow: 0 0 14px rgba(46, 207, 181, 0.3);
-    }
-
-    .search-box::before {
-      content: '🔍';
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 1rem;
-      opacity: 0.6;
-    }
-
-    /* FILTROS */
-    .filter-pills {
-      display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      margin-bottom: 14px;
-      scrollbar-width: none;
-    }
-    .filter-pills::-webkit-scrollbar { display: none; }
-
-    .f-pill {
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border-glass);
-      color: #CADCD7;
-      padding: 6px 14px;
+      background: rgba(46, 207, 181, 0.15);
+      padding: 3px 10px;
       border-radius: 999px;
-      font-family: 'Fredoka', cursive;
-      font-weight: 700;
-      font-size: 0.85rem;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: all 0.15s;
     }
 
-    .f-pill:hover {
-      background: rgba(255, 255, 255, 0.18);
-      color: var(--white);
-    }
-
-    .f-pill.active {
-      background: var(--teal);
-      color: var(--dark);
-      border-color: var(--teal);
-      box-shadow: 0 4px 12px rgba(46, 207, 181, 0.3);
-    }
-
-    /* LISTA SCROLLÁVEL */
-    .track-list {
-      flex: 1;
+    .upcoming-list {
+      max-height: 220px;
       overflow-y: auto;
-      padding-right: 6px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 6px;
+      padding-right: 6px;
     }
 
-    .track-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .track-list::-webkit-scrollbar-thumb {
+    .upcoming-list::-webkit-scrollbar { width: 4px; }
+    .upcoming-list::-webkit-scrollbar-thumb {
       background: rgba(255, 255, 255, 0.2);
       border-radius: 10px;
     }
 
-    .track-item {
+    .upcoming-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
-      padding: 10px 14px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid transparent;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .track-item:hover {
-      background: rgba(255, 255, 255, 0.1);
-      transform: translateX(4px);
-    }
-
-    .track-item.active {
-      background: rgba(46, 207, 181, 0.15);
-      border-color: var(--teal);
-      box-shadow: 0 4px 16px rgba(46, 207, 181, 0.2);
-    }
-
-    .track-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .track-num {
-      width: 28px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      color: #8BA89F;
-      text-align: center;
-      flex-shrink: 0;
-    }
-
-    .track-item.active .track-num {
-      display: none;
-    }
-
-    .equalizer-anim {
-      display: none;
-      align-items: flex-end;
-      gap: 2px;
-      width: 28px;
-      height: 18px;
-      flex-shrink: 0;
-    }
-
-    .track-item.active .equalizer-anim {
-      display: flex;
-    }
-
-    .equalizer-anim span {
-      flex: 1;
-      background: var(--pink);
-      border-radius: 2px;
-      animation: eqBounce 0.8s infinite ease-in-out alternate;
-    }
-    .equalizer-anim span:nth-child(1) { height: 40%; animation-delay: 0.1s; }
-    .equalizer-anim span:nth-child(2) { height: 90%; animation-delay: 0.3s; }
-    .equalizer-anim span:nth-child(3) { height: 60%; animation-delay: 0.2s; }
-
-    @keyframes eqBounce {
-      0% { height: 20%; }
-      100% { height: 100%; }
-    }
-
-    .track-name-box {
-      min-width: 0;
-    }
-
-    .track-item-title {
-      font-weight: 800;
-      font-size: 0.98rem;
-      color: var(--white);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .track-item.active .track-item-title {
-      color: var(--yellow);
-    }
-
-    .track-item-meta {
-      font-size: 0.8rem;
-      color: #8BA89F;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-top: 2px;
-    }
-
-    .track-tag-mini {
-      font-family: 'Fredoka', cursive;
-      font-size: 0.7rem;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.88rem;
       font-weight: 700;
-      padding: 1px 6px;
+      color: #C0D6CF;
+    }
+
+    .upcoming-item.now-playing {
+      background: rgba(46, 207, 181, 0.15);
+      color: var(--yellow);
+      border: 1px solid rgba(46, 207, 181, 0.4);
+    }
+
+    .upcoming-item .tag {
+      font-size: 0.72rem;
+      padding: 2px 8px;
       border-radius: 4px;
       text-transform: uppercase;
-    }
-    .track-tag-mini.mp3 { background: var(--teal-soft); color: var(--teal); }
-    .track-tag-mini.suno { background: var(--pink-soft); color: var(--pink); }
-    .track-tag-mini.ambient { background: rgba(255, 226, 52, 0.15); color: var(--yellow); }
-
-    .track-play-btn {
-      background: none;
-      border: none;
-      color: #8BA89F;
-      font-size: 1.1rem;
-      cursor: pointer;
-      padding: 4px;
-      transition: color 0.15s, transform 0.15s;
+      font-family: 'Fredoka', cursive;
     }
 
-    .track-item:hover .track-play-btn {
-      color: var(--white);
-      transform: scale(1.15);
-    }
+    .upcoming-item .tag.mp3 { background: var(--teal-soft); color: var(--teal); }
+    .upcoming-item .tag.suno { background: var(--pink-soft); color: var(--pink); }
+    .upcoming-item .tag.ambient { background: rgba(255, 226, 52, 0.15); color: var(--yellow); }
 
-    .track-item.active .track-play-btn {
-      color: var(--pink);
-    }
-
-    /* RODAPÉ */
     footer {
+      margin-top: 24px;
       text-align: center;
-      padding: 20px;
       font-size: 0.85rem;
       color: #6C8E84;
       font-weight: 700;
@@ -698,93 +520,85 @@
 </head>
 
 <body>
-  <!-- HEADER -->
+  <!-- BARRA SUPERIOR -->
   <header class="topbar">
-    <a href="/tv" class="brand" title="Ir para a TV">
+    <a href="/tv" class="brand">
       <img src="img/logo-simbolo.png" alt="FaçaAmigos">
       <div class="brand-text">
         <b>FaçaAmigos</b>
-        <span>Estação de Músicas</span>
+        <span>Rádio do Salão</span>
       </div>
     </a>
-
-    <div class="nav-actions">
-      <button class="btn-action" id="btnShuffleAll" title="Embaralhar todas as músicas">🔀 Aleatório</button>
-      <a href="/tv" class="btn-action tv-link" title="Abrir a TV do Salão">📺 Abrir TV</a>
-    </div>
+    <a href="/tv" class="btn-tv">📺 Abrir TV</a>
   </header>
 
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="container">
-    <!-- COLUNA 1: PLAYER HERO -->
-    <section class="player-card" aria-label="Player Principal">
-      <div class="artwork-stage" id="artworkStage">
+  <!-- PLAYER ÚNICO (SEM CONFUSÃO) -->
+  <main class="player-card" aria-label="Player Único de Músicas">
+    
+    <!-- BADGE DE STATUS -->
+    <div class="radio-status-badge">
+      <span class="live-dot"></span>
+      <span id="radioStatusText">Rádio Contínua • Rodízio 100% Aleatório (89 Faixas)</span>
+    </div>
+
+    <!-- PALCO CENTRAL DA MÍDIA (MESMO LUGAR PARA TUDO) -->
+    <div class="stage-wrapper" id="stageWrapper">
+      <!-- Palco MP3 com Mascote -->
+      <div class="artwork-stage active" id="artworkStage">
         <img class="artwork-char" id="artworkChar" src="img/amigos/cachorro-acena.webp" alt="Mascote FaçaAmigos">
       </div>
 
-      <div class="type-pill mp3" id="typePill">MP3 FaçaAmigos</div>
-      <h1 class="track-title" id="trackTitle">Selecione uma Música</h1>
-      <p class="track-subtitle" id="trackSubtitle">FaçaAmigos Playground Inclusivo</p>
-
-      <!-- SCRUBBER MP3 -->
-      <div class="scrubber-box" id="scrubberBox">
-        <div class="scrubber-track" id="scrubberTrack">
-          <div class="scrubber-fill" id="scrubberFill"></div>
-        </div>
-        <div class="scrubber-times">
-          <span id="timeCurrent">0:00</span>
-          <span id="timeTotal">0:00</span>
-        </div>
-      </div>
-
-      <!-- CONTROLES -->
-      <div class="controls-row">
-        <button class="ctrl-btn" id="btnPrev" title="Faixa Anterior">⏮</button>
-        <button class="ctrl-btn ctrl-btn-play" id="btnPlay" title="Tocar / Pausar">▶</button>
-        <button class="ctrl-btn" id="btnNext" title="Próxima Faixa [M]">⏭</button>
-      </div>
-
-      <!-- VOLUME -->
-      <div class="volume-row">
-        <span id="volumeIcon">🔊</span>
-        <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.75" title="Controle de Volume">
-      </div>
-
-      <!-- SUNO EMBED PLAYER (Ativo quando a faixa é do Suno) -->
-      <div class="suno-embed-card" id="sunoEmbedCard">
-        <div class="suno-embed-header">
-          <span>🎵 Reproduzindo via Suno (sem login)</span>
-          <a id="sunoLink" href="#" target="_blank" rel="noopener">Abrir no Suno ↗</a>
-        </div>
+      <!-- Palco Suno Embed (Mesmíssimo Espaço) -->
+      <div class="suno-stage" id="sunoStage">
         <iframe id="sunoFrame" src="about:blank" title="Suno Player" allow="autoplay; encrypted-media"></iframe>
       </div>
-    </section>
+    </div>
 
-    <!-- COLUNA 2: PLAYLIST & PESQUISA -->
-    <section class="playlist-section" aria-label="Lista de Músicas">
-      <div class="playlist-header">
-        <div class="playlist-title-row">
-          <h2>Lista de Músicas <span class="counter-badge" id="counterBadge">89 faixas</span></h2>
-        </div>
+    <!-- METADADOS DA FAIXA -->
+    <div class="type-pill mp3" id="typePill">Rádio FaçaAmigos</div>
+    <h1 class="track-title" id="trackTitle">Toque no Botão Abaixo</h1>
+    <p class="track-subtitle" id="trackSubtitle">Modo automático contínuo para tocar no salão</p>
 
-        <div class="search-box">
-          <input type="text" id="searchInput" placeholder="Buscar por título ou personagem...">
-        </div>
-
-        <div class="filter-pills" role="tablist">
-          <button class="f-pill active" data-filter="all">Todas (89)</button>
-          <button class="f-pill" data-filter="mp3">Oficiais MP3 (20)</button>
-          <button class="f-pill" data-filter="suno-vocal">Cantadas Suno (22)</button>
-          <button class="f-pill" data-filter="suno-inst">Instrumentais Suno (27)</button>
-          <button class="f-pill" data-filter="ambient">Fundo Playground (20)</button>
-        </div>
+    <!-- BARRA DE PROGRESSO DO MP3 -->
+    <div class="scrubber-box" id="scrubberBox" style="display:none;">
+      <div class="scrubber-track" id="scrubberTrack">
+        <div class="scrubber-fill" id="scrubberFill"></div>
       </div>
-
-      <div class="track-list" id="trackList" role="list">
-        <!-- Itens inseridos dinamicamente pelo JS -->
+      <div class="scrubber-times">
+        <span id="timeCurrent">0:00</span>
+        <span id="timeTotal">0:00</span>
       </div>
-    </section>
+    </div>
+
+    <!-- BOTÃO GIGANTE DE INÍCIO DIRETO -->
+    <button class="btn-start-hero" id="btnStartRadio">
+      ▶ LIGAR RÁDIO (TOCAR DIRETO)
+    </button>
+
+    <!-- CONTROLES UNIFICADOS -->
+    <div class="controls-row" id="controlsRow">
+      <button class="ctrl-btn" id="btnPrev" title="Música Anterior">⏮</button>
+      <button class="ctrl-btn ctrl-btn-play" id="btnPlay" title="Pausar / Retomar">⏸</button>
+      <button class="ctrl-btn ctrl-btn-next" id="btnNext" title="Próxima Faixa Aleatória">⏭ Próxima</button>
+    </div>
+
+    <!-- VOLUME -->
+    <div class="volume-row">
+      <span id="volumeIcon">🔊</span>
+      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.85" title="Volume da Rádio">
+    </div>
   </main>
+
+  <!-- PRÓXIMAS FAIXAS NO RODÍZIO (APENAS INFORMATIVO) -->
+  <section class="upcoming-section" aria-label="Próximas Faixas">
+    <div class="upcoming-header">
+      <h2>📻 Na Fila da Rádio</h2>
+      <span class="upcoming-badge" id="upcomingBadge">89 faixas no rodízio</span>
+    </div>
+    <div class="upcoming-list" id="upcomingList">
+      <!-- Inserido dinamicamente pelo JS -->
+    </div>
+  </section>
 
   <footer>
     <p>FaçaAmigos • Parque Shopping Belém • <a href="/tv">Modo TV</a> • <a href="/tv-controle">Controle Celular</a></p>
@@ -808,110 +622,112 @@
       { title: "Até Amanhã, Amigo", file: "conteudo/Até Amanhã, Amigo.mp3", cat: "mp3", char: "cachorro-deitado" },
       { title: "Parabéns no FaçaAmigos", file: "conteudo/Parabéns no FaçaAmigos.mp3", cat: "mp3", char: "macaco-danca" },
       { title: "Brincar é Coisa Séria", file: "conteudo/Brincar é Coisa Séria.mp3", cat: "mp3", char: "macaco-coracao" },
-      { title: "Mão na Mão", file: "conteudo/Mão na Mão.mp3", cat: "mp3", char: "tucano-joinha" },
-      { title: "Tira o Sapato!", file: "conteudo/Tira o Sapato!.mp3", cat: "mp3", char: "macaco-sentado" },
-      { title: "A Turma do FaçaAmigos", file: "conteudo/A Turma do FaçaAmigos.mp3", cat: "mp3", char: "tucano-parado" },
-      { title: "Faça Amigos (Versão 1)", file: "conteudo/Faça Amigos (1).mp3", cat: "mp3", char: "cachorro-pula" },
-      { title: "Faça Amigos (Versão 2)", file: "conteudo/Faça Amigos (2).mp3", cat: "mp3", char: "cachorro-acena" },
-      { title: "Faça Amigos (Instrumental)", file: "conteudo/Faça Amigos (Instrumental).mp3", cat: "mp3", char: "tartaruga-sorri" },
-      { title: "Oi, Amigo! (Instrumental)", file: "conteudo/Oi, Amigo! (Instrumental).mp3", cat: "mp3", char: "cachorro-sentado" },
-      { title: "Piscina de Bolinhas (Instrumental)", file: "conteudo/Piscina de Bolinhas (Instrumental).mp3", cat: "mp3", char: "macaco-bracos-cruzados" },
+      { title: "Mão na Mão", file: "conteudo/Mão na Mão.mp3", cat: "mp3", char: "tartaruga-frente" },
+      { title: "Tira o Sapato!", file: "conteudo/Tira o Sapato!.mp3", cat: "mp3", char: "tucano-galho" },
+      { title: "A Turma do FaçaAmigos", file: "conteudo/A Turma do FaçaAmigos.mp3", cat: "mp3", char: "cachorro-acena" },
+      { title: "Faça Amigos (Instrumental)", file: "conteudo/Faça Amigos (Instrumental).mp3", cat: "mp3", char: "cachorro-pula" },
+      { title: "Oi, Amigo! (Instrumental)", file: "conteudo/Oi, Amigo! (Instrumental).mp3", cat: "mp3", char: "macaco-festa" },
+      { title: "Piscina de Bolinhas (Instrumental)", file: "conteudo/Piscina de Bolinhas (Instrumental).mp3", cat: "mp3", char: "macaco-corda" },
+      { title: "Faça Amigos (Versão 1)", file: "conteudo/Faça Amigos (1).mp3", cat: "mp3", char: "tartaruga-anda" },
+      { title: "Faça Amigos (Versão 2)", file: "conteudo/Faça Amigos (2).mp3", cat: "mp3", char: "tucano-asas" },
 
-      // 2. FAIXAS SUNO EMBED - CANTADAS (2º clip & duplicatas Create)
-      { title: "Devagar Também Chega (Clip 2)", embed: "https://suno.com/embed/9b79f5e9-9c0e-40d6-8119-f1ab4102b809", cat: "suno-vocal", char: "tartaruga-anda" },
-      { title: "Tuco Toca Carimbó (Clip 2)", embed: "https://suno.com/embed/9a71e863-c654-479f-b795-2a5c303ece8f", cat: "suno-vocal", char: "tucano-asas" },
-      { title: "Cada Um do Seu Jeito (Clip 2)", embed: "https://suno.com/embed/4b33a450-39bb-4665-9e5f-8b65d46c7d43", cat: "suno-vocal", char: "cachorro-sentado" },
-      { title: "Respira Comigo (Clip 2)", embed: "https://suno.com/embed/7cf7831a-ee65-42ff-8826-27eb016c0293", cat: "suno-vocal", char: "tartaruga-dorme" },
-      { title: "Chuva das Três (Clip 2)", embed: "https://suno.com/embed/72fd7a5a-b8f8-40f9-9ee9-37ef20713c99", cat: "suno-vocal", char: "tucano-frente" },
-      { title: "Até Amanhã, Amigo (Clip 2)", embed: "https://suno.com/embed/31e4223f-c789-4066-9b3c-8a686cd87a67", cat: "suno-vocal", char: "cachorro-deitado" },
-      { title: "Parabéns no FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/64226f35-28c0-470c-8551-53c49d2da4c4", cat: "suno-vocal", char: "macaco-danca" },
-      { title: "Brincar é Coisa Séria (Clip 2)", embed: "https://suno.com/embed/a2c3ffba-d8c8-4cda-93e9-9b96f913380a", cat: "suno-vocal", char: "macaco-coracao" },
-      { title: "Mão na Mão (Clip 2)", embed: "https://suno.com/embed/e9052d7d-d392-46a1-95e1-b3561a6258a9", cat: "suno-vocal", char: "tucano-joinha" },
-      { title: "Tira o Sapato! (Clip 2)", embed: "https://suno.com/embed/4f40ea6d-b48e-4b2b-ade3-232f6b191a44", cat: "suno-vocal", char: "macaco-sentado" },
-      { title: "A Turma do FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/acc844f0-0c9b-4732-a15b-a361533a6ee0", cat: "suno-vocal", char: "tucano-parado" },
-      { title: "Oi, Amigo! (Clip 2)", embed: "https://suno.com/embed/de27593c-925c-4acc-8ef0-65097ded8775", cat: "suno-vocal", char: "cachorro-pula" },
-      { title: "Vrum-Vrum do Caco (Clip 2)", embed: "https://suno.com/embed/ed192f63-38d7-4937-9dda-30d98540ec0b", cat: "suno-vocal", char: "macaco-corda" },
-      { title: "Faça Amigos (Versão 3)", embed: "https://suno.com/embed/1f754f65-f99a-4412-9490-35d76aaa73d6", cat: "suno-vocal", char: "cachorro-acena" },
-      { title: "Faça Amigos (Versão 4)", embed: "https://suno.com/embed/9c4e1608-8559-4556-a2f6-210e3825bdcd", cat: "suno-vocal", char: "cachorro-pula" },
-      { title: "Faça Amigos (Versão 5)", embed: "https://suno.com/embed/bb632620-b5c1-463a-998b-372a92e5228d", cat: "suno-vocal", char: "cachorro-sentado" },
-      { title: "Até Amanhã, Amigo (Extra 1)", embed: "https://suno.com/embed/7b3c1205-c9e3-4e43-8776-76b488ab355f", cat: "suno-vocal", char: "tartaruga-dorme" },
-      { title: "Até Amanhã, Amigo (Extra 2)", embed: "https://suno.com/embed/48a7d909-bfe1-4fc6-a961-ea03cbfbe910", cat: "suno-vocal", char: "tartaruga-anda" },
-      { title: "Até Amanhã, Amigo (Extra 3)", embed: "https://suno.com/embed/d04687f8-f406-486d-8146-16bfc42b503a", cat: "suno-vocal", char: "cachorro-deitado" },
-      { title: "Até Amanhã, Amigo (Extra 4)", embed: "https://suno.com/embed/41469cc8-9b66-4d3a-b0b9-02e8a4cdf315", cat: "suno-vocal", char: "tartaruga-ri" },
-      { title: "A Turma do FaçaAmigos (Extra 1)", embed: "https://suno.com/embed/489c5a77-2037-4e6c-a993-fa5ec03e8031", cat: "suno-vocal", char: "tucano-parado" },
-      { title: "A Turma do FaçaAmigos (Extra 2)", embed: "https://suno.com/embed/347c3829-17f0-429e-8b03-0877fb5320a4", cat: "suno-vocal", char: "macaco-festa" },
+      // 2. FAIXAS SUNO EMBED - CANTADAS
+      { title: "Devagar Também Chega (Clip 2)", embed: "https://suno.com/embed/9b79f5e9-9c0e-40d6-8119-f1ab4102b809", cat: "suno" },
+      { title: "Tuco Toca Carimbó (Clip 2)", embed: "https://suno.com/embed/9a71e863-c654-479f-b795-2a5c303ece8f", cat: "suno" },
+      { title: "Cada Um do Seu Jeito (Clip 2)", embed: "https://suno.com/embed/4b33a450-39bb-4665-9e5f-8b65d46c7d43", cat: "suno" },
+      { title: "Respira Comigo (Clip 2)", embed: "https://suno.com/embed/7cf7831a-ee65-42ff-8826-27eb016c0293", cat: "suno" },
+      { title: "Chuva das Três (Clip 2)", embed: "https://suno.com/embed/72fd7a5a-b8f8-40f9-9ee9-37ef20713c99", cat: "suno" },
+      { title: "Até Amanhã, Amigo (Clip 2)", embed: "https://suno.com/embed/31e4223f-c789-4066-9b3c-8a686cd87a67", cat: "suno" },
+      { title: "Parabéns no FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/64226f35-28c0-470c-8551-53c49d2da4c4", cat: "suno" },
+      { title: "Brincar é Coisa Séria (Clip 2)", embed: "https://suno.com/embed/a2c3ffba-d8c8-4cda-93e9-9b96f913380a", cat: "suno" },
+      { title: "Mão na Mão (Clip 2)", embed: "https://suno.com/embed/e9052d7d-d392-46a1-95e1-b3561a6258a9", cat: "suno" },
+      { title: "Tira o Sapato! (Clip 2)", embed: "https://suno.com/embed/4f40ea6d-b48e-4b2b-ade3-232f6b191a44", cat: "suno" },
+      { title: "A Turma do FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/acc844f0-0c9b-4732-a15b-a361533a6ee0", cat: "suno" },
+      { title: "Oi, Amigo! (Clip 2)", embed: "https://suno.com/embed/de27593c-925c-4acc-8ef0-65097ded8775", cat: "suno" },
+      { title: "Piscina de Bolinhas (Clip 2)", embed: "https://suno.com/embed/5eb11029-7988-46c9-839f-ca631165bc67", cat: "suno" },
+      { title: "Vrum-Vrum do Caco (Clip 1)", embed: "https://suno.com/embed/7ea520ea-d2f6-455b-b9d9-2e4bb25fc49c", cat: "suno" },
+      { title: "Vrum-Vrum do Caco (Clip 2)", embed: "https://suno.com/embed/ef029193-4a17-4856-bb6b-a2eb914e6790", cat: "suno" },
+      { title: "Faça Amigos (Extra 1)", embed: "https://suno.com/embed/f7bbd454-e9a0-4c12-a7d1-e5d80424bb88", cat: "suno" },
+      { title: "Faça Amigos (Extra 2)", embed: "https://suno.com/embed/da1b0a8f-fc2a-43cf-be64-7095ba04b122", cat: "suno" },
+      { title: "Faça Amigos (Extra 3)", embed: "https://suno.com/embed/6e44b3aa-5d51-4043-a616-2c5a2c270d4f", cat: "suno" },
+      { title: "Faça Amigos (Extra 4)", embed: "https://suno.com/embed/433e387d-080c-40ad-be86-4f40f2824647", cat: "suno" },
+      { title: "Até Amanhã, Amigo (Extra 1)", embed: "https://suno.com/embed/3e6ddfe1-ce48-4cb9-9945-8664ecb958c2", cat: "suno" },
+      { title: "Até Amanhã, Amigo (Extra 2)", embed: "https://suno.com/embed/ba727a85-115d-4074-9fdf-fc73f2fa17ff", cat: "suno" },
+      { title: "Até Amanhã, Amigo (Extra 3)", embed: "https://suno.com/embed/ba127e90-c115-4ba8-bb73-98319e710ea1", cat: "suno" },
 
-      // 3. FAIXAS SUNO EMBED - INSTRUMENTAIS (sem login via /embed/)
-      { title: "Faça Amigos (Instrumental 2)", embed: "https://suno.com/embed/5ee7d94e-5f05-4324-92ba-641bec9b8bf3", cat: "suno-inst", char: "cachorro-acena" },
-      { title: "Oi, Amigo! (Instrumental 2)", embed: "https://suno.com/embed/ee777339-7c6e-4217-937d-15a7dbf2c6c1", cat: "suno-inst", char: "cachorro-pula" },
-      { title: "Piscina de Bolinhas (Instrumental 2)", embed: "https://suno.com/embed/c8eda657-6105-4185-8abb-b2cc10cf0df5", cat: "suno-inst", char: "macaco-festa" },
-      { title: "Vrum-Vrum do Caco (Instrumental 1)", embed: "https://suno.com/embed/eca2738d-4257-4166-86e2-ebcbc7aa0552", cat: "suno-inst", char: "macaco-corda" },
-      { title: "Vrum-Vrum do Caco (Instrumental 2)", embed: "https://suno.com/embed/c0b70bc4-0170-4aa1-ba6d-8940f3a7b41c", cat: "suno-inst", char: "macaco-sentado" },
-      { title: "Devagar Também Chega (Instrumental 1)", embed: "https://suno.com/embed/d436b14a-5715-445e-bb8a-b304852eb30f", cat: "suno-inst", char: "tartaruga-anda" },
-      { title: "Devagar Também Chega (Instrumental 2)", embed: "https://suno.com/embed/1524daef-c92d-4956-aa0b-1bb6b87661e9", cat: "suno-inst", char: "tartaruga-dorme" },
-      { title: "Tuco Toca Carimbó (Instrumental 1)", embed: "https://suno.com/embed/5c54c1e4-b40e-47ed-baca-3305205f9271", cat: "suno-inst", char: "tucano-asas" },
-      { title: "Tuco Toca Carimbó (Instrumental 2)", embed: "https://suno.com/embed/a8cf7c38-8879-4219-b279-5bf8db18dac4", cat: "suno-inst", char: "tucano-frente" },
-      { title: "Cada Um do Seu Jeito (Instrumental 1)", embed: "https://suno.com/embed/0e402464-254b-45f6-98d5-8207d87cb644", cat: "suno-inst", char: "cachorro-sentado" },
-      { title: "Cada Um do Seu Jeito (Instrumental 2)", embed: "https://suno.com/embed/eb87925f-de6c-4880-b1b5-646253dd033a", cat: "suno-inst", char: "cachorro-deitado" },
-      { title: "Respira Comigo (Instrumental 1)", embed: "https://suno.com/embed/c7937d60-b818-4695-a4bd-e7303115e9f3", cat: "suno-inst", char: "tartaruga-sorri" },
-      { title: "Respira Comigo (Instrumental 2)", embed: "https://suno.com/embed/47011a81-b3cd-4deb-beae-614ad13cccfb", cat: "suno-inst", char: "tartaruga-dorme" },
-      { title: "Chuva das Três (Instrumental 1)", embed: "https://suno.com/embed/bcf673c5-463b-489c-a177-a5e29edf41b5", cat: "suno-inst", char: "tucano-joinha" },
-      { title: "Chuva das Três (Instrumental 2)", embed: "https://suno.com/embed/1425e478-7828-45ab-a52a-4e2f261ae44f", cat: "suno-inst", char: "tucano-parado" },
-      { title: "Até Amanhã, Amigo (Instrumental 1)", embed: "https://suno.com/embed/24d0e1f7-2bfc-4c01-bf96-0af23d0faf73", cat: "suno-inst", char: "cachorro-deitado" },
-      { title: "Até Amanhã, Amigo (Instrumental 2)", embed: "https://suno.com/embed/5e2ec321-766e-4b07-8cb1-87a2b34652d3", cat: "suno-inst", char: "tartaruga-ri" },
-      { title: "Parabéns no FaçaAmigos (Instrumental 1)", embed: "https://suno.com/embed/a6d27ccb-0f3b-40c3-a70a-93d2c76dbf09", cat: "suno-inst", char: "macaco-danca" },
-      { title: "Parabéns no FaçaAmigos (Instrumental 2)", embed: "https://suno.com/embed/187237ce-12c4-4cff-ae81-2d4b7639c644", cat: "suno-inst", char: "macaco-festa" },
-      { title: "Brincar é Coisa Séria (Instrumental 1)", embed: "https://suno.com/embed/a76a8fc5-2bae-45b5-b943-e7f48818efcd", cat: "suno-inst", char: "macaco-coracao" },
-      { title: "Brincar é Coisa Séria (Instrumental 2)", embed: "https://suno.com/embed/428621cf-22f7-427d-bad8-f3af39d57b2e", cat: "suno-inst", char: "macaco-bracos-cruzados" },
-      { title: "Mão na Mão (Instrumental 1)", embed: "https://suno.com/embed/e7503c89-f225-488c-b7ff-3209980c9096", cat: "suno-inst", char: "tucano-joinha" },
-      { title: "Mão na Mão (Instrumental 2)", embed: "https://suno.com/embed/84dd03ec-57f0-4835-b948-aa4e19fdc69f", cat: "suno-inst", char: "tucano-parado" },
-      { title: "Tira o Sapato! (Instrumental 1)", embed: "https://suno.com/embed/26eb7770-6e44-4dee-a7bc-e7ef4cbb93d5", cat: "suno-inst", char: "macaco-sentado" },
-      { title: "Tira o Sapato! (Instrumental 2)", embed: "https://suno.com/embed/c52f0b97-dae5-4e69-8d5b-53390957b6fb", cat: "suno-inst", char: "macaco-corda" },
-      { title: "A Turma do FaçaAmigos (Instrumental 1)", embed: "https://suno.com/embed/9e397a51-c199-4dd4-812b-b5b475726a3f", cat: "suno-inst", char: "cachorro-acena" },
-      { title: "A Turma do FaçaAmigos (Instrumental 2)", embed: "https://suno.com/embed/33633d52-afab-4219-b25c-6c8fc19a308e", cat: "suno-inst", char: "tucano-asas" },
+      // 3. FAIXAS SUNO EMBED - INSTRUMENTAIS
+      { title: "Faça Amigos (Instrumental Clip 2)", embed: "https://suno.com/embed/5ee7d94e-5f05-4324-92ba-641bec9b8bf3", cat: "suno" },
+      { title: "Oi, Amigo! (Instrumental Clip 2)", embed: "https://suno.com/embed/ee777339-7c6e-4217-937d-15a7dbf2c6c1", cat: "suno" },
+      { title: "Piscina de Bolinhas (Instrumental Clip 2)", embed: "https://suno.com/embed/c8eda657-6105-4185-8abb-b2cc10cf0df5", cat: "suno" },
+      { title: "Vrum-Vrum do Caco (Inst Clip 1)", embed: "https://suno.com/embed/eca2738d-4257-4166-86e2-ebcbc7aa0552", cat: "suno" },
+      { title: "Vrum-Vrum do Caco (Inst Clip 2)", embed: "https://suno.com/embed/c0b70bc4-0170-4aa1-ba6d-8940f3a7b41c", cat: "suno" },
+      { title: "Devagar Também Chega (Inst Clip 1)", embed: "https://suno.com/embed/d436b14a-5715-445e-bb8a-b304852eb30f", cat: "suno" },
+      { title: "Devagar Também Chega (Inst Clip 2)", embed: "https://suno.com/embed/1524daef-c92d-4956-aa0b-1bb6b87661e9", cat: "suno" },
+      { title: "Tuco Toca Carimbó (Inst Clip 1)", embed: "https://suno.com/embed/5c54c1e4-984e-4b68-b80c-7b003a744265", cat: "suno" },
+      { title: "Tuco Toca Carimbó (Inst Clip 2)", embed: "https://suno.com/embed/589ca3d3-eb92-4916-b8f4-fc8fe39fa739", cat: "suno" },
+      { title: "Cada Um do Seu Jeito (Inst Clip 1)", embed: "https://suno.com/embed/84b1ebf1-83c7-43ca-a0e2-e1d5a7d65fc9", cat: "suno" },
+      { title: "Cada Um do Seu Jeito (Inst Clip 2)", embed: "https://suno.com/embed/c4d32a4e-cf54-46c5-b1a7-15d909ca248a", cat: "suno" },
+      { title: "Respira Comigo (Inst Clip 1)", embed: "https://suno.com/embed/eb81774b-c403-4f51-b0fe-e275f928e1dc", cat: "suno" },
+      { title: "Respira Comigo (Inst Clip 2)", embed: "https://suno.com/embed/e79ee82b-09ea-4ef5-8a8b-fba01f8087fc", cat: "suno" },
+      { title: "Chuva das Três (Inst Clip 1)", embed: "https://suno.com/embed/b02a76f1-a18d-4a11-85e3-8f0a0e9fc781", cat: "suno" },
+      { title: "Chuva das Três (Inst Clip 2)", embed: "https://suno.com/embed/d3fe0dfb-93ff-4fa5-a7b3-c4098eb08779", cat: "suno" },
+      { title: "Até Amanhã, Amigo (Inst Clip 1)", embed: "https://suno.com/embed/93ae4d4f-5dd6-4275-8ce6-a7081bc13e8b", cat: "suno" },
+      { title: "Até Amanhã, Amigo (Inst Clip 2)", embed: "https://suno.com/embed/fc5f0fcb-cbfa-42f0-9759-86927cfa4b4a", cat: "suno" },
+      { title: "Parabéns no FaçaAmigos (Inst Clip 1)", embed: "https://suno.com/embed/3e680a3a-3c5e-4bb5-a30d-270f8ee96f4b", cat: "suno" },
+      { title: "Parabéns no FaçaAmigos (Inst Clip 2)", embed: "https://suno.com/embed/6d52f9f1-f0eb-48be-8a3a-305ce7b5b5c9", cat: "suno" },
+      { title: "Brincar é Coisa Séria (Inst Clip 1)", embed: "https://suno.com/embed/cfa63a92-f04b-4835-abfa-3d7f955615d0", cat: "suno" },
+      { title: "Brincar é Coisa Séria (Inst Clip 2)", embed: "https://suno.com/embed/b11568e2-632b-42be-926f-4c17228a4524", cat: "suno" },
+      { title: "Mão na Mão (Inst Clip 1)", embed: "https://suno.com/embed/84048ca5-263a-446d-9fc0-0937a0c1fcba", cat: "suno" },
+      { title: "Mão na Mão (Inst Clip 2)", embed: "https://suno.com/embed/41f893f0-466a-484b-ba04-eb5558e80709", cat: "suno" },
+      { title: "Tira o Sapato! (Inst Clip 1)", embed: "https://suno.com/embed/a7071f41-3b52-475a-b605-dbbb9315d183", cat: "suno" },
+      { title: "Tira o Sapato! (Inst Clip 2)", embed: "https://suno.com/embed/8a2f588c-9a40-4131-a083-d5669bcf20fc", cat: "suno" },
+      { title: "A Turma do FaçaAmigos (Inst Clip 1)", embed: "https://suno.com/embed/8e9d6d87-39e2-4ea5-a4f5-7b56f8f742f3", cat: "suno" },
+      { title: "A Turma do FaçaAmigos (Inst Clip 2)", embed: "https://suno.com/embed/3932e65d-cf48-4395-8ba9-03c738e4a13f", cat: "suno" },
 
-      // 4. FAIXAS INSTRUMENTAIS AMBIENTAIS (audio/musica/)
-      { title: "Abraço de Brincar", file: "audio/musica/abraco-de-brincar.mp3", cat: "ambient", char: "cachorro-sentado" },
-      { title: "De um Lado pro Outro", file: "audio/musica/de-um-lado-pro-outro.mp3", cat: "ambient", char: "macaco-danca" },
-      { title: "Jardim de Amigos", file: "audio/musica/jardim-de-amigos.mp3", cat: "ambient", char: "tartaruga-anda" },
-      { title: "Lugar de Ser Feliz", file: "audio/musica/lugar-de-ser-feliz.mp3", cat: "ambient", char: "tucano-joinha" },
-      { title: "Mittens in the Toy Chest", file: "audio/musica/mittens-in-the-toy-chest.mp3", cat: "ambient", char: "macaco-sentado" },
-      { title: "Nosso Recreio", file: "audio/musica/nosso-recreio.mp3", cat: "ambient", char: "cachorro-pula" },
-      { title: "Nuvem Mansa", file: "audio/musica/nuvem-mansa.mp3", cat: "ambient", char: "tartaruga-dorme" },
-      { title: "Open Palms", file: "audio/musica/open-palms.mp3", cat: "ambient", char: "tucano-asas" },
-      { title: "O Chão É Sol", file: "audio/musica/o-chao-e-sol.mp3", cat: "ambient", char: "cachorro-acena" },
-      { title: "O Chão É um Convite", file: "audio/musica/o-chao-e-um-convite.mp3", cat: "ambient", char: "tartaruga-sorri" },
-      { title: "O Mundo É um Jardim", file: "audio/musica/o-mundo-e-um-jardim.mp3", cat: "ambient", char: "tucano-parado" },
-      { title: "O Nosso Papel", file: "audio/musica/o-nosso-papel.mp3", cat: "ambient", char: "macaco-coracao" },
-      { title: "O Passo Miúdo", file: "audio/musica/o-passo-miudo.mp3", cat: "ambient", char: "tartaruga-anda" },
-      { title: "O Playground da Gente", file: "audio/musica/o-playground-da-gente.mp3", cat: "ambient", char: "cachorro-pula" },
-      { title: "Passo Miúdo", file: "audio/musica/passo-miudo.mp3", cat: "ambient", char: "tartaruga-ri" },
-      { title: "Small Footsteps on Cedar", file: "audio/musica/small-footsteps-on-cedar.mp3", cat: "ambient", char: "macaco-corda" },
-      { title: "Sunlight on the Conservatory", file: "audio/musica/sunlight-on-the-conservatory.mp3", cat: "ambient", char: "tucano-frente" },
-      { title: "Sunlight on the Slide", file: "audio/musica/sunlight-on-the-slide.mp3", cat: "ambient", char: "macaco-festa" },
-      { title: "The Highest Arc", file: "audio/musica/the-highest-arc.mp3", cat: "ambient", char: "tucano-joinha" },
-      { title: "Through the Garden Gate", file: "audio/musica/through-the-garden-gate.mp3", cat: "ambient", char: "cachorro-sentado" }
+      // 4. FAIXAS DE FUNDO SALÃO (MP3 Locais em /audio/musica)
+      { title: "A Tarde Dourada", file: "audio/musica/a-tarde-dourada.mp3", cat: "ambient" },
+      { title: "Ao Lado do Tucano", file: "audio/musica/ao-lado-do-tucano.mp3", cat: "ambient" },
+      { title: "Brincadeira de Roda", file: "audio/musica/brincadeira-de-roda.mp3", cat: "ambient" },
+      { title: "Caminho de Algodão", file: "audio/musica/caminho-de-algodao.mp3", cat: "ambient" },
+      { title: "Ciranda das Cores", file: "audio/musica/ciranda-das-cores.mp3", cat: "ambient" },
+      { title: "Dança das Sombras", file: "audio/musica/danca-das-sombras.mp3", cat: "ambient" },
+      { title: "Doce Balanço", file: "audio/musica/doce-balanco.mp3", cat: "ambient" },
+      { title: "Gotas de Alegria", file: "audio/musica/gotas-de-alegria.mp3", cat: "ambient" },
+      { title: "Manhã de Sol no Bosque", file: "audio/musica/manha-de-sol-no-bosque.mp3", cat: "ambient" },
+      { title: "Nuvem de Sabão", file: "audio/musica/nuvem-de-sabao.mp3", cat: "ambient" },
+      { title: "O Chão É um Convite", file: "audio/musica/o-chao-e-um-convite.mp3", cat: "ambient" },
+      { title: "O Mundo É um Jardim", file: "audio/musica/o-mundo-e-um-jardim.mp3", cat: "ambient" },
+      { title: "O Nosso Papel", file: "audio/musica/o-nosso-papel.mp3", cat: "ambient" },
+      { title: "O Passo Miúdo", file: "audio/musica/o-passo-miudo.mp3", cat: "ambient" },
+      { title: "O Playground da Gente", file: "audio/musica/o-playground-da-gente.mp3", cat: "ambient" },
+      { title: "Passo Miúdo", file: "audio/musica/passo-miudo.mp3", cat: "ambient" },
+      { title: "Small Footsteps on Cedar", file: "audio/musica/small-footsteps-on-cedar.mp3", cat: "ambient" },
+      { title: "Sunlight on the Conservatory", file: "audio/musica/sunlight-on-the-conservatory.mp3", cat: "ambient" },
+      { title: "Sunlight on the Slide", file: "audio/musica/sunlight-on-the-slide.mp3", cat: "ambient" },
+      { title: "The Highest Arc", file: "audio/musica/the-highest-arc.mp3", cat: "ambient" }
     ];
 
-    // ESTADO DO PLAYER
+    // ========================================================================
+    // ESTADO DA RÁDIO (RODÍZIO RANDÔMICO DIRETO E CONTÍNUO)
+    // ========================================================================
     const state = {
-      playlist: [...TRACKS],
-      filteredIndices: TRACKS.map((_, i) => i),
-      currentIndex: 0,
+      queue: [],
+      queueIndex: 0,
+      currentIndex: -1,
       isPlaying: false,
-      isShuffle: false,
-      currentFilter: 'all',
-      searchQuery: '',
       advanceTimer: null
     };
 
     const audio = new Audio();
-    audio.volume = 0.75;
+    audio.volume = 0.85;
 
     // ELEMENTOS DO DOM
     const dom = {
+      radioStatusText: document.getElementById('radioStatusText'),
       artworkStage: document.getElementById('artworkStage'),
       artworkChar: document.getElementById('artworkChar'),
+      sunoStage: document.getElementById('sunoStage'),
+      sunoFrame: document.getElementById('sunoFrame'),
       typePill: document.getElementById('typePill'),
       trackTitle: document.getElementById('trackTitle'),
       trackSubtitle: document.getElementById('trackSubtitle'),
@@ -920,22 +736,17 @@
       scrubberFill: document.getElementById('scrubberFill'),
       timeCurrent: document.getElementById('timeCurrent'),
       timeTotal: document.getElementById('timeTotal'),
+      btnStartRadio: document.getElementById('btnStartRadio'),
+      controlsRow: document.getElementById('controlsRow'),
       btnPlay: document.getElementById('btnPlay'),
       btnPrev: document.getElementById('btnPrev'),
       btnNext: document.getElementById('btnNext'),
-      btnShuffleAll: document.getElementById('btnShuffleAll'),
       volumeSlider: document.getElementById('volumeSlider'),
       volumeIcon: document.getElementById('volumeIcon'),
-      sunoEmbedCard: document.getElementById('sunoEmbedCard'),
-      sunoLink: document.getElementById('sunoLink'),
-      sunoFrame: document.getElementById('sunoFrame'),
-      searchInput: document.getElementById('searchInput'),
-      counterBadge: document.getElementById('counterBadge'),
-      filterPills: document.querySelectorAll('.f-pill'),
-      trackList: document.getElementById('trackList')
+      upcomingBadge: document.getElementById('upcomingBadge'),
+      upcomingList: document.getElementById('upcomingList')
     };
 
-    // FORMATAÇÃO DE TEMPO
     function fmtTime(sec) {
       if (isNaN(sec) || !isFinite(sec)) return '0:00';
       const m = Math.floor(sec / 60);
@@ -943,108 +754,107 @@
       return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    // RENDERIZAR LISTA DE FAIXAS
-    function renderTrackList() {
-      dom.trackList.innerHTML = '';
-      dom.counterBadge.textContent = `${state.filteredIndices.length} faixa${state.filteredIndices.length !== 1 ? 's' : ''}`;
-
-      state.filteredIndices.forEach((trackIdx, listPos) => {
-        const t = TRACKS[trackIdx];
-        const isActive = trackIdx === state.currentIndex;
-
-        const item = document.createElement('div');
-        item.className = 'track-item' + (isActive ? ' active' : '');
-        item.setAttribute('data-index', trackIdx);
-
-        let tagClass = 'mp3';
-        let tagLabel = 'MP3 Oficial';
-        if (t.cat === 'suno-vocal') { tagClass = 'suno'; tagLabel = 'Suno Cantada'; }
-        else if (t.cat === 'suno-inst') { tagClass = 'suno'; tagLabel = 'Suno Instrumental'; }
-        else if (t.cat === 'ambient') { tagClass = 'ambient'; tagLabel = 'Fundo Salão'; }
-
-        item.innerHTML = `
-          <div class="track-left">
-            <span class="track-num">${listPos + 1}</span>
-            <div class="equalizer-anim" aria-hidden="true">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="track-name-box">
-              <div class="track-item-title">${t.title}</div>
-              <div class="track-item-meta">
-                <span class="track-tag-mini ${tagClass}">${tagLabel}</span>
-              </div>
-            </div>
-          </div>
-          <button type="button" class="track-play-btn" aria-label="Tocar ${t.title}">
-            ${isActive && state.isPlaying ? '⏸' : '▶'}
-          </button>
-        `;
-
-        item.addEventListener('click', () => {
-          if (state.currentIndex === trackIdx) {
-            togglePlay();
-          } else {
-            playTrack(trackIdx);
-          }
-        });
-
-        dom.trackList.appendChild(item);
-      });
+    // EMBARALHAR FILA TOTALMENTE RANDÔMICA
+    function shuffleQueue() {
+      state.queue = Array.from({ length: TRACKS.length }, (_, i) => i);
+      for (let i = state.queue.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [state.queue[i], state.queue[j]] = [state.queue[j], state.queue[i]];
+      }
+      state.queueIndex = 0;
     }
 
-    // TOCAR FAIXA ESPECÍFICA
+    // ATUALIZAR LISTA INFORMATIVA DAS PRÓXIMAS FAIXAS
+    function updateUpcomingList() {
+      dom.upcomingList.innerHTML = '';
+      const total = state.queue.length;
+      dom.upcomingBadge.textContent = `${total} faixas no rodízio`;
+
+      // Mostra as próximas faixas da fila
+      const start = state.queueIndex;
+      const count = Math.min(20, total);
+
+      for (let i = 0; i < count; i++) {
+        const qIdx = (start + i) % total;
+        const trackIdx = state.queue[qIdx];
+        const t = TRACKS[trackIdx];
+        const isNow = (i === 0);
+
+        const row = document.createElement('div');
+        row.className = 'upcoming-item' + (isNow ? ' now-playing' : '');
+
+        let tagClass = 'mp3';
+        let tagText = 'MP3';
+        if (t.embed) { tagClass = 'suno'; tagText = 'Suno'; }
+        else if (t.cat === 'ambient') { tagClass = 'ambient'; tagText = 'Salão'; }
+
+        row.innerHTML = `
+          <span>${isNow ? '▶ ' : `${i + 1}. `}${t.title}</span>
+          <span class="tag ${tagClass}">${tagText}</span>
+        `;
+        dom.upcomingList.appendChild(row);
+      }
+    }
+
+    // REPRODUÇÃO DA FAIXA NO PLAYER ÚNICO
     function playTrack(idx) {
       clearTimeout(state.advanceTimer);
       state.currentIndex = idx;
       const t = TRACKS[idx];
 
-      // Atualiza UI
       dom.trackTitle.textContent = t.title;
-      dom.artworkChar.src = `img/amigos/${t.char || 'cachorro-acena'}.webp`;
 
       let pillClass = 'mp3';
-      let pillText = 'MP3 Oficial FaçaAmigos';
-      let subText = 'Áudio estéreo de alta fidelidade do playground';
+      let pillText = 'Faixa Oficial FaçaAmigos';
+      let subText = 'Áudio estéreo de alta fidelidade';
 
-      if (t.cat === 'suno-vocal') {
+      if (t.embed) {
         pillClass = 'suno';
-        pillText = 'Suno AI • Vozes dos Personagens';
-        subText = 'Faixa temática cantada via Suno Embed';
-      } else if (t.cat === 'suno-inst') {
-        pillClass = 'suno';
-        pillText = 'Suno AI • Instrumental';
-        subText = 'Arranjo instrumental original do FaçaAmigos';
+        pillText = 'Coleção FaçaAmigos (Suno)';
+        subText = 'Rotação automática da rádio';
       } else if (t.cat === 'ambient') {
         pillClass = 'ambient';
-        pillText = 'Trilha Ambiental de Fundo';
-        subText = 'Instrumental suave para o salão';
+        pillText = 'Fundo Musical do Salão';
+        subText = 'Trilha instrumental relaxante';
       }
 
       dom.typePill.className = `type-pill ${pillClass}`;
       dom.typePill.textContent = pillText;
       dom.trackSubtitle.textContent = subText;
+      dom.radioStatusText.textContent = `🟢 Rádio no Ar • Faixa ${state.queueIndex + 1} de ${TRACKS.length}`;
 
-      // Se for Suno Embed
+      dom.btnStartRadio.classList.add('playing');
+      dom.controlsRow.style.display = 'flex';
+
+      // ======================================================================
+      // UM ÚNICO PLAYER: O SLOT CENTRAL ADAPTA-SE SEM DUPLICAR CONTROLES
+      // ======================================================================
       if (t.embed) {
+        // Se for Suno: Carrega o embed no mesmo palco central
         audio.pause();
         dom.scrubberBox.style.display = 'none';
-        dom.sunoEmbedCard.classList.add('visible');
-        dom.sunoLink.href = t.embed.replace('/embed/', '/song/');
-        dom.sunoFrame.src = t.embed;
+
+        dom.artworkStage.style.display = 'none';
+        dom.sunoStage.classList.add('active');
+        if (dom.sunoFrame.src !== t.embed) {
+          dom.sunoFrame.src = t.embed;
+        }
 
         state.isPlaying = true;
         updatePlayBtn();
-        dom.artworkStage.classList.add('playing');
 
-        // Auto-avanço da faixa do Suno (~2m25s)
+        // Avanço automático contínuo para Suno (~2m15s / 135s)
         state.advanceTimer = setTimeout(() => {
           nextTrack();
-        }, 145000);
+        }, 135000);
 
       } else {
-        // Se for MP3 local
-        dom.sunoEmbedCard.classList.remove('visible');
+        // Se for MP3: Mostra o palco com mascote e toca áudio nativo
+        dom.sunoStage.classList.remove('active');
         dom.sunoFrame.src = 'about:blank';
+
+        dom.artworkStage.style.display = 'flex';
+        dom.artworkChar.src = `img/amigos/${t.char || 'cachorro-acena'}.webp`;
         dom.scrubberBox.style.display = 'block';
 
         const src = t.file;
@@ -1070,18 +880,20 @@
         }
       }
 
-      renderTrackList();
-      scrollActiveTrackIntoView();
+      updateUpcomingList();
     }
 
     // ALTERNAR PLAY/PAUSE
     function togglePlay() {
       const t = TRACKS[state.currentIndex];
       if (t.embed) {
-        // Para Suno Embed, se já está tocando, avançamos ou alternamos visual
         state.isPlaying = !state.isPlaying;
         updatePlayBtn();
-        dom.artworkStage.classList.toggle('playing', state.isPlaying);
+        if (!state.isPlaying) {
+          clearTimeout(state.advanceTimer);
+        } else {
+          state.advanceTimer = setTimeout(nextTrack, 135000);
+        }
         return;
       }
 
@@ -1097,45 +909,30 @@
         updatePlayBtn();
         dom.artworkStage.classList.remove('playing');
       }
-      renderTrackList();
     }
 
     function updatePlayBtn() {
       dom.btnPlay.textContent = state.isPlaying ? '⏸' : '▶';
     }
 
-    // PRÓXIMA / ANTERIOR
+    // AVANÇAR PARA A PRÓXIMA FAIXA (RODÍZIO ALEATÓRIO DIRETO)
     function nextTrack() {
-      let currentPos = state.filteredIndices.indexOf(state.currentIndex);
-      if (currentPos === -1) currentPos = 0;
-
-      let nextPos = currentPos + 1;
-      if (nextPos >= state.filteredIndices.length) {
-        nextPos = 0;
+      state.queueIndex++;
+      if (state.queueIndex >= state.queue.length) {
+        shuffleQueue();
       }
-      playTrack(state.filteredIndices[nextPos]);
+      playTrack(state.queue[state.queueIndex]);
     }
 
     function prevTrack() {
-      let currentPos = state.filteredIndices.indexOf(state.currentIndex);
-      if (currentPos === -1) currentPos = 0;
-
-      let prevPos = currentPos - 1;
-      if (prevPos < 0) {
-        prevPos = state.filteredIndices.length - 1;
+      state.queueIndex--;
+      if (state.queueIndex < 0) {
+        state.queueIndex = state.queue.length - 1;
       }
-      playTrack(state.filteredIndices[prevPos]);
+      playTrack(state.queue[state.queueIndex]);
     }
 
-    // SCROLL PARA O ITEM ATIVO
-    function scrollActiveTrackIntoView() {
-      const activeEl = dom.trackList.querySelector('.track-item.active');
-      if (activeEl) {
-        activeEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }
-
-    // EVENTOS DE ÁUDIO NATIVO
+    // EVENTOS DO ÁUDIO MP3
     audio.addEventListener('timeupdate', () => {
       if (audio.duration) {
         const percent = (audio.currentTime / audio.duration) * 100;
@@ -1149,16 +946,17 @@
       dom.timeTotal.textContent = fmtTime(audio.duration);
     });
 
+    // Quando o áudio MP3 termina -> imediatamente toca a próxima música aleatória!
     audio.addEventListener('ended', () => {
       nextTrack();
     });
 
     audio.addEventListener('error', (err) => {
-      console.warn('Erro ao reproduzir faixa local, avançando...', err);
+      console.warn('Erro ao carregar faixa, pulando para a próxima...', err);
       nextTrack();
     });
 
-    // SCRUBBER CLIQUE
+    // SCRUBBER
     dom.scrubberTrack.addEventListener('click', (e) => {
       if (!audio.duration) return;
       const rect = dom.scrubberTrack.getBoundingClientRect();
@@ -1173,53 +971,27 @@
       dom.volumeIcon.textContent = val === 0 ? '🔇' : (val < 0.5 ? '🔉' : '🔊');
     });
 
-    // FILTRO E BUSCA
-    function applyFilters() {
-      const q = state.searchQuery.toLowerCase().trim();
-      const cat = state.currentFilter;
-
-      state.filteredIndices = TRACKS.map((t, idx) => ({ t, idx }))
-        .filter(({ t }) => {
-          const matchCat = (cat === 'all') || (t.cat === cat);
-          const matchQuery = !q || t.title.toLowerCase().includes(q);
-          return matchCat && matchQuery;
-        })
-        .map(({ idx }) => idx);
-
-      renderTrackList();
-    }
-
-    dom.searchInput.addEventListener('input', (e) => {
-      state.searchQuery = e.target.value;
-      applyFilters();
+    // BOTÃO ÚNICO DE LIGAR RÁDIO (1 CLIQUE PARA O OPERADOR)
+    dom.btnStartRadio.addEventListener('click', () => {
+      shuffleQueue();
+      playTrack(state.queue[0]);
     });
 
-    dom.filterPills.forEach(pill => {
-      pill.addEventListener('click', () => {
-        dom.filterPills.forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        state.currentFilter = pill.getAttribute('data-filter');
-        applyFilters();
-      });
-    });
-
-    // BARRALHAMENTO GERAL
-    dom.btnShuffleAll.addEventListener('click', () => {
-      const randIdx = Math.floor(Math.random() * TRACKS.length);
-      playTrack(randIdx);
-    });
-
-    // CONTROLES
+    // CONTROLES UNIFICADOS
     dom.btnPlay.addEventListener('click', togglePlay);
     dom.btnNext.addEventListener('click', nextTrack);
     dom.btnPrev.addEventListener('click', prevTrack);
 
     // ATALHOS DE TECLADO
     window.addEventListener('keydown', (e) => {
-      if (e.target.tagName === 'INPUT') return;
       if (e.code === 'Space') {
         e.preventDefault();
-        togglePlay();
+        if (!state.isPlaying && dom.btnStartRadio.offsetParent !== null) {
+          shuffleQueue();
+          playTrack(state.queue[0]);
+        } else {
+          togglePlay();
+        }
       } else if (e.key === 'm' || e.key === 'M' || e.key === 'ArrowRight') {
         nextTrack();
       } else if (e.key === 'ArrowLeft') {
@@ -1228,14 +1000,8 @@
     });
 
     // INICIALIZAÇÃO
-    applyFilters();
-    // Prepara a 1ª música
-    playTrack(0);
-    // Como navegadores bloqueiam autoplay sem interação, pausamos inicialmente até o usuário interagir
-    audio.pause();
-    state.isPlaying = false;
-    updatePlayBtn();
-    dom.artworkStage.classList.remove('playing');
+    shuffleQueue();
+    updateUpcomingList();
   </script>
 </body>
 
