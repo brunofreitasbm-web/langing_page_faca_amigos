@@ -22,7 +22,9 @@ O DNA da casa inclui regulação sensorial, e parte das crianças tem sensibilid
 
 **Uso:** abertura, eventos, aniversários. **Clima:** chiclete, animada.
 
-**Prompt:** `upbeat brazilian kids pop, 112 bpm, ukulele, claps, light marimba, warm female and children choir, catchy sing-along chorus, soft dynamics, no harsh sounds`
+**Voz principal:** A Turma (os quatro revezando versos).
+
+**Prompt:** `four distinct character voices trading lines: warm female, bright male tenor, playful boyish male, soft low female; kids choir on chorus, upbeat brazilian kids pop, 112 bpm, ukulele, claps, light marimba, warm female and children choir, catchy sing-along chorus, soft dynamics, no harsh sounds`
 
 ```
 [Verso 1]
@@ -59,13 +61,19 @@ Quem chegou não fica atrás!
 
 [Final]
 Um, dois, três... FaçaAmigos!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 2. Oi, Amigo! (canção da Zoe)
 
 **Uso:** chegada das famílias, Hora da Criança. **Clima:** acolhedora, animada.
 
-**Prompt:** `cheerful acoustic kids song, 104 bpm, acoustic guitar, glockenspiel, gentle shaker, friendly female vocal, call and response with kids, warm and welcoming`
+**Voz principal:** Zoe (cachorra golden, anfitriã).
+
+**Prompt:** `warm friendly female lead vocal, mid register, smiling tone, cheerful acoustic kids song, 104 bpm, acoustic guitar, glockenspiel, gentle shaker, friendly female vocal, call and response with kids, warm and welcoming`
 
 ```
 [Verso 1]
@@ -78,7 +86,7 @@ E diz baixinho: "que bom que você voltou!"
 Oi, amigo! (Oi, Zoe!)
 Pode entrar, pode chegar
 Oi, amigo! (Oi, Zoe!)
-Aqui tem lugar pra brincar
+No FaçaAmigos tem lugar pra brincar
 
 [Verso 2]
 Se é a primeira vez, tá tudo certo
@@ -90,7 +98,7 @@ E vai brincando devagarinho
 Oi, amigo! (Oi, Zoe!)
 Pode entrar, pode chegar
 Oi, amigo! (Oi, Zoe!)
-Aqui tem lugar pra brincar
+No FaçaAmigos tem lugar pra brincar
 
 [Ponte]
 Mãozinha pra cima, tchau pra timidez
@@ -99,13 +107,19 @@ Rodinha de amigos, chegou sua vez
 [Refrão final]
 Oi, amigo! (Oi, Zoe!)
 Que bom que você veio brincar!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 3. Piscina de Bolinhas
 
 **Uso:** Playground, turno das famílias. **Clima:** chiclete, animada.
 
-**Prompt:** `bouncy kids pop, 116 bpm, pizzicato strings, bubbly synth plucks, handclaps, playful children choir, catchy repetitive hook, smooth mix, no sudden drops`
+**Voz principal:** Caco (macaco).
+
+**Prompt:** `energetic playful boyish male lead vocal, bouncy phrasing, bouncy kids pop, 116 bpm, pizzicato strings, bubbly synth plucks, handclaps, playful children choir, catchy repetitive hook, smooth mix, no sudden drops`
 
 ```
 [Verso 1]
@@ -116,7 +130,7 @@ Quem acha o Caco escondido? Quem é?
 
 [Refrão]
 Ploc, ploc, ploc, bolinha!
-Pula na piscina comigo
+Pula no FaçaAmigos comigo
 Ploc, ploc, ploc, bolinha!
 Cada bolinha é um amigo
 
@@ -128,20 +142,26 @@ Brincar junto é mais gostoso assim
 
 [Refrão]
 Ploc, ploc, ploc, bolinha!
-Pula na piscina comigo
+Pula no FaçaAmigos comigo
 Ploc, ploc, ploc, bolinha!
 Cada bolinha é um amigo
 
 [Ponte - contando]
 Uma, duas, três, quatro, cinco
 Seis, sete, oito, nove, dez!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 4. Vrum-Vrum do Caco (Circuito)
 
 **Uso:** Circuito de Carrinhos. **Clima:** animada.
 
-**Prompt:** `fun kids rock-pop, 118 bpm, clean electric guitar, steady drums with soft kick, bass groove, playful male vocal and kids choir, driving but gentle, no horns or sirens`
+**Voz principal:** Caco (macaco).
+
+**Prompt:** `energetic playful boyish male lead vocal, bouncy phrasing, fun kids rock-pop, 118 bpm, clean electric guitar, steady drums with soft kick, bass groove, playful male vocal and kids choir, driving but gentle, no horns or sirens`
 
 ```
 [Verso 1]
@@ -170,13 +190,19 @@ Devagar também vai chegar
 
 [Final]
 Última volta... e chegou! Todo mundo ganhou!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 5. Devagar Também Chega (canção da Tati)
 
 **Uso:** qualquer turno, transição entre animadas. **Clima:** acolhedora, calma.
 
-**Prompt:** `gentle brazilian kids folk, 80 bpm, nylon guitar, soft piano, light brushed percussion, tender female vocal, warm and reassuring, lullaby-like but bright`
+**Voz principal:** Tati (tartaruga).
+
+**Prompt:** `soft low gentle female lead vocal, slow unhurried phrasing, gentle brazilian kids folk, 80 bpm, nylon guitar, soft piano, light brushed percussion, tender female vocal, warm and reassuring, lullaby-like but bright`
 
 ```
 [Verso 1]
@@ -205,13 +231,18 @@ E chega com o coração dentro
 
 [Final]
 Passinho, passinho... chegou.
+
+[Assinatura, bem suave]
+FaçaAmigos... aqui todo mundo brinca junto.
 ```
 
 ## 6. Tuco Toca Carimbó
 
 **Uso:** turno das famílias, eventos. **Clima:** animada, raiz paraense.
 
-**Prompt:** `kids carimbo from Para Brazil, 110 bpm, curimbo hand drums, banjo, maracas, flute, joyful mixed choir, folk dance groove, warm and organic, moderate volume`
+**Voz principal:** Tuco (tucano, o músico).
+
+**Prompt:** `bright expressive male tenor lead vocal, musical phrasing, light northern Brazil accent, kids carimbo from Para Brazil, 110 bpm, curimbo hand drums, banjo, maracas, flute, joyful mixed choir, folk dance groove, warm and organic, moderate volume`
 
 ```
 [Verso 1]
@@ -243,13 +274,19 @@ Pra esquerda, pra direita
 Agachou, levantou
 Quem rodou ganhou um amigo
 E o Tuco aplaudiu: piu, piu!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 7. Cada Um do Seu Jeito
 
 **Uso:** qualquer turno. Carrega o pilar "É para todas as crianças". **Clima:** chiclete, acolhedora.
 
-**Prompt:** `feel-good kids pop, 106 bpm, ukulele, soft synth pad, finger snaps, light bass, warm female vocal with kids choir, uplifting and inclusive, smooth and steady`
+**Voz principal:** Zoe (cachorra golden, anfitriã).
+
+**Prompt:** `warm friendly female lead vocal, mid register, smiling tone, feel-good kids pop, 106 bpm, ukulele, soft synth pad, finger snaps, light bass, warm female vocal with kids choir, uplifting and inclusive, smooth and steady`
 
 ```
 [Verso 1]
@@ -281,13 +318,19 @@ Ninguém fica de fora
 Ninguém fica pra trás
 Brincando todo mundo junto
 A gente é muito mais
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 8. Respira Comigo
 
 **Uso:** cantinho da calma, abertura (10h), após picos de movimento. **Clima:** acolhedora, regulação.
 
-**Prompt:** `calm ambient kids song, 64 bpm, soft piano, warm pad, gentle rain texture, very soft whispery female vocal, slow breathing pace, no percussion, soothing and steady`
+**Voz principal:** Tati (tartaruga).
+
+**Prompt:** `soft low gentle female lead vocal, slow unhurried phrasing, calm ambient kids song, 64 bpm, soft piano, warm pad, gentle rain texture, very soft whispery female vocal, slow breathing pace, no percussion, soothing and steady`
 
 ```
 [Verso 1]
@@ -316,13 +359,18 @@ Mais uma vez
 
 [Final]
 Tô aqui... tô aqui.
+
+[Assinatura, bem suave]
+FaçaAmigos... aqui todo mundo brinca junto.
 ```
 
 ## 9. Chuva das Três
 
 **Uso:** turno da tarde, quando chove em Belém. **Clima:** chiclete, animada, local.
 
-**Prompt:** `breezy brazilian kids pop with light brega paraense swing, 108 bpm, clean guitar, soft keys, shaker, playful female and male duet with kids choir, sunny mood, gentle mix`
+**Voz principal:** Tuco (tucano, o músico).
+
+**Prompt:** `bright expressive male tenor lead vocal, musical phrasing, light northern Brazil accent, breezy brazilian kids pop with light brega paraense swing, 108 bpm, clean guitar, soft keys, shaker, playful female and male duet with kids choir, sunny mood, gentle mix`
 
 ```
 [Verso 1]
@@ -351,13 +399,19 @@ Quando passar, a gente brinca outra vez
 
 [Final]
 Abriu o sol... e o arco-íris chegou!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 10. Até Amanhã, Amigo
 
 **Uso:** saída das famílias, fechamento (21h30 em diante). **Clima:** acolhedora, calma.
 
-**Prompt:** `warm kids farewell song, 84 bpm, acoustic guitar, soft glockenspiel, light strings, gentle female vocal with soft kids choir, nostalgic and happy, quiet ending`
+**Voz principal:** Zoe (cachorra golden, anfitriã).
+
+**Prompt:** `warm friendly female lead vocal, mid register, smiling tone, warm kids farewell song, 84 bpm, acoustic guitar, soft glockenspiel, light strings, gentle female vocal with soft kids choir, nostalgic and happy, quiet ending`
 
 ```
 [Verso 1]
@@ -386,6 +440,9 @@ A Zoe acena com o pé
 
 [Final]
 Tchau, tchau... até amanhã.
+
+[Assinatura, bem suave]
+FaçaAmigos... aqui todo mundo brinca junto.
 ```
 
 ---
@@ -405,7 +462,9 @@ A cada duas animadas entra uma calma, para a sala não acumular agitação.
 
 **Uso:** aniversários no salão, eventos. Fora da rotação normal: toca só quando tem festa. **Clima:** chiclete, festiva.
 
-**Prompt:** `festive brazilian kids pop, 114 bpm, ukulele, handclaps, glockenspiel, warm female vocal with kids choir singing (not shouting), bright celebration, smooth dynamics, no whistles or horns`
+**Voz principal:** A Turma (os quatro revezando versos).
+
+**Prompt:** `four distinct character voices trading lines: warm female, bright male tenor, playful boyish male, soft low female; kids choir on chorus, festive brazilian kids pop, 114 bpm, ukulele, handclaps, glockenspiel, warm female vocal with kids choir singing (not shouting), bright celebration, smooth dynamics, no whistles or horns`
 
 ```
 [Verso 1]
@@ -434,13 +493,19 @@ Sopra devagar, que o desejo é seu
 
 [Final]
 Viva, viva, viva! Feliz aniversário!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 12. Brincar é Coisa Séria (Clínica)
 
 **Uso:** Clínica, turno da manhã, dia 5 do ciclo da TV. Carrega o pilar "brincar com propósito". **Clima:** acolhedora, esperançosa.
 
-**Prompt:** `gentle brazilian kids folk-pop, 88 bpm, nylon guitar, soft piano, light hand percussion, warm female vocal, hopeful and calm, intimate mix`
+**Voz principal:** Tati (tartaruga).
+
+**Prompt:** `soft low gentle female lead vocal, slow unhurried phrasing, gentle brazilian kids folk-pop, 88 bpm, nylon guitar, soft piano, light hand percussion, warm female vocal, hopeful and calm, intimate mix`
 
 ```
 [Verso 1]
@@ -469,13 +534,18 @@ Cada tentativa, um saber
 
 [Final]
 Um passo, um passo... olha só até onde chegou.
+
+[Assinatura, bem suave]
+FaçaAmigos... aqui todo mundo brinca junto.
 ```
 
 ## 13. Mão na Mão
 
 **Uso:** qualquer turno. Dividir brinquedo e revezar. **Clima:** chiclete, animada.
 
-**Prompt:** `upbeat kids pop with light samba swing, 112 bpm, cavaquinho, tambourine, soft bass, warm male and female duet with kids choir, catchy, smooth mix`
+**Voz principal:** Caco (macaco).
+
+**Prompt:** `energetic playful boyish male lead vocal, bouncy phrasing, upbeat kids pop with light samba swing, 112 bpm, cavaquinho, tambourine, soft bass, warm male and female duet with kids choir, catchy, smooth mix`
 
 ```
 [Verso 1]
@@ -488,7 +558,7 @@ Dividir é uma coisa boa de fazer
 Mão na mão, lado a lado
 Junto é mais divertido
 Mão na mão, lado a lado
-Quem divide ganha um amigo
+No FaçaAmigos se ganha um amigo
 
 [Verso 2]
 Tu segura aqui, eu puxo ali
@@ -500,7 +570,7 @@ Dessa vez com um amigo novo
 Mão na mão, lado a lado
 Junto é mais divertido
 Mão na mão, lado a lado
-Quem divide ganha um amigo
+No FaçaAmigos se ganha um amigo
 
 [Ponte]
 Um ajuda o outro, o outro ajuda alguém
@@ -510,14 +580,20 @@ E no final todo mundo ajuda bem
 Mão na mão, lado a lado
 Junto é mais divertido
 Mão na mão, lado a lado
-Quem divide ganha um amigo
+No FaçaAmigos se ganha um amigo
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 14. Tira o Sapato!
 
 **Uso:** entrada do Playground, turno das famílias. Ensina a rotina de chegada cantando. **Clima:** animada, pergunta e resposta.
 
-**Prompt:** `playful kids pop, 110 bpm, marimba, ukulele, claps, bouncy bass, clear female vocal with kids answering in call and response, fun, very clear diction`
+**Voz principal:** Zoe (cachorra golden, anfitriã).
+
+**Prompt:** `warm friendly female lead vocal, mid register, smiling tone, playful kids pop, 110 bpm, marimba, ukulele, claps, bouncy bass, clear female vocal with kids answering in call and response, fun, very clear diction`
 
 ```
 [Verso 1]
@@ -530,7 +606,7 @@ E entra pisando bem de mansinho
 Tira o sapato! (Tirei!)
 Bota a meia! (Botei!)
 Lava a mão! (Lavei!)
-Agora sim, pode entrar!
+Agora sim, no FaçaAmigos pode entrar!
 
 [Verso 2]
 Na piscina a gente mergulha com cuidado
@@ -542,7 +618,7 @@ E ninguém fica machucado
 Tira o sapato! (Tirei!)
 Bota a meia! (Botei!)
 Lava a mão! (Lavei!)
-Agora sim, pode entrar!
+Agora sim, no FaçaAmigos pode entrar!
 
 [Ponte]
 Se cansou, tem um cantinho pra descansar
@@ -552,14 +628,20 @@ Se precisar, chama a Zoe que ela vem te ajudar
 Tira o sapato! (Tirei!)
 Bota a meia! (Botei!)
 Lava a mão! (Lavei!)
-Agora sim, pode brincar!
+No FaçaAmigos, pode brincar!
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
 
 ## 15. A Turma do FaçaAmigos
 
 **Uso:** abertura do turno das famílias, dia 1 do ciclo da TV ("Reino das Mascotes"). Apresenta os quatro personagens. **Clima:** chiclete, tema.
 
-**Prompt:** `catchy kids theme song, 116 bpm, synth plucks, ukulele, handclaps, light bass, female vocal asking and kids choir answering the names, bright and smooth, no brass`
+**Voz principal:** A Turma (os quatro revezando versos).
+
+**Prompt:** `four distinct character voices trading lines: warm female, bright male tenor, playful boyish male, soft low female; kids choir on chorus, catchy kids theme song, 116 bpm, synth plucks, ukulele, handclaps, light bass, female vocal asking and kids choir answering the names, bright and smooth, no brass`
 
 ```
 [Verso 1]
@@ -589,7 +671,32 @@ Zoe, Tuco, Caco e Tati
 A turma do FaçaAmigos tá aqui
 Zoe, Tuco, Caco e Tati
 Vem brincar com a gente aqui
+
+[Assinatura]
+Fa-ça-A-mi-gos!
+Aqui todo mundo brinca junto.
 ```
+
+---
+
+## Assinatura de marca e vozes (turno da tarde)
+
+Objetivo: a criança sair do salão com "FaçaAmigos" na cabeça, pelo mesmo mecanismo de qualquer jingle: nome cantado no gancho, repetido em momento bom, com vozes que ela reconhece.
+
+- **Assinatura no final de toda cantada:** `Fa-ça-A-mi-gos! Aqui todo mundo brinca junto.` Nas calmas (05, 08, 10, 12) é falada baixinho, para não quebrar a regulação.
+- **Nome dentro do refrão** nas de maior gancho: 02, 03, 13, 14 (além de 01 e 15, que já tinham).
+- **Quatro vozes, quatro Personas no Suno.** Cada música tem uma voz principal:
+
+| Voz | Músicas | Como criar a Persona |
+|-----|---------|----------------------|
+| Zoe | 02, 07, 10, 14 | a partir da cantada 02 aprovada |
+| Tuco | 06, 09 | a partir da 06 aprovada |
+| Caco | 03, 04, 13 | a partir da 04 aprovada |
+| Tati | 05, 08, 12 | a partir da 05 aprovada |
+| A Turma (os quatro) | 01, 11, 15 | sem Persona; o prompt pede as quatro vozes revezando |
+
+  Ordem prática: aprove primeiro 02, 06, 04 e 05 (uma de cada voz), crie as 4 Personas, e gere o resto com elas. Assim a criança reconhece "a voz do Caco" da 04 na 13. Nas músicas da Turma o Suno não garante quatro vozes distintas de verdade; se vier uma só, aceite e deixe a variedade para o coral.
+- **Limite:** publicidade dirigida a criança é considerada abusiva pela Resolução 163/2014 do CONANDA. Cantar o nome do lugar enquanto a criança brinca é ambientação. Mandar a criança pedir para voltar ou comprar é publicidade infantil, e nenhuma letra faz isso.
 
 ---
 
@@ -652,7 +759,7 @@ A 11 (Parabéns) fica **fora da rotação**: toca sob demanda, quando tem aniver
 
 | Etapa | Gerações | Créditos |
 |-------|----------|----------|
-| Teste: faixas 01, 05 e 08, cantada + instrumental | ~18 | ~180 |
+| Teste: faixas 02, 04, 05 e 06 (uma por voz), cantada + instrumental | ~24 | ~240 |
 | Semana de teste no salão | 0 | 0 |
 | Restantes 12 cantadas (3 tentativas cada) | ~36 | ~360 |
 | Restantes 12 instrumentais (2 tentativas cada) | ~24 | ~240 |
@@ -662,9 +769,9 @@ A 11 (Parabéns) fica **fora da rotação**: toca sob demanda, quando tem aniver
 
 ### Ordem de produção
 
-1. **Teste (6 arquivos):** 01, 05, 08 em cantada + instrumental. Uma semana no salão.
-2. **Núcleo da tarde (8 cantadas):** 02, 15, 14, 03, 07, 13, 09, 10, com as instrumentais logo em seguida.
-3. **Resto:** 04, 06, 12, 11 e as 5 extras `-b`.
+1. **Teste (8 arquivos):** 02, 04, 05 e 06 em cantada + instrumental, uma por voz. Criar as 4 Personas. Uma semana no salão.
+2. **Núcleo da tarde (8 cantadas):** 01, 15, 14, 03, 07, 13, 09, 10, com as instrumentais logo em seguida.
+3. **Resto:** 08, 12, 11 e as 5 extras `-b`.
 
 Assim o turno das famílias fica completo primeiro, que é onde a música é parte da experiência vendida.
 
