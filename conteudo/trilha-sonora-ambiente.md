@@ -400,3 +400,72 @@ A cada duas animadas entra uma calma, para a sala não acumular agitação.
 
 - Isabella revisa as letras 5, 7 e 8 (falam de comportamento e regulação).
 - Testar 2 ou 3 faixas no salão por uma semana antes de gerar o resto: observar se alguma criança se incomoda e perguntar à equipe o que já cansou.
+
+---
+
+## Plano de produção: 20 faixas
+
+Decisão: 10 músicas, cada uma em 2 versões. A **instrumental** toca no turno da equipe (10h–15h59, baixo fluxo). A **cantada** toca no turno das famílias (16h–22h).
+
+### Nome dos arquivos
+
+Padrão `NN-slug-versao.mp3`, para a `/tv` montar a playlist sozinha pelo sufixo:
+
+| Nº | Arquivo cantada | Arquivo instrumental |
+|----|-----------------|----------------------|
+| 01 | `01-faca-amigos-voz.mp3` | `01-faca-amigos-inst.mp3` |
+| 02 | `02-oi-amigo-voz.mp3` | `02-oi-amigo-inst.mp3` |
+| 03 | `03-piscina-de-bolinhas-voz.mp3` | `03-piscina-de-bolinhas-inst.mp3` |
+| 04 | `04-vrum-vrum-do-caco-voz.mp3` | `04-vrum-vrum-do-caco-inst.mp3` |
+| 05 | `05-devagar-tambem-chega-voz.mp3` | `05-devagar-tambem-chega-inst.mp3` |
+| 06 | `06-tuco-toca-carimbo-voz.mp3` | `06-tuco-toca-carimbo-inst.mp3` |
+| 07 | `07-cada-um-do-seu-jeito-voz.mp3` | `07-cada-um-do-seu-jeito-inst.mp3` |
+| 08 | `08-respira-comigo-voz.mp3` | `08-respira-comigo-inst.mp3` |
+| 09 | `09-chuva-das-tres-voz.mp3` | `09-chuva-das-tres-inst.mp3` |
+| 10 | `10-ate-amanha-amigo-voz.mp3` | `10-ate-amanha-amigo-inst.mp3` |
+
+Pasta no repo: `audio/trilha/`.
+
+### Playlist manhã (10h–15h59, só instrumental)
+
+Ordem pensada para a equipe: começa calmo, sobe no meio do turno, volta a baixar antes da troca.
+
+08 → 05 → 10 → 02 → 07 → 01 → 03 → 09 → 04 → 06 → 05 → 08
+
+Volume: 2 a 3 passos abaixo do turno da tarde. Nesse horário a música é fundo, não atração.
+
+### Playlist tarde (16h–22h, cantada)
+
+01 → 02 → 03 → 05 → 04 → 07 → 08 → 06 → 09 → 01 → 10
+
+Mantém uma calma a cada duas animadas. Das 21h30 em diante, só 05, 08 e 10.
+
+### Como gerar no Suno (versão instrumental)
+
+Para a instrumental sair parecida com a cantada, e não uma música diferente:
+1. Gere a cantada primeiro e escolha a versão final.
+2. Na versão escolhida, use **Cover** com a opção Instrumental ligada, ou **Remaster** sem voz, conforme o que o seu plano oferece. Isso mantém melodia e arranjo.
+3. Só se o Cover sair ruim, gere do zero com o mesmo prompt de estilo e Instrumental ligado.
+
+### Orçamento (2.500 créditos, 10 por geração)
+
+| Etapa | Gerações | Créditos |
+|-------|----------|----------|
+| Teste: faixas 01, 05 e 08, cantada + instrumental | ~18 | ~180 |
+| Semana de teste no salão | 0 | 0 |
+| Restantes 7 cantadas (3 tentativas cada) | ~21 | ~210 |
+| Restantes 7 instrumentais (2 tentativas cada) | ~14 | ~140 |
+| **Total das 20 faixas** | **~53** | **~530** |
+| Reserva para refazer o que cansar e para fase 2 | | ~1.970 |
+
+Fase 2 (depois de um mês rodando): esticar as instrumentais com Extend para 5–6 min e gerar uma segunda variação instrumental das faixas 05, 08 e 10. Isso resolve a repetição no turno da manhã, que com 10 instrumentais de ~3 min roda 12 vezes por dia.
+
+### Checklist antes de aprovar uma faixa
+
+- [ ] Ouviu inteira, do começo ao fim, sem pular.
+- [ ] Nenhum pico: buzina, grito, agudo estridente, batida que entra de repente.
+- [ ] Pronúncia certa de FaçaAmigos, Zoe, Tuco, Caco e Tati.
+- [ ] Letra cantada igual à escrita (o Suno às vezes troca ou pula versos).
+- [ ] Final limpo, sem corte seco.
+- [ ] Instrumental reconhecível como a mesma música da cantada.
+- [ ] Faixas 05, 07 e 08: letra revisada pela Isabella.
