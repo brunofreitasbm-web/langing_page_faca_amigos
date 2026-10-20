@@ -3123,7 +3123,7 @@
 
       window.addEventListener('keydown', (e) => {
         const key = e.key.toUpperCase();
-        if (state.gameActive && key !== 'G' && key !== 'ESCAPE') return;
+        if (state.gameActive && key !== 'G') return; // Esc/Voltar ficam com o jogo (back)
         if (key === '1') {
           state.forcedMode = 'team';
           switchMode('team');
@@ -3148,8 +3148,6 @@
         } else if (key === 'M') {
           nextAmbientTrack();
         } else if (key === 'G') {
-          toggleGame();
-        } else if (key === 'ESCAPE' && state.gameActive) {
           toggleGame();
         }
       });
@@ -3192,7 +3190,7 @@
         { up: 'arrowup', down: 'arrowdown', left: 'arrowleft', right: 'arrowright', press: 'enter' }
       ];
 
-      const game = { screen: null, raf: 0, last: 0, timers: [], left: 0, team: 0, mem: null };
+      const game = { screen: null, raf: 0, last: 0, lastBack: 0, timers: [], left: 0, team: 0, mem: null };
 
       function gameLater(fn, ms) {
         const id = setTimeout(fn, ms);
@@ -3283,15 +3281,48 @@
         else t.click();
       }
 
+      // B do gamepad no Android TV também vira "Voltar" do sistema (popstate/GoBack):
+      // o mesmo aperto chega por dois caminhos, então só o primeiro em 500 ms conta.
       function back() {
+        const now = performance.now();
+        if (now - game.lastBack < 500) return;
+        game.lastBack = now;
         if (game.screen === 'menu') toggleGame();
         else showMenu();
       }
+
+      function anyPad() {
+        const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+        for (const gp of pads) if (gp) return true;
+        return false;
+      }
+
+      // Guarda do histórico: o Voltar do TV Bro cai no estado que o jogo empilhou e não sai do /tv
+      let histSkip = false;
+      function guardHistory() {
+        if (!(history.state && history.state.faJogo)) history.pushState({ faJogo: 1 }, '');
+      }
+      window.addEventListener('popstate', () => {
+        if (histSkip) { histSkip = false; return; }
+        if (!state.gameActive) return;
+        back();
+        if (state.gameActive) guardHistory();
+      });
 
       // Teclado (só enquanto o jogo está aberto; o atalho global ignora as outras teclas)
       window.addEventListener('keydown', (e) => {
         if (!state.gameActive) return;
         const k = e.key.toLowerCase();
+        if (k === 'escape' || k === 'backspace' || k === 'goback' || k === 'browserback') {
+          e.preventDefault();
+          back();
+          return;
+        }
+        // Com gamepad ligado, o D-pad dele também chega como seta: não pode mover o outro jogador
+        if (anyPad()) {
+          if (KEYMAP.some((m) => [m.up, m.down, m.left, m.right, m.press].includes(k))) e.preventDefault();
+          return;
+        }
         KEYMAP.forEach((m, i) => {
           const p = players[i];
           if (p.pad !== null) return;
@@ -3305,7 +3336,6 @@
             resetGameInactivity();
           }
         });
-        if (k === 'backspace') back();
       });
       window.addEventListener('keyup', (e) => {
         const k = e.key.toLowerCase();
@@ -3369,8 +3399,10 @@
             p.btn = {};
             gp.buttons.forEach((bt, n) => { if (bt.pressed) p.btn[n] = true; });
             const just = (n) => p.btn[n] && !p.prevBtn[n];
-            if (just(BTN.A)) press(p);
-            if (just(BTN.B) || just(BTN.START)) back();
+            // Sem mapping "standard" a ordem dos botões varia: 0 ou 1 clicam e só o Start volta
+            const std = gp.mapping === 'standard';
+            if (just(BTN.A) || (!std && just(BTN.B))) press(p);
+            if ((std && just(BTN.B)) || just(BTN.START)) back();
             p.prevBtn = p.btn;
           } else if (i < KEYMAP.length && p.keys.size) {
             const m = KEYMAP[i];
@@ -3620,6 +3652,8 @@
         resetPlayers();
         showMenu();
         game.last = 0;
+        game.lastBack = 0;
+        guardHistory();
         game.raf = requestAnimationFrame(gameLoop);
         resetGameInactivity();
       }
@@ -3630,6 +3664,10 @@
         clearTimeout(state.gameInactivityTimer);
         resetPlayers();
         game.screen = null;
+        if (history.state && history.state.faJogo) {
+          histSkip = true;
+          history.back();
+        }
       }
 
       function resetGameInactivity() {
@@ -3639,20 +3677,33 @@
         }, GCFG.idleMs);
       }
 
-      // Diagnóstico na TV do salão: /tv?jogos=teste lista os controles que o navegador enxerga
+      // Diagnóstico na TV do salão: /tv?jogos=teste lista os controles e as teclas que o navegador enxerga
       if (new URLSearchParams(location.search).get('jogos') === 'teste') {
         const diag = document.createElement('pre');
         diag.id = 'gpDiag';
         document.body.appendChild(diag);
+        const keys = [];
+        let pops = 0;
+        window.addEventListener('keydown', (e) => {
+          keys.unshift(`${e.key} (code ${e.code || '-'}, keyCode ${e.keyCode})`);
+          keys.length = Math.min(keys.length, 6);
+        }, true);
+        window.addEventListener('popstate', () => { pops++; });
         const draw = () => {
           const pads = navigator.getGamepads ? Array.from(navigator.getGamepads()).filter(Boolean) : null;
-          if (!pads) diag.textContent = 'Este navegador NÃO tem Gamepad API.\nUse Chrome em Android/Google TV ou um TV box.';
-          else if (!pads.length) diag.textContent = 'Nenhum controle ainda.\nAperte um botão em CADA controle.';
-          else {
-            diag.textContent = `${pads.length} controle(s) — para 2 jogadores precisam aparecer 2:\n\n` + pads.map((gp) =>
-              `#${gp.index} ${gp.id}\n  mapping: ${gp.mapping || '(nenhum)'}\n  eixos: ${gp.axes.map((v) => v.toFixed(2)).join('  ')}\n  botões: ${gp.buttons.map((b, i) => (b.pressed ? i : null)).filter((v) => v !== null).join(', ') || '-'}`
+          let txt;
+          if (!pads) txt = 'NÃO: este navegador não tem Gamepad API.\nPlano B: Firefox para Android TV.';
+          else if (pads.length >= 2) txt = 'OK para 2 jogadores!';
+          else if (pads.length === 1) txt = 'Só 1 controle. Aperte um botão no outro (ou pareie em Configurações > Controles remotos e acessórios).';
+          else if (keys.length) txt = 'As teclas chegam, mas nenhum controle aparece na Gamepad API.\nAperte A em cada controle; se continuar assim, plano B: Firefox para Android TV.';
+          else txt = 'Nenhum controle ainda. Aperte um botão em CADA controle.';
+          if (pads && pads.length) {
+            txt += '\n\n' + pads.map((gp) =>
+              `#${gp.index} ${gp.id}\n  mapping: ${gp.mapping || '(nenhum: A pode ser 0 ou 1)'}\n  eixos: ${gp.axes.map((v) => v.toFixed(2)).join('  ')}\n  botões: ${gp.buttons.map((b, i) => (b.pressed ? i : null)).filter((v) => v !== null).join(', ') || '-'}`
             ).join('\n\n');
           }
+          txt += `\n\nÚltimas teclas:\n  ${keys.join('\n  ') || '-'}\nVoltar do navegador (popstate): ${pops}`;
+          diag.textContent = txt;
           requestAnimationFrame(draw);
         };
         draw();
