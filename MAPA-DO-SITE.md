@@ -92,7 +92,7 @@ flowchart LR
 | `/descadastrar` | descadastrar.html | Sair da sequência de e-mails | não | noindex |
 | `/admin` | admin.html | Painel do teste | não | noindex, no-store |
 | `/gestao` | gestao.html | Hub de Gestão | não | só pelo host `gestao.` |
-| `/tv` | tv.html | Vitrine Digital e canal de cultura para as Smart TVs das operações (/vitrine-digital) | não | noindex (uso interno nas lojas) |
+| `/tv` | tv.html | Vitrine Digital e canal de cultura para as Smart TVs das operações (/vitrine-digital) | não | noindex (uso interno nas lojas). Tecla G = Jogos FaçaAmigos para 2 gamepads Bluetooth; `/tv?jogos=teste` mostra os controles detectados |
 | `/tv2` | tv2.html | Vitrine Digital da TV 50" deitada 90º (retrato) do Quiosque do Circuito — só carrinhos, preço R$ 48,00 · 20/30 min | não | noindex (uso interno quiosque) |
 | `/404` | 404.html | Erro | não | links para home, circuito, guia, código, playground, teste |
 
