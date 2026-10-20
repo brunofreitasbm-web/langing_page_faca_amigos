@@ -968,6 +968,110 @@
       padding: 6px 18px;
       border-radius: 999px;
     }
+
+    /* ==========================================================================
+       DOCK FLUTUANTE DO PLAYER SUNO (EMBED)
+       ========================================================================== */
+    .suno-player-dock {
+      position: fixed;
+      bottom: 52px;
+      right: 28px;
+      width: 440px;
+      height: 184px;
+      background: rgba(14, 34, 28, 0.96);
+      border: 2px solid var(--teal, #2ECFB5);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55);
+      z-index: 1000;
+      overflow: hidden;
+      display: none;
+      flex-direction: column;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: transform 0.25s ease, opacity 0.25s ease, height 0.25s ease;
+      animation: sunoSlideUp 0.35s ease-out;
+    }
+    @keyframes sunoSlideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .suno-player-dock.active {
+      display: flex;
+    }
+    .suno-player-dock.collapsed {
+      height: 44px;
+    }
+    .suno-player-dock.collapsed .suno-player-body {
+      display: none;
+    }
+    .suno-player-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: #1A3F35;
+      border-bottom: 1px solid rgba(46, 207, 181, 0.3);
+      flex-shrink: 0;
+    }
+    .suno-header-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+    }
+    .suno-tag {
+      background: var(--pink, #F0196B);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      padding: 2px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.5px;
+    }
+    .suno-track-name {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 190px;
+    }
+    .suno-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .suno-btn {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .suno-btn:hover {
+      background: rgba(46, 207, 181, 0.4);
+    }
+    .suno-btn-close {
+      padding: 4px 8px;
+    }
+    .suno-player-body {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+    .suno-player-body iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
   </style>
 </head>
 
@@ -1095,6 +1199,24 @@
       </div>
     </div>
   </div>
+
+  <!-- Player Suno Embed para faixas online da rotação (sem login via /embed/) -->
+  <aside id="sunoPlayerDock" class="suno-player-dock" aria-label="Player Suno FaçaAmigos">
+    <div class="suno-player-header">
+      <div class="suno-header-info">
+        <span class="suno-tag">SUNO</span>
+        <span class="suno-track-name" id="sunoPlayerTitle">Faixa Suno</span>
+      </div>
+      <div class="suno-header-actions">
+        <a id="sunoExternalLink" href="#" target="_blank" rel="noopener" class="suno-btn" title="Abrir no Suno">↗ Suno</a>
+        <button type="button" class="suno-btn" id="btnSunoNext" title="Pular para a próxima faixa [M]">⏭ Próxima</button>
+        <button type="button" class="suno-btn suno-btn-close" id="btnSunoClose" title="Minimizar / expandir player">✕</button>
+      </div>
+    </div>
+    <div class="suno-player-body">
+      <iframe id="sunoPlayerFrame" src="about:blank" title="Player de Áudio Suno" allow="autoplay; encrypted-media; fullscreen" loading="lazy"></iframe>
+    </div>
+  </aside>
 
   <!-- ========================================================================
        BANCO DA EQUIPE (10h às 15h59) — CICLO ROTATIVO DE 5 DIAS (NÃO REPETE EM < 5 DIAS)
@@ -1499,7 +1621,13 @@
         btnGameClose: document.getElementById('btnGameClose'),
         gameLayer: document.getElementById('game-layer'),
         gameCanvas: document.getElementById('gameCanvas'),
-        gameScoreText: document.getElementById('gameScoreText')
+        gameScoreText: document.getElementById('gameScoreText'),
+        sunoPlayerDock: document.getElementById('sunoPlayerDock'),
+        sunoPlayerTitle: document.getElementById('sunoPlayerTitle'),
+        sunoPlayerFrame: document.getElementById('sunoPlayerFrame'),
+        sunoExternalLink: document.getElementById('sunoExternalLink'),
+        btnSunoNext: document.getElementById('btnSunoNext'),
+        btnSunoClose: document.getElementById('btnSunoClose')
       };
 
       // ----------------------------------------------------------------------
@@ -1670,6 +1798,7 @@
           dom.statusDot.style.boxShadow = '0 0 10px #8B5CF6';
           dom.progressFill.style.width = '0%';
           ambient.audio.pause();
+          hideSunoEmbed();
           updateBadgeStatus(false);
         }
 
@@ -1742,8 +1871,92 @@
         'tartaruga-anda', 'tartaruga-dorme', 'tartaruga-sorri', 'tartaruga-ri'];
 
       // ---------------- MÚSICA AMBIENTE FAÇA AMIGOS ----------------
-      // Playlist rotativa de 20 faixas originais do playground
+      // Playlist oficial FaçaAmigos (faixas temáticas do salão e playground: MP3 + Suno Embed)
       const AMBIENT_TRACKS = [
+        // ====================================================================
+        // 1. FAIXAS OFICIAIS BAIXADAS (MP3 Locais em /conteudo)
+        // ====================================================================
+        { title: "Faça Amigos", file: "conteudo/Faça Amigos.mp3" },
+        { title: "Oi, Amigo!", file: "conteudo/Oi, Amigo!.mp3" },
+        { title: "Piscina de Bolinhas", file: "conteudo/Piscina de Bolinhas.mp3" },
+        { title: "Vrum-Vrum do Caco", file: "conteudo/Vrum-Vrum do Caco.mp3" },
+        { title: "Devagar Também Chega", file: "conteudo/Devagar Também Chega.mp3" },
+        { title: "Tuco Toca Carimbó", file: "conteudo/Tuco Toca Carimbó.mp3" },
+        { title: "Cada Um do Seu Jeito", file: "conteudo/Cada Um do Seu Jeito.mp3" },
+        { title: "Respira Comigo", file: "conteudo/Respira Comigo.mp3" },
+        { title: "Chuva das Três", file: "conteudo/Chuva das Três.mp3" },
+        { title: "Até Amanhã, Amigo", file: "conteudo/Até Amanhã, Amigo.mp3" },
+        { title: "Parabéns no FaçaAmigos", file: "conteudo/Parabéns no FaçaAmigos.mp3" },
+        { title: "Brincar é Coisa Séria", file: "conteudo/Brincar é Coisa Séria.mp3" },
+        { title: "Mão na Mão", file: "conteudo/Mão na Mão.mp3" },
+        { title: "Tira o Sapato!", file: "conteudo/Tira o Sapato!.mp3" },
+        { title: "A Turma do FaçaAmigos", file: "conteudo/A Turma do FaçaAmigos.mp3" },
+        { title: "Faça Amigos (Versão 1)", file: "conteudo/Faça Amigos (1).mp3" },
+        { title: "Faça Amigos (Versão 2)", file: "conteudo/Faça Amigos (2).mp3" },
+        { title: "Faça Amigos (Instrumental)", file: "conteudo/Faça Amigos (Instrumental).mp3" },
+        { title: "Oi, Amigo! (Instrumental)", file: "conteudo/Oi, Amigo! (Instrumental).mp3" },
+        { title: "Piscina de Bolinhas (Instrumental)", file: "conteudo/Piscina de Bolinhas (Instrumental).mp3" },
+
+        // ====================================================================
+        // 2. FAIXAS SUNO EMBED - CANTADAS (2º clip & duplicatas Create)
+        // ====================================================================
+        { title: "Devagar Também Chega (Clip 2)", embed: "https://suno.com/embed/9b79f5e9-9c0e-40d6-8119-f1ab4102b809" },
+        { title: "Tuco Toca Carimbó (Clip 2)", embed: "https://suno.com/embed/9a71e863-c654-479f-b795-2a5c303ece8f" },
+        { title: "Cada Um do Seu Jeito (Clip 2)", embed: "https://suno.com/embed/4b33a450-39bb-4665-9e5f-8b65d46c7d43" },
+        { title: "Respira Comigo (Clip 2)", embed: "https://suno.com/embed/7cf7831a-ee65-42ff-8826-27eb016c0293" },
+        { title: "Chuva das Três (Clip 2)", embed: "https://suno.com/embed/72fd7a5a-b8f8-40f9-9ee9-37ef20713c99" },
+        { title: "Até Amanhã, Amigo (Clip 2)", embed: "https://suno.com/embed/31e4223f-c789-4066-9b3c-8a686cd87a67" },
+        { title: "Parabéns no FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/64226f35-28c0-470c-8551-53c49d2da4c4" },
+        { title: "Brincar é Coisa Séria (Clip 2)", embed: "https://suno.com/embed/a2c3ffba-d8c8-4cda-93e9-9b96f913380a" },
+        { title: "Mão na Mão (Clip 2)", embed: "https://suno.com/embed/e9052d7d-d392-46a1-95e1-b3561a6258a9" },
+        { title: "Tira o Sapato! (Clip 2)", embed: "https://suno.com/embed/4f40ea6d-b48e-4b2b-ade3-232f6b191a44" },
+        { title: "A Turma do FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/acc844f0-0c9b-4732-a15b-a361533a6ee0" },
+        { title: "Oi, Amigo! (Clip 2)", embed: "https://suno.com/embed/de27593c-925c-4acc-8ef0-65097ded8775" },
+        { title: "Vrum-Vrum do Caco (Clip 2)", embed: "https://suno.com/embed/ed192f63-38d7-4937-9dda-30d98540ec0b" },
+        { title: "Faça Amigos (Versão 3)", embed: "https://suno.com/embed/1f754f65-f99a-4412-9490-35d76aaa73d6" },
+        { title: "Faça Amigos (Versão 4)", embed: "https://suno.com/embed/9c4e1608-8559-4556-a2f6-210e3825bdcd" },
+        { title: "Faça Amigos (Versão 5)", embed: "https://suno.com/embed/bb632620-b5c1-463a-998b-372a92e5228d" },
+        { title: "Até Amanhã, Amigo (Extra 1)", embed: "https://suno.com/embed/7b3c1205-c9e3-4e43-8776-76b488ab355f" },
+        { title: "Até Amanhã, Amigo (Extra 2)", embed: "https://suno.com/embed/48a7d909-bfe1-4fc6-a961-ea03cbfbe910" },
+        { title: "Até Amanhã, Amigo (Extra 3)", embed: "https://suno.com/embed/d04687f8-f406-486d-8146-16bfc42b503a" },
+        { title: "Até Amanhã, Amigo (Extra 4)", embed: "https://suno.com/embed/41469cc8-9b66-4d3a-b0b9-02e8a4cdf315" },
+        { title: "A Turma do FaçaAmigos (Extra 1)", embed: "https://suno.com/embed/489c5a77-2037-4e6c-a993-fa5ec03e8031" },
+        { title: "A Turma do FaçaAmigos (Extra 2)", embed: "https://suno.com/embed/347c3829-17f0-429e-8b03-0877fb5320a4" },
+
+        // ====================================================================
+        // 3. FAIXAS SUNO EMBED - INSTRUMENTAIS (sem login via /embed/)
+        // ====================================================================
+        { title: "Faça Amigos (Instrumental 2)", embed: "https://suno.com/embed/5ee7d94e-5f05-4324-92ba-641bec9b8bf3" },
+        { title: "Oi, Amigo! (Instrumental 2)", embed: "https://suno.com/embed/ee777339-7c6e-4217-937d-15a7dbf2c6c1" },
+        { title: "Piscina de Bolinhas (Instrumental 2)", embed: "https://suno.com/embed/c8eda657-6105-4185-8abb-b2cc10cf0df5" },
+        { title: "Vrum-Vrum do Caco (Instrumental 1)", embed: "https://suno.com/embed/eca2738d-4257-4166-86e2-ebcbc7aa0552" },
+        { title: "Vrum-Vrum do Caco (Instrumental 2)", embed: "https://suno.com/embed/c0b70bc4-0170-4aa1-ba6d-8940f3a7b41c" },
+        { title: "Devagar Também Chega (Instrumental 1)", embed: "https://suno.com/embed/d436b14a-5715-445e-bb8a-b304852eb30f" },
+        { title: "Devagar Também Chega (Instrumental 2)", embed: "https://suno.com/embed/1524daef-c92d-4956-aa0b-1bb6b87661e9" },
+        { title: "Tuco Toca Carimbó (Instrumental 1)", embed: "https://suno.com/embed/5c54c1e4-b40e-47ed-baca-3305205f9271" },
+        { title: "Tuco Toca Carimbó (Instrumental 2)", embed: "https://suno.com/embed/a8cf7c38-8879-4219-b279-5bf8db18dac4" },
+        { title: "Cada Um do Seu Jeito (Instrumental 1)", embed: "https://suno.com/embed/0e402464-254b-45f6-98d5-8207d87cb644" },
+        { title: "Cada Um do Seu Jeito (Instrumental 2)", embed: "https://suno.com/embed/eb87925f-de6c-4880-b1b5-646253dd033a" },
+        { title: "Respira Comigo (Instrumental 1)", embed: "https://suno.com/embed/c7937d60-b818-4695-a4bd-e7303115e9f3" },
+        { title: "Respira Comigo (Instrumental 2)", embed: "https://suno.com/embed/47011a81-b3cd-4deb-beae-614ad13cccfb" },
+        { title: "Chuva das Três (Instrumental 1)", embed: "https://suno.com/embed/bcf673c5-463b-489c-a177-a5e29edf41b5" },
+        { title: "Chuva das Três (Instrumental 2)", embed: "https://suno.com/embed/1425e478-7828-45ab-a52a-4e2f261ae44f" },
+        { title: "Até Amanhã, Amigo (Instrumental 1)", embed: "https://suno.com/embed/24d0e1f7-2bfc-4c01-bf96-0af23d0faf73" },
+        { title: "Até Amanhã, Amigo (Instrumental 2)", embed: "https://suno.com/embed/5e2ec321-766e-4b07-8cb1-87a2b34652d3" },
+        { title: "Parabéns no FaçaAmigos (Instrumental 1)", embed: "https://suno.com/embed/a6d27ccb-0f3b-40c3-a70a-93d2c76dbf09" },
+        { title: "Parabéns no FaçaAmigos (Instrumental 2)", embed: "https://suno.com/embed/187237ce-12c4-4cff-ae81-2d4b7639c644" },
+        { title: "Brincar é Coisa Séria (Instrumental 1)", embed: "https://suno.com/embed/a76a8fc5-2bae-45b5-b943-e7f48818efcd" },
+        { title: "Brincar é Coisa Séria (Instrumental 2)", embed: "https://suno.com/embed/428621cf-22f7-427d-bad8-f3af39d57b2e" },
+        { title: "Mão na Mão (Instrumental 1)", embed: "https://suno.com/embed/e7503c89-f225-488c-b7ff-3209980c9096" },
+        { title: "Mão na Mão (Instrumental 2)", embed: "https://suno.com/embed/84dd03ec-57f0-4835-b948-aa4e19fdc69f" },
+        { title: "Tira o Sapato! (Instrumental 1)", embed: "https://suno.com/embed/26eb7770-6e44-4dee-a7bc-e7ef4cbb93d5" },
+        { title: "Tira o Sapato! (Instrumental 2)", embed: "https://suno.com/embed/c52f0b97-dae5-4e69-8d5b-53390957b6fb" },
+        { title: "A Turma do FaçaAmigos (Instrumental 1)", embed: "https://suno.com/embed/9e397a51-c199-4dd4-812b-b5b475726a3f" },
+        { title: "A Turma do FaçaAmigos (Instrumental 2)", embed: "https://suno.com/embed/33633d52-afab-4219-b25c-6c8fc19a308e" },
+
+        // ====================================================================
+        // 4. FAIXAS INSTRUMENTAIS AMBIENTAIS (audio/musica/)
+        // ====================================================================
         { title: "Abraço de Brincar", file: "abraco-de-brincar.mp3" },
         { title: "De um Lado pro Outro", file: "de-um-lado-pro-outro.mp3" },
         { title: "Jardim de Amigos", file: "jardim-de-amigos.mp3" },
@@ -1774,7 +1987,8 @@
         ducked: false,
         pausedByScene: false,
         volumeLevel: 0.35, // nível suave de fundo no salão
-        fadeInterval: null
+        fadeInterval: null,
+        advanceTimer: null
       };
 
       function shuffleAmbientOrder() {
@@ -1830,20 +2044,77 @@
         dom.musicBadge.classList.toggle('muted', !som.on || state.currentMode === 'night');
       }
 
-      function updateBadgeTitle(title) {
+      function updateBadgeTitle(title, isEmbed) {
         if (dom.musicText) {
-          dom.musicText.textContent = title ? `🎵 ${title}` : 'Música ambiente';
+          const tag = isEmbed ? '🎵 [Suno] ' : '🎵 ';
+          dom.musicText.textContent = title ? `${tag}${title}` : 'Música ambiente';
+        }
+      }
+
+      function showSunoEmbed(track) {
+        if (!dom.sunoPlayerDock || !dom.sunoPlayerFrame) return;
+        if (!som.on || state.currentMode === 'night' || ambient.pausedByScene) {
+          hideSunoEmbed();
+          return;
+        }
+        if (dom.sunoPlayerTitle) {
+          dom.sunoPlayerTitle.textContent = track.title || 'Faixa FaçaAmigos (Suno)';
+        }
+        if (dom.sunoExternalLink) {
+          dom.sunoExternalLink.href = track.embed.replace('/embed/', '/song/');
+        }
+        if (dom.sunoPlayerFrame.src !== track.embed) {
+          dom.sunoPlayerFrame.src = track.embed;
+        }
+        dom.sunoPlayerDock.classList.remove('collapsed');
+        dom.sunoPlayerDock.classList.add('active');
+        updateBadgeStatus(true);
+      }
+
+      function hideSunoEmbed() {
+        if (!dom.sunoPlayerDock) return;
+        dom.sunoPlayerDock.classList.remove('active');
+        if (dom.sunoPlayerFrame && dom.sunoPlayerFrame.src !== 'about:blank') {
+          dom.sunoPlayerFrame.src = 'about:blank';
         }
       }
 
       function playCurrentTrack() {
+        clearTimeout(ambient.advanceTimer);
         const track = getCurrentTrack();
         if (!track) return;
-        const targetSrc = `audio/musica/${track.file}`;
-        if (!ambient.audio.src.endsWith(track.file)) {
+
+        // Se a faixa for um Embed Suno (sem arquivo local MP3)
+        if (track.embed) {
+          ambient.audio.pause();
+          updateBadgeTitle(track.title, true);
+          showSunoEmbed(track);
+
+          // Auto-avanço da faixa do Suno após ~2m20s se não pulada manualmente
+          if (som.on && state.currentMode !== 'night') {
+            ambient.advanceTimer = setTimeout(() => {
+              if (getCurrentTrack() === track) {
+                nextAmbientTrack();
+              }
+            }, 140000);
+          }
+          return;
+        }
+
+        // Faixa com arquivo de áudio local (MP3)
+        hideSunoEmbed();
+        updateBadgeTitle(track.title, false);
+
+        const targetSrc = (track.file && (track.file.includes('/') || track.file.startsWith('http')))
+          ? track.file
+          : `audio/musica/${track.file}`;
+        const currentSrc = ambient.audio.src || '';
+        const targetDecoded = decodeURI(targetSrc);
+        const currentDecoded = decodeURI(currentSrc);
+
+        if (!currentDecoded.endsWith(targetDecoded) && !currentSrc.endsWith(encodeURI(targetSrc))) {
           ambient.audio.src = targetSrc;
         }
-        updateBadgeTitle(track.title);
 
         if (!som.on || state.currentMode === 'night' || ambient.pausedByScene) {
           ambient.audio.pause();
@@ -1976,6 +2247,7 @@
         if (!som.on) {
           stopVoice();
           ambient.audio.pause();
+          hideSunoEmbed();
           updateBadgeStatus(false);
         } else {
           unlockAudio();
@@ -2117,6 +2389,7 @@
           // Congela a música ambiente durante o momento "Estátua!"
           ambient.pausedByScene = true;
           ambient.audio.pause();
+          hideSunoEmbed();
           updateBadgeStatus(false);
         } else {
           if (ambient.pausedByScene) {
@@ -3010,7 +3283,18 @@
 
       dom.btnSound.addEventListener('click', toggleSound);
       if (dom.btnMusicNext) dom.btnMusicNext.addEventListener('click', nextAmbientTrack);
-      if (dom.musicBadge) dom.musicBadge.addEventListener('click', nextAmbientTrack);
+      if (dom.musicBadge) dom.musicBadge.addEventListener('click', () => {
+        const current = getCurrentTrack();
+        if (current && current.embed && dom.sunoPlayerDock) {
+          dom.sunoPlayerDock.classList.remove('collapsed');
+          dom.sunoPlayerDock.classList.add('active');
+        }
+        nextAmbientTrack();
+      });
+      if (dom.btnSunoNext) dom.btnSunoNext.addEventListener('click', nextAmbientTrack);
+      if (dom.btnSunoClose) dom.btnSunoClose.addEventListener('click', () => {
+        if (dom.sunoPlayerDock) dom.sunoPlayerDock.classList.toggle('collapsed');
+      });
       dom.btnPair.addEventListener('click', togglePair);
       dom.btnGameToggle.addEventListener('click', toggleGame);
       dom.btnGameClose.addEventListener('click', toggleGame);
