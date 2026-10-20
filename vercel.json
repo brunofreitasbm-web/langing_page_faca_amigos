@@ -13,7 +13,10 @@
     { "source": "/vitrine-digital", "destination": "/tv" },
     { "source": "/tv2", "destination": "/tv2" },
     { "source": "/circuito/tv", "destination": "/tv2" },
-    { "source": "/tv-circuito", "destination": "/tv2" }
+    { "source": "/tv-circuito", "destination": "/tv2" },
+    { "source": "/musicas", "destination": "/musica" },
+    { "source": "/player", "destination": "/musica" },
+    { "source": "/som", "destination": "/musica" }
   ],
   "headers": [
     {
