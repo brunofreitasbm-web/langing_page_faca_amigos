@@ -1,6 +1,6 @@
 # Trilha Sonora Ambiente — FaçaAmigos
 
-10 músicas originais para tocar no Playground, no Circuito e no salão. Cada uma traz a letra e um prompt de estilo pronto para colar em gerador de música (Suno, Udio). O prompt vai em inglês porque esses geradores respondem melhor assim; a letra fica em português.
+15 músicas originais para tocar no Playground, no Circuito e no salão. Cada uma traz a letra e um prompt de estilo pronto para colar em gerador de música (Suno, Udio). O prompt vai em inglês porque esses geradores respondem melhor assim; a letra fica em português.
 
 Personagens: **Zoe** (cachorra golden, anfitriã), **Tuco** (tucano, música), **Caco** (macaco), **Tati** (tartaruga).
 
@@ -401,51 +401,252 @@ A cada duas animadas entra uma calma, para a sala não acumular agitação.
 - Isabella revisa as letras 5, 7 e 8 (falam de comportamento e regulação).
 - Testar 2 ou 3 faixas no salão por uma semana antes de gerar o resto: observar se alguma criança se incomoda e perguntar à equipe o que já cansou.
 
+## 11. Parabéns no FaçaAmigos
+
+**Uso:** aniversários no salão, eventos. Fora da rotação normal: toca só quando tem festa. **Clima:** chiclete, festiva.
+
+**Prompt:** `festive brazilian kids pop, 114 bpm, ukulele, handclaps, glockenspiel, warm female vocal with kids choir singing (not shouting), bright celebration, smooth dynamics, no whistles or horns`
+
+```
+[Verso 1]
+Hoje o salão acordou diferente
+Tem bolo, tem balão, tem muita gente
+A Zoe já colocou o chapéu
+O Tuco afinou o bico pro céu
+
+[Refrão]
+Parabéns, parabéns, é o seu dia!
+Mais um ano de brincadeira e alegria
+Parabéns, parabéns, a vela acendeu
+Sopra devagar, que o desejo é seu
+
+[Verso 2]
+O Caco trouxe um presente escondido
+A Tati chegou, mas chegou sorrindo
+Todo mundo em roda pra cantar
+Quem faz amigo nunca vai parar
+
+[Refrão]
+Parabéns, parabéns, é o seu dia!
+Mais um ano de brincadeira e alegria
+Parabéns, parabéns, a vela acendeu
+Sopra devagar, que o desejo é seu
+
+[Final]
+Viva, viva, viva! Feliz aniversário!
+```
+
+## 12. Brincar é Coisa Séria (Clínica)
+
+**Uso:** Clínica, turno da manhã, dia 5 do ciclo da TV. Carrega o pilar "brincar com propósito". **Clima:** acolhedora, esperançosa.
+
+**Prompt:** `gentle brazilian kids folk-pop, 88 bpm, nylon guitar, soft piano, light hand percussion, warm female vocal, hopeful and calm, intimate mix`
+
+```
+[Verso 1]
+Empilha, derruba, empilha de novo
+Cada bloquinho é um passo novo
+Olha pra mim, eu olho pra você
+Brincando a gente aprende a crescer
+
+[Refrão]
+Brincar é coisa séria
+Brincar é jeito de aprender
+Cada risada é uma conquista
+Cada tentativa, um saber
+
+[Verso 2]
+Tem dia que sai, tem dia que não
+A gente tenta com a mesma paixão
+Ninguém precisa ser igual a ninguém
+Do seu jeitinho você vai além
+
+[Refrão]
+Brincar é coisa séria
+Brincar é jeito de aprender
+Cada risada é uma conquista
+Cada tentativa, um saber
+
+[Final]
+Um passo, um passo... olha só até onde chegou.
+```
+
+## 13. Mão na Mão
+
+**Uso:** qualquer turno. Dividir brinquedo e revezar. **Clima:** chiclete, animada.
+
+**Prompt:** `upbeat kids pop with light samba swing, 112 bpm, cavaquinho, tambourine, soft bass, warm male and female duet with kids choir, catchy, smooth mix`
+
+```
+[Verso 1]
+Esse brinquedo é meu, mas pode ser seu também
+A gente reveza e fica tudo bem
+Um pouquinho pra mim, um pouquinho pra você
+Dividir é uma coisa boa de fazer
+
+[Refrão]
+Mão na mão, lado a lado
+Junto é mais divertido
+Mão na mão, lado a lado
+Quem divide ganha um amigo
+
+[Verso 2]
+Tu segura aqui, eu puxo ali
+Olha a torre que a gente fez subir
+Caiu? Tudo bem, a gente faz de novo
+Dessa vez com um amigo novo
+
+[Refrão]
+Mão na mão, lado a lado
+Junto é mais divertido
+Mão na mão, lado a lado
+Quem divide ganha um amigo
+
+[Ponte]
+Um ajuda o outro, o outro ajuda alguém
+E no final todo mundo ajuda bem
+
+[Refrão]
+Mão na mão, lado a lado
+Junto é mais divertido
+Mão na mão, lado a lado
+Quem divide ganha um amigo
+```
+
+## 14. Tira o Sapato!
+
+**Uso:** entrada do Playground, turno das famílias. Ensina a rotina de chegada cantando. **Clima:** animada, pergunta e resposta.
+
+**Prompt:** `playful kids pop, 110 bpm, marimba, ukulele, claps, bouncy bass, clear female vocal with kids answering in call and response, fun, very clear diction`
+
+```
+[Verso 1]
+Chegou na porta, já sabe o que fazer
+Tira o sapato, a meia vai com você
+Guarda direitinho lá no cantinho
+E entra pisando bem de mansinho
+
+[Refrão]
+Tira o sapato! (Tirei!)
+Bota a meia! (Botei!)
+Lava a mão! (Lavei!)
+Agora sim, pode entrar!
+
+[Verso 2]
+Na piscina a gente mergulha com cuidado
+No escorregador, um de cada vez
+Quem espera a vez brinca outra vez
+E ninguém fica machucado
+
+[Refrão]
+Tira o sapato! (Tirei!)
+Bota a meia! (Botei!)
+Lava a mão! (Lavei!)
+Agora sim, pode entrar!
+
+[Ponte]
+Se cansou, tem um cantinho pra descansar
+Se precisar, chama a Zoe que ela vem te ajudar
+
+[Refrão]
+Tira o sapato! (Tirei!)
+Bota a meia! (Botei!)
+Lava a mão! (Lavei!)
+Agora sim, pode brincar!
+```
+
+## 15. A Turma do FaçaAmigos
+
+**Uso:** abertura do turno das famílias, dia 1 do ciclo da TV ("Reino das Mascotes"). Apresenta os quatro personagens. **Clima:** chiclete, tema.
+
+**Prompt:** `catchy kids theme song, 116 bpm, synth plucks, ukulele, handclaps, light bass, female vocal asking and kids choir answering the names, bright and smooth, no brass`
+
+```
+[Verso 1]
+Quem é que abana o rabo e recebe na porta?
+É a Zoe! (Zoe!)
+Quem é que canta bonito lá do galho da mangueira?
+É o Tuco! (Tuco!)
+
+[Verso 2]
+Quem é que pula, roda e faz careta?
+É o Caco! (Caco!)
+Quem chega devagar, mas chega sempre inteira?
+É a Tati! (Tati!)
+
+[Refrão]
+Zoe, Tuco, Caco e Tati
+A turma do FaçaAmigos tá aqui
+Zoe, Tuco, Caco e Tati
+Vem brincar com a gente aqui
+
+[Ponte]
+Um late, um canta, um pula, um sorri
+Quatro jeitos diferentes, e todos cabem aqui
+
+[Refrão]
+Zoe, Tuco, Caco e Tati
+A turma do FaçaAmigos tá aqui
+Zoe, Tuco, Caco e Tati
+Vem brincar com a gente aqui
+```
+
 ---
 
-## Plano de produção: 20 faixas
+## Plano de produção: 35 faixas
 
-Decisão: 10 músicas, cada uma em 2 versões. A **instrumental** toca no turno da equipe (10h–15h59, baixo fluxo). A **cantada** toca no turno das famílias (16h–22h).
+Decisão: **15 músicas cantadas + 15 instrumentais + 5 instrumentais extras** (segunda variação das mais calmas). As instrumentais tocam no turno da equipe (10h–15h59, baixo fluxo). As cantadas tocam no turno das famílias (16h–22h).
+
+Por que 5 extras só instrumentais: o turno da manhã dura 6 horas e é a mesma equipe ouvindo. Com 20 instrumentais de ~3 min, a playlist tem ~60 min e repete 6 vezes por dia. Com 10, repetia 12.
 
 ### Nome dos arquivos
 
-Padrão `NN-slug-versao.mp3`, para a `/tv` montar a playlist sozinha pelo sufixo:
+Padrão `NN-slug-versao.mp3`, para a `/tv` montar a playlist sozinha pelo sufixo. Pasta no repo: `audio/trilha/`.
 
-| Nº | Arquivo cantada | Arquivo instrumental |
-|----|-----------------|----------------------|
-| 01 | `01-faca-amigos-voz.mp3` | `01-faca-amigos-inst.mp3` |
-| 02 | `02-oi-amigo-voz.mp3` | `02-oi-amigo-inst.mp3` |
-| 03 | `03-piscina-de-bolinhas-voz.mp3` | `03-piscina-de-bolinhas-inst.mp3` |
-| 04 | `04-vrum-vrum-do-caco-voz.mp3` | `04-vrum-vrum-do-caco-inst.mp3` |
-| 05 | `05-devagar-tambem-chega-voz.mp3` | `05-devagar-tambem-chega-inst.mp3` |
-| 06 | `06-tuco-toca-carimbo-voz.mp3` | `06-tuco-toca-carimbo-inst.mp3` |
-| 07 | `07-cada-um-do-seu-jeito-voz.mp3` | `07-cada-um-do-seu-jeito-inst.mp3` |
-| 08 | `08-respira-comigo-voz.mp3` | `08-respira-comigo-inst.mp3` |
-| 09 | `09-chuva-das-tres-voz.mp3` | `09-chuva-das-tres-inst.mp3` |
-| 10 | `10-ate-amanha-amigo-voz.mp3` | `10-ate-amanha-amigo-inst.mp3` |
+| Nº | Música | Cantada | Instrumental | Extra (manhã) |
+|----|--------|---------|--------------|---------------|
+| 01 | Faça Amigos | `01-faca-amigos-voz.mp3` | `01-faca-amigos-inst.mp3` | |
+| 02 | Oi, Amigo! | `02-oi-amigo-voz.mp3` | `02-oi-amigo-inst.mp3` | `02-oi-amigo-inst-b.mp3` |
+| 03 | Piscina de Bolinhas | `03-piscina-de-bolinhas-voz.mp3` | `03-piscina-de-bolinhas-inst.mp3` | |
+| 04 | Vrum-Vrum do Caco | `04-vrum-vrum-do-caco-voz.mp3` | `04-vrum-vrum-do-caco-inst.mp3` | |
+| 05 | Devagar Também Chega | `05-devagar-tambem-chega-voz.mp3` | `05-devagar-tambem-chega-inst.mp3` | `05-devagar-tambem-chega-inst-b.mp3` |
+| 06 | Tuco Toca Carimbó | `06-tuco-toca-carimbo-voz.mp3` | `06-tuco-toca-carimbo-inst.mp3` | |
+| 07 | Cada Um do Seu Jeito | `07-cada-um-do-seu-jeito-voz.mp3` | `07-cada-um-do-seu-jeito-inst.mp3` | |
+| 08 | Respira Comigo | `08-respira-comigo-voz.mp3` | `08-respira-comigo-inst.mp3` | `08-respira-comigo-inst-b.mp3` |
+| 09 | Chuva das Três | `09-chuva-das-tres-voz.mp3` | `09-chuva-das-tres-inst.mp3` | |
+| 10 | Até Amanhã, Amigo | `10-ate-amanha-amigo-voz.mp3` | `10-ate-amanha-amigo-inst.mp3` | `10-ate-amanha-amigo-inst-b.mp3` |
+| 11 | Parabéns no FaçaAmigos | `11-parabens-voz.mp3` | `11-parabens-inst.mp3` | |
+| 12 | Brincar é Coisa Séria | `12-brincar-e-coisa-seria-voz.mp3` | `12-brincar-e-coisa-seria-inst.mp3` | `12-brincar-e-coisa-seria-inst-b.mp3` |
+| 13 | Mão na Mão | `13-mao-na-mao-voz.mp3` | `13-mao-na-mao-inst.mp3` | |
+| 14 | Tira o Sapato! | `14-tira-o-sapato-voz.mp3` | `14-tira-o-sapato-inst.mp3` | |
+| 15 | A Turma do FaçaAmigos | `15-a-turma-voz.mp3` | `15-a-turma-inst.mp3` | |
 
-Pasta no repo: `audio/trilha/`.
+Total: 15 + 15 + 5 = **35 arquivos**.
 
-### Playlist manhã (10h–15h59, só instrumental)
+### Playlist manhã (10h–15h59, 20 instrumentais, ~60 min)
 
-Ordem pensada para a equipe: começa calmo, sobe no meio do turno, volta a baixar antes da troca.
+Começa calmo, sobe no meio do turno, volta a baixar antes da troca:
 
-08 → 05 → 10 → 02 → 07 → 01 → 03 → 09 → 04 → 06 → 05 → 08
+08 → 05 → 12 → 10 → 02 → 07 → 13 → 01 → 15 → 03 → 09 → 14 → 04 → 06 → 11 → 02-b → 12-b → 05-b → 10-b → 08-b
 
 Volume: 2 a 3 passos abaixo do turno da tarde. Nesse horário a música é fundo, não atração.
 
-### Playlist tarde (16h–22h, cantada)
+### Playlist tarde (16h–22h, 14 cantadas)
 
-01 → 02 → 03 → 05 → 04 → 07 → 08 → 06 → 09 → 01 → 10
+01 → 15 → 02 → 14 → 03 → 05 → 04 → 13 → 07 → 08 → 06 → 09 → 12 → 10
 
-Mantém uma calma a cada duas animadas. Das 21h30 em diante, só 05, 08 e 10.
+A 11 (Parabéns) fica **fora da rotação**: toca sob demanda, quando tem aniversário no salão. Das 21h30 em diante, só 05, 08, 12 e 10.
 
-### Como gerar no Suno (versão instrumental)
+### Como gerar no Suno
 
-Para a instrumental sair parecida com a cantada, e não uma música diferente:
+**Cantada:** modo Custom, letra com as marcações, prompt de estilo, título. Cada geração dá 2 versões.
+
+**Instrumental (fiel à cantada):** para a instrumental sair parecida com a cantada, e não uma música diferente:
 1. Gere a cantada primeiro e escolha a versão final.
-2. Na versão escolhida, use **Cover** com a opção Instrumental ligada, ou **Remaster** sem voz, conforme o que o seu plano oferece. Isso mantém melodia e arranjo.
+2. Na versão escolhida, use **Cover** com Instrumental ligado (ou Remaster sem voz, conforme o seu plano). Isso mantém melodia e arranjo.
 3. Só se o Cover sair ruim, gere do zero com o mesmo prompt de estilo e Instrumental ligado.
+
+**Extra `-b`:** Cover da mesma cantada de novo, mas trocando um ou dois instrumentos no prompt (ex.: piano em vez de violão, marimba em vez de glockenspiel). Mesma melodia, outra cor; a equipe reconhece sem sentir repetição.
 
 ### Orçamento (2.500 créditos, 10 por geração)
 
@@ -453,12 +654,19 @@ Para a instrumental sair parecida com a cantada, e não uma música diferente:
 |-------|----------|----------|
 | Teste: faixas 01, 05 e 08, cantada + instrumental | ~18 | ~180 |
 | Semana de teste no salão | 0 | 0 |
-| Restantes 7 cantadas (3 tentativas cada) | ~21 | ~210 |
-| Restantes 7 instrumentais (2 tentativas cada) | ~14 | ~140 |
-| **Total das 20 faixas** | **~53** | **~530** |
-| Reserva para refazer o que cansar e para fase 2 | | ~1.970 |
+| Restantes 12 cantadas (3 tentativas cada) | ~36 | ~360 |
+| Restantes 12 instrumentais (2 tentativas cada) | ~24 | ~240 |
+| 5 extras `-b` (2 tentativas cada) | ~10 | ~100 |
+| **Total das 35 faixas** | **~88** | **~880** |
+| Reserva para refazer o que cansar, datas e eventos | | ~1.620 |
 
-Fase 2 (depois de um mês rodando): esticar as instrumentais com Extend para 5–6 min e gerar uma segunda variação instrumental das faixas 05, 08 e 10. Isso resolve a repetição no turno da manhã, que com 10 instrumentais de ~3 min roda 12 vezes por dia.
+### Ordem de produção
+
+1. **Teste (6 arquivos):** 01, 05, 08 em cantada + instrumental. Uma semana no salão.
+2. **Núcleo da tarde (8 cantadas):** 02, 15, 14, 03, 07, 13, 09, 10, com as instrumentais logo em seguida.
+3. **Resto:** 04, 06, 12, 11 e as 5 extras `-b`.
+
+Assim o turno das famílias fica completo primeiro, que é onde a música é parte da experiência vendida.
 
 ### Checklist antes de aprovar uma faixa
 
@@ -468,4 +676,4 @@ Fase 2 (depois de um mês rodando): esticar as instrumentais com Extend para 5�
 - [ ] Letra cantada igual à escrita (o Suno às vezes troca ou pula versos).
 - [ ] Final limpo, sem corte seco.
 - [ ] Instrumental reconhecível como a mesma música da cantada.
-- [ ] Faixas 05, 07 e 08: letra revisada pela Isabella.
+- [ ] Faixas 05, 07, 08 e 12: letra revisada pela Isabella.
