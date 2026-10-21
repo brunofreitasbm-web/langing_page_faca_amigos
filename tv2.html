@@ -517,7 +517,10 @@
         soundKey: 'fa-tv2-som',
         bedLevel: 0.30,          // trilha de fundo bem abaixo dos efeitos
         sfxLevel: 0.90,
-        bpm: 112                 // andamento alegre, mas sem pressa
+        bpm: 112,                // andamento alegre, mas sem pressa
+        // Rótulo do experimento em curso (regras em contexto.md, seção 7.1). Trocar a cada mudança de uma coisa só;
+        // ?exp=<rótulo> na URL sobrepõe, só para teste.
+        experiment: 'base-2026-10'
       };
 
       const ROTATIONS = ['auto', '90', '270', '0'];
@@ -775,6 +778,21 @@
         return order;
       }
 
+      // Cada troca de slide vai para o dataLayer com o rótulo do experimento. A TV é passiva: o evento
+      // não mede venda, só registra o que estava na tela e quando. A venda vem de `sessoes` do quiosque.
+      const EXPERIMENT = (new URLSearchParams(location.search).get('exp') || CONFIG.experiment).slice(0, 40);
+
+      function trackSlide(slide) {
+        try {
+          (window.dataLayer = window.dataLayer || []).push({
+            event: 'tv2_slide',
+            tv2_experiment: EXPERIMENT,
+            tv2_slide: slide.image.replace('img/circuito-', ''),
+            tv2_plan: slide.plan
+          });
+        } catch (e) { /* medição nunca derruba a vitrine */ }
+      }
+
       function show() {
         clearTimeout(state.timer);
 
@@ -789,6 +807,7 @@
         slide.el.classList.add('active');
         dom.plans.forEach(p => p.classList.toggle('on', Number(p.dataset.plan) === slide.plan));
         playSfx(slide.sfx);
+        trackSlide(slide);
 
         // Reinicia a animação da barra (CSS, sem custo de JS por frame)
         dom.progress.classList.remove('run');
