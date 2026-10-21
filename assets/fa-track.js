@@ -156,7 +156,15 @@
     })(window, 'clarity');
     loadScript('https://www.clarity.ms/tag/' + IDS.clarity);
   }
+  // Painel de quiosque (<html data-fa-kiosk>, ex.: tv2.html): é uma TV da empresa, sem ninguém para responder ao
+  // banner e sem dado de pessoa. Não abre o banner; libera só a medição (analytics_storage) para os eventos do
+  // painel chegarem ao GA4. Anúncios e o Clarity (gravação de sessão) continuam desligados, mesmo com aceite salvo.
+  var KIOSK = document.documentElement.hasAttribute('data-fa-kiosk');
   function applyConsent(choice) {
+    if (KIOSK) {
+      gtag('consent', 'update', { analytics_storage: 'granted' });
+      return;
+    }
     if (choice === 'all') {
       gtag('consent', 'update', GRANTED);
       loadClarity();
@@ -372,6 +380,7 @@
   }
 
   function ready() {
+    if (KIOSK) return;
     if (!read(CONSENT_KEY)) buildBanner();
     addFooterLink();
   }
