@@ -23,6 +23,7 @@ Objetivo: saber se uma mudança no painel vende mais, em vez de decidir no palpi
 | Rótulo | No ar de | Até | O que mudou | Sessões/hora (20 min) | Sessões/hora (30 min) | Conclusão |
 |---|---|---|---|---|---|---|
 | `base-2026-10` | (preencher na data do deploy) | | 14 slides: 8 antigos + 6 novos (pelúcias, bebê no Lamborghini, quiosque) | | | Linha de base. Comparar a próxima mudança contra ela. |
+| `fotos-novas-2026-10` | (preencher na data do deploy) | | 19 slides: entram 6 fotos novas com criança ao volante (jeep, Lamborghini x2, Range Rover, moto, capivara); sai `bombeiro-h` (repetia a foto do bombeiro). Cartão de 20 min passa a dizer "Pelúcias e jeep". | | | Comparar contra `base-2026-10`. |
 
 ## Ideias de testes, em ordem sugerida
 
