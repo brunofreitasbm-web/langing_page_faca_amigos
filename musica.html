@@ -539,7 +539,7 @@
     <!-- BADGE DE STATUS -->
     <div class="radio-status-badge">
       <span class="live-dot"></span>
-      <span id="radioStatusText">Rádio Contínua • Rodízio 100% Aleatório (89 Faixas)</span>
+      <span id="radioStatusText">Rádio Contínua • Rodízio 100% Automático (40 Faixas Oficiais)</span>
     </div>
 
     <!-- PALCO CENTRAL DA MÍDIA (MESMO LUGAR PARA TUDO) -->
@@ -550,14 +550,14 @@
       </div>
 
       <!-- Palco Suno Embed (Mesmíssimo Espaço) -->
-      <div class="suno-stage" id="sunoStage">
+      <div class="suno-stage" id="sunoStage" style="display:none;">
         <iframe id="sunoFrame" src="about:blank" title="Suno Player" allow="autoplay; encrypted-media"></iframe>
       </div>
     </div>
 
     <!-- METADADOS DA FAIXA -->
     <div class="type-pill mp3" id="typePill">Rádio FaçaAmigos</div>
-    <h1 class="track-title" id="trackTitle">Toque no Botão Abaixo</h1>
+    <h1 class="track-title" id="trackTitle">Iniciando Rádio...</h1>
     <p class="track-subtitle" id="trackSubtitle">Modo automático contínuo para tocar no salão</p>
 
     <!-- BARRA DE PROGRESSO DO MP3 -->
@@ -594,7 +594,7 @@
   <section class="upcoming-section" aria-label="Próximas Faixas">
     <div class="upcoming-header">
       <h2>📻 Na Fila da Rádio</h2>
-      <span class="upcoming-badge" id="upcomingBadge">89 faixas no rodízio</span>
+      <span class="upcoming-badge" id="upcomingBadge">40 faixas no rodízio</span>
     </div>
     <div class="upcoming-list" id="upcomingList">
       <!-- Inserido dinamicamente pelo JS -->
@@ -607,116 +607,63 @@
 
   <script>
     // ========================================================================
-    // BASE DE DADOS COMPLETA DAS 89 MÚSICAS DO FAÇAAMIGOS
+    // BASE DE DADOS OFICIAL: 40 FAIXAS LOCAIS MP3 DE ALTA FIDELIDADE
+    // 100% dos arquivos residem localmente no servidor garantindo reprodução contínua.
     // ========================================================================
     const TRACKS = [
-      // 1. FAIXAS OFICIAIS BAIXADAS (MP3 Locais em /conteudo)
-      { title: "Faça Amigos", file: "conteudo/Faça Amigos.mp3", cat: "mp3", char: "cachorro-acena" },
-      { title: "Oi, Amigo!", file: "conteudo/Oi, Amigo!.mp3", cat: "mp3", char: "cachorro-pula" },
-      { title: "Piscina de Bolinhas", file: "conteudo/Piscina de Bolinhas.mp3", cat: "mp3", char: "macaco-festa" },
-      { title: "Vrum-Vrum do Caco", file: "conteudo/Vrum-Vrum do Caco.mp3", cat: "mp3", char: "macaco-corda" },
-      { title: "Devagar Também Chega", file: "conteudo/Devagar Também Chega.mp3", cat: "mp3", char: "tartaruga-anda" },
-      { title: "Tuco Toca Carimbó", file: "conteudo/Tuco Toca Carimbó.mp3", cat: "mp3", char: "tucano-asas" },
-      { title: "Cada Um do Seu Jeito", file: "conteudo/Cada Um do Seu Jeito.mp3", cat: "mp3", char: "cachorro-sentado" },
-      { title: "Respira Comigo", file: "conteudo/Respira Comigo.mp3", cat: "mp3", char: "tartaruga-dorme" },
-      { title: "Chuva das Três", file: "conteudo/Chuva das Três.mp3", cat: "mp3", char: "tucano-frente" },
-      { title: "Até Amanhã, Amigo", file: "conteudo/Até Amanhã, Amigo.mp3", cat: "mp3", char: "cachorro-deitado" },
-      { title: "Parabéns no FaçaAmigos", file: "conteudo/Parabéns no FaçaAmigos.mp3", cat: "mp3", char: "macaco-danca" },
-      { title: "Brincar é Coisa Séria", file: "conteudo/Brincar é Coisa Séria.mp3", cat: "mp3", char: "macaco-coracao" },
-      { title: "Mão na Mão", file: "conteudo/Mão na Mão.mp3", cat: "mp3", char: "tartaruga-frente" },
-      { title: "Tira o Sapato!", file: "conteudo/Tira o Sapato!.mp3", cat: "mp3", char: "tucano-galho" },
-      { title: "A Turma do FaçaAmigos", file: "conteudo/A Turma do FaçaAmigos.mp3", cat: "mp3", char: "cachorro-acena" },
-      { title: "Faça Amigos (Instrumental)", file: "conteudo/Faça Amigos (Instrumental).mp3", cat: "mp3", char: "cachorro-pula" },
-      { title: "Oi, Amigo! (Instrumental)", file: "conteudo/Oi, Amigo! (Instrumental).mp3", cat: "mp3", char: "macaco-festa" },
-      { title: "Piscina de Bolinhas (Instrumental)", file: "conteudo/Piscina de Bolinhas (Instrumental).mp3", cat: "mp3", char: "macaco-corda" },
-      { title: "Faça Amigos (Versão 1)", file: "conteudo/Faça Amigos (1).mp3", cat: "mp3", char: "tartaruga-anda" },
-      { title: "Faça Amigos (Versão 2)", file: "conteudo/Faça Amigos (2).mp3", cat: "mp3", char: "tucano-asas" },
+      // 1. FAIXAS OFICIAIS FAÇAAMIGOS (MP3 Locais em conteudo/)
+      { title: "Faça Amigos", file: "conteudo/Faça Amigos.mp3", cat: "fa", char: "cachorro-acena" },
+      { title: "Oi, Amigo!", file: "conteudo/Oi, Amigo!.mp3", cat: "fa", char: "cachorro-pula" },
+      { title: "Piscina de Bolinhas", file: "conteudo/Piscina de Bolinhas.mp3", cat: "fa", char: "macaco-festa" },
+      { title: "Vrum-Vrum do Caco", file: "conteudo/Vrum-Vrum do Caco.mp3", cat: "fa", char: "macaco-corda" },
+      { title: "Devagar Também Chega", file: "conteudo/Devagar Também Chega.mp3", cat: "fa", char: "tartaruga-anda" },
+      { title: "Tuco Toca Carimbó", file: "conteudo/Tuco Toca Carimbó.mp3", cat: "fa", char: "tucano-asas" },
+      { title: "Cada Um do Seu Jeito", file: "conteudo/Cada Um do Seu Jeito.mp3", cat: "fa", char: "cachorro-sentado" },
+      { title: "Respira Comigo", file: "conteudo/Respira Comigo.mp3", cat: "fa", char: "tartaruga-dorme" },
+      { title: "Chuva das Três", file: "conteudo/Chuva das Três.mp3", cat: "fa", char: "tucano-frente" },
+      { title: "Até Amanhã, Amigo", file: "conteudo/Até Amanhã, Amigo.mp3", cat: "fa", char: "cachorro-deitado" },
+      { title: "Parabéns no FaçaAmigos", file: "conteudo/Parabéns no FaçaAmigos.mp3", cat: "fa", char: "macaco-danca" },
+      { title: "Brincar é Coisa Séria", file: "conteudo/Brincar é Coisa Séria.mp3", cat: "fa", char: "macaco-coracao" },
+      { title: "Mão na Mão", file: "conteudo/Mão na Mão.mp3", cat: "fa", char: "tartaruga-sorri" },
+      { title: "Tira o Sapato!", file: "conteudo/Tira o Sapato!.mp3", cat: "fa", char: "tucano-joinha" },
+      { title: "A Turma do FaçaAmigos", file: "conteudo/A Turma do FaçaAmigos.mp3", cat: "fa", char: "cachorro-acena" },
+      { title: "Faça Amigos (Versão 1)", file: "conteudo/Faça Amigos (1).mp3", cat: "fa", char: "tartaruga-anda" },
+      { title: "Faça Amigos (Versão 2)", file: "conteudo/Faça Amigos (2).mp3", cat: "fa", char: "tucano-asas" },
+      { title: "Faça Amigos (Instrumental)", file: "conteudo/Faça Amigos (Instrumental).mp3", cat: "inst", char: "cachorro-pula" },
+      { title: "Oi, Amigo! (Instrumental)", file: "conteudo/Oi, Amigo! (Instrumental).mp3", cat: "inst", char: "macaco-festa" },
+      { title: "Piscina de Bolinhas (Instrumental)", file: "conteudo/Piscina de Bolinhas (Instrumental).mp3", cat: "inst", char: "macaco-corda" },
 
-      // 2. FAIXAS SUNO EMBED - CANTADAS
-      { title: "Devagar Também Chega (Clip 2)", embed: "https://suno.com/embed/9b79f5e9-9c0e-40d6-8119-f1ab4102b809", cat: "suno" },
-      { title: "Tuco Toca Carimbó (Clip 2)", embed: "https://suno.com/embed/9a71e863-c654-479f-b795-2a5c303ece8f", cat: "suno" },
-      { title: "Cada Um do Seu Jeito (Clip 2)", embed: "https://suno.com/embed/4b33a450-39bb-4665-9e5f-8b65d46c7d43", cat: "suno" },
-      { title: "Respira Comigo (Clip 2)", embed: "https://suno.com/embed/7cf7831a-ee65-42ff-8826-27eb016c0293", cat: "suno" },
-      { title: "Chuva das Três (Clip 2)", embed: "https://suno.com/embed/72fd7a5a-b8f8-40f9-9ee9-37ef20713c99", cat: "suno" },
-      { title: "Até Amanhã, Amigo (Clip 2)", embed: "https://suno.com/embed/31e4223f-c789-4066-9b3c-8a686cd87a67", cat: "suno" },
-      { title: "Parabéns no FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/64226f35-28c0-470c-8551-53c49d2da4c4", cat: "suno" },
-      { title: "Brincar é Coisa Séria (Clip 2)", embed: "https://suno.com/embed/a2c3ffba-d8c8-4cda-93e9-9b96f913380a", cat: "suno" },
-      { title: "Mão na Mão (Clip 2)", embed: "https://suno.com/embed/e9052d7d-d392-46a1-95e1-b3561a6258a9", cat: "suno" },
-      { title: "Tira o Sapato! (Clip 2)", embed: "https://suno.com/embed/4f40ea6d-b48e-4b2b-ade3-232f6b191a44", cat: "suno" },
-      { title: "A Turma do FaçaAmigos (Clip 2)", embed: "https://suno.com/embed/acc844f0-0c9b-4732-a15b-a361533a6ee0", cat: "suno" },
-      { title: "Oi, Amigo! (Clip 2)", embed: "https://suno.com/embed/de27593c-925c-4acc-8ef0-65097ded8775", cat: "suno" },
-      { title: "Piscina de Bolinhas (Clip 2)", embed: "https://suno.com/embed/5eb11029-7988-46c9-839f-ca631165bc67", cat: "suno" },
-      { title: "Vrum-Vrum do Caco (Clip 1)", embed: "https://suno.com/embed/7ea520ea-d2f6-455b-b9d9-2e4bb25fc49c", cat: "suno" },
-      { title: "Vrum-Vrum do Caco (Clip 2)", embed: "https://suno.com/embed/ef029193-4a17-4856-bb6b-a2eb914e6790", cat: "suno" },
-      { title: "Faça Amigos (Extra 1)", embed: "https://suno.com/embed/f7bbd454-e9a0-4c12-a7d1-e5d80424bb88", cat: "suno" },
-      { title: "Faça Amigos (Extra 2)", embed: "https://suno.com/embed/da1b0a8f-fc2a-43cf-be64-7095ba04b122", cat: "suno" },
-      { title: "Faça Amigos (Extra 3)", embed: "https://suno.com/embed/6e44b3aa-5d51-4043-a616-2c5a2c270d4f", cat: "suno" },
-      { title: "Faça Amigos (Extra 4)", embed: "https://suno.com/embed/433e387d-080c-40ad-be86-4f40f2824647", cat: "suno" },
-      { title: "Até Amanhã, Amigo (Extra 1)", embed: "https://suno.com/embed/3e6ddfe1-ce48-4cb9-9945-8664ecb958c2", cat: "suno" },
-      { title: "Até Amanhã, Amigo (Extra 2)", embed: "https://suno.com/embed/ba727a85-115d-4074-9fdf-fc73f2fa17ff", cat: "suno" },
-      { title: "Até Amanhã, Amigo (Extra 3)", embed: "https://suno.com/embed/ba127e90-c115-4ba8-bb73-98319e710ea1", cat: "suno" },
-
-      // 3. FAIXAS SUNO EMBED - INSTRUMENTAIS
-      { title: "Faça Amigos (Instrumental Clip 2)", embed: "https://suno.com/embed/5ee7d94e-5f05-4324-92ba-641bec9b8bf3", cat: "suno" },
-      { title: "Oi, Amigo! (Instrumental Clip 2)", embed: "https://suno.com/embed/ee777339-7c6e-4217-937d-15a7dbf2c6c1", cat: "suno" },
-      { title: "Piscina de Bolinhas (Instrumental Clip 2)", embed: "https://suno.com/embed/c8eda657-6105-4185-8abb-b2cc10cf0df5", cat: "suno" },
-      { title: "Vrum-Vrum do Caco (Inst Clip 1)", embed: "https://suno.com/embed/eca2738d-4257-4166-86e2-ebcbc7aa0552", cat: "suno" },
-      { title: "Vrum-Vrum do Caco (Inst Clip 2)", embed: "https://suno.com/embed/c0b70bc4-0170-4aa1-ba6d-8940f3a7b41c", cat: "suno" },
-      { title: "Devagar Também Chega (Inst Clip 1)", embed: "https://suno.com/embed/d436b14a-5715-445e-bb8a-b304852eb30f", cat: "suno" },
-      { title: "Devagar Também Chega (Inst Clip 2)", embed: "https://suno.com/embed/1524daef-c92d-4956-aa0b-1bb6b87661e9", cat: "suno" },
-      { title: "Tuco Toca Carimbó (Inst Clip 1)", embed: "https://suno.com/embed/5c54c1e4-984e-4b68-b80c-7b003a744265", cat: "suno" },
-      { title: "Tuco Toca Carimbó (Inst Clip 2)", embed: "https://suno.com/embed/589ca3d3-eb92-4916-b8f4-fc8fe39fa739", cat: "suno" },
-      { title: "Cada Um do Seu Jeito (Inst Clip 1)", embed: "https://suno.com/embed/84b1ebf1-83c7-43ca-a0e2-e1d5a7d65fc9", cat: "suno" },
-      { title: "Cada Um do Seu Jeito (Inst Clip 2)", embed: "https://suno.com/embed/c4d32a4e-cf54-46c5-b1a7-15d909ca248a", cat: "suno" },
-      { title: "Respira Comigo (Inst Clip 1)", embed: "https://suno.com/embed/eb81774b-c403-4f51-b0fe-e275f928e1dc", cat: "suno" },
-      { title: "Respira Comigo (Inst Clip 2)", embed: "https://suno.com/embed/e79ee82b-09ea-4ef5-8a8b-fba01f8087fc", cat: "suno" },
-      { title: "Chuva das Três (Inst Clip 1)", embed: "https://suno.com/embed/b02a76f1-a18d-4a11-85e3-8f0a0e9fc781", cat: "suno" },
-      { title: "Chuva das Três (Inst Clip 2)", embed: "https://suno.com/embed/d3fe0dfb-93ff-4fa5-a7b3-c4098eb08779", cat: "suno" },
-      { title: "Até Amanhã, Amigo (Inst Clip 1)", embed: "https://suno.com/embed/93ae4d4f-5dd6-4275-8ce6-a7081bc13e8b", cat: "suno" },
-      { title: "Até Amanhã, Amigo (Inst Clip 2)", embed: "https://suno.com/embed/fc5f0fcb-cbfa-42f0-9759-86927cfa4b4a", cat: "suno" },
-      { title: "Parabéns no FaçaAmigos (Inst Clip 1)", embed: "https://suno.com/embed/3e680a3a-3c5e-4bb5-a30d-270f8ee96f4b", cat: "suno" },
-      { title: "Parabéns no FaçaAmigos (Inst Clip 2)", embed: "https://suno.com/embed/6d52f9f1-f0eb-48be-8a3a-305ce7b5b5c9", cat: "suno" },
-      { title: "Brincar é Coisa Séria (Inst Clip 1)", embed: "https://suno.com/embed/cfa63a92-f04b-4835-abfa-3d7f955615d0", cat: "suno" },
-      { title: "Brincar é Coisa Séria (Inst Clip 2)", embed: "https://suno.com/embed/b11568e2-632b-42be-926f-4c17228a4524", cat: "suno" },
-      { title: "Mão na Mão (Inst Clip 1)", embed: "https://suno.com/embed/84048ca5-263a-446d-9fc0-0937a0c1fcba", cat: "suno" },
-      { title: "Mão na Mão (Inst Clip 2)", embed: "https://suno.com/embed/41f893f0-466a-484b-ba04-eb5558e80709", cat: "suno" },
-      { title: "Tira o Sapato! (Inst Clip 1)", embed: "https://suno.com/embed/a7071f41-3b52-475a-b605-dbbb9315d183", cat: "suno" },
-      { title: "Tira o Sapato! (Inst Clip 2)", embed: "https://suno.com/embed/8a2f588c-9a40-4131-a083-d5669bcf20fc", cat: "suno" },
-      { title: "A Turma do FaçaAmigos (Inst Clip 1)", embed: "https://suno.com/embed/8e9d6d87-39e2-4ea5-a4f5-7b56f8f742f3", cat: "suno" },
-      { title: "A Turma do FaçaAmigos (Inst Clip 2)", embed: "https://suno.com/embed/3932e65d-cf48-4395-8ba9-03c738e4a13f", cat: "suno" },
-
-      // 4. FAIXAS DE FUNDO SALÃO (MP3 Locais em /audio/musica)
-      { title: "A Tarde Dourada", file: "audio/musica/a-tarde-dourada.mp3", cat: "ambient" },
-      { title: "Ao Lado do Tucano", file: "audio/musica/ao-lado-do-tucano.mp3", cat: "ambient" },
-      { title: "Brincadeira de Roda", file: "audio/musica/brincadeira-de-roda.mp3", cat: "ambient" },
-      { title: "Caminho de Algodão", file: "audio/musica/caminho-de-algodao.mp3", cat: "ambient" },
-      { title: "Ciranda das Cores", file: "audio/musica/ciranda-das-cores.mp3", cat: "ambient" },
-      { title: "Dança das Sombras", file: "audio/musica/danca-das-sombras.mp3", cat: "ambient" },
-      { title: "Doce Balanço", file: "audio/musica/doce-balanco.mp3", cat: "ambient" },
-      { title: "Gotas de Alegria", file: "audio/musica/gotas-de-alegria.mp3", cat: "ambient" },
-      { title: "Manhã de Sol no Bosque", file: "audio/musica/manha-de-sol-no-bosque.mp3", cat: "ambient" },
-      { title: "Nuvem de Sabão", file: "audio/musica/nuvem-de-sabao.mp3", cat: "ambient" },
-      { title: "O Chão É um Convite", file: "audio/musica/o-chao-e-um-convite.mp3", cat: "ambient" },
-      { title: "O Mundo É um Jardim", file: "audio/musica/o-mundo-e-um-jardim.mp3", cat: "ambient" },
-      { title: "O Nosso Papel", file: "audio/musica/o-nosso-papel.mp3", cat: "ambient" },
-      { title: "O Passo Miúdo", file: "audio/musica/o-passo-miudo.mp3", cat: "ambient" },
-      { title: "O Playground da Gente", file: "audio/musica/o-playground-da-gente.mp3", cat: "ambient" },
-      { title: "Passo Miúdo", file: "audio/musica/passo-miudo.mp3", cat: "ambient" },
-      { title: "Small Footsteps on Cedar", file: "audio/musica/small-footsteps-on-cedar.mp3", cat: "ambient" },
-      { title: "Sunlight on the Conservatory", file: "audio/musica/sunlight-on-the-conservatory.mp3", cat: "ambient" },
-      { title: "Sunlight on the Slide", file: "audio/musica/sunlight-on-the-slide.mp3", cat: "ambient" },
-      { title: "The Highest Arc", file: "audio/musica/the-highest-arc.mp3", cat: "ambient" }
+      // 2. FAIXAS INSTRUMENTAIS DO SALÃO (MP3 Locais em audio/musica/)
+      { title: "Abraço de Brincar", file: "audio/musica/abraco-de-brincar.mp3", cat: "ambient", char: "tartaruga-ri" },
+      { title: "De um Lado pro Outro", file: "audio/musica/de-um-lado-pro-outro.mp3", cat: "ambient", char: "macaco-sentado" },
+      { title: "Jardim de Amigos", file: "audio/musica/jardim-de-amigos.mp3", cat: "ambient", char: "tucano-frente" },
+      { title: "Lugar de Ser Feliz", file: "audio/musica/lugar-de-ser-feliz.mp3", cat: "ambient", char: "cachorro-acena" },
+      { title: "Mittens in the Toy Chest", file: "audio/musica/mittens-in-the-toy-chest.mp3", cat: "ambient", char: "macaco-coracao" },
+      { title: "Nosso Recreio", file: "audio/musica/nosso-recreio.mp3", cat: "ambient", char: "cachorro-pula" },
+      { title: "Nuvem Mansa", file: "audio/musica/nuvem-mansa.mp3", cat: "ambient", char: "tartaruga-dorme" },
+      { title: "O Chão É Sol", file: "audio/musica/o-chao-e-sol.mp3", cat: "ambient", char: "tucano-asas" },
+      { title: "O Chão É um Convite", file: "audio/musica/o-chao-e-um-convite.mp3", cat: "ambient", char: "macaco-danca" },
+      { title: "O Mundo É um Jardim", file: "audio/musica/o-mundo-e-um-jardim.mp3", cat: "ambient", char: "tartaruga-anda" },
+      { title: "O Nosso Papel", file: "audio/musica/o-nosso-papel.mp3", cat: "ambient", char: "tucano-joinha" },
+      { title: "O Passo Miúdo", file: "audio/musica/o-passo-miudo.mp3", cat: "ambient", char: "tartaruga-sorri" },
+      { title: "O Playground da Gente", file: "audio/musica/o-playground-da-gente.mp3", cat: "ambient", char: "cachorro-sentado" },
+      { title: "Open Palms", file: "audio/musica/open-palms.mp3", cat: "ambient", char: "macaco-corda" },
+      { title: "Passo Miúdo", file: "audio/musica/passo-miudo.mp3", cat: "ambient", char: "tartaruga-anda" },
+      { title: "Small Footsteps on Cedar", file: "audio/musica/small-footsteps-on-cedar.mp3", cat: "ambient", char: "tucano-parado" },
+      { title: "Sunlight on the Conservatory", file: "audio/musica/sunlight-on-the-conservatory.mp3", cat: "ambient", char: "macaco-festa" },
+      { title: "Sunlight on the Slide", file: "audio/musica/sunlight-on-the-slide.mp3", cat: "ambient", char: "cachorro-deitado" },
+      { title: "The Highest Arc", file: "audio/musica/the-highest-arc.mp3", cat: "ambient", char: "tucano-asas" },
+      { title: "Through the Garden Gate", file: "audio/musica/through-the-garden-gate.mp3", cat: "ambient", char: "macaco-sentado" }
     ];
 
     // ========================================================================
-    // ESTADO DA RÁDIO (RODÍZIO RANDÔMICO DIRETO E CONTÍNUO)
+    // ESTADO DA RÁDIO (RODÍZIO RANDÔMICO DIRETO, CONTÍNUO E SEM PARAR)
     // ========================================================================
     const state = {
       queue: [],
       queueIndex: 0,
       currentIndex: -1,
-      isPlaying: false,
-      advanceTimer: null
+      isPlaying: false
     };
 
     const audio = new Audio();
@@ -771,7 +718,6 @@
       const total = state.queue.length;
       dom.upcomingBadge.textContent = `${total} faixas no rodízio`;
 
-      // Mostra as próximas faixas da fila
       const start = state.queueIndex;
       const count = Math.min(20, total);
 
@@ -785,9 +731,9 @@
         row.className = 'upcoming-item' + (isNow ? ' now-playing' : '');
 
         let tagClass = 'mp3';
-        let tagText = 'MP3';
-        if (t.embed) { tagClass = 'suno'; tagText = 'Suno'; }
-        else if (t.cat === 'ambient') { tagClass = 'ambient'; tagText = 'Salão'; }
+        let tagText = 'FaçaAmigos';
+        if (t.cat === 'ambient') { tagClass = 'ambient'; tagText = 'Salão'; }
+        else if (t.cat === 'inst') { tagClass = 'ambient'; tagText = 'Inst.'; }
 
         row.innerHTML = `
           <span>${isNow ? '▶ ' : `${i + 1}. `}${t.title}</span>
@@ -797,11 +743,11 @@
       }
     }
 
-    // REPRODUÇÃO DA FAIXA NO PLAYER ÚNICO
+    // REPRODUÇÃO DA FAIXA NO PLAYER ÚNICO (DIRETO E GARANTIDO)
     function playTrack(idx) {
-      clearTimeout(state.advanceTimer);
       state.currentIndex = idx;
       const t = TRACKS[idx];
+      if (!t) return;
 
       dom.trackTitle.textContent = t.title;
 
@@ -809,10 +755,10 @@
       let pillText = 'Faixa Oficial FaçaAmigos';
       let subText = 'Áudio estéreo de alta fidelidade';
 
-      if (t.embed) {
-        pillClass = 'suno';
-        pillText = 'Coleção FaçaAmigos (Suno)';
-        subText = 'Rotação automática da rádio';
+      if (t.cat === 'inst') {
+        pillClass = 'ambient';
+        pillText = 'FaçaAmigos Instrumental';
+        subText = 'Trilha oficial instrumental';
       } else if (t.cat === 'ambient') {
         pillClass = 'ambient';
         pillText = 'Fundo Musical do Salão';
@@ -825,60 +771,36 @@
       dom.radioStatusText.textContent = `🟢 Rádio no Ar • Faixa ${state.queueIndex + 1} de ${TRACKS.length}`;
 
       dom.btnStartRadio.classList.add('playing');
+      dom.btnStartRadio.textContent = '📻 RÁDIO NO AR (RODÍZIO CONTÍNUO)';
       dom.controlsRow.style.display = 'flex';
 
-      // ======================================================================
-      // UM ÚNICO PLAYER: O SLOT CENTRAL ADAPTA-SE SEM DUPLICAR CONTROLES
-      // ======================================================================
-      if (t.embed) {
-        // Se for Suno: Carrega o embed no mesmo palco central
-        audio.pause();
-        dom.scrubberBox.style.display = 'none';
+      // Mostra o palco com mascote e toca áudio nativo MP3
+      if (dom.sunoStage) dom.sunoStage.style.display = 'none';
+      dom.artworkStage.style.display = 'flex';
+      dom.artworkChar.src = `img/amigos/${t.char || 'cachorro-acena'}.webp`;
+      dom.scrubberBox.style.display = 'block';
 
-        dom.artworkStage.style.display = 'none';
-        dom.sunoStage.classList.add('active');
-        if (dom.sunoFrame.src !== t.embed) {
-          dom.sunoFrame.src = t.embed;
-        }
+      const src = encodeURI(t.file);
+      audio.src = src;
 
-        state.isPlaying = true;
-        updatePlayBtn();
-
-        // Avanço automático contínuo para Suno (~2m15s / 135s)
-        state.advanceTimer = setTimeout(() => {
-          nextTrack();
-        }, 135000);
-
-      } else {
-        // Se for MP3: Mostra o palco com mascote e toca áudio nativo
-        dom.sunoStage.classList.remove('active');
-        dom.sunoFrame.src = 'about:blank';
-
-        dom.artworkStage.style.display = 'flex';
-        dom.artworkChar.src = `img/amigos/${t.char || 'cachorro-acena'}.webp`;
-        dom.scrubberBox.style.display = 'block';
-
-        const src = t.file;
-        if (!decodeURI(audio.src).endsWith(src)) {
-          audio.src = src;
-        }
-
-        const p = audio.play();
-        if (p && p.catch) {
-          p.then(() => {
-            state.isPlaying = true;
-            updatePlayBtn();
-            dom.artworkStage.classList.add('playing');
-          }).catch(() => {
-            state.isPlaying = false;
-            updatePlayBtn();
-            dom.artworkStage.classList.remove('playing');
-          });
-        } else {
+      const p = audio.play();
+      if (p && p.catch) {
+        p.then(() => {
           state.isPlaying = true;
           updatePlayBtn();
           dom.artworkStage.classList.add('playing');
-        }
+          dom.btnStartRadio.textContent = '📻 RÁDIO NO AR (RODÍZIO CONTÍNUO)';
+        }).catch((err) => {
+          console.warn('Autoplay bloqueado pelo navegador, aguardando 1 toque:', err);
+          state.isPlaying = false;
+          updatePlayBtn();
+          dom.artworkStage.classList.remove('playing');
+          dom.btnStartRadio.textContent = '▶ TOQUE PARA LIGAR O SOM DA RÁDIO';
+        });
+      } else {
+        state.isPlaying = true;
+        updatePlayBtn();
+        dom.artworkStage.classList.add('playing');
       }
 
       updateUpcomingList();
@@ -886,29 +808,19 @@
 
     // ALTERNAR PLAY/PAUSE
     function togglePlay() {
-      const t = TRACKS[state.currentIndex];
-      if (t.embed) {
-        state.isPlaying = !state.isPlaying;
-        updatePlayBtn();
-        if (!state.isPlaying) {
-          clearTimeout(state.advanceTimer);
-        } else {
-          state.advanceTimer = setTimeout(nextTrack, 135000);
-        }
-        return;
-      }
-
       if (audio.paused) {
         audio.play().then(() => {
           state.isPlaying = true;
           updatePlayBtn();
           dom.artworkStage.classList.add('playing');
+          dom.btnStartRadio.textContent = '📻 RÁDIO NO AR (RODÍZIO CONTÍNUO)';
         }).catch(console.warn);
       } else {
         audio.pause();
         state.isPlaying = false;
         updatePlayBtn();
         dom.artworkStage.classList.remove('playing');
+        dom.btnStartRadio.textContent = '▶ RETOMAR RÁDIO';
       }
     }
 
@@ -916,7 +828,7 @@
       dom.btnPlay.textContent = state.isPlaying ? '⏸' : '▶';
     }
 
-    // AVANÇAR PARA A PRÓXIMA FAIXA (RODÍZIO ALEATÓRIO DIRETO)
+    // AVANÇAR PARA A PRÓXIMA FAIXA (RODÍZIO INFINITO 100% AUTOMÁTICO)
     function nextTrack() {
       state.queueIndex++;
       if (state.queueIndex >= state.queue.length) {
@@ -947,14 +859,15 @@
       dom.timeTotal.textContent = fmtTime(audio.duration);
     });
 
-    // Quando o áudio MP3 termina -> imediatamente toca a próxima música aleatória!
+    // Quando o áudio MP3 termina -> IMEDIATAMENTE toca a próxima música sem intervenção humana!
     audio.addEventListener('ended', () => {
       nextTrack();
     });
 
+    // Se houver qualquer falha transitória -> avança em 300ms para a próxima sem travar o salão
     audio.addEventListener('error', (err) => {
-      console.warn('Erro ao carregar faixa, pulando para a próxima...', err);
-      nextTrack();
+      console.warn('Erro ao carregar faixa, avançando automaticamente...', err);
+      setTimeout(nextTrack, 300);
     });
 
     // SCRUBBER
@@ -972,10 +885,17 @@
       dom.volumeIcon.textContent = val === 0 ? '🔇' : (val < 0.5 ? '🔉' : '🔊');
     });
 
-    // BOTÃO ÚNICO DE LIGAR RÁDIO (1 CLIQUE PARA O OPERADOR)
+    // BOTÃO HERO
     dom.btnStartRadio.addEventListener('click', () => {
-      shuffleQueue();
-      playTrack(state.queue[0]);
+      if (!state.isPlaying) {
+        if (state.currentIndex === -1) {
+          playTrack(state.queue[0]);
+        } else {
+          togglePlay();
+        }
+      } else {
+        nextTrack();
+      }
     });
 
     // CONTROLES UNIFICADOS
@@ -987,12 +907,7 @@
     window.addEventListener('keydown', (e) => {
       if (e.code === 'Space') {
         e.preventDefault();
-        if (!state.isPlaying && dom.btnStartRadio.offsetParent !== null) {
-          shuffleQueue();
-          playTrack(state.queue[0]);
-        } else {
-          togglePlay();
-        }
+        togglePlay();
       } else if (e.key === 'm' || e.key === 'M' || e.key === 'ArrowRight') {
         nextTrack();
       } else if (e.key === 'ArrowLeft') {
@@ -1000,9 +915,23 @@
       }
     });
 
-    // INICIALIZAÇÃO
+    // INICIALIZAÇÃO AUTOMÁTICA
     shuffleQueue();
     updateUpcomingList();
+
+    // Tenta reprodução automática sem intervenção humana imediatamente
+    playTrack(state.queue[0]);
+
+    // Caso a política de autoplay do navegador necessite de 1 primeiro gesto na página:
+    // Qualquer toque, clique ou tecla em qualquer lugar destrava o som sem precisar clicar no botão
+    const unlockAutoplay = () => {
+      if (!state.isPlaying) {
+        playTrack(state.queue[state.queueIndex]);
+      }
+    };
+    ['pointerdown', 'touchstart', 'click', 'keydown'].forEach((evt) => {
+      window.addEventListener(evt, unlockAutoplay, { passive: true, once: true });
+    });
   </script>
 </body>
 
