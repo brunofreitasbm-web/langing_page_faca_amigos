@@ -443,7 +443,7 @@
           <div class="c-plan-icon">🐾</div>
           <div>
             <div class="c-plan-time">20<small>min</small></div>
-            <div class="c-plan-name">Pelúcias</div>
+            <div class="c-plan-name">Pelúcias e jeep</div>
           </div>
         </div>
         <div class="c-plan" data-plan="30">
@@ -477,29 +477,39 @@
       // SLIDES 100% CIRCUITO — cada frase usa um padrão de persuasão:
       // pressuposição ("qual", não "se"), comando embutido, futuro vivido,
       // e alívio para quem cuida (o pai descansa enquanto a criança brinca).
-      // plan: qual cartão de preço acende junto com a foto (20 = pelúcias, 30 = carrinhos).
+      // plan: qual cartão de preço acende junto com a foto (20 = pelúcias e jeep, 30 = carros e moto).
       // ----------------------------------------------------------------------
       const SLIDES = [
         { image: 'img/circuito-bombeiro', pos: '50% 40%', plan: 30, sfx: 'sirene',
           kicker: '🚨 Sirene ligada', headline: 'Hoje ele é o <em>herói</em> do shopping.' },
         { image: 'img/circuito-frota-quiosque', pos: '50% 60%', plan: 30, sfx: 'buzina',
           kicker: 'Range Rover ou Lamborghini?', headline: 'Qual ele vai <em>escolher</em> hoje?' },
+        { image: 'img/circuito-lamborghini-menino', pos: '50% 45%', plan: 30, sfx: 'vroom',
+          kicker: '🏎️ Lamborghini do tamanho dele', headline: 'Olha a cara de quem <em>chegou</em>.' },
         { image: 'img/circuito-macaco', pos: '50% 55%', plan: 30, sfx: 'vroom',
           kicker: '🎮 Controle remoto com você', headline: 'Ele no volante.<br><em>Você no controle.</em>' },
         { image: 'img/circuito-equipe-capivara', pos: '50% 40%', plan: 20, sfx: 'plim',
           kicker: '🐾 Pelúcias gigantes', headline: 'Um abraço desse tamanho cabe em <em>20 minutos</em>.' },
-        { image: 'img/circuito-bombeiro-h', pos: '50% 40%', plan: 30, sfx: 'plim',
-          kicker: '📸 Guarda esse momento', headline: 'Essa fase passa rápido.<br><em>Esse sorriso fica.</em>' },
+        { image: 'img/circuito-jeep-menino', pos: '50% 50%', plan: 20, sfx: 'vroom',
+          kicker: '🛞 Jeep off-road', headline: 'Hoje o corredor vira <em>trilha</em>.' },
         { image: 'img/circuito-lamborghini-urus', pos: '50% 60%', plan: 30, sfx: 'vroom',
           kicker: '🏁 Passeio pelo shopping', headline: 'Você respira.<br><em>Ele acelera.</em>' },
+        { image: 'img/circuito-rangerover-menino', pos: '50% 45%', plan: 30, sfx: 'buzina',
+          kicker: '🚙 Range Rover branca', headline: 'Ele dirige.<br><em>Você filma.</em>' },
         { image: 'img/circuito-frota-alinhada', pos: '50% 55%', plan: 20, sfx: 'buzina',
           kicker: '👉 Está tudo pronto aqui', headline: 'Pode deixar ele <em>escolher</em>.' },
+        { image: 'img/circuito-capivara-menina', pos: '50% 18%', plan: 20, sfx: 'plim',
+          kicker: '🐾 Capivara gigante', headline: 'Ela já escolheu a <em>dela</em>.' },
         { image: 'img/circuito-carrinhos', pos: '30% 60%', plan: 30, sfx: 'tada',
           kicker: '⏱️ Daqui a 30 minutos…', headline: 'Você vai ouvir:<br><em>“De novo!”</em>' },
+        { image: 'img/circuito-moto-menino', pos: '50% 22%', plan: 30, sfx: 'vroom',
+          kicker: '🏍️ Tem moto também', headline: 'Duas rodas,<br><em>um sorriso enorme</em>.' },
         { image: 'img/circuito-stitch-menina', pos: '50% 55%', plan: 20, sfx: 'plim',
           kicker: '🐾 Pelúcia que anda', headline: 'Qual pelúcia ela vai <em>escolher</em>?' },
         { image: 'img/circuito-cachorro-pelucia', pos: '50% 40%', plan: 20, sfx: 'plim',
           kicker: '🐶 Amigo de pelúcia', headline: 'Um amigo de pelúcia pra <em>passear</em>.' },
+        { image: 'img/circuito-lamborghini-sorriso', pos: '50% 45%', plan: 30, sfx: 'tada',
+          kicker: '👀 Ele já viu', headline: 'Agora é só você dizer <em>sim</em>.' },
         { image: 'img/circuito-unicornio', pos: '50% 55%', plan: 20, sfx: 'tada',
           kicker: '🦄 Pronto pra passear', headline: 'Roxo, macio e <em>pronto pra galope</em>.' },
         { image: 'img/circuito-bebe-lamborghini', pos: '50% 50%', plan: 30, sfx: 'vroom',
@@ -520,7 +530,7 @@
         bpm: 112,                // andamento alegre, mas sem pressa
         // Rótulo do experimento em curso (regras em contexto.md, seção 7.1). Trocar a cada mudança de uma coisa só;
         // ?exp=<rótulo> na URL sobrepõe, só para teste.
-        experiment: 'base-2026-10'
+        experiment: 'fotos-novas-2026-10'
       };
 
       const ROTATIONS = ['auto', '90', '270', '0'];
