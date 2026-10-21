@@ -1853,79 +1853,129 @@
 
       // ---------------- MÚSICA AMBIENTE FAÇA AMIGOS ----------------
       // Playlist oficial FaçaAmigos (40 faixas MP3 locais de alta fidelidade: reprodução 100% contínua e automática)
+      // - 10:00 às 15:59: 100% Instrumentais do Salão e FaçaAmigos
+      // - 16:00 em diante: Cantadas rigorosamente alternadas com Instrumentais
       const AMBIENT_TRACKS = [
         // ====================================================================
-        // 1. FAIXAS OFICIAIS FAÇAAMIGOS (MP3 Locais em conteudo/)
+        // 1. FAIXAS OFICIAIS FAÇAAMIGOS CANTADAS (17 Faixas MP3 Locais em audio/musica/)
         // ====================================================================
-        { title: "Faça Amigos", file: "conteudo/Faça Amigos.mp3" },
-        { title: "Oi, Amigo!", file: "conteudo/Oi, Amigo!.mp3" },
-        { title: "Piscina de Bolinhas", file: "conteudo/Piscina de Bolinhas.mp3" },
-        { title: "Vrum-Vrum do Caco", file: "conteudo/Vrum-Vrum do Caco.mp3" },
-        { title: "Devagar Também Chega", file: "conteudo/Devagar Também Chega.mp3" },
-        { title: "Tuco Toca Carimbó", file: "conteudo/Tuco Toca Carimbó.mp3" },
-        { title: "Cada Um do Seu Jeito", file: "conteudo/Cada Um do Seu Jeito.mp3" },
-        { title: "Respira Comigo", file: "conteudo/Respira Comigo.mp3" },
-        { title: "Chuva das Três", file: "conteudo/Chuva das Três.mp3" },
-        { title: "Até Amanhã, Amigo", file: "conteudo/Até Amanhã, Amigo.mp3" },
-        { title: "Parabéns no FaçaAmigos", file: "conteudo/Parabéns no FaçaAmigos.mp3" },
-        { title: "Brincar é Coisa Séria", file: "conteudo/Brincar é Coisa Séria.mp3" },
-        { title: "Mão na Mão", file: "conteudo/Mão na Mão.mp3" },
-        { title: "Tira o Sapato!", file: "conteudo/Tira o Sapato!.mp3" },
-        { title: "A Turma do FaçaAmigos", file: "conteudo/A Turma do FaçaAmigos.mp3" },
-        { title: "Faça Amigos (Versão 1)", file: "conteudo/Faça Amigos (1).mp3" },
-        { title: "Faça Amigos (Versão 2)", file: "conteudo/Faça Amigos (2).mp3" },
-        { title: "Faça Amigos (Instrumental)", file: "conteudo/Faça Amigos (Instrumental).mp3" },
-        { title: "Oi, Amigo! (Instrumental)", file: "conteudo/Oi, Amigo! (Instrumental).mp3" },
-        { title: "Piscina de Bolinhas (Instrumental)", file: "conteudo/Piscina de Bolinhas (Instrumental).mp3" },
+        { title: "Faça Amigos", file: "audio/musica/faca-amigos.mp3", type: "vocal" },
+        { title: "Oi, Amigo!", file: "audio/musica/oi-amigo.mp3", type: "vocal" },
+        { title: "Piscina de Bolinhas", file: "audio/musica/piscina-de-bolinhas.mp3", type: "vocal" },
+        { title: "Vrum-Vrum do Caco", file: "audio/musica/vrum-vrum-do-caco.mp3", type: "vocal" },
+        { title: "Devagar Também Chega", file: "audio/musica/devagar-tambem-chega.mp3", type: "vocal" },
+        { title: "Tuco Toca Carimbó", file: "audio/musica/tuco-toca-carimbo.mp3", type: "vocal" },
+        { title: "Cada Um do Seu Jeito", file: "audio/musica/cada-um-do-seu-jeito.mp3", type: "vocal" },
+        { title: "Respira Comigo", file: "audio/musica/respira-comigo.mp3", type: "vocal" },
+        { title: "Chuva das Três", file: "audio/musica/chuva-das-tres.mp3", type: "vocal" },
+        { title: "Até Amanhã, Amigo", file: "audio/musica/ate-amanha-amigo.mp3", type: "vocal" },
+        { title: "Parabéns no FaçaAmigos", file: "audio/musica/parabens-no-facaamigos.mp3", type: "vocal" },
+        { title: "Brincar é Coisa Séria", file: "audio/musica/brincar-e-coisa-seria.mp3", type: "vocal" },
+        { title: "Mão na Mão", file: "audio/musica/mao-na-mao.mp3", type: "vocal" },
+        { title: "Tira o Sapato!", file: "audio/musica/tira-o-sapato.mp3", type: "vocal" },
+        { title: "A Turma do FaçaAmigos", file: "audio/musica/a-turma-do-facaamigos.mp3", type: "vocal" },
+        { title: "Faça Amigos (Versão 1)", file: "audio/musica/faca-amigos-v1.mp3", type: "vocal" },
+        { title: "Faça Amigos (Versão 2)", file: "audio/musica/faca-amigos-v2.mp3", type: "vocal" },
 
         // ====================================================================
-        // 2. FAIXAS INSTRUMENTAIS DO SALÃO (MP3 Locais em audio/musica/)
+        // 2. FAIXAS FAÇAAMIGOS INSTRUMENTAIS (3 Faixas MP3 Locais em audio/musica/)
         // ====================================================================
-        { title: "Abraço de Brincar", file: "audio/musica/abraco-de-brincar.mp3" },
-        { title: "De um Lado pro Outro", file: "audio/musica/de-um-lado-pro-outro.mp3" },
-        { title: "Jardim de Amigos", file: "audio/musica/jardim-de-amigos.mp3" },
-        { title: "Lugar de Ser Feliz", file: "audio/musica/lugar-de-ser-feliz.mp3" },
-        { title: "Mittens in the Toy Chest", file: "audio/musica/mittens-in-the-toy-chest.mp3" },
-        { title: "Nosso Recreio", file: "audio/musica/nosso-recreio.mp3" },
-        { title: "Nuvem Mansa", file: "audio/musica/nuvem-mansa.mp3" },
-        { title: "O Chão É Sol", file: "audio/musica/o-chao-e-sol.mp3" },
-        { title: "O Chão É um Convite", file: "audio/musica/o-chao-e-um-convite.mp3" },
-        { title: "O Mundo É um Jardim", file: "audio/musica/o-mundo-e-um-jardim.mp3" },
-        { title: "O Nosso Papel", file: "audio/musica/o-nosso-papel.mp3" },
-        { title: "O Passo Miúdo", file: "audio/musica/o-passo-miudo.mp3" },
-        { title: "O Playground da Gente", file: "audio/musica/o-playground-da-gente.mp3" },
-        { title: "Open Palms", file: "audio/musica/open-palms.mp3" },
-        { title: "Passo Miúdo", file: "audio/musica/passo-miudo.mp3" },
-        { title: "Small Footsteps on Cedar", file: "audio/musica/small-footsteps-on-cedar.mp3" },
-        { title: "Sunlight on the Conservatory", file: "audio/musica/sunlight-on-the-conservatory.mp3" },
-        { title: "Sunlight on the Slide", file: "audio/musica/sunlight-on-the-slide.mp3" },
-        { title: "The Highest Arc", file: "audio/musica/the-highest-arc.mp3" },
-        { title: "Through the Garden Gate", file: "audio/musica/through-the-garden-gate.mp3" }
+        { title: "Faça Amigos (Instrumental)", file: "audio/musica/faca-amigos-instrumental.mp3", type: "instrumental" },
+        { title: "Oi, Amigo! (Instrumental)", file: "audio/musica/oi-amigo-instrumental.mp3", type: "instrumental" },
+        { title: "Piscina de Bolinhas (Instrumental)", file: "audio/musica/piscina-de-bolinhas-instrumental.mp3", type: "instrumental" },
+
+        // ====================================================================
+        // 3. FAIXAS INSTRUMENTAIS DO SALÃO (20 Faixas MP3 Locais em audio/musica/)
+        // ====================================================================
+        { title: "Abraço de Brincar", file: "audio/musica/abraco-de-brincar.mp3", type: "instrumental" },
+        { title: "De um Lado pro Outro", file: "audio/musica/de-um-lado-pro-outro.mp3", type: "instrumental" },
+        { title: "Jardim de Amigos", file: "audio/musica/jardim-de-amigos.mp3", type: "instrumental" },
+        { title: "Lugar de Ser Feliz", file: "audio/musica/lugar-de-ser-feliz.mp3", type: "instrumental" },
+        { title: "Mittens in the Toy Chest", file: "audio/musica/mittens-in-the-toy-chest.mp3", type: "instrumental" },
+        { title: "Nosso Recreio", file: "audio/musica/nosso-recreio.mp3", type: "instrumental" },
+        { title: "Nuvem Mansa", file: "audio/musica/nuvem-mansa.mp3", type: "instrumental" },
+        { title: "O Chão É Sol", file: "audio/musica/o-chao-e-sol.mp3", type: "instrumental" },
+        { title: "O Chão É um Convite", file: "audio/musica/o-chao-e-um-convite.mp3", type: "instrumental" },
+        { title: "O Mundo É um Jardim", file: "audio/musica/o-mundo-e-um-jardim.mp3", type: "instrumental" },
+        { title: "O Nosso Papel", file: "audio/musica/o-nosso-papel.mp3", type: "instrumental" },
+        { title: "O Passo Miúdo", file: "audio/musica/o-passo-miudo.mp3", type: "instrumental" },
+        { title: "O Playground da Gente", file: "audio/musica/o-playground-da-gente.mp3", type: "instrumental" },
+        { title: "Open Palms", file: "audio/musica/open-palms.mp3", type: "instrumental" },
+        { title: "Passo Miúdo", file: "audio/musica/passo-miudo.mp3", type: "instrumental" },
+        { title: "Small Footsteps on Cedar", file: "audio/musica/small-footsteps-on-cedar.mp3", type: "instrumental" },
+        { title: "Sunlight on the Conservatory", file: "audio/musica/sunlight-on-the-conservatory.mp3", type: "instrumental" },
+        { title: "Sunlight on the Slide", file: "audio/musica/sunlight-on-the-slide.mp3", type: "instrumental" },
+        { title: "The Highest Arc", file: "audio/musica/the-highest-arc.mp3", type: "instrumental" },
+        { title: "Through the Garden Gate", file: "audio/musica/through-the-garden-gate.mp3", type: "instrumental" }
       ];
 
       const ambient = {
         audio: new Audio(),
         tracks: [...AMBIENT_TRACKS],
-        order: [],
+        queue: [],
         index: 0,
+        scheduleMode: null, // 'instrumental' (10h às 15h59) ou 'alternado' (16h em diante)
         ducked: false,
         pausedByScene: false,
         volumeLevel: 0.35, // nível suave de fundo no salão
-        fadeInterval: null
+        fadeInterval: null,
+        stallTimer: null
       };
 
-      function shuffleAmbientOrder() {
-        ambient.order = Array.from({ length: ambient.tracks.length }, (_, i) => i);
-        for (let i = ambient.order.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [ambient.order[i], ambient.order[j]] = [ambient.order[j], ambient.order[i]];
+      function getRadioScheduleMode() {
+        const h = belemNow().hours;
+        // 10:00 até 15:59 -> 100% instrumental
+        // 16:00 em diante -> alternado (cantadas com instrumentais)
+        return (h >= 16) ? 'alternado' : 'instrumental';
+      }
+
+      function rebuildAmbientQueue() {
+        const mode = getRadioScheduleMode();
+        ambient.scheduleMode = mode;
+
+        const vocals = ambient.tracks.filter(t => t.type === 'vocal');
+        const insts = ambient.tracks.filter(t => t.type === 'instrumental');
+
+        const shuffle = (arr) => {
+          const a = [...arr];
+          for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+          }
+          return a;
+        };
+
+        if (mode === 'instrumental') {
+          // 10h00 às 15h59: Tocar 100% instrumental
+          ambient.queue = shuffle(insts);
+        } else {
+          // 16h00 em diante: Tocar cantadas rigorosamente alternadas com instrumentais
+          const shuffVocals = shuffle(vocals);
+          const shuffInsts = shuffle(insts);
+          const q = [];
+          const total = Math.max(shuffVocals.length, shuffInsts.length) * 2;
+          let vIdx = 0;
+          let iIdx = 0;
+          for (let k = 0; k < total; k++) {
+            if (k % 2 === 0) {
+              q.push(shuffVocals[vIdx % shuffVocals.length]);
+              vIdx++;
+            } else {
+              q.push(shuffInsts[iIdx % shuffInsts.length]);
+              iIdx++;
+            }
+          }
+          ambient.queue = q;
         }
         ambient.index = 0;
       }
 
       function getCurrentTrack() {
-        if (!ambient.order.length) shuffleAmbientOrder();
-        return ambient.tracks[ambient.order[ambient.index]];
+        const currentMode = getRadioScheduleMode();
+        if (!ambient.queue.length || ambient.scheduleMode !== currentMode) {
+          rebuildAmbientQueue();
+        }
+        return ambient.queue[ambient.index] || ambient.tracks[0];
       }
 
       function getTargetAmbientVolume() {
@@ -1987,15 +2037,12 @@
       }
 
       function playCurrentTrack() {
+        clearTimeout(ambient.stallTimer);
         const track = getCurrentTrack();
         if (!track) return;
 
         hideSunoEmbed();
         updateBadgeTitle(track.title);
-
-        const targetSrc = (track.file && (track.file.includes('/') || track.file.startsWith('http')))
-          ? track.file
-          : `audio/musica/${track.file}`;
 
         if (!som.on || state.currentMode === 'night' || ambient.pausedByScene) {
           ambient.audio.pause();
@@ -2003,8 +2050,10 @@
           return;
         }
 
-        const encodedSrc = encodeURI(targetSrc);
-        ambient.audio.src = encodedSrc;
+        const src = track.file;
+        if (ambient.audio.src !== new URL(src, location.href).href) {
+          ambient.audio.src = src;
+        }
         ambient.audio.volume = getTargetAmbientVolume();
 
         const p = ambient.audio.play();
@@ -2020,13 +2069,27 @@
         } else {
           updateBadgeStatus(true);
         }
+
+        // Watchdog de stall: se ficar mais de 8s travado sem iniciar, avança automaticamente
+        ambient.stallTimer = setTimeout(() => {
+          if (som.on && state.currentMode !== 'night' && !ambient.pausedByScene && ambient.audio.paused && ambient.audio.currentTime === 0) {
+            console.warn('Faixa travada no carregamento, tentando avançar automaticamente...', track.file);
+            nextAmbientTrack();
+          }
+        }, 8000);
       }
 
       // Avança para a próxima faixa e toca continuamente sem intervenção humana
       function nextAmbientTrack() {
-        ambient.index++;
-        if (ambient.index >= ambient.order.length) {
-          shuffleAmbientOrder();
+        clearTimeout(ambient.stallTimer);
+        const currentMode = getRadioScheduleMode();
+        if (ambient.scheduleMode !== currentMode) {
+          rebuildAmbientQueue();
+        } else {
+          ambient.index++;
+          if (ambient.index >= ambient.queue.length) {
+            rebuildAmbientQueue();
+          }
         }
         playCurrentTrack();
       }
@@ -2034,10 +2097,24 @@
       // Ao terminar uma música -> toca imediatamente a próxima da fila!
       ambient.audio.addEventListener('ended', nextAmbientTrack);
 
-      // Se houver qualquer falha de carregamento -> avança em 500ms para a próxima
+      // Se houver qualquer falha de carregamento -> avança em 300ms para a próxima
       ambient.audio.addEventListener('error', (err) => {
-        console.warn('Erro ao reproduzir faixa de áudio, avançando...', err);
-        setTimeout(nextAmbientTrack, 500);
+        console.warn('Erro ao reproduzir faixa de áudio, avançando...', ambient.audio.src, err);
+        setTimeout(nextAmbientTrack, 300);
+      });
+
+      // Se o áudio ficar congelado na rede
+      ambient.audio.addEventListener('stalled', () => {
+        console.warn('Áudio ambient stalled, monitorando...');
+      });
+
+      // Retomar se a aba/tela voltar a ficar visível
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && som.on && state.currentMode !== 'night' && !ambient.pausedByScene) {
+          if (ambient.audio.paused) {
+            ambient.audio.play().catch(() => {});
+          }
+        }
       });
 
       // ---------------- SOM ----------------
@@ -2146,7 +2223,7 @@
         updateSoundHint();
       }
 
-      ['pointerdown', 'keydown', 'touchstart', 'click'].forEach((evt) => {
+      ['pointerdown', 'keydown', 'touchstart', 'click', 'mousemove', 'wheel', 'focus'].forEach((evt) => {
         window.addEventListener(evt, () => { unlockAudio(); }, { passive: true });
       });
 

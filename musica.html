@@ -611,29 +611,37 @@
     // 100% dos arquivos residem localmente no servidor garantindo reprodução contínua.
     // ========================================================================
     const TRACKS = [
-      // 1. FAIXAS OFICIAIS FAÇAAMIGOS (MP3 Locais em conteudo/)
-      { title: "Faça Amigos", file: "conteudo/Faça Amigos.mp3", cat: "fa", char: "cachorro-acena" },
-      { title: "Oi, Amigo!", file: "conteudo/Oi, Amigo!.mp3", cat: "fa", char: "cachorro-pula" },
-      { title: "Piscina de Bolinhas", file: "conteudo/Piscina de Bolinhas.mp3", cat: "fa", char: "macaco-festa" },
-      { title: "Vrum-Vrum do Caco", file: "conteudo/Vrum-Vrum do Caco.mp3", cat: "fa", char: "macaco-corda" },
-      { title: "Devagar Também Chega", file: "conteudo/Devagar Também Chega.mp3", cat: "fa", char: "tartaruga-anda" },
-      { title: "Tuco Toca Carimbó", file: "conteudo/Tuco Toca Carimbó.mp3", cat: "fa", char: "tucano-asas" },
-      { title: "Cada Um do Seu Jeito", file: "conteudo/Cada Um do Seu Jeito.mp3", cat: "fa", char: "cachorro-sentado" },
-      { title: "Respira Comigo", file: "conteudo/Respira Comigo.mp3", cat: "fa", char: "tartaruga-dorme" },
-      { title: "Chuva das Três", file: "conteudo/Chuva das Três.mp3", cat: "fa", char: "tucano-frente" },
-      { title: "Até Amanhã, Amigo", file: "conteudo/Até Amanhã, Amigo.mp3", cat: "fa", char: "cachorro-deitado" },
-      { title: "Parabéns no FaçaAmigos", file: "conteudo/Parabéns no FaçaAmigos.mp3", cat: "fa", char: "macaco-danca" },
-      { title: "Brincar é Coisa Séria", file: "conteudo/Brincar é Coisa Séria.mp3", cat: "fa", char: "macaco-coracao" },
-      { title: "Mão na Mão", file: "conteudo/Mão na Mão.mp3", cat: "fa", char: "tartaruga-sorri" },
-      { title: "Tira o Sapato!", file: "conteudo/Tira o Sapato!.mp3", cat: "fa", char: "tucano-joinha" },
-      { title: "A Turma do FaçaAmigos", file: "conteudo/A Turma do FaçaAmigos.mp3", cat: "fa", char: "cachorro-acena" },
-      { title: "Faça Amigos (Versão 1)", file: "conteudo/Faça Amigos (1).mp3", cat: "fa", char: "tartaruga-anda" },
-      { title: "Faça Amigos (Versão 2)", file: "conteudo/Faça Amigos (2).mp3", cat: "fa", char: "tucano-asas" },
-      { title: "Faça Amigos (Instrumental)", file: "conteudo/Faça Amigos (Instrumental).mp3", cat: "inst", char: "cachorro-pula" },
-      { title: "Oi, Amigo! (Instrumental)", file: "conteudo/Oi, Amigo! (Instrumental).mp3", cat: "inst", char: "macaco-festa" },
-      { title: "Piscina de Bolinhas (Instrumental)", file: "conteudo/Piscina de Bolinhas (Instrumental).mp3", cat: "inst", char: "macaco-corda" },
+      // ======================================================================
+      // 1. FAIXAS OFICIAIS FAÇAAMIGOS CANTADAS (17 Faixas MP3 Locais em audio/musica/)
+      // ======================================================================
+      { title: "Faça Amigos", file: "audio/musica/faca-amigos.mp3", cat: "fa", char: "cachorro-acena" },
+      { title: "Oi, Amigo!", file: "audio/musica/oi-amigo.mp3", cat: "fa", char: "cachorro-pula" },
+      { title: "Piscina de Bolinhas", file: "audio/musica/piscina-de-bolinhas.mp3", cat: "fa", char: "macaco-festa" },
+      { title: "Vrum-Vrum do Caco", file: "audio/musica/vrum-vrum-do-caco.mp3", cat: "fa", char: "macaco-corda" },
+      { title: "Devagar Também Chega", file: "audio/musica/devagar-tambem-chega.mp3", cat: "fa", char: "tartaruga-anda" },
+      { title: "Tuco Toca Carimbó", file: "audio/musica/tuco-toca-carimbo.mp3", cat: "fa", char: "tucano-asas" },
+      { title: "Cada Um do Seu Jeito", file: "audio/musica/cada-um-do-seu-jeito.mp3", cat: "fa", char: "cachorro-sentado" },
+      { title: "Respira Comigo", file: "audio/musica/respira-comigo.mp3", cat: "fa", char: "tartaruga-dorme" },
+      { title: "Chuva das Três", file: "audio/musica/chuva-das-tres.mp3", cat: "fa", char: "tucano-frente" },
+      { title: "Até Amanhã, Amigo", file: "audio/musica/ate-amanha-amigo.mp3", cat: "fa", char: "cachorro-deitado" },
+      { title: "Parabéns no FaçaAmigos", file: "audio/musica/parabens-no-facaamigos.mp3", cat: "fa", char: "macaco-danca" },
+      { title: "Brincar é Coisa Séria", file: "audio/musica/brincar-e-coisa-seria.mp3", cat: "fa", char: "macaco-coracao" },
+      { title: "Mão na Mão", file: "audio/musica/mao-na-mao.mp3", cat: "fa", char: "tartaruga-sorri" },
+      { title: "Tira o Sapato!", file: "audio/musica/tira-o-sapato.mp3", cat: "fa", char: "tucano-joinha" },
+      { title: "A Turma do FaçaAmigos", file: "audio/musica/a-turma-do-facaamigos.mp3", cat: "fa", char: "cachorro-acena" },
+      { title: "Faça Amigos (Versão 1)", file: "audio/musica/faca-amigos-v1.mp3", cat: "fa", char: "tartaruga-anda" },
+      { title: "Faça Amigos (Versão 2)", file: "audio/musica/faca-amigos-v2.mp3", cat: "fa", char: "tucano-asas" },
 
-      // 2. FAIXAS INSTRUMENTAIS DO SALÃO (MP3 Locais em audio/musica/)
+      // ======================================================================
+      // 2. FAIXAS FAÇAAMIGOS INSTRUMENTAIS (3 Faixas MP3 Locais em audio/musica/)
+      // ======================================================================
+      { title: "Faça Amigos (Instrumental)", file: "audio/musica/faca-amigos-instrumental.mp3", cat: "inst", char: "cachorro-pula" },
+      { title: "Oi, Amigo! (Instrumental)", file: "audio/musica/oi-amigo-instrumental.mp3", cat: "inst", char: "macaco-festa" },
+      { title: "Piscina de Bolinhas (Instrumental)", file: "audio/musica/piscina-de-bolinhas-instrumental.mp3", cat: "inst", char: "macaco-corda" },
+
+      // ======================================================================
+      // 3. FAIXAS INSTRUMENTAIS DO SALÃO (20 Faixas MP3 Locais em audio/musica/)
+      // ======================================================================
       { title: "Abraço de Brincar", file: "audio/musica/abraco-de-brincar.mp3", cat: "ambient", char: "tartaruga-ri" },
       { title: "De um Lado pro Outro", file: "audio/musica/de-um-lado-pro-outro.mp3", cat: "ambient", char: "macaco-sentado" },
       { title: "Jardim de Amigos", file: "audio/musica/jardim-de-amigos.mp3", cat: "ambient", char: "tucano-frente" },
@@ -657,17 +665,56 @@
     ];
 
     // ========================================================================
-    // ESTADO DA RÁDIO (RODÍZIO RANDÔMICO DIRETO, CONTÍNUO E SEM PARAR)
+    // MOTOR DE HORÁRIO E PROGRAMAÇÃO DA RÁDIO (BELÉM GMT-3)
+    // - 10:00 às 15:59 -> 100% Instrumentais do Salão e FaçaAmigos
+    // - 16:00 em diante -> Faixas Cantadas rigorosamente alternadas com Instrumentais
+    // ========================================================================
+    function getBelemHour() {
+      try {
+        const str = new Intl.DateTimeFormat('pt-BR', {
+          timeZone: 'America/Belem',
+          hour: 'numeric',
+          hour12: false
+        }).format(new Date());
+        const h = parseInt(str, 10);
+        if (!isNaN(h)) return h;
+      } catch (e) { /* fallback */ }
+      const now = new Date();
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const belem = new Date(utc - (3 * 3600000));
+      return belem.getHours();
+    }
+
+    function getRadioScheduleMode() {
+      const h = getBelemHour();
+      // De 10h00 até 15h59 (e pela manhã) -> instrumental
+      // A partir das 16h00 -> alternado (cantadas com instrumentais)
+      return (h >= 16) ? 'alternado' : 'instrumental';
+    }
+
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    // ========================================================================
+    // ESTADO DA RÁDIO (RODÍZIO CONTÍNUO, SEM PARAR, ESTILO RÁDIO WEB)
     // ========================================================================
     const state = {
       queue: [],
       queueIndex: 0,
       currentIndex: -1,
+      currentScheduleMode: null,
       isPlaying: false
     };
 
     const audio = new Audio();
     audio.volume = 0.85;
+    let stallWatchdog = null;
 
     // ELEMENTOS DO DOM
     const dom = {
@@ -702,21 +749,53 @@
       return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
-    // EMBARALHAR FILA TOTALMENTE RANDÔMICA
-    function shuffleQueue() {
-      state.queue = Array.from({ length: TRACKS.length }, (_, i) => i);
-      for (let i = state.queue.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [state.queue[i], state.queue[j]] = [state.queue[j], state.queue[i]];
+    // CONSTRUIR OU RECONSTRUIR FILA BASEADA NA PROGRAMAÇÃO DO HORÁRIO
+    function rebuildQueue() {
+      const mode = getRadioScheduleMode();
+      state.currentScheduleMode = mode;
+
+      const vocalIndices = [];
+      const instIndices = [];
+      TRACKS.forEach((t, i) => {
+        if (t.cat === 'fa') vocalIndices.push(i);
+        else instIndices.push(i);
+      });
+
+      if (mode === 'instrumental') {
+        // 10h00 às 15h59: Tocar 100% instrumental (sem vocais)
+        state.queue = shuffleArray(instIndices);
+      } else {
+        // 16h00 em diante: Tocar faixas cantadas rigorosamente alternadas com instrumentais
+        const shuffVocals = shuffleArray(vocalIndices);
+        const shuffInsts = shuffleArray(instIndices);
+        const q = [];
+        const total = Math.max(shuffVocals.length, shuffInsts.length) * 2;
+        let vIdx = 0;
+        let iIdx = 0;
+        for (let k = 0; k < total; k++) {
+          if (k % 2 === 0) {
+            q.push(shuffVocals[vIdx % shuffVocals.length]);
+            vIdx++;
+          } else {
+            q.push(shuffInsts[iIdx % shuffInsts.length]);
+            iIdx++;
+          }
+        }
+        state.queue = q;
       }
       state.queueIndex = 0;
     }
 
     // ATUALIZAR LISTA INFORMATIVA DAS PRÓXIMAS FAIXAS
     function updateUpcomingList() {
+      if (!dom.upcomingList || !dom.upcomingBadge) return;
       dom.upcomingList.innerHTML = '';
       const total = state.queue.length;
-      dom.upcomingBadge.textContent = `${total} faixas no rodízio`;
+      const mode = state.currentScheduleMode || getRadioScheduleMode();
+      const modeLabel = (mode === 'instrumental') 
+        ? '🌿 10h às 16h: 100% Instrumental'
+        : '🎉 16h+: Cantadas + Instrumentais Alternadas';
+      dom.upcomingBadge.textContent = `${total} faixas no rodízio • ${modeLabel}`;
 
       const start = state.queueIndex;
       const count = Math.min(20, total);
@@ -731,7 +810,7 @@
         row.className = 'upcoming-item' + (isNow ? ' now-playing' : '');
 
         let tagClass = 'mp3';
-        let tagText = 'FaçaAmigos';
+        let tagText = 'Cantada';
         if (t.cat === 'ambient') { tagClass = 'ambient'; tagText = 'Salão'; }
         else if (t.cat === 'inst') { tagClass = 'ambient'; tagText = 'Inst.'; }
 
@@ -745,6 +824,7 @@
 
     // REPRODUÇÃO DA FAIXA NO PLAYER ÚNICO (DIRETO E GARANTIDO)
     function playTrack(idx) {
+      clearTimeout(stallWatchdog);
       state.currentIndex = idx;
       const t = TRACKS[idx];
       if (!t) return;
@@ -768,7 +848,10 @@
       dom.typePill.className = `type-pill ${pillClass}`;
       dom.typePill.textContent = pillText;
       dom.trackSubtitle.textContent = subText;
-      dom.radioStatusText.textContent = `🟢 Rádio no Ar • Faixa ${state.queueIndex + 1} de ${TRACKS.length}`;
+
+      const mode = state.currentScheduleMode || getRadioScheduleMode();
+      const modeShort = (mode === 'instrumental') ? '🌿 Horário Instrumental' : '🎉 Horário Infantil Alternado';
+      dom.radioStatusText.textContent = `🟢 Rádio no Ar • ${modeShort} • Faixa ${state.queueIndex + 1} de ${state.queue.length}`;
 
       dom.btnStartRadio.classList.add('playing');
       dom.btnStartRadio.textContent = '📻 RÁDIO NO AR (RODÍZIO CONTÍNUO)';
@@ -780,8 +863,7 @@
       dom.artworkChar.src = `img/amigos/${t.char || 'cachorro-acena'}.webp`;
       dom.scrubberBox.style.display = 'block';
 
-      const src = encodeURI(t.file);
-      audio.src = src;
+      audio.src = t.file;
 
       const p = audio.play();
       if (p && p.catch) {
@@ -795,13 +877,21 @@
           state.isPlaying = false;
           updatePlayBtn();
           dom.artworkStage.classList.remove('playing');
-          dom.btnStartRadio.textContent = '▶ TOQUE PARA LIGAR O SOM DA RÁDIO';
+          dom.btnStartRadio.textContent = '▶ TOQUE EM QUALQUER LUGAR PARA LIGAR O SOM DA RÁDIO';
         });
       } else {
         state.isPlaying = true;
         updatePlayBtn();
         dom.artworkStage.classList.add('playing');
       }
+
+      // Watchdog de stall: se ficar mais de 8s travado sem iniciar, avança automaticamente
+      stallWatchdog = setTimeout(() => {
+        if (state.isPlaying && audio.paused && audio.currentTime === 0) {
+          console.warn('Faixa travada no carregamento, avançando para a próxima...', t.file);
+          nextTrack();
+        }
+      }, 8000);
 
       updateUpcomingList();
     }
@@ -830,9 +920,16 @@
 
     // AVANÇAR PARA A PRÓXIMA FAIXA (RODÍZIO INFINITO 100% AUTOMÁTICO)
     function nextTrack() {
-      state.queueIndex++;
-      if (state.queueIndex >= state.queue.length) {
-        shuffleQueue();
+      clearTimeout(stallWatchdog);
+      const currentMode = getRadioScheduleMode();
+      // Se virou o horário (ex: bateu 16h), reconstrói a fila para a nova programação
+      if (currentMode !== state.currentScheduleMode) {
+        rebuildQueue();
+      } else {
+        state.queueIndex++;
+        if (state.queueIndex >= state.queue.length) {
+          rebuildQueue();
+        }
       }
       playTrack(state.queue[state.queueIndex]);
     }
@@ -866,8 +963,20 @@
 
     // Se houver qualquer falha transitória -> avança em 300ms para a próxima sem travar o salão
     audio.addEventListener('error', (err) => {
-      console.warn('Erro ao carregar faixa, avançando automaticamente...', err);
+      console.warn('Erro ao carregar faixa, avançando automaticamente...', audio.src, err);
       setTimeout(nextTrack, 300);
+    });
+
+    // Se o áudio ficar congelado na rede
+    audio.addEventListener('stalled', () => {
+      console.warn('Conexão de áudio instável/stalled, monitorando...');
+    });
+
+    // Retomar se a aba/tela voltar a ficar visível
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && state.isPlaying && audio.paused) {
+        audio.play().catch(() => {});
+      }
     });
 
     // SCRUBBER
@@ -916,20 +1025,20 @@
     });
 
     // INICIALIZAÇÃO AUTOMÁTICA
-    shuffleQueue();
+    rebuildQueue();
     updateUpcomingList();
 
     // Tenta reprodução automática sem intervenção humana imediatamente
     playTrack(state.queue[0]);
 
     // Caso a política de autoplay do navegador necessite de 1 primeiro gesto na página:
-    // Qualquer toque, clique ou tecla em qualquer lugar destrava o som sem precisar clicar no botão
+    // Qualquer toque, clique, tecla, foco ou movimento do mouse destrava o som sem precisar clicar no botão
     const unlockAutoplay = () => {
       if (!state.isPlaying) {
         playTrack(state.queue[state.queueIndex]);
       }
     };
-    ['pointerdown', 'touchstart', 'click', 'keydown'].forEach((evt) => {
+    ['pointerdown', 'touchstart', 'click', 'keydown', 'mousemove', 'wheel', 'focus'].forEach((evt) => {
       window.addEventListener(evt, unlockAutoplay, { passive: true, once: true });
     });
   </script>
