@@ -199,16 +199,6 @@
   .browser-link { text-align: center; margin-top: 16px; }
   .browser-link a { font-size: 12.5px; font-weight: 800; color: var(--ink-soft); text-decoration: underline; }
 
-  /* Avaliação (3ª visita) */
-  .review {
-    display: none; text-align: center; margin-top: 26px;
-    background: linear-gradient(135deg, rgba(255,226,52,0.28), rgba(240,25,107,0.07));
-    border-radius: 20px; padding: 16px 14px;
-  }
-  .review.show { display: block; }
-  .review .stars { font-size: 18px; letter-spacing: 3px; margin-bottom: 4px; }
-  .review b { display: block; font-size: 14px; font-weight: 900; margin-bottom: 9px; }
-
   footer { text-align: center; padding: 34px var(--gutter) 40px; color: var(--ink-soft); font-size: 12px; font-weight: 600; }
   footer .links { margin-top: 8px; display: flex; justify-content: center; gap: 14px; }
   footer .links a { text-decoration: underline; }
@@ -401,12 +391,6 @@
     </div>
 
     <p class="browser-link"><a id="linkWifiPage" href="#" target="_blank" rel="noopener">Abrir no navegador</a></p>
-
-    <div class="review" id="reviewCard">
-      <div class="stars">★★★★★</div>
-      <b>Você já é da família FaçaAmigos</b>
-      <a class="btn btn-outline" id="ctaReview" href="#" target="_blank" rel="noopener">Avaliar no Google</a>
-    </div>
   </section>
 </div>
 
@@ -446,20 +430,6 @@
   /* Segmentação por dia: +5 min só de segunda a sexta */
   var day = new Date().getDay();
   if (day === 0 || day === 6) { $("tilePlus5").hidden = true; }
-
-  /* Recorrência: só pede avaliação no Google a partir da 3ª conexão do aparelho */
-  try {
-    var VISIT_KEY = "fa_wifi_visit_count";
-    var visits = parseInt(localStorage.getItem(VISIT_KEY) || "0", 10) + 1;
-    localStorage.setItem(VISIT_KEY, String(visits));
-    if (visits >= 3) {
-      $("reviewCard").classList.add("show");
-      $("ctaReview").href = "https://search.google.com/local/writereview?placeid=SEU_PLACE_ID_AQUI";
-      $("ctaReview").addEventListener("click", function () { pushDL("wifi_review_click", { visits: visits }); });
-    }
-  } catch (e) {
-    // localStorage indisponível (modo privado) — segue sem o bloco de avaliação.
-  }
 </script>
 </body>
 </html>

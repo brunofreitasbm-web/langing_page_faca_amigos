@@ -93,7 +93,7 @@ WhatsApp: Clínica `5591991782027`, Playground/Circuito `5591992347673`. Não mi
 - **playground.html**: JSON-LD com 8 Offers; preços duplicados entre schema, tabela e cards; Bosque Grão-Pará aparece no schema como negócio ativo mas é "Em breve"; passaporte mensal fora do schema. Mesmos `@id` do hub (mudar um quebra o outro).
 - **circuito.html**: R$48 (20/30 min), minuto adicional R$3, 10ª entrada grátis por CPF. Única página com URLs absolutas para o hub; canonical no host playground.
 - **servicos.html**: serviços da Clínica, lista de espera por WhatsApp, JSON-LD com 7 serviços.
-- **wifi.html** (noindex): pós-portal; monta UTMs; cupom +15 dias calculado no cliente; avaliação Google só a partir da 3ª visita (`localStorage`).
+- **wifi.html** (noindex): pós-portal; monta UTMs; cupom +15 dias calculado no cliente.
 - **termos / politica-privacidade**: datas fixas (20/09/2026); texto de cookies precisa acompanhar `fa-track.js`.
 
 ### Produtos (Hotmart)
@@ -195,26 +195,25 @@ Portal cativo para um hEX S (arquivos vão em `flash/hotspot/`). `login.html` va
 
 **Consistência / bugs prováveis**
 10. `window.VITE_SUPABASE_PUBLISHABLE_KEY` nunca é definido: o POST de vagas (`job-application-webhook`) sai sem Authorization (index, playground, circuito). Note que `job-application-webhook` **não existe** em `supabase/functions` (vive fora deste repo).
-11. `SEU_PLACE_ID_AQUI` não resolvido em `wifi.html` e `hotspot/alogin.html`.
-12. Dois caminhos de resgate do cupom `ESPERA` (`wifi-coupon-admin` não desativa `fa_kiosk_coupons`; o admin do painel sim).
-13. `hotmart-sync` possivelmente sem cron; `fa-health` monitora esse job e só conhece 2 jobs no `fa_health_snapshot`.
-14. Templates de e-mail do guia fixam o guia: quem tem `ebook_offer=codigo` recebe e-mail do guia; padrões de UTM divergem do código.
-15. Migrations `20261001150000` e `20261001160000` dependem de `fa_kiosk_coupons` (inexistente em banco novo). `fa_gestao_tickets_painel` é órfã e nunca limpa; a migration cita uma action `admin_sso` que não existe em `gestao-hub`.
-16. `eventos-dispatch`: `voucher_reenvio` pode ser bloqueado pelo unique `(inscricao_id,tipo)` conforme o comentário do código (a migration exclui esse tipo; conferir em produção).
-17. Envios com `status=erro` não são reprocessados por `run`; `wifi_resumo`, dashboard e CSV truncam em silêncio (20000/5000 linhas).
+11. Dois caminhos de resgate do cupom `ESPERA` (`wifi-coupon-admin` não desativa `fa_kiosk_coupons`; o admin do painel sim).
+12. `hotmart-sync` possivelmente sem cron; `fa-health` monitora esse job e só conhece 2 jobs no `fa_health_snapshot`.
+13. Templates de e-mail do guia fixam o guia: quem tem `ebook_offer=codigo` recebe e-mail do guia; padrões de UTM divergem do código.
+14. Migrations `20261001150000` e `20261001160000` dependem de `fa_kiosk_coupons` (inexistente em banco novo). `fa_gestao_tickets_painel` é órfã e nunca limpa; a migration cita uma action `admin_sso` que não existe em `gestao-hub`.
+15. `eventos-dispatch`: `voucher_reenvio` pode ser bloqueado pelo unique `(inscricao_id,tipo)` conforme o comentário do código (a migration exclui esse tipo; conferir em produção).
+16. Envios com `status=erro` não são reprocessados por `run`; `wifi_resumo`, dashboard e CSV truncam em silêncio (20000/5000 linhas).
 
 **Duplicação (risco de dessincronia)**
-18. Preços em ≥4 lugares (HTML, JSON-LD, `llms*.txt`, FAQ) + `fa-track.js` + `ESPERADO` em `fa-health`; só `llms*.txt` é checado.
-19. Motor do teste duplicado: `behavior-test-webhook`, `behavior-test-admin`, `admin.html`, `teste-perguntas.json`.
-20. Código HMAC duplicado em `eventos-public` e `eventos-dispatch`; CORS/helpers copiados em todas as funções.
-21. Modal de vagas e CSS triplicados (index, playground, circuito); endereço "Av." vs "Rod."; CEP correto é 66060-147 (66060-060 está errado); `CLINICA_FATIMA` e `utm_campaign=clinica_fatima` são legado mantido de propósito.
-22. Hardcodes: UUIDs de unidades (`geo-facts`, `wifi-lead-webhook`, `fa-health`), ids de template Brevo, `consent_at >= 2026-09-20T16:50Z` em `guia-sequence`, project ref em ops.
+17. Preços em ≥4 lugares (HTML, JSON-LD, `llms*.txt`, FAQ) + `fa-track.js` + `ESPERADO` em `fa-health`; só `llms*.txt` é checado.
+18. Motor do teste duplicado: `behavior-test-webhook`, `behavior-test-admin`, `admin.html`, `teste-perguntas.json`.
+19. Código HMAC duplicado em `eventos-public` e `eventos-dispatch`; CORS/helpers copiados em todas as funções.
+20. Modal de vagas e CSS triplicados (index, playground, circuito); endereço "Av." vs "Rod."; CEP correto é 66060-147 (66060-060 está errado); `CLINICA_FATIMA` e `utm_campaign=clinica_fatima` são legado mantido de propósito.
+21. Hardcodes: UUIDs de unidades (`geo-facts`, `wifi-lead-webhook`, `fa-health`), ids de template Brevo, `consent_at >= 2026-09-20T16:50Z` em `guia-sequence`, project ref em ops.
 
 **Documentação desatualizada**
-23. `LEIA-ME.txt`: Clarity/GA4 antigos (hoje Clarity `yr8qq61339` só com aceite, GA4 `G-37G5XLBXKG`), estrutura antiga do site (`hub.html`), BANDS/8 perguntas. `PUBLICAR.md` vale mais.
-24. `MAPA-DO-SITE.md` diz que `clinica.` é o site Next.js da Clínica, mas `middleware.js` serve o Hub de Gestão nesse host. **Confirmar com o dono do projeto.** O PUBLICAR diz "5 quadrados"; `gestao.html` tem 7.
-25. Política de privacidade cita Clarity e envio de conversão à Meta; precisa acompanhar o tracking real.
-26. Cache: `/assets/*` pode ter ficado em cache longo antes de 29/09; para troca urgente, renomear o arquivo.
+22. `LEIA-ME.txt`: Clarity/GA4 antigos (hoje Clarity `yr8qq61339` só com aceite, GA4 `G-37G5XLBXKG`), estrutura antiga do site (`hub.html`), BANDS/8 perguntas. `PUBLICAR.md` vale mais.
+23. `MAPA-DO-SITE.md` diz que `clinica.` é o site Next.js da Clínica, mas `middleware.js` serve o Hub de Gestão nesse host. **Confirmar com o dono do projeto.** O PUBLICAR diz "5 quadrados"; `gestao.html` tem 7.
+24. Política de privacidade cita Clarity e envio de conversão à Meta; precisa acompanhar o tracking real.
+25. Cache: `/assets/*` pode ter ficado em cache longo antes de 29/09; para troca urgente, renomear o arquivo.
 
 ## 11. Guia de navegação por tarefa
 
