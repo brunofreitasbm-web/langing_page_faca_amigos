@@ -64,10 +64,10 @@ de paciente não podem estar na mesma LAN de um visitante anônimo.
 /interface bridge port add bridge=bridge-visitantes interface=ether3
 ;; adicione as portas onde os access points existentes estão conectados
 
-/ip pool add name=pool-visitantes ranges=10.20.0.10-10.20.0.250
-/ip address add address=10.20.0.1/24 interface=bridge-visitantes
+/ip pool add name=pool-visitantes ranges=192.168.20.10-192.168.20.250
+/ip address add address=192.168.20.1/24 interface=bridge-visitantes
 /ip dhcp-server add name=dhcp-visitantes interface=bridge-visitantes address-pool=pool-visitantes disabled=no
-/ip dhcp-server network add address=10.20.0.0/24 gateway=10.20.0.1 dns-server=10.20.0.1
+/ip dhcp-server network add address=192.168.20.0/24 gateway=192.168.20.1 dns-server=192.168.20.1
 ```
 
 Os access points existentes ficam em **modo bridge** — só repassam Wi-Fi para essa rede,
@@ -85,6 +85,12 @@ sem autenticar nada por conta própria.
 
 O assistente `/ip hotspot setup` faz isso de forma guiada, se preferir — só aponte
 `html-directory` para `flash/hotspot` ao final.
+
+**Endereço do portal:** o RouterOS serve o `login.html` no IP da interface do hotspot, na
+rota `/login` (sem `.html`). Com a rede acima, a página de login é
+`http://192.168.20.1/login`. Em condições normais ninguém digita isso — o celular abre o
+portal sozinho ao conectar — mas é o endereço para testar manualmente, e é a confirmação
+de que 192.168.20.1 pertence à `bridge-visitantes`, não à LAN administrativa.
 
 ## 4. Conta compartilhada de visitante + perfil de sessão
 
@@ -184,9 +190,10 @@ aqui é a configuração técnica, não uma orientação legal.
 - **Aba "Cupons Wi-Fi" do `/admin`** (entrada pelo Hub de Gestão; a equipe usa o login direto limitado): lista os
   cadastros, mostra o código, o nome e o status, e resgata no Playground ou no Circuito (um benefício por cupom, cupom
   vencido não resgata). O dono também vê o resumo do portal, o telefone, o e-mail e quem aceitou contato.
-- **Caixa:** o cupom `ESPERA-XXXX` também existe, com o mesmo código, no caixa do Circuito (+5 min) e do Playground
-  (meia inclusiva), de uso único. O atendente pode digitar o código direto no caixa em vez de usar a aba. O uso no
-  caixa aparece na aba como "Usado no caixa".
+- **Caixa:** o cupom `ESPERA-XXXX` também existe, com o mesmo código, no caixa do Circuito (+5 min) e dos dois
+  Playgrounds, Parque Shopping e Bosque Grão-Pará (meia inclusiva), de uso único. O atendente pode digitar o código
+  direto no caixa em vez de usar a aba. O uso no caixa aparece na aba como "Usado no caixa". Usar em uma unidade
+  desativa o mesmo código nas outras duas.
 - `wifi-coupon-admin` (API com `WIFI_ADMIN_API_KEY`) continua existindo como alternativa por linha de comando, mas a
   aba é o caminho normal:
 

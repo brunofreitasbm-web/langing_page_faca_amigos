@@ -615,16 +615,17 @@ async function sendInsightEmailToGuardian(params: {
 // Cupons Wi-Fi: uso no caixa (fa_kiosk_coupons)
 // ---------------------------------------------------------------------
 // wifi-lead-webhook cria, no mesmo código ESPERA-XXXX, um cupom de uso único em cada unidade
-// (Circuito: +5 min; Playground: meia inclusiva). Quem lê aqui só consulta o uso (used_count) e,
-// no resgate pela aba, desativa os dois para o código não valer duas vezes.
+// (Circuito: +5 min; Playground do Parque e do Grão-Pará: meia inclusiva). Quem lê aqui só consulta o uso
+// (used_count) e, no resgate pela aba, desativa os três para o código não valer duas vezes.
 const KIOSK_PLAYGROUND_UNIT_ID = "11111111-1111-1111-1111-111111111111";
 const KIOSK_CIRCUITO_UNIT_ID = "e43ba7a8-bd5f-47ad-b81d-dae7ea19d504";
+const KIOSK_GRAOPARA_UNIT_ID = "5fc99a57-81ee-4232-a105-1fcb4634cef4";
 
-type UsoCaixa = { playground: Set<string>; circuito: Set<string> };
+type UsoCaixa = { playground: Set<string>; circuito: Set<string>; graopara: Set<string> };
 
 // Códigos ESPERA já usados no caixa, por unidade. Sem lista de códigos = todos.
 async function usoNoCaixa(admin: Admin, codes?: string[]): Promise<UsoCaixa> {
-  const uso: UsoCaixa = { playground: new Set(), circuito: new Set() };
+  const uso: UsoCaixa = { playground: new Set(), circuito: new Set(), graopara: new Set() };
   let q = admin.from("fa_kiosk_coupons").select("code, unit_id, used_count").like("code", "ESPERA-%").gt("used_count", 0).limit(20000);
   if (codes) {
     if (!codes.length) return uso;
@@ -634,6 +635,7 @@ async function usoNoCaixa(admin: Admin, codes?: string[]): Promise<UsoCaixa> {
   for (const r of (data ?? []) as { code: string; unit_id: string }[]) {
     if (r.unit_id === KIOSK_PLAYGROUND_UNIT_ID) uso.playground.add(r.code);
     else if (r.unit_id === KIOSK_CIRCUITO_UNIT_ID) uso.circuito.add(r.code);
+    else if (r.unit_id === KIOSK_GRAOPARA_UNIT_ID) uso.graopara.add(r.code);
   }
   return uso;
 }
@@ -954,7 +956,7 @@ Deno.serve(async (req) => {
     let query = admin
       .from("fa_wifi_leads")
       .select(
-        "id, guardian_name, guardian_phone, guardian_email, coupon_code, coupon_status, coupon_operation, coupon_expires_at, last_redeemed_at, redeemed_count, visit_count, created_at, marketing_opt_in_whatsapp, marketing_opt_in_email, kiosk_coupon_synced_at, kiosk_coupon_error, playground_coupon_synced_at, playground_coupon_error",
+        "id, guardian_name, guardian_phone, guardian_email, coupon_code, coupon_status, coupon_operation, coupon_expires_at, last_redeemed_at, redeemed_count, visit_count, created_at, marketing_opt_in_whatsapp, marketing_opt_in_email, kiosk_coupon_synced_at, kiosk_coupon_error, playground_coupon_synced_at, playground_coupon_error, graopara_coupon_synced_at, graopara_coupon_error",
       )
       .order("created_at", { ascending: false })
       .limit(100);
@@ -977,7 +979,7 @@ Deno.serve(async (req) => {
     const todayStart = new Date(startOfTodayBelemIso()).getTime();
     const uso = await usoNoCaixa(admin, (data ?? []).map((c) => c.coupon_code as string));
     const coupons = (data ?? []).map((c) => {
-      const usadoNoCaixa = uso.playground.has(c.coupon_code) ? "playground" : uso.circuito.has(c.coupon_code) ? "circuito" : null;
+      const usadoNoCaixa = uso.playground.has(c.coupon_code) ? "playground" : uso.graopara.has(c.coupon_code) ? "graopara" : uso.circuito.has(c.coupon_code) ? "circuito" : null;
       const base = {
         id: c.id,
         guardian_name: c.guardian_name,
@@ -1003,7 +1005,7 @@ Deno.serve(async (req) => {
         marketing_opt_in_whatsapp: !!c.marketing_opt_in_whatsapp,
         marketing_opt_in_email: !!c.marketing_opt_in_email,
         // Cupom que não chegou ao caixa não trava reuso nem aplica o benefício sozinho.
-        register_sync_ok: !c.kiosk_coupon_error && !c.playground_coupon_error && !!c.kiosk_coupon_synced_at && !!c.playground_coupon_synced_at,
+        register_sync_ok: !c.kiosk_coupon_error && !c.playground_coupon_error && !c.graopara_coupon_error && !!c.kiosk_coupon_synced_at && !!c.playground_coupon_synced_at && !!c.graopara_coupon_synced_at,
       };
     });
     return jsonResponse(req, { coupons });
@@ -1015,7 +1017,7 @@ Deno.serve(async (req) => {
     const { data, error } = await admin
       .from("fa_wifi_leads")
       .select(
-        "created_at, coupon_code, coupon_expires_at, redeemed_count, coupon_operation, visit_count, marketing_opt_in_whatsapp, marketing_opt_in_email, email_error, kiosk_coupon_error, playground_coupon_error",
+        "created_at, coupon_code, coupon_expires_at, redeemed_count, coupon_operation, visit_count, marketing_opt_in_whatsapp, marketing_opt_in_email, email_error, kiosk_coupon_error, playground_coupon_error, graopara_coupon_error",
       )
       .order("created_at", { ascending: false })
       .limit(20000);
@@ -1033,7 +1035,7 @@ Deno.serve(async (req) => {
     const r = {
       cadastros: leads.length, hoje: 0, ultimos_7_dias: 0, ultimos_30_dias: 0,
       optin_whatsapp: 0, optin_email: 0, voltaram: 0,
-      resgatados: 0, resgate_aba_playground: 0, resgate_aba_circuito: 0, resgate_caixa_playground: 0, resgate_caixa_circuito: 0,
+      resgatados: 0, resgate_aba_playground: 0, resgate_aba_circuito: 0, resgate_caixa_playground: 0, resgate_caixa_graopara: 0, resgate_caixa_circuito: 0,
       vigentes: 0, vencem_em_3_dias: 0, vencidos_sem_uso: 0,
       falhas_caixa: 0, falhas_email: 0,
     };
@@ -1051,14 +1053,16 @@ Deno.serve(async (req) => {
 
       const naAba = Number(l.redeemed_count ?? 0) > 0;
       const noPlay = uso.playground.has(code);
+      const noGrao = uso.graopara.has(code);
       const noCirc = uso.circuito.has(code);
       if (naAba) {
         if (l.coupon_operation === "playground") r.resgate_aba_playground++;
         else if (l.coupon_operation === "circuito") r.resgate_aba_circuito++;
       }
       if (noPlay) r.resgate_caixa_playground++;
+      if (noGrao) r.resgate_caixa_graopara++;
       if (noCirc) r.resgate_caixa_circuito++;
-      const usado = naAba || noPlay || noCirc;
+      const usado = naAba || noPlay || noGrao || noCirc;
       if (usado) r.resgatados++;
       const vence = new Date(String(l.coupon_expires_at)).getTime();
       if (!usado) {
@@ -1068,7 +1072,7 @@ Deno.serve(async (req) => {
           if (vence - now <= 3 * DAY) r.vencem_em_3_dias++;
         }
       }
-      if (l.kiosk_coupon_error || l.playground_coupon_error) r.falhas_caixa++;
+      if (l.kiosk_coupon_error || l.playground_coupon_error || l.graopara_coupon_error) r.falhas_caixa++;
       if (l.email_error) r.falhas_email++;
     }
     return jsonResponse(req, {
@@ -1100,10 +1104,11 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "cupom expirado" }, 409);
     }
 
-    // Já usado direto no caixa (Playground ou Circuito): o benefício de hoje acabou, não vale de novo pela aba.
+    // Já usado direto no caixa (Playground, Playground do Grão-Pará ou Circuito): o benefício de hoje acabou, não vale de novo pela aba.
     const usoCaixa = await usoNoCaixa(admin, [code]);
-    if (usoCaixa.playground.has(code) || usoCaixa.circuito.has(code)) {
-      return jsonResponse(req, { error: "este cupom já foi usado no caixa do " + (usoCaixa.playground.has(code) ? "Playground" : "Circuito") }, 409);
+    if (usoCaixa.playground.has(code) || usoCaixa.graopara.has(code) || usoCaixa.circuito.has(code)) {
+      const onde = usoCaixa.playground.has(code) ? "Playground" : usoCaixa.graopara.has(code) ? "Playground do Grão-Pará" : "Circuito";
+      return jsonResponse(req, { error: "este cupom já foi usado no caixa do " + onde }, 409);
     }
 
     if (Number(lead.redeemed_count ?? 0) > 0) {
@@ -1124,7 +1129,7 @@ Deno.serve(async (req) => {
     if (!updated?.length) {
       return jsonResponse(req, { error: "este cupom já foi usado — um benefício por cupom" }, 409);
     }
-    // Resgatado pela aba: desativa o cupom nas duas unidades do caixa para o código não valer de novo lá.
+    // Resgatado pela aba: desativa o cupom nas três unidades do caixa para o código não valer de novo lá.
     const { error: caixaErr } = await admin.from("fa_kiosk_coupons").update({ active: false }).eq("code", code).like("code", "ESPERA-%");
     if (caixaErr) console.error("Erro ao desativar cupom no caixa:", caixaErr.message);
     return jsonResponse(req, { ok: true, coupon_code: code, operation });

@@ -1921,7 +1921,7 @@
       var wifiCards = document.getElementById('wifiCards');
       var wifiDebounce = null;
       var wifiOptin = document.getElementById('wifiOptin');
-      var OP_LABEL = { playground: 'Playground', circuito: 'Circuito' };
+      var OP_LABEL = { playground: 'Playground', graopara: 'Playground Grão-Pará', circuito: 'Circuito' };
 
       function formatDay(iso) {
         if (!iso) return '—';
@@ -1999,7 +1999,7 @@
           ['Aceitaram WhatsApp', (r.optin_whatsapp || 0) + pct(r.optin_whatsapp || 0), false, ''],
           ['Aceitaram e-mail', (r.optin_email || 0) + pct(r.optin_email || 0), false, ''],
           ['Cupons usados', (r.resgatados || 0) + ' (' + (r.taxa_resgate || 0) + '%)', false,
-            'Playground ' + ((r.resgate_aba_playground || 0) + (r.resgate_caixa_playground || 0)) + ' · Circuito ' + ((r.resgate_aba_circuito || 0) + (r.resgate_caixa_circuito || 0))],
+            'Playground ' + ((r.resgate_aba_playground || 0) + (r.resgate_caixa_playground || 0) + (r.resgate_caixa_graopara || 0)) + (r.resgate_caixa_graopara ? ' (Grão-Pará ' + r.resgate_caixa_graopara + ')' : '') + ' · Circuito ' + ((r.resgate_aba_circuito || 0) + (r.resgate_caixa_circuito || 0))],
           ['Vigentes, sem uso', r.vigentes || 0, false, (r.vencem_em_3_dias || 0) + ' vencem em 3 dias'],
           ['Venceram sem uso', r.vencidos_sem_uso || 0, false, ''],
           ['Voltaram ao Wi-Fi', r.voltaram || 0, false, ''],

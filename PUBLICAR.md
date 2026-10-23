@@ -281,3 +281,13 @@ Ver `supabase/ops/agendar-rotinas.sql` (ordem de execução comentada no arquivo
 ## Oferta do Código no resultado do teste
 
 Secret `EBOOK2_URL=https://institutofacaamigos.com.br/codigo`. Sem ele, o resultado continua oferecendo só o guia.
+
+## Lote 11: cupom Wi-Fi no Playground do Bosque Grão-Pará e e-mail com as duas unidades, 23/10/2026 (banco e funções aplicados em 23/10/2026; site pendente de merge)
+
+- **Cupom no caixa do Grão-Pará.** `wifi-lead-webhook` passa a criar, no mesmo código `ESPERA-XXXX`, um terceiro cupom de uso único: meia inclusiva (`DESCONTO_PCT` 50) na unidade `Playground (Bosque Grão-Pará)` (`5fc99a57-81ee-4232-a105-1fcb4634cef4`). É a mesma regra do Parque. Se a criação falhar, o cadastro e o e-mail seguem e o erro fica em `fa_wifi_leads.graopara_coupon_error`.
+- **Um benefício por cupom** continua valendo sem mudança no banco: o gatilho `fa_kiosk_coupons_espera_um_uso` e o job `fa-wifi-cupons-vencidos` trabalham por código `ESPERA-%`, então já cobrem a terceira linha.
+- **E-mail do cupom** reescrito: sem botão de WhatsApp; lista os benefícios (meia inclusiva R$ 50 no Playground, nos dois shoppings; +5 min adicionais grátis no Circuito, seg a sex) e traz um cartão por lugar com endereço, horário, descrição e "Como chegar" (Parque Shopping, Bosque Grão-Pará e Circuito).
+- **`/admin`, aba Cupons Wi-Fi:** reconhece uso no caixa do Grão-Pará ("Usado no caixa (Playground Grão-Pará)"), conta no resumo e na falha de criação, e o resgate pela aba recusa cupom já usado lá. O resgate pela aba continua com as operações `playground` e `circuito` (a coluna `coupon_operation` só aceita esses dois valores), então um resgate pela aba no Grão-Pará aparece como Playground.
+- **Sem backfill:** em 23/10/2026 não havia cadastro nem cupom `ESPERA` em nenhuma unidade. Cadastros feitos antes do deploy do webhook não terão o cupom do Grão-Pará.
+
+Aplicado em produção em 23/10/2026: migração (registrada no Supabase como `wifi_cupom_grao_para`), `wifi-lead-webhook` v32 e `behavior-test-admin` v42, ambos com `verify_jwt` desligado. Falta o site (`admin.html`, que traz o rótulo "Playground Grão-Pará" na aba). Ordem seguida: (1) migração `20261023120000_wifi_cupom_grao_para.sql`; (2) deploy de `wifi-lead-webhook` e `behavior-test-admin` (`--no-verify-jwt`); (3) site. A migração vai primeiro porque, sem as colunas novas, o `update` final do cadastro no webhook falha (e com ele o registro de `email_sent_at` e das sincronizações) e a listagem da aba Cupons Wi-Fi devolve erro.

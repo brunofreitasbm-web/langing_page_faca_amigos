@@ -131,7 +131,7 @@ Deno.serve(async (req) => {
     if (!updated?.length) {
       return jsonResponse({ error: "este cupom já foi usado — um benefício por cupom" }, 409);
     }
-    // Resgatado por aqui: desativa o cupom nas duas unidades do caixa para o código não valer de novo lá.
+    // Resgatado por aqui: desativa o cupom em todas as unidades do caixa para o código não valer de novo lá.
     const { error: caixaErr } = await admin.from("fa_kiosk_coupons").update({ active: false }).eq("code", code).like("code", "ESPERA-%");
     if (caixaErr) console.error("Erro ao desativar cupom no caixa:", caixaErr.message);
 
