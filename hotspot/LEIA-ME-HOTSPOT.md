@@ -205,7 +205,5 @@ curl -H "Authorization: Bearer $WIFI_ADMIN_API_KEY" \
 
 ## Outras pendências
 
-- **Google Place ID:** o botão de avaliação em `alogin.html` usa um placeholder
-  (`SEU_PLACE_ID_AQUI`) — substituir pelo Place ID real da clínica no Google Maps.
 - **Horário Inclusivo:** confirmado como 10h–16h, todos os dias — `playground.html`,
   `wifi.html` e o portal já estão alinhados (o nome "Manhã Inclusiva" foi trocado).

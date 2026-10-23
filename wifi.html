@@ -225,16 +225,6 @@
     .chip .arrow { margin-left: auto; color: #B3A99C; }
     .chip .arrow svg { width: 20px; height: 20px; }
 
-    /* Avaliação (3ª visita) */
-    .review {
-      display: none; text-align: center; margin-top: 30px;
-      background: linear-gradient(135deg, rgba(255,226,52,0.28), rgba(240,25,107,0.07));
-      border-radius: 22px; padding: 18px 16px;
-    }
-    .review.show { display: block; }
-    .review .stars { font-size: 20px; letter-spacing: 3px; margin-bottom: 4px; }
-    .review b { display: block; font-size: 15px; font-weight: 900; margin-bottom: 10px; }
-
     footer { text-align: center; padding: 40px var(--gutter) 110px; color: var(--ink-soft); font-size: 12.5px; font-weight: 600; }
     footer .links { margin-top: 8px; display: flex; justify-content: center; gap: 16px; }
     footer .links a { text-decoration: underline; }
@@ -433,12 +423,6 @@
           <span class="arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></span>
         </a>
       </div>
-
-      <div class="review" id="reviewCard">
-        <div class="stars">★★★★★</div>
-        <b>Você já é da família FaçaAmigos</b>
-        <a class="btn btn-outline" id="ctaReview" href="#" target="_blank" rel="noopener">Avaliar no Google</a>
-      </div>
     </section>
   </div>
 
@@ -490,18 +474,6 @@
       } else {
         window.addEventListener("scroll", function () { bar.classList.toggle("show", window.scrollY > window.innerHeight * 0.8); });
       }
-
-      /* Avaliação no Google só a partir da 3ª visita do aparelho */
-      try {
-        var VISIT_KEY = "fa_wifi_visit_count";
-        var visits = parseInt(localStorage.getItem(VISIT_KEY) || "0", 10) + 1;
-        localStorage.setItem(VISIT_KEY, String(visits));
-        if (visits >= 3) {
-          $("reviewCard").classList.add("show");
-          $("ctaReview").href = "https://search.google.com/local/writereview?placeid=SEU_PLACE_ID_AQUI";
-          $("ctaReview").addEventListener("click", function () { pushDL("wifi_review_click", { visits: visits }); });
-        }
-      } catch (e) { /* localStorage indisponível: segue sem o bloco */ }
     })();
   </script>
 </body>
