@@ -64,10 +64,10 @@ de paciente não podem estar na mesma LAN de um visitante anônimo.
 /interface bridge port add bridge=bridge-visitantes interface=ether3
 ;; adicione as portas onde os access points existentes estão conectados
 
-/ip pool add name=pool-visitantes ranges=10.20.0.10-10.20.0.250
-/ip address add address=10.20.0.1/24 interface=bridge-visitantes
+/ip pool add name=pool-visitantes ranges=192.168.20.10-192.168.20.250
+/ip address add address=192.168.20.1/24 interface=bridge-visitantes
 /ip dhcp-server add name=dhcp-visitantes interface=bridge-visitantes address-pool=pool-visitantes disabled=no
-/ip dhcp-server network add address=10.20.0.0/24 gateway=10.20.0.1 dns-server=10.20.0.1
+/ip dhcp-server network add address=192.168.20.0/24 gateway=192.168.20.1 dns-server=192.168.20.1
 ```
 
 Os access points existentes ficam em **modo bridge** — só repassam Wi-Fi para essa rede,
@@ -85,6 +85,12 @@ sem autenticar nada por conta própria.
 
 O assistente `/ip hotspot setup` faz isso de forma guiada, se preferir — só aponte
 `html-directory` para `flash/hotspot` ao final.
+
+**Endereço do portal:** o RouterOS serve o `login.html` no IP da interface do hotspot, na
+rota `/login` (sem `.html`). Com a rede acima, a página de login é
+`http://192.168.20.1/login`. Em condições normais ninguém digita isso — o celular abre o
+portal sozinho ao conectar — mas é o endereço para testar manualmente, e é a confirmação
+de que 192.168.20.1 pertence à `bridge-visitantes`, não à LAN administrativa.
 
 ## 4. Conta compartilhada de visitante + perfil de sessão
 
