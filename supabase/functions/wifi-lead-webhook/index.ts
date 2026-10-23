@@ -96,11 +96,14 @@ const CIRCUITO_BONUS_MINUTES = 5;
 // select id from fa_kiosk_units where name ilike '%playground (parque%'.
 const PLAYGROUND_UNIT_ID = "11111111-1111-1111-1111-111111111111";
 const PLAYGROUND_DISCOUNT_PCT = 50;
+// Unidade "Playground (Bosque Grão-Pará)": mesma meia inclusiva (DESCONTO_PCT 50) do Parque Shopping, no mesmo código.
+// Confirmar com: select id from fa_kiosk_units where name ilike '%grão-pará%'.
+const GRAOPARA_UNIT_ID = "5fc99a57-81ee-4232-a105-1fcb4634cef4";
 
 // Cria, no MESMO código do cupom "ESPERA-XXXX", um cupom nativo do kiosk
 // (fa_kiosk_coupons) com max_uses=1: +5 min no Circuito (MINUTOS_EXTRA) e meia
-// inclusiva no Playground (DESCONTO_PCT 50). (Texto abaixo descreve o Circuito; o
-// Playground funciona igual.) O check-in do
+// inclusiva nos dois Playgrounds, Parque Shopping e Bosque Grão-Pará (DESCONTO_PCT 50).
+// (Texto abaixo descreve o Circuito; os Playgrounds funcionam igual.) O check-in do
 // Circuito já aceita p_coupon_code — ao digitar o código, o kiosk aplica os
 // minutos extras e bloqueia qualquer segunda tentativa com o mesmo código,
 // em qualquer unidade ou dia. Isso resolve o risco de a família reusar ou
@@ -144,9 +147,37 @@ async function sendCouponEmail(params: {
     month: "2-digit",
     year: "numeric",
   });
-  const waPlayground = `https://wa.me/5591992347673?text=${encodeURIComponent(
-    `Olá! Sou ${params.guardianName}, vim da clínica e quero usar meu cupom ${params.couponCode}`,
-  )}`;
+  const siteUrl = "https://institutofacaamigos.com.br/playground?utm_source=wifi&amp;utm_medium=email&amp;utm_campaign=clinica_fatima&amp;utm_content=cupom";
+  const mapaParque = "https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m";
+  const mapaGraoPara =
+    "https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving";
+  // Um cartão por lugar onde o cupom vale. Endereços e horários espelham o site (assets/fa-footer.js e playground.html).
+  const lugar = (tag: string, nome: string, linhas: string[], mapa: string) => `
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFF9F1;border:1px solid #E7DFC9;border-radius:12px;margin:0 0 10px 0;">
+            <tr><td style="padding:14px 16px;">
+              <span style="display:inline-block;background:#FFE234;color:#1A3F35;font-family:Arial,sans-serif;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:9999px;">${tag}</span>
+              <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:800;color:#1A3F35;margin:6px 0 4px 0;">${nome}</div>
+              ${linhas.map((l) => `<div style="font-family:Arial,sans-serif;font-size:13px;line-height:1.55;color:#3A4258;">${l}</div>`).join("")}
+              <div style="margin-top:8px;"><a href="${mapa}" style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;color:#f0196b;text-decoration:underline;">Como chegar</a></div>
+            </td></tr>
+          </table>`;
+  const lugares = [
+    lugar("Playground", "Parque Shopping Belém", [
+      "Rod. Augusto Montenegro, 4300 · Térreo, próximo às Lojas Americanas",
+      "Todos os dias, das 10h às 22h",
+      "Piscina de bolinhas gigante, casa na árvore, cantinho de leitura, mediadores especializados e espaço sensorial completo.",
+    ], mapaParque),
+    lugar("Playground", "Shopping Bosque Grão-Pará", [
+      "Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner",
+      "Segunda a sábado, das 10h às 22h · Domingo, das 10h às 21h",
+      "Mesmos preços, mesma equipe qualificada e os mesmos atrativos inclusivos do Parque Shopping. Sem agendamento: é só chegar.",
+    ], mapaGraoPara),
+    lugar("Circuito", "Parque Shopping Belém", [
+      "Rod. Augusto Montenegro, 4300 · Térreo",
+      "Todos os dias, das 10h às 22h",
+      "Carrinhos elétricos a R$ 48 o passeio. Seu filho dirige, você acompanha de pertinho.",
+    ], mapaParque),
+  ].join("");
 
   const html = `<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#FFF9F1;">
@@ -169,14 +200,15 @@ async function sendCouponEmail(params: {
               <div style="font-family:Arial,sans-serif;font-size:12px;color:#4C6B62;">Válido até ${expiresLabel}</div>
             </tr></td>
           </table>
-          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 6px 0;font-weight:800;">Apresente na recepção do Playground ou do quiosque do Circuito, no Parque Shopping, e escolha <strong>um</strong> destes benefícios:</p>
+          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 6px 0;font-weight:800;">Apresente o código na recepção e escolha <strong>um</strong> destes benefícios:</p>
           <ul style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#3A4258;margin:0 0 8px 0;padding-left:20px;">
-            <li>Meia inclusiva (R$ 50 na entrada) para crianças com laudo ou CIPTEA — todo dia</li>
-            <li>+5 minutos grátis no Circuito, em qualquer plano — de segunda a sexta</li>
+            <li><strong>Meia inclusiva no Playground:</strong> R$ 50 nos 30 minutos, contra R$ 60 do público geral, para crianças com laudo ou CIPTEA. Vale todos os dias, no Parque Shopping ou no Shopping Bosque Grão-Pará.</li>
+            <li><strong>+5 minutos adicionais grátis no Circuito</strong>, em qualquer plano, de segunda a sexta.</li>
           </ul>
-          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 20px 0;font-style:italic;">Cada cupom vale um único benefício — no Playground ou no Circuito, nunca nos dois.</p>
-          <div style="text-align:center;margin-bottom:8px;">
-            <a href="${waPlayground}" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:9999px;font-size:15px;">Falar no WhatsApp</a>
+          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 22px 0;font-style:italic;">Cada cupom vale um único benefício, em um único lugar: Playground do Parque Shopping, Playground do Grão-Pará ou Circuito.</p>
+          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 10px 0;font-weight:800;">Onde usar</p>${lugares}
+          <div style="text-align:center;margin:18px 0 8px 0;">
+            <a href="${siteUrl}" style="display:inline-block;background:#f0196b;color:#fff;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:9999px;font-size:15px;">Conhecer o Playground</a>
           </div>
         </td></tr>
         <tr><td style="padding:8px 32px 28px 32px;text-align:center;">
@@ -365,6 +397,19 @@ Deno.serve(async (req) => {
   if (!playgroundResult.synced) {
     console.error("Erro ao sincronizar cupom do Playground no kiosk:", playgroundResult.error);
   }
+  // Mesmo código no Playground do Grão-Pará. Falha aqui também não derruba o cadastro.
+  const graoparaResult = await syncKioskCoupon(admin, {
+    couponCode,
+    guardianName,
+    unitId: GRAOPARA_UNIT_ID,
+    kind: "DESCONTO_PCT",
+    value: PLAYGROUND_DISCOUNT_PCT,
+    label: "meia inclusiva Playground Grão-Pará",
+    expiresAtMs: couponExpiresAt.getTime(),
+  }).catch(onError);
+  if (!graoparaResult.synced) {
+    console.error("Erro ao sincronizar cupom do Grão-Pará no kiosk:", graoparaResult.error);
+  }
 
   const emailResult = await sendCouponEmail({
     guardianName,
@@ -385,6 +430,9 @@ Deno.serve(async (req) => {
       ...(playgroundResult.synced
         ? { playground_coupon_synced_at: new Date().toISOString() }
         : { playground_coupon_error: playgroundResult.error ?? "falha desconhecida" }),
+      ...(graoparaResult.synced
+        ? { graopara_coupon_synced_at: new Date().toISOString() }
+        : { graopara_coupon_error: graoparaResult.error ?? "falha desconhecida" }),
     })
     .eq("id", data.id);
 

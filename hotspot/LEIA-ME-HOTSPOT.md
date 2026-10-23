@@ -190,9 +190,10 @@ aqui é a configuração técnica, não uma orientação legal.
 - **Aba "Cupons Wi-Fi" do `/admin`** (entrada pelo Hub de Gestão; a equipe usa o login direto limitado): lista os
   cadastros, mostra o código, o nome e o status, e resgata no Playground ou no Circuito (um benefício por cupom, cupom
   vencido não resgata). O dono também vê o resumo do portal, o telefone, o e-mail e quem aceitou contato.
-- **Caixa:** o cupom `ESPERA-XXXX` também existe, com o mesmo código, no caixa do Circuito (+5 min) e do Playground
-  (meia inclusiva), de uso único. O atendente pode digitar o código direto no caixa em vez de usar a aba. O uso no
-  caixa aparece na aba como "Usado no caixa".
+- **Caixa:** o cupom `ESPERA-XXXX` também existe, com o mesmo código, no caixa do Circuito (+5 min) e dos dois
+  Playgrounds, Parque Shopping e Bosque Grão-Pará (meia inclusiva), de uso único. O atendente pode digitar o código
+  direto no caixa em vez de usar a aba. O uso no caixa aparece na aba como "Usado no caixa". Usar em uma unidade
+  desativa o mesmo código nas outras duas.
 - `wifi-coupon-admin` (API com `WIFI_ADMIN_API_KEY`) continua existindo como alternativa por linha de comando, mas a
   aba é o caminho normal:
 

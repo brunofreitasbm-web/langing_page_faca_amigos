@@ -140,7 +140,7 @@ Padrões comuns: `Deno.serve` único roteado por `action`; CORS e helpers copiad
 - **Auth do painel**: `gestao-hub` (`launch painel|eventos`) cria ticket em `fa_gestao_painel_tickets` → `/admin#sso=` → `behavior-test-admin` `sso` cria sessão em `fa_teste_admin_sessions` → `eventos-admin` reutiliza o mesmo Bearer.
 - **E-mail de eventos**: `eventos-public`/`eventos-admin`/`hotmart-webhook` → `eventos-dispatch` (`x-ops-key`) → Brevo. O cron chama `run`.
 - **Compra de e-book**: link com `src/sck/utm/xcod` → Hotmart → `hotmart-webhook` (+ `hotmart-sync`) → `fa_ebook_compras` → para a `guia-sequence` do lead → GA4/Meta server-side.
-- **Wi-Fi**: MikroTik `login.html` → `wifi-lead-webhook` → lead + 2 cupons nativos (Circuito +5 min, Playground 50%) → e-mail → `/wifi`.
+- **Wi-Fi**: MikroTik `login.html` → `wifi-lead-webhook` → lead + 3 cupons nativos (Circuito +5 min, Playground Parque 50%, Playground Grão-Pará 50%) → e-mail → `/wifi`.
 
 ### Variáveis de ambiente (nomes)
 `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`; Clínica: `CLINICA_SUPABASE_URL`, `CLINICA_SUPABASE_ANON_KEY`, `CLINICA_SUPABASE_SERVICE_ROLE_KEY`; chaves de operação: `OPS_KEY`, `SEQ_RUN_KEY`, `SEQ_SECRET`, `HOTMART_SYNC_KEY`, `HOTMART_HOTTOK`, `HOTMART_BASIC_TOKEN`, `WIFI_ADMIN_API_KEY`, `EVENTOS_SECRET`, `GESTAO_SSO_SECRET_CACAU`; produtos: `HOTMART_PRODUCT_ID`, `HOTMART_CODIGO_PRODUCT_ID`, `EBOOK_URL`, `EBOOK2_URL`, `EBOOK_PRICE_*`; e-mail: `BREVO_API_KEY`, `BREVO_FROM`, `BREVO_REPLY_TO`, `BREVO_LIST_ID`, `BREVO_LIST_EVENTOS_*`; alertas: `ALERT_EMAIL`, `LEAD_NOTIFY_EMAIL`, `LEAD_WHATSAPP`; analytics: `GA4_API_SECRET`, `GA4_MEASUREMENT_ID`, `META_PIXEL_ID`, `META_CAPI_TOKEN`; outros: `GEMINI_API_KEY`, `SITE_URL`, `COMUNIDADE_WHATSAPP_*`, `GESTAO_URL_*`.
@@ -153,7 +153,7 @@ Convenção: **RLS ligada e nenhuma policy**; só a service role (Edge Functions
 |---|---|
 | Teste | `fa_leads_teste_comportamento`, `fa_teste_ebook_seq` (FK cascade), `fa_teste_config`, `fa_teste_admin_sessions` (`escopo` owner/equipe), `fa_teste_admin_login_attempts` |
 | E-books | `fa_ebook_compras` (PK `transaction`), `fa_hotmart_eventos` (idempotência por `event_id`), `fa_ebook_carrinhos` (sem recuperação por e-mail ainda) |
-| Wi-Fi | `fa_wifi_leads` (`coupon_code` único; liga a `fa_kiosk_coupons`) |
+| Wi-Fi | `fa_wifi_leads` (`coupon_code` único; liga a `fa_kiosk_coupons`; `kiosk_/playground_/graopara_coupon_synced_at` e `_error` dizem se cada cupom chegou ao caixa) |
 | Hub | `fa_gestao_contas` (mãe), `_desafios`, `_sessoes` (hash do token), `_login_attempts`, `_auditoria`, `_painel_tickets` (em uso), `_tickets_painel` (**órfã**) |
 | Eventos | `fa_eventos` 1:N `fa_eventos_ingresso_tipos` 1:N `fa_eventos_inscricoes` 1:N `fa_eventos_envios`; view `fa_eventos_publicos` (`security_invoker`); RPCs `fa_eventos_inscrever/cancelar/checkin/confirmar_*/expirar_promocoes/reprocessar_vagas` (lock `for update` no evento); `fa_health_snapshot()` |
 | Externas a este repo | `fa_kiosk_units/plans/packages/coupons/loyalty_rules/app_settings` (app dos quiosques); `profiles` e `auth` no projeto Supabase da Clínica |
