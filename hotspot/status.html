@@ -10,7 +10,7 @@
   :root {
     --pink: #F0196B; --pink-dark: #C81158; --teal: #2ECFB5; --teal-dark: #1FA893;
     --yellow: #FFE234; --dark: #1A3F35; --ink-soft: #4C6B62; --cream: #FFF9F1;
-    --white: #FFFFFF; --wa: #25D366;
+    --white: #FFFFFF;
     --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
     --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
     --shadow-pink: 0 10px 26px rgba(240, 25, 107, 0.32);
@@ -35,7 +35,7 @@
   .hero p { color: var(--ink-soft); font-size: 14px; }
   .cta-group { display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
   .btn { display: flex; align-items: center; justify-content: center; gap: 8px; border: none; border-radius: 999px; padding: 15px; text-decoration: none; font-family: 'Fredoka One', sans-serif; font-size: 15px; cursor: pointer; }
-  .btn-wa { background: var(--wa); color: var(--white); box-shadow: 0 10px 26px rgba(37,211,102,0.32); }
+  .btn-pink { background: var(--pink); color: var(--white); box-shadow: var(--shadow-pink); }
   .btn-outline { background: var(--white); color: var(--dark); border: 2px solid #E7E1D5; }
   .btn-logout { background: transparent; color: var(--ink-soft); font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 13.5px; text-decoration: underline; }
   .foot { text-align: center; margin-top: 6px; }
@@ -56,11 +56,11 @@
 
   <div class="hero">
     <h1>Aproveite o Wi-Fi!</h1>
-    <p>E já de olho na sua próxima parada: o Playground e o Circuito inclusivos do FaçaAmigos no Parque Shopping.</p>
+    <p>E já de olho na sua próxima parada: o Playground inclusivo do FaçaAmigos, no Parque Shopping Belém e no Shopping Bosque Grão-Pará, e o Circuito, no Parque Shopping.</p>
   </div>
 
   <div class="cta-group">
-    <a class="btn btn-wa" href="https://wa.me/5591992347673?text=Vim%20da%20cl%C3%ADnica%20e%20quero%20saber%20mais%20do%20Playground" target="_blank" rel="noopener">Falar sobre o Playground</a>
+    <a class="btn btn-pink" href="https://institutofacaamigos.com.br/playground?utm_source=wifi&amp;utm_medium=captive_portal&amp;utm_campaign=clinica_fatima&amp;utm_content=status" target="_blank" rel="noopener">Conhecer o Playground</a>
     <a class="btn btn-outline" href="https://institutofacaamigos.com.br/wifi?utm_source=wifi&amp;utm_medium=captive_portal&amp;utm_campaign=clinica_fatima" target="_blank" rel="noopener">Ver todos os benefícios</a>
     <a class="btn btn-logout" href="$(link-logout)">Encerrar minha sessão</a>
   </div>
