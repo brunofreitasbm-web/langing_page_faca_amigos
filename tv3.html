@@ -50,6 +50,8 @@
       user-select: none;
     }
 
+    [hidden] { display: none !important; }
+
     html, body {
       width: 100vw;
       height: 100vh;
@@ -712,7 +714,7 @@
     <!-- CABEÇALHO DA TV -->
     <header class="tv-header">
       <div class="tv-brand">
-        <img class="tv-logo-symbol" src="img/logo-simbolo.png" alt="FaçaAmigos">
+        <img class="tv-logo-symbol" src="img/logo-simbolo.png" alt="FaçaAmigos" width="54" height="54">
         <div class="tv-brand-titles">
           <div class="tv-brand-main">
             FaçaAmigos
@@ -727,11 +729,7 @@
           <span class="tv-live-dot"></span>
           <span>SALA DE ESPERA</span>
         </div>
-        <div class="tv-header-info">
-          <span>☕ Café & Água à vontade</span>
-          <span>•</span>
-          <span>📶 Wi-Fi disponível</span>
-        </div>
+        <div class="tv-header-info" id="headerInfo" hidden></div>
       </div>
 
       <div class="tv-clock-box">
@@ -754,21 +752,17 @@
       </div>
 
       <div class="tv-footer-amenities">
-        <div class="tv-amenity-item">
+        <div class="tv-amenity-item" id="amenityWifi" hidden>
           <span class="tv-amenity-icon">📶</span>
-          <span>Rede Wi-Fi: <b>FacaAmigos_Pacientes</b></span>
-        </div>
-        <div class="tv-amenity-item">
-          <span class="tv-amenity-icon">🔑</span>
-          <span>Senha: <b>facaamigos2026</b></span>
+          <span id="amenityWifiText"></span>
         </div>
         <div class="tv-amenity-item">
           <span class="tv-amenity-icon">💬</span>
-          <span>Recepção e Dúvidas: <b>(91) 98606-9538</b></span>
+          <span>Recepção e dúvidas: <b>(91) 99178-2027</b></span>
         </div>
       </div>
 
-      <div class="tv-slide-counter" id="slideCounter">1 / 14</div>
+      <div class="tv-slide-counter" id="slideCounter"></div>
     </footer>
 
     <!-- CONTROLES DE HUD (APARECEM COM O MOUSE OU ATALHOS) -->
@@ -787,9 +781,23 @@
       'use strict';
 
       // ======================================================================
-      // CONFIGURAÇÃO DOS SLIDES DA TV3 (GRADE COM ROTAÇÃO CONTÍNUA)
+      // CONFIGURAÇÃO DA TV3 (tudo que muda sem mexer na lógica fica aqui)
       // ======================================================================
-      const SLIDE_DURATION = 14000; // 14 segundos por slide
+      const CONFIG = {
+        experiment: 'base-2026-12',   // rótulo do experimento (formato <o-que-mudou>-AAAA-MM)
+        wifiSsid: '',                 // vazio = não mostra Wi-Fi. Preencher quando o portal cativo estiver instalado
+        whatsapp: '(91) 99178-2027'   // WhatsApp oficial da Clínica
+      };
+
+      // Hora oficial de Belém (UTC-3), independente do fuso da TV
+      const BELEM_OFFSET_MS = -3 * 60 * 60 * 1000;
+      function belemNow() {
+        const d = new Date(Date.now() + BELEM_OFFSET_MS);
+        return { hours: d.getUTCHours(), minutes: d.getUTCMinutes(), seconds: d.getUTCSeconds(), dayIndex: Math.floor(d.getTime() / 86400000), weekday: d.getUTCDay() };
+      }
+      function calculateCurrentCycleDay() { return (belemNow().dayIndex % 5) + 1; }
+
+      const SLIDE_DURATION = 14000; // 14 segundos por slide (provisório até o motor de voltas)
 
       // Links com UTM para rastreamento preciso
       const URL_TESTE = 'https://institutofacaamigos.com.br/teste?utm_source=tv3&utm_medium=indoor&utm_campaign=sala_espera';
@@ -1396,17 +1404,23 @@
       // RELÓGIO DIGITAL E DATA EM TEMPO REAL
       // ======================================================================
       function updateClock() {
-        const now = new Date();
+        const b = belemNow();
         const timeEl = document.getElementById('clockTime');
         const dateEl = document.getElementById('clockDate');
+        timeEl.textContent = [b.hours, b.minutes, b.seconds].map(n => String(n).padStart(2, '0')).join(':');
+        dateEl.textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Belem' });
+      }
 
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        const seconds = String(now.getSeconds()).padStart(2, '0');
-        timeEl.textContent = `${hours}:${minutes}:${seconds}`;
-
-        const options = { weekday: 'long', day: 'numeric', month: 'long' };
-        dateEl.textContent = now.toLocaleDateString('pt-BR', options);
+      // Cabeçalho e rodapé: só mostram o que foi configurado
+      function applyAmenities() {
+        if (CONFIG.wifiSsid) {
+          const info = document.getElementById('headerInfo');
+          info.hidden = false;
+          info.textContent = '📶 Wi-Fi para visitantes';
+          document.getElementById('amenityWifi').hidden = false;
+          document.getElementById('amenityWifiText').innerHTML = 'Wi-Fi: <b></b> · faça o cadastro rápido';
+          document.querySelector('#amenityWifiText b').textContent = CONFIG.wifiSsid;
+        }
       }
 
       // ======================================================================
@@ -1455,8 +1469,8 @@
 
       // Auto-recarregamento preventivo diário às 04:00 da manhã para limpar memória da TV
       setInterval(() => {
-        const d = new Date();
-        if (d.getHours() === 4 && d.getMinutes() === 0) {
+        const b = belemNow();
+        if (b.hours === 4 && b.minutes === 0) {
           window.location.reload();
         }
       }, 60000);
@@ -1467,6 +1481,7 @@
 
       renderSlides();
       fitStage();
+      applyAmenities();
       updateClock();
       setInterval(updateClock, 1000);
       resetProgressBar();
