@@ -1,0 +1,1477 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-fa-kiosk>
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>FaçaAmigos TV3 — Clínica de Terapia Comportamental</title>
+  <meta name="description" content="Mídia Indoor da Sala de Espera da Clínica FaçaAmigos: acolhimento parental, dicas terapêuticas, divulgação dos Playgrounds, Circuito e Mapeamento Gratuito.">
+  <link rel="canonical" href="https://institutofacaamigos.com.br/tv3">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+
+  <!-- Fontes Oficiais da Marca -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --petrol-deep: #032D37;
+      --petrol: #065264;
+      --petrol-light: #0B6D84;
+      --petrol-soft: #E5F3F6;
+      --pink: #F0196B;
+      --pink-dark: #C81158;
+      --pink-soft: rgba(240, 25, 107, 0.12);
+      --teal: #2ECFB5;
+      --teal-dark: #1FA893;
+      --teal-soft: #E3F8F4;
+      --yellow: #FFE234;
+      --yellow-gold: #F59E0B;
+      --yellow-soft: #FFF9D2;
+      --dark: #0F2520;
+      --ink-soft: #425B53;
+      --cream: #FFF9F1;
+      --white: #FFFFFF;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --shadow-elevation: 0 24px 60px rgba(3, 45, 55, 0.22);
+      --shadow-glow: 0 0 35px rgba(46, 207, 181, 0.35);
+      --font-display: 'Fredoka One', 'Fredoka', cursive, sans-serif;
+      --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--petrol-deep);
+      font-family: var(--font-body);
+      color: var(--dark);
+      cursor: default;
+    }
+
+    body.hide-cursor {
+      cursor: none !important;
+    }
+
+    /* ==========================================================================
+       STAGE MASTER (1920x1080 Paisagem Nativo com Escala e Rotação)
+       ========================================================================== */
+    #tvStage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 1920px;
+      height: 1080px;
+      transform-origin: center center;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle at 85% 15%, rgba(46, 207, 181, 0.18), transparent 45%),
+                  radial-gradient(circle at 15% 85%, rgba(240, 25, 107, 0.15), transparent 40%),
+                  var(--cream);
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: 96px 1fr 64px;
+    }
+
+    /* MODO RETRATO VERTICAL (QUANDO TV ESTIVER EM PÉ 1080x1920) */
+    #tvStage.portrait-mode {
+      width: 1080px;
+      height: 1920px;
+      grid-template-rows: 110px 1fr 70px;
+    }
+
+    /* ==========================================================================
+       BARRA SUPERIOR (HEADER INFORMATIVO COM RELÓGIO E AVISOS)
+       ========================================================================== */
+    .tv-header {
+      background: var(--petrol);
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 44px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      z-index: 50;
+    }
+
+    .tv-brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .tv-logo-symbol {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+    }
+
+    .tv-brand-titles {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tv-brand-main {
+      font-family: var(--font-display);
+      font-size: 26px;
+      letter-spacing: 0.5px;
+      color: var(--white);
+      line-height: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .tv-brand-badge {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      background: var(--pink);
+      color: var(--white);
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+
+    .tv-brand-sub {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.3px;
+      margin-top: 3px;
+    }
+
+    .tv-header-center {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 8px 24px;
+      border-radius: 999px;
+      backdrop-filter: blur(8px);
+    }
+
+    .tv-live-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--yellow);
+    }
+
+    .tv-live-dot {
+      width: 10px;
+      height: 10px;
+      background: #25D366;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #25D366;
+      animation: pulseLive 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseLive {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.3); }
+    }
+
+    .tv-header-info {
+      font-size: 14px;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.9);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tv-clock-box {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-align: right;
+    }
+
+    .tv-clock-time {
+      font-family: var(--font-display);
+      font-size: 34px;
+      letter-spacing: 1px;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .tv-clock-date {
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: capitalize;
+      color: var(--teal-soft);
+      line-height: 1.2;
+    }
+
+    /* ==========================================================================
+       CONTEÚDO PRINCIPAL (SPLIT: VISUAL À ESQUERDA + PAINEL DE AÇÃO À DIREITA)
+       ========================================================================== */
+    .tv-body {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .tv-slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      padding: 36px 44px;
+      gap: 36px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(30px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  visibility 0.8s;
+      z-index: 1;
+    }
+
+    .tv-slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      z-index: 2;
+    }
+
+    /* MODO RETRATO VERTICAL */
+    #tvStage.portrait-mode .tv-slide {
+      grid-template-columns: 1fr;
+      grid-template-rows: 1fr auto;
+      padding: 30px;
+      gap: 24px;
+    }
+
+    /* CARTÃO VISUAL PRINCIPAL (ESQUERDA) */
+    .tv-visual-card {
+      position: relative;
+      background: var(--dark);
+      border-radius: 36px;
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .tv-slide-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.02);
+      transition: transform 12s ease-out;
+    }
+
+    .tv-slide.active .tv-slide-image {
+      transform: scale(1.10);
+    }
+
+    .tv-image-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, 
+                  rgba(6, 82, 100, 0.1) 0%, 
+                  rgba(3, 45, 55, 0.4) 40%, 
+                  rgba(3, 45, 55, 0.95) 100%);
+      z-index: 2;
+    }
+
+    .tv-visual-text {
+      position: relative;
+      z-index: 3;
+      padding: 44px;
+      color: var(--white);
+    }
+
+    .tv-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--yellow);
+      color: var(--petrol-deep);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-weight: 900;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .tv-kicker.pink {
+      background: var(--pink);
+      color: var(--white);
+    }
+
+    .tv-kicker.teal {
+      background: var(--teal);
+      color: var(--petrol-deep);
+    }
+
+    .tv-headline {
+      font-family: var(--font-display);
+      font-size: clamp(34px, 2.6vw, 48px);
+      line-height: 1.18;
+      color: var(--white);
+      margin-bottom: 14px;
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    .tv-headline em {
+      font-style: normal;
+      color: var(--yellow);
+      background: linear-gradient(180deg, transparent 65%, rgba(240, 25, 107, 0.6) 65%);
+    }
+
+    .tv-subtext {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: rgba(255, 255, 255, 0.94);
+      max-width: 90%;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    /* PAINEL DE AÇÃO E CONEXÃO (DIREITA) */
+    .tv-action-card {
+      background: var(--card-bg);
+      border-radius: 36px;
+      padding: 40px 36px;
+      box-shadow: var(--shadow-elevation);
+      border: 2px solid rgba(255, 255, 255, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(14px);
+    }
+
+    .tv-action-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tv-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      align-self: flex-start;
+      padding: 6px 14px;
+      background: var(--petrol-soft);
+      color: var(--petrol);
+      font-weight: 900;
+      font-size: 13px;
+      border-radius: 999px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .tv-action-title {
+      font-family: var(--font-display);
+      font-size: 28px;
+      line-height: 1.22;
+      color: var(--petrol-deep);
+    }
+
+    .tv-action-desc {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink-soft);
+      line-height: 1.4;
+    }
+
+    /* QR CODE CONTAINER */
+    .tv-qr-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      background: var(--white);
+      padding: 24px;
+      border-radius: 28px;
+      box-shadow: 0 10px 30px rgba(6, 82, 100, 0.1);
+      border: 1.5px solid rgba(6, 82, 100, 0.12);
+      margin: 20px 0;
+    }
+
+    .tv-qr-box {
+      width: 150px;
+      height: 150px;
+      flex-shrink: 0;
+      background: var(--white);
+      border-radius: 16px;
+      padding: 6px;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .tv-qr-box svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .tv-qr-text {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .tv-qr-callout {
+      font-family: var(--font-display);
+      font-size: 20px;
+      color: var(--pink);
+      line-height: 1.15;
+    }
+
+    .tv-qr-instructions {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--petrol-deep);
+      line-height: 1.35;
+    }
+
+    .tv-qr-subhint {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink-soft);
+    }
+
+    /* CARDS DE DESTAQUE ADICIONAL */
+    .tv-highlight-box {
+      background: linear-gradient(135deg, var(--teal-soft) 0%, rgba(255, 255, 255, 0.9) 100%);
+      padding: 18px 22px;
+      border-radius: 20px;
+      border-left: 5px solid var(--teal-dark);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tv-highlight-icon {
+      font-size: 30px;
+      flex-shrink: 0;
+    }
+
+    .tv-highlight-text {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--petrol-deep);
+      line-height: 1.35;
+    }
+
+    /* TUTORIAL STEPS & COMPARATIVO NO SLIDE */
+    .tv-tutorial-steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .tv-step-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(10px);
+      padding: 12px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .tv-step-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--yellow);
+      color: var(--petrol-deep);
+      font-family: var(--font-display);
+      font-size: 20px;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .tv-step-body {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .tv-step-body strong {
+      font-size: 16px;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .tv-step-body span {
+      font-size: 13.5px;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+    }
+
+    /* GRID COMPARATIVO (MURAL VS WHATSAPP MANUAL) */
+    .tv-vs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .tv-vs-box {
+      border-radius: 18px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .tv-vs-box.bad {
+      background: rgba(197, 48, 48, 0.28);
+      border: 1.5px solid rgba(240, 25, 107, 0.5);
+    }
+
+    .tv-vs-box.good {
+      background: rgba(16, 185, 129, 0.25);
+      border: 1.5px solid rgba(46, 207, 181, 0.6);
+    }
+
+    .tv-vs-header {
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tv-vs-box.bad .tv-vs-header { color: #FFA8B6; }
+    .tv-vs-box.good .tv-vs-header { color: #A7F3D0; }
+
+    .tv-vs-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .tv-vs-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+      line-height: 1.25;
+    }
+
+    /* ==========================================================================
+       BARRA INFERIOR (FOOTER COM TICKER / WI-FI / PROGRESSO)
+       ========================================================================== */
+    .tv-footer {
+      background: var(--white);
+      border-top: 2px solid rgba(6, 82, 100, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 44px;
+      position: relative;
+      z-index: 50;
+    }
+
+    .tv-progress-container {
+      position: absolute;
+      top: -4px;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: rgba(6, 82, 100, 0.15);
+      overflow: hidden;
+    }
+
+    .tv-progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--teal), var(--pink));
+      transition: width 0.1s linear;
+    }
+
+    .tv-footer-amenities {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .tv-amenity-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--petrol-deep);
+    }
+
+    .tv-amenity-icon {
+      font-size: 18px;
+      display: grid;
+      place-items: center;
+      width: 32px;
+      height: 32px;
+      background: var(--petrol-soft);
+      border-radius: 8px;
+    }
+
+    .tv-amenity-item b {
+      color: var(--pink-dark);
+      background: var(--pink-soft);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .tv-slide-counter {
+      font-family: var(--font-display);
+      font-size: 17px;
+      color: var(--petrol);
+      background: var(--petrol-soft);
+      padding: 6px 18px;
+      border-radius: 999px;
+      letter-spacing: 1px;
+    }
+
+    /* ==========================================================================
+       HUD DE CONTROLE (OCULTO AUTOMATICAMENTE)
+       ========================================================================== */
+    .tv-hud {
+      position: absolute;
+      bottom: 74px;
+      right: 44px;
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+
+    .tv-hud.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .tv-hud-btn {
+      background: rgba(3, 45, 55, 0.9);
+      color: var(--white);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .tv-hud-btn:hover {
+      background: var(--pink);
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+
+<body class="hide-cursor">
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <div id="tvStage">
+
+    <!-- CABEÇALHO DA TV -->
+    <header class="tv-header">
+      <div class="tv-brand">
+        <img class="tv-logo-symbol" src="img/logo-simbolo.png" alt="FaçaAmigos">
+        <div class="tv-brand-titles">
+          <div class="tv-brand-main">
+            FaçaAmigos
+            <span class="tv-brand-badge">Clínica</span>
+          </div>
+          <div class="tv-brand-sub">Centro de Terapia Comportamental Infantil</div>
+        </div>
+      </div>
+
+      <div class="tv-header-center">
+        <div class="tv-live-tag">
+          <span class="tv-live-dot"></span>
+          <span>SALA DE ESPERA</span>
+        </div>
+        <div class="tv-header-info">
+          <span>☕ Café & Água à vontade</span>
+          <span>•</span>
+          <span>📶 Wi-Fi disponível</span>
+        </div>
+      </div>
+
+      <div class="tv-clock-box">
+        <div>
+          <div class="tv-clock-time" id="clockTime">00:00:00</div>
+          <div class="tv-clock-date" id="clockDate">Carregando data...</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ÁREA DE SLIDES -->
+    <main class="tv-body" id="slideContainer">
+      <!-- Inserido dinamicamente via JavaScript -->
+    </main>
+
+    <!-- RODAPÉ DA TV -->
+    <footer class="tv-footer">
+      <div class="tv-progress-container">
+        <div class="tv-progress-bar" id="progressBar"></div>
+      </div>
+
+      <div class="tv-footer-amenities">
+        <div class="tv-amenity-item">
+          <span class="tv-amenity-icon">📶</span>
+          <span>Rede Wi-Fi: <b>FacaAmigos_Pacientes</b></span>
+        </div>
+        <div class="tv-amenity-item">
+          <span class="tv-amenity-icon">🔑</span>
+          <span>Senha: <b>facaamigos2026</b></span>
+        </div>
+        <div class="tv-amenity-item">
+          <span class="tv-amenity-icon">💬</span>
+          <span>Recepção e Dúvidas: <b>(91) 98606-9538</b></span>
+        </div>
+      </div>
+
+      <div class="tv-slide-counter" id="slideCounter">1 / 14</div>
+    </footer>
+
+    <!-- CONTROLES DE HUD (APARECEM COM O MOUSE OU ATALHOS) -->
+    <nav class="tv-hud" id="tvHud" aria-label="Controles">
+      <button class="tv-hud-btn" id="btnPrev">◀ [←] Anterior</button>
+      <button class="tv-hud-btn" id="btnPause">⏸ [Espaço] Pausar</button>
+      <button class="tv-hud-btn" id="btnNext">▶ [→] Próximo</button>
+      <button class="tv-hud-btn" id="btnRotate">🔄 [R] Girar</button>
+      <button class="tv-hud-btn" id="btnFull">⛶ [F] Tela Cheia</button>
+    </nav>
+
+  </div>
+
+  <script>
+    (function () {
+      'use strict';
+
+      // ======================================================================
+      // CONFIGURAÇÃO DOS SLIDES DA TV3 (GRADE COM ROTAÇÃO CONTÍNUA)
+      // ======================================================================
+      const SLIDE_DURATION = 14000; // 14 segundos por slide
+
+      // Links com UTM para rastreamento preciso
+      const URL_TESTE = 'https://institutofacaamigos.com.br/teste?utm_source=tv3&utm_medium=indoor&utm_campaign=sala_espera';
+      const URL_PLAYGROUND = 'https://institutofacaamigos.com.br/playground?utm_source=tv3&utm_medium=indoor';
+      const URL_CIRCUITO = 'https://institutofacaamigos.com.br/circuito?utm_source=tv3&utm_medium=indoor';
+      const URL_CLINICA = 'https://institutofacaamigos.com.br/clinica?utm_source=tv3&utm_medium=indoor';
+      const URL_MURAL_FAMILIA = 'https://sistema.institutofacaamigos.com.br/familia?utm_source=tv3&utm_medium=indoor&utm_campaign=mural_espera';
+
+      const SLIDES = [
+        // 1. ACOLHIMENTO CLÍNICO
+        {
+          id: 'clinica_tempo',
+          kicker: '💙 Acolhimento e Afeto',
+          kickerClass: 'teal',
+          headline: 'Cada conquista tem seu <em>ritmo</em>.',
+          subtext: 'Na Clínica FaçaAmigos, respeitamos o tempo e a individualidade do seu filho. Cada evolução em sala é comemorada como uma grande vitória.',
+          image: 'img/clinica-atividade-pedagogica.webp',
+          badge: 'Clínica FaçaAmigos',
+          actionTitle: 'Terapia Comportamental',
+          actionDesc: 'Equipe multidisciplinar alinhada para desenvolver autonomia, linguagem e socialização.',
+          qrUrl: URL_CLINICA,
+          qrTitle: 'Conheça nossos métodos',
+          qrDesc: 'Aponte a câmera do celular para ler mais sobre o nosso plano terapêutico.',
+          qrHint: 'Psicologia ABA • Fono • TO',
+          highlightIcon: '🌱',
+          highlightText: 'Ambiente estruturado com foco no bem-estar emocional de toda a família.'
+        },
+
+        // 2. TUTORIAL: MURAL DA FAMÍLIA (ACESSO PASSO A PASSO)
+        {
+          id: 'mural_tutorial',
+          kicker: '📱 Portal Exclusivo da Família',
+          kickerClass: 'pink',
+          headline: 'O acompanhamento do seu filho na <em>palma da mão</em>.',
+          subtext: 'Acesse o Mural da Família enquanto aguarda na sala de espera em 3 passos simples:',
+          image: 'img/inclusao-cantinho-leitura.webp',
+          steps: [
+            { num: '1', title: 'Aponte a Câmera', desc: 'Escaneie o QR Code ao lado no seu celular' },
+            { num: '2', title: 'Digite seu CPF', desc: 'Use o mesmo CPF informado no cadastro da clínica' },
+            { num: '3', title: 'Acesse o Mural', desc: 'Pronto! Acompanhe fotos, recados e evoluções em tempo real' }
+          ],
+          badge: 'Sistema da Clínica',
+          actionTitle: 'Mural da Família',
+          actionDesc: 'Acesso direto, sem baixar aplicativo pesado na loja. Funciona na hora no navegador!',
+          qrUrl: URL_MURAL_FAMILIA,
+          qrTitle: 'Acessar agora mesmo',
+          qrDesc: 'Aponte a câmera do seu celular para fazer login direto com seu CPF.',
+          qrHint: 'sistema.institutofacaamigos.com.br',
+          highlightIcon: '⚡',
+          highlightText: 'Dica: adicione à tela inicial do celular como um atalho rápido.'
+        },
+
+        // 3. COMPARATIVO PERSUASIVO: MURAL VS WHATSAPP MANUAL
+        {
+          id: 'mural_vantagens',
+          kicker: '⚡ Canal Oficial e Direto',
+          kickerClass: 'teal',
+          headline: 'Mural da Família <em>vs</em> WhatsApp Manual',
+          subtext: 'Por que usar o sistema próprio da clínica é muito mais rápido, seguro e eficiente:',
+          image: 'img/equipe-recepcao.webp',
+          comparativo: {
+            bad: {
+              header: '⚠️ WhatsApp / E-mail Manual',
+              items: [
+                'Mensagens se perdem no fluxo do dia',
+                'Demora na triagem manual de recados',
+                'Sem registro oficial no prontuário'
+              ]
+            },
+            good: {
+              header: '✨ Mural da Família Oficial',
+              items: [
+                'Canal direto com a coordenação clínica',
+                'Evoluções que o terapeuta alimenta na hora',
+                'Histórico seguro 24h com proteção LGPD'
+              ]
+            }
+          },
+          badge: 'Comunicação Direta',
+          actionTitle: 'Fale com a Coordenação',
+          actionDesc: 'Dúvidas sobre o plano, justificativas de ausência e avisos com resposta garantida.',
+          qrUrl: URL_MURAL_FAMILIA,
+          qrTitle: 'Conecte-se ao Mural',
+          qrDesc: 'Veja as mensagens com o selo "✓ Resposta Recebida" da coordenação.',
+          qrHint: 'Sem filas e sem espera',
+          highlightIcon: '🛡️',
+          highlightText: 'Mais velocidade e respeito pelo tempo precioso da sua família.'
+        },
+
+        // 4. ENVIO DE DOCUMENTOS E LAUDOS
+        {
+          id: 'mural_documentos',
+          kicker: '📄 Envio Rápido de Documentos',
+          kickerClass: 'pink',
+          headline: 'Envie laudos e exames <em>sem burocracia</em>.',
+          subtext: 'Tire uma foto do laudo médico, guia do plano ou receita e anexe direto no sistema pelo celular:',
+          image: 'img/clinica-recursos-terapeuticos.webp',
+          steps: [
+            { num: '1', title: 'Clique em Enviar', desc: 'No Mural, toque em "Enviar documento para a clínica"' },
+            { num: '2', title: 'Tire Foto ou Anexe', desc: 'Envie foto ou PDF direto da galeria do seu celular' },
+            { num: '3', title: 'Equipe Notificada', desc: 'O documento já entra no prontuário para a equipe clínica analisar' }
+          ],
+          badge: 'Prontuário Digital',
+          actionTitle: 'Zero Papel e Deslocamento',
+          actionDesc: 'Não precisa imprimir nem ir à recepção: laudos e relatórios atualizados com 1 toque.',
+          qrUrl: URL_MURAL_FAMILIA,
+          qrTitle: 'Anexar documento agora',
+          qrDesc: 'Acesse com seu CPF e envie pendências enquanto aguarda na sala.',
+          qrHint: 'Seguro • Confidencial • LGPD',
+          highlightIcon: '📁',
+          highlightText: 'Baixe relatórios devolutivos e declarações liberadas a qualquer momento.'
+        },
+
+        // 5. FOTO DA CRIANÇA NO MURAL DA CLÍNICA
+        {
+          id: 'mural_foto',
+          kicker: '💛 Seu Filho no Nosso Mural',
+          kickerClass: 'teal',
+          headline: 'Envie a fotinho dele para o <em>nosso mural</em>.',
+          subtext: 'No Mural da Família você anexa uma foto recente da criança. Ela aparece no mural da recepção e ajuda toda a equipe a acolher com carinho logo na chegada!',
+          image: 'img/clinica-painel-sensorial.webp',
+          badge: 'Acolhimento da Equipe',
+          actionTitle: 'Cantinho Especial',
+          actionDesc: 'Toda a equipe reconhece na hora quem é quem quando vocês chegam.',
+          qrUrl: URL_MURAL_FAMILIA,
+          qrTitle: 'Enviar foto no portal',
+          qrDesc: 'Leva menos de 1 minuto para carregar a foto no perfil da criança.',
+          qrHint: 'Participação voluntária',
+          highlightIcon: '📸',
+          highlightText: 'Momentos especiais compartilhados entre os terapeutas e os pais.'
+        },
+
+        // 6. MARKETING DO MAPEAMENTO GRÁTIS (CALL TO ACTION CENTRAL)
+        {
+          id: 'mapeamento_gratis_1',
+          kicker: '📝 Aproveite o seu tempo de espera',
+          kickerClass: 'pink',
+          headline: 'Faça o <em>Mapeamento Grátis</em> no celular.',
+          subtext: 'Enquanto aguarda a sessão, descubra um retrato detalhado sobre o desenvolvimento do seu filho em cerca de 5 minutos.',
+          image: 'img/ambiente-sensorial.webp',
+          badge: 'Questionário Online',
+          actionTitle: 'Mapeamento Comportamental',
+          actionDesc: '100% gratuito, sem diagnósticos precipitados ou julgamentos. Um guia inicial claro para a sua família.',
+          qrUrl: URL_TESTE,
+          qrTitle: 'Começar agora mesmo',
+          qrDesc: 'Escaneie o QR Code e preencha direto no seu celular. O resultado chega no seu e-mail.',
+          qrHint: 'Leva apenas 5 minutos',
+          highlightIcon: '⏱️',
+          highlightText: 'Mais de 1.000 famílias em Belém já realizaram o mapeamento do FaçaAmigos.'
+        },
+
+        // 3. PUBLICIDADE: PLAYGROUND PARQUE SHOPPING
+        {
+          id: 'play_parque',
+          kicker: '🎈 Lazer Inclusivo em Belém',
+          kickerClass: 'teal',
+          headline: 'O playground feito para <em>todas as crianças</em>.',
+          subtext: 'No Parque Shopping Belém, um espaço adaptado, seguro e acolhedor onde seu filho brinca com respeito às suas necessidades sensoriais.',
+          image: 'img/playground-piscina-casinha.webp',
+          badge: 'Parque Shopping Belém',
+          actionTitle: 'Playground Adaptado',
+          actionDesc: 'Monitores treinados, piscina de bolinhas sensorial e espaço para o brincar livre.',
+          qrUrl: URL_PLAYGROUND,
+          qrTitle: 'Ver localização e fotos',
+          qrDesc: 'Térreo, próximo às Lojas Americanas. Aberto todos os dias das 10h às 22h.',
+          qrHint: 'Sem agendamento • É só chegar',
+          highlightIcon: '🧸',
+          highlightText: 'Você senta, toma um café e acompanha de perto com total tranquilidade.'
+        },
+
+        // 4. CORPO CLÍNICO E MÉTODO
+        {
+          id: 'clinica_equipe',
+          kicker: '👩‍⚕️ Rigor Técnico e Cuidado',
+          kickerClass: 'teal',
+          headline: 'Coordenação com <em>olhar humano</em>.',
+          subtext: 'Supervisão técnica sob a liderança da psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), unindo ciência do comportamento e acolhimento.',
+          image: 'img/isabella-2.webp',
+          badge: 'Direção Clínica',
+          actionTitle: 'Plano Terapêutico Singular',
+          actionDesc: 'Metas personalizadas e reavaliações periódicas para acompanhar o progresso real da criança.',
+          qrUrl: URL_CLINICA,
+          qrTitle: 'Fale com a nossa equipe',
+          qrDesc: 'Tire dúvidas sobre os relatórios de evolução e orientações para a rotina de casa.',
+          qrHint: 'Atendimento humanizado',
+          highlightIcon: '🤝',
+          highlightText: 'Diálogo aberto com a família e integração direta com a escola.'
+        },
+
+        // 5. PUBLICIDADE: PLAYGROUND SHOPPING BOSQUE GRÃO-PARÁ
+        {
+          id: 'play_grao_para',
+          kicker: '✨ Nova Unidade no Bosque',
+          kickerClass: 'pink',
+          headline: 'Playground no <em>Shopping Grão-Pará</em>.',
+          subtext: 'Agora você também encontra a diversão inclusiva do FaçaAmigos no Shopping Bosque Grão-Pará, com a mesma equipe dedicada e acolhedora.',
+          image: 'img/playground-fachada-recepcao.webp',
+          badge: 'Bosque Grão-Pará',
+          actionTitle: '1º Piso (em frente à Renner)',
+          actionDesc: 'Ambiente climatizado, seguro e estruturado para o desenvolvimento psicomotor.',
+          qrUrl: URL_PLAYGROUND,
+          qrTitle: 'Horários do Grão-Pará',
+          qrDesc: 'Segunda a Sábado das 10h às 22h • Domingos das 10h às 21h.',
+          qrHint: 'Mesmos valores e benefícios',
+          highlightIcon: '⭐',
+          highlightText: 'Um ponto de encontro seguro para os fins de semana com a família.'
+        },
+
+        // 6. DICA PSICOEDUCATIVA PARA PAIS
+        {
+          id: 'dica_rotina',
+          kicker: '💡 Dica para o dia a dia',
+          kickerClass: 'teal',
+          headline: 'A previsibilidade reduz a <em>ansiedade</em>.',
+          subtext: 'Estruturar o dia com rotinas visuais simples ajuda a criança a antecipar transições de tarefas, diminuindo crises e inseguranças em casa.',
+          image: 'img/clinica-recursos-terapeuticos.webp',
+          badge: 'Orientação Parental',
+          actionTitle: 'Construindo Rotinas',
+          actionDesc: 'Pequenas mudanças no ambiente doméstico geram grandes saltos na regulação emocional.',
+          qrUrl: URL_CLINICA,
+          qrTitle: 'Artigos no Portal Aprender',
+          qrDesc: 'Acesse guias práticos gratuitos para aplicar no dia a dia com seu filho.',
+          qrHint: 'Conteúdo gratuito FaçaAmigos',
+          highlightIcon: '🗓️',
+          highlightText: 'Nossos terapeutas preparam orientações práticas para a família.'
+        },
+
+        // 7. PUBLICIDADE: CIRCUITO DE CARRINHOS ELÉTRICOS
+        {
+          id: 'circuito_parque',
+          kicker: '🏎️ Circuito de Carrinhos',
+          kickerClass: 'pink',
+          headline: 'Ele no volante.<br><em>Você no controle.</em>',
+          subtext: 'Minicarros, jeeps off-road e pelúcias elétricas no Parque Shopping Belém. Um passeio inesquecível de 20 a 30 minutos com total segurança.',
+          image: 'img/circuito-lamborghini-menino.webp',
+          badge: 'Parque Shopping Belém',
+          actionTitle: 'Circuito FaçaAmigos',
+          actionDesc: 'Veículos com controle remoto para os pais ou direção autônoma guiada.',
+          qrUrl: URL_CIRCUITO,
+          qrTitle: 'Conheça os veículos',
+          qrDesc: 'Lamborghini, Range Rover, Bombeiro e Pelúcias gigantes prontas no corredor.',
+          qrHint: 'A partir de 20 minutos',
+          highlightIcon: '🎮',
+          highlightText: 'Estímulo à coordenação motora, noção espacial e muita gargalhada.'
+        },
+
+        // 8. MARKETING DO MAPEAMENTO: INDIQUE PARA AMIGOS
+        {
+          id: 'mapeamento_indicar',
+          kicker: '📲 Rede de Apoio e Informação',
+          kickerClass: 'teal',
+          headline: 'Conhece outra família que <em>precisa de ajuda</em>?',
+          subtext: 'Muitos pais têm dúvidas sobre marcos do desenvolvimento e não sabem por onde começar. Envie o Mapeamento Gratuito para quem você ama.',
+          image: 'img/ambiente-sensorial.webp',
+          badge: 'Compartilhe Cuidado',
+          actionTitle: 'Mapeamento Compartilhável',
+          actionDesc: 'Um gesto simples de carinho que pode abrir portas para uma intervenção precoce oportuna.',
+          qrUrl: URL_TESTE,
+          qrTitle: 'Copie e envie o link',
+          qrDesc: 'Aponte o celular, copie o link e compartilhe no WhatsApp da família ou da escola.',
+          qrHint: 'Apoio sem rótulos',
+          highlightIcon: '💚',
+          highlightText: 'Intervenção precoce faz toda a diferença no desenvolvimento infantil.'
+        },
+
+        // 9. PUBLICIDADE: CIRCUITO - PELÚCIAS GIGANTES
+        {
+          id: 'circuito_pelucias',
+          kicker: '🐾 Pelúcias Motorizadas',
+          kickerClass: 'pink',
+          headline: 'Um abraço gigante que <em>anda de verdade</em>.',
+          subtext: 'Capivaras, ursos e unicórnios motorizados para um passeio calmo e divertido pelo shopping. Uma experiência sensorial única.',
+          image: 'img/circuito-capivara-menina.webp',
+          badge: 'Circuito Parque Shopping',
+          actionTitle: 'Passeio com Pelúcias',
+          actionDesc: 'Perfeito para crianças menores que adoram animais de pelúcia com movimentos suaves.',
+          qrUrl: URL_CIRCUITO,
+          qrTitle: 'Passeio no Shopping',
+          qrDesc: 'Localizado no piso térreo do Parque Shopping Belém.',
+          qrHint: 'Diversão para todas as idades',
+          highlightIcon: '🦄',
+          highlightText: 'O sucesso absoluto entre as crianças de 2 a 8 anos.'
+        },
+
+        // 10. SOCIALIZAÇÃO NO PLAYGROUND
+        {
+          id: 'play_socializacao',
+          kicker: '🧩 Brincar com Propósito',
+          kickerClass: 'teal',
+          headline: 'O brincar como extensão da <em>terapia</em>.',
+          subtext: 'Interagir com outras crianças em um ambiente amigável e sensorial estimula a socialização, a troca de turnos e a linguagem de forma natural.',
+          image: 'img/playground-mediadora-tapete.webp',
+          badge: 'Brincar Inclusivo',
+          actionTitle: 'Desenvolvimento Social',
+          actionDesc: 'Mediação atenta para garantir conforto e interação positiva entre todos.',
+          qrUrl: URL_PLAYGROUND,
+          qrTitle: 'Parque Shopping & Grão-Pará',
+          qrDesc: 'Leve seu filho para brincar após a sessão ou no fim de semana.',
+          qrHint: 'Diversão acessível e inclusiva',
+          highlightIcon: '🎯',
+          highlightText: 'Toda criança merece um espaço onde possa se sentir acolhida e feliz.'
+        },
+
+        // 11. CONFORTO DA SALA DE ESPERA
+        {
+          id: 'espera_conforto',
+          kicker: '☕ Espaço Pensado em Você',
+          kickerClass: 'teal',
+          headline: 'Sua dedicação é o maior <em>apoio</em> dele.',
+          subtext: 'Sabemos que a rotina de terapias exige energia, paciência e amor. Relaxe, tome uma água ou um café fresquinho enquanto aguarda.',
+          image: 'img/equipe-recepcao.webp',
+          badge: 'Cuidado com os Pais',
+          actionTitle: 'Conforto & Recepção',
+          actionDesc: 'Wi-Fi gratuito de alta velocidade, café, água e suporte completo da nossa recepção.',
+          qrUrl: URL_CLINICA,
+          qrTitle: 'Fale com a Recepção',
+          qrDesc: 'Qualquer dúvida sobre horários ou sessões, avise nossa equipe no balcão.',
+          qrHint: 'Estamos aqui com você',
+          highlightIcon: '🛋️',
+          highlightText: 'Cuidar de quem cuida também faz parte da nossa missão diária.'
+        },
+
+        // 12. PUBLICIDADE: CIRCUITO - FROTA E AUTONOMIA
+        {
+          id: 'circuito_frota',
+          kicker: '🏁 Aventura e Autonomia',
+          kickerClass: 'pink',
+          headline: 'Hoje ele é o <em>piloto</em> da vez.',
+          subtext: 'Veículos seguros com cinto de segurança e velocidade controlada. Um momento especial de alegria que quebra a rotina da semana.',
+          image: 'img/circuito-frota-alinhada.webp',
+          badge: 'Circuito FaçaAmigos',
+          actionTitle: 'Parque Shopping Belém',
+          actionDesc: 'Escolha entre mais de 10 modelos de carros, jeeps e pelúcias elétricas.',
+          qrUrl: URL_CIRCUITO,
+          qrTitle: 'Visite o quiosque',
+          qrDesc: 'Em frente à Renner no Parque Shopping Belém.',
+          qrHint: 'Atendimento por ordem de chegada',
+          highlightIcon: '🚗',
+          highlightText: 'A alegria de dirigir seu próprio carrinho elétrico!'
+        },
+
+        // 13. CLÍNICA: AVALIAÇÃO E SEGUIMENTO
+        {
+          id: 'clinica_avaliacao',
+          kicker: '🔍 Avaliação Comportamental',
+          kickerClass: 'teal',
+          headline: 'Intervenção baseada em <em>evidências</em>.',
+          subtext: 'Nossos protocolos clínicos utilizam métricas científicas para mapear déficits e excessos comportamentais, construindo pontes para a vida real.',
+          image: 'img/clinica-fachada.webp',
+          badge: 'Centro Clínico Umarizal',
+          actionTitle: 'Estrutura Completa',
+          actionDesc: 'Salas acolhedoras preparadas para terapia individualizada com respeito ao neurodesenvolvimento.',
+          qrUrl: URL_CLINICA,
+          qrTitle: 'Dúvidas sobre o tratamento?',
+          qrDesc: 'Converse com a coordenação clínica sobre as diretrizes do atendimento.',
+          qrHint: 'Transparência e ciência',
+          highlightIcon: '🔬',
+          highlightText: 'Acolhimento humanizado aliado às melhores práticas científicas.'
+        },
+
+        // 14. MAPEAMENTO: REFORÇO FINAL DO FUNIL
+        {
+          id: 'mapeamento_final',
+          kicker: '📋 Comece em 5 minutos',
+          kickerClass: 'pink',
+          headline: 'Um olhar cuidadoso sobre <em>5 áreas vitais</em>.',
+          subtext: 'Comunicação, interação social, comportamento motor, sensorialidade e flexibilidade. O Mapeamento Gratuito te dá um ponto de partida seguro.',
+          image: 'img/inclusao-cantinho-leitura.webp',
+          badge: 'Mapeamento Grátis',
+          actionTitle: 'Sem Custos • Online',
+          actionDesc: 'Não é um laudo médico, mas uma bússola inicial preciosa feita por especialistas.',
+          qrUrl: URL_TESTE,
+          qrTitle: 'Fazer o teste agora',
+          qrDesc: 'Basta aproximar o celular do QR Code abaixo para carregar as perguntas.',
+          qrHint: 'institutofacaamigos.com.br/teste',
+          highlightIcon: '📊',
+          highlightText: 'Receba uma análise clara e sugestões práticas diretamente no seu e-mail.'
+        }
+      ];
+
+      // ======================================================================
+      // GERADOR DE QR CODE EM SVG PURO (Zero dependências externas)
+      // ======================================================================
+      function generateQRCodeSVG(text, size) {
+        // Fallback gráfico elegante caso o gerador dinâmico precise de fallback
+        // Usamos a API do QuickChart para fallback instantâneo e robusto em imagem SVG/PNG
+        const encoded = encodeURIComponent(text);
+        const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=' + size + 'x' + size + '&margin=0&color=065264&data=' + encoded;
+        return '<img src="' + qrUrl + '" alt="QR Code" width="' + size + '" height="' + size + '" style="border-radius:10px; display:block;">';
+      }
+
+      // ======================================================================
+      // CRIAÇÃO E MONTAGEM DO DOM DOS SLIDES
+      // ======================================================================
+      const container = document.getElementById('slideContainer');
+      const progressBar = document.getElementById('progressBar');
+      const slideCounter = document.getElementById('slideCounter');
+      const stage = document.getElementById('tvStage');
+      const tvHud = document.getElementById('tvHud');
+
+      let currentIndex = 0;
+      let slideTimer = null;
+      let progressTimer = null;
+      let isPaused = false;
+      let currentRotation = 0;
+      let progressStartTime = 0;
+      let hudTimeout = null;
+
+      function renderSlides() {
+        container.innerHTML = '';
+        SLIDES.forEach((item, index) => {
+          const slideEl = document.createElement('article');
+          slideEl.className = 'tv-slide' + (index === 0 ? ' active' : '');
+          slideEl.id = 'slide-' + item.id;
+          slideEl.setAttribute('data-index', index);
+
+          const qrHTML = generateQRCodeSVG(item.qrUrl, 140);
+
+          let visualExtraHTML = '';
+          if (item.steps && item.steps.length) {
+            visualExtraHTML = `
+              <div class="tv-tutorial-steps">
+                ${item.steps.map(s => `
+                  <div class="tv-step-item">
+                    <div class="tv-step-num">${s.num}</div>
+                    <div class="tv-step-body">
+                      <strong>${s.title}</strong>
+                      <span>${s.desc}</span>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          } else if (item.comparativo) {
+            const c = item.comparativo;
+            visualExtraHTML = `
+              <div class="tv-vs-grid">
+                <div class="tv-vs-box bad">
+                  <div class="tv-vs-header">${c.bad.header}</div>
+                  <ul class="tv-vs-list">
+                    ${c.bad.items.map(it => `<li><span>✕</span> <span>${it}</span></li>`).join('')}
+                  </ul>
+                </div>
+                <div class="tv-vs-box good">
+                  <div class="tv-vs-header">${c.good.header}</div>
+                  <ul class="tv-vs-list">
+                    ${c.good.items.map(it => `<li><span>✓</span> <span>${it}</span></li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+            `;
+          }
+
+          slideEl.innerHTML = `
+            <div class="tv-visual-card">
+              <img class="tv-slide-image" src="${item.image}" alt="${item.headline}" loading="${index < 2 ? 'eager' : 'lazy'}">
+              <div class="tv-image-overlay"></div>
+              <div class="tv-visual-text">
+                <span class="tv-kicker ${item.kickerClass}">${item.kicker}</span>
+                <h1 class="tv-headline">${item.headline}</h1>
+                <p class="tv-subtext">${item.subtext}</p>
+                ${visualExtraHTML}
+              </div>
+            </div>
+
+            <aside class="tv-action-card">
+              <div class="tv-action-header">
+                <div class="tv-pill-badge">${item.badge}</div>
+                <h2 class="tv-action-title">${item.actionTitle}</h2>
+                <p class="tv-action-desc">${item.actionDesc}</p>
+              </div>
+
+              <div class="tv-qr-wrapper">
+                <div class="tv-qr-box">
+                  ${qrHTML}
+                </div>
+                <div class="tv-qr-text">
+                  <div class="tv-qr-callout">${item.qrTitle}</div>
+                  <div class="tv-qr-instructions">${item.qrDesc}</div>
+                  <div class="tv-qr-subhint">👉 ${item.qrHint}</div>
+                </div>
+              </div>
+
+              <div class="tv-highlight-box">
+                <div class="tv-highlight-icon">${item.highlightIcon}</div>
+                <div class="tv-highlight-text">${item.highlightText}</div>
+              </div>
+            </aside>
+          `;
+
+          container.appendChild(slideEl);
+        });
+
+        updateCounter();
+      }
+
+      function updateCounter() {
+        slideCounter.textContent = (currentIndex + 1) + ' / ' + SLIDES.length;
+      }
+
+      function showSlide(index) {
+        const slides = container.querySelectorAll('.tv-slide');
+        if (!slides.length) return;
+
+        slides[currentIndex].classList.remove('active');
+        currentIndex = (index + SLIDES.length) % SLIDES.length;
+        slides[currentIndex].classList.add('active');
+
+        updateCounter();
+        resetProgressBar();
+
+        // Disparo para dataLayer e Analytics
+        if (window.dataLayer) {
+          window.dataLayer.push({
+            event: 'tv3_slide',
+            tv3_slide_id: SLIDES[currentIndex].id,
+            tv3_slide_index: currentIndex,
+            tv3_kicker: SLIDES[currentIndex].kicker
+          });
+        }
+      }
+
+      function nextSlide() {
+        showSlide(currentIndex + 1);
+      }
+
+      function prevSlide() {
+        showSlide(currentIndex - 1);
+      }
+
+      // ======================================================================
+      // BARRA DE PROGRESSO E TEMPORIZADOR
+      // ======================================================================
+      function resetProgressBar() {
+        clearInterval(progressTimer);
+        clearTimeout(slideTimer);
+        progressBar.style.width = '0%';
+
+        if (isPaused) return;
+
+        progressStartTime = Date.now();
+        progressTimer = setInterval(() => {
+          if (isPaused) return;
+          const elapsed = Date.now() - progressStartTime;
+          const pct = Math.min(100, (elapsed / SLIDE_DURATION) * 100);
+          progressBar.style.width = pct + '%';
+
+          if (pct >= 100) {
+            clearInterval(progressTimer);
+          }
+        }, 80);
+
+        slideTimer = setTimeout(() => {
+          if (!isPaused) {
+            nextSlide();
+          }
+        }, SLIDE_DURATION);
+      }
+
+      function togglePause() {
+        isPaused = !isPaused;
+        const btn = document.getElementById('btnPause');
+        if (isPaused) {
+          btn.innerHTML = '▶ [Espaço] Continuar';
+          clearInterval(progressTimer);
+          clearTimeout(slideTimer);
+        } else {
+          btn.innerHTML = '⏸ [Espaço] Pausar';
+          resetProgressBar();
+        }
+      }
+
+      // ======================================================================
+      // ESCALA AUTOMÁTICA E ROTAÇÃO DO STAGE (Suporta TV Horizontal ou Vertical)
+      // ======================================================================
+      function fitStage() {
+        const isPortrait = (currentRotation === 90 || currentRotation === 270);
+        const stageW = isPortrait ? 1080 : 1920;
+        const stageH = isPortrait ? 1920 : 1080;
+
+        stage.classList.toggle('portrait-mode', isPortrait);
+
+        const winW = window.innerWidth;
+        const winH = window.innerHeight;
+
+        const scale = Math.min(winW / stageW, winH / stageH);
+        stage.style.transform = `translate(-50%, -50%) rotate(${currentRotation}deg) scale(${scale})`;
+      }
+
+      function rotateStage() {
+        currentRotation = (currentRotation + 90) % 360;
+        fitStage();
+      }
+
+      function toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        } else {
+          document.exitFullscreen().catch(() => {});
+        }
+      }
+
+      // ======================================================================
+      // RELÓGIO DIGITAL E DATA EM TEMPO REAL
+      // ======================================================================
+      function updateClock() {
+        const now = new Date();
+        const timeEl = document.getElementById('clockTime');
+        const dateEl = document.getElementById('clockDate');
+
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        timeEl.textContent = `${hours}:${minutes}:${seconds}`;
+
+        const options = { weekday: 'long', day: 'numeric', month: 'long' };
+        dateEl.textContent = now.toLocaleDateString('pt-BR', options);
+      }
+
+      // ======================================================================
+      // CONTROLE DE INTERAÇÃO & HUD
+      // ======================================================================
+      function showHud() {
+        tvHud.classList.add('visible');
+        clearTimeout(hudTimeout);
+        hudTimeout = setTimeout(() => {
+          tvHud.classList.remove('visible');
+        }, 4000);
+      }
+
+      window.addEventListener('mousemove', showHud);
+      window.addEventListener('touchstart', showHud, { passive: true });
+
+      window.addEventListener('keydown', (e) => {
+        showHud();
+        if (e.key === ' ' || e.code === 'Space') {
+          e.preventDefault();
+          togglePause();
+        } else if (e.key === 'ArrowRight') {
+          nextSlide();
+        } else if (e.key === 'ArrowLeft') {
+          prevSlide();
+        } else if (e.key === 'r' || e.key === 'R') {
+          rotateStage();
+        } else if (e.key === 'f' || e.key === 'F') {
+          toggleFullscreen();
+        }
+      });
+
+      // Botoes do HUD
+      document.getElementById('btnPrev').addEventListener('click', prevSlide);
+      document.getElementById('btnNext').addEventListener('click', nextSlide);
+      document.getElementById('btnPause').addEventListener('click', togglePause);
+      document.getElementById('btnRotate').addEventListener('click', rotateStage);
+      document.getElementById('btnFull').addEventListener('click', toggleFullscreen);
+
+      // Verificação de parâmetros na URL (Ex: ?rot=90 ou ?rot=270)
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.has('rot')) {
+        const r = parseInt(urlParams.get('rot'), 10);
+        if ([0, 90, 180, 270].includes(r)) currentRotation = r;
+      }
+
+      // Auto-recarregamento preventivo diário às 04:00 da manhã para limpar memória da TV
+      setInterval(() => {
+        const d = new Date();
+        if (d.getHours() === 4 && d.getMinutes() === 0) {
+          window.location.reload();
+        }
+      }, 60000);
+
+      // Inicialização
+      window.addEventListener('resize', fitStage);
+      window.addEventListener('orientationchange', fitStage);
+
+      renderSlides();
+      fitStage();
+      updateClock();
+      setInterval(updateClock, 1000);
+      resetProgressBar();
+
+    })();
+  </script>
+</body>
+</html>

@@ -192,11 +192,27 @@
     .geo-faq-item[open] summary::after { content: '−'; }
     .geo-faq-ans { margin-top: 12px; font-size: .96rem; font-weight: 600; line-height: 1.55; color: var(--ink-soft); border-top: 1px solid rgba(26, 63, 53, .1); padding-top: 12px; }
 
+    /* Mural da Família */
+    .mural-section { background: linear-gradient(180deg, var(--petrol-deep) 0%, var(--petrol) 100%); color: #fff; border-radius: 40px; margin: 30px 0; padding: 64px 0; }
+    .mural-grid { display: grid; gap: 20px; margin-top: 36px; text-align: left; }
+    .mural-card { background: rgba(255, 255, 255, 0.08); border: 1.5px solid rgba(255, 255, 255, 0.16); border-radius: var(--r-card); padding: 26px; backdrop-filter: blur(10px); transition: transform var(--t-fast); }
+    .mural-card:hover { transform: translateY(-4px); background: rgba(255, 255, 255, 0.13); }
+    .mural-card .ib { width: 48px; height: 48px; border-radius: 14px; background: rgba(255, 255, 255, 0.15); display: grid; place-items: center; font-size: 1.5rem; margin-bottom: 12px; }
+    .mural-card h3 { color: var(--yellow); font-size: 1.25rem; margin-bottom: 8px; }
+    .mural-card p { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: .98rem; line-height: 1.5; }
+    .mural-steps { display: grid; gap: 16px; margin-top: 36px; text-align: left; }
+    .mural-step { display: flex; gap: 16px; align-items: flex-start; background: var(--white); color: var(--dark); border-radius: 20px; padding: 20px 22px; box-shadow: var(--shadow-sm); }
+    .mural-step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--pink); color: #fff; font-family: var(--font-display); font-size: 1.3rem; display: grid; place-items: center; flex-shrink: 0; }
+    .mural-step-body h4 { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 4px; color: var(--petrol); }
+    .mural-step-body p { font-size: .94rem; font-weight: 600; color: var(--ink-soft); line-height: 1.45; }
+
     @media (min-width: 720px) {
       .steps { grid-template-columns: repeat(3, 1fr); }
       .services { grid-template-columns: repeat(2, 1fr); }
       .tiles.three { grid-template-columns: repeat(3, 1fr); }
       .cta-row .btn-buy { min-width: 320px; }
+      .mural-grid { grid-template-columns: repeat(2, 1fr); }
+      .mural-steps { grid-template-columns: repeat(3, 1fr); }
     }
     @media (min-width: 980px) {
       section { padding: 84px 0; }
@@ -519,6 +535,84 @@
               <h3>Jogos Estruturados</h3>
               <p>Materiais adaptados e jogos de regulação para cada fase do desenvolvimento infantil.</p>
             </div>
+          </div>
+        </div>
+    <!-- MURAL DA FAMÍLIA -->
+    <section class="mural-section" aria-labelledby="mural-h">
+      <div class="wrap center">
+        <span class="eyebrow" style="background: var(--yellow); color: var(--petrol-deep);">Portal do Responsável</span>
+        <h2 class="title" id="mural-h" style="color: #fff;">Mural da Família: tudo em um só lugar</h2>
+        <p class="lead" style="color: rgba(255, 255, 255, 0.92); margin: 0 auto; max-width: 44rem;">
+          Chega de mensagens perdidas no WhatsApp ou laudos esquecidos em gavetas. No portal exclusivo da Clínica FaçaAmigos, você acompanha cada passo do seu filho em tempo real.
+        </p>
+
+        <!-- 4 PILARES DE VANTAGENS -->
+        <div class="mural-grid">
+          <div class="mural-card">
+            <div class="ib">💬</div>
+            <h3>Canal Direto com a Coordenação</h3>
+            <p>Converse com a equipe clínica por um canal oficial, com protocolo documentado e confirmação de resposta ("✓ Resposta Recebida"). Muito mais rápido e seguro do que tentar falar por e-mail ou WhatsApp manual.</p>
+          </div>
+
+          <div class="mural-card">
+            <div class="ib">📈</div>
+            <h3>Evoluções Alimentadas na Hora</h3>
+            <p>A cada atendimento, o terapeuta registra as orientações e progressos do dia. Você sabe exatamente o que foi trabalhado em sala e como dar continuidade às conquistas em casa.</p>
+          </div>
+
+          <div class="mural-card">
+            <div class="ib">📄</div>
+            <h3>Envio de Laudos e Exames em 1 Clique</h3>
+            <p>Tire foto de laudos médicos, receitas e guias do plano pelo próprio celular e envie direto para o prontuário. Sem precisar imprimir papel ou se deslocar até a recepção.</p>
+          </div>
+
+          <div class="mural-card">
+            <div class="ib">💛</div>
+            <h3>Foto no Mural de Boas-Vindas</h3>
+            <p>Envie uma foto recente do seu filho pelo portal: ela ganha destaque no mural e ajuda toda a equipe multidisciplinar a acolher a sua família pelo nome logo na entrada.</p>
+          </div>
+        </div>
+
+        <!-- TUTORIAL PASSO A PASSO -->
+        <div style="margin-top: 50px;">
+          <h3 style="font-family: var(--font-display); font-size: 1.8rem; color: var(--yellow); margin-bottom: 8px;">Como acessar no seu celular:</h3>
+          <p style="color: rgba(255, 255, 255, 0.88); font-weight: 600; font-size: 1.05rem;">Não precisa baixar nada da loja de aplicativos. Funciona direto no navegador!</p>
+          
+          <div class="mural-steps">
+            <div class="mural-step">
+              <div class="mural-step-num">1</div>
+              <div class="mural-step-body">
+                <h4>Acesse o Link</h4>
+                <p>Abra o navegador do celular e entre em <b>sistema.institutofacaamigos.com.br/familia</b> (ou escaneie o QR Code na TV da clínica).</p>
+              </div>
+            </div>
+
+            <div class="mural-step">
+              <div class="mural-step-num">2</div>
+              <div class="mural-step-body">
+                <h4>Digite seu CPF</h4>
+                <p>Insira o mesmo CPF informado no momento do cadastro na recepção. O acesso é imediato e protegido por sigilo médico.</p>
+              </div>
+            </div>
+
+            <div class="mural-step">
+              <div class="mural-step-num">3</div>
+              <div class="mural-step-body">
+                <h4>Pronto! Conexão Direta</h4>
+                <p>Acompanhe o feed de fotos da sessão, consulte documentos liberados e tire dúvidas com a coordenação a qualquer hora.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="cta-row" style="margin-top: 36px;">
+            <div class="actions">
+              <a href="https://sistema.institutofacaamigos.com.br/familia" target="_blank" rel="noopener" class="btn-buy" style="background: var(--yellow); color: var(--petrol-deep); box-shadow: 0 10px 26px rgba(0,0,0,0.25);">
+                Acessar o Mural da Família agora 👉
+              </a>
+            </div>
+            <p class="cta-note" style="color: rgba(255, 255, 255, 0.85);">
+              💡 Dica: No Safari ou Chrome, toque em "Adicionar à Tela de Início" para criar um ícone de acesso rápido.
+            </p>
           </div>
         </div>
       </div>

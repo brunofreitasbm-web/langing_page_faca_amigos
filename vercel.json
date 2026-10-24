@@ -14,6 +14,9 @@
     { "source": "/tv2", "destination": "/tv2" },
     { "source": "/circuito/tv", "destination": "/tv2" },
     { "source": "/tv-circuito", "destination": "/tv2" },
+    { "source": "/tv3", "destination": "/tv3" },
+    { "source": "/clinica/tv", "destination": "/tv3" },
+    { "source": "/tv-clinica", "destination": "/tv3" },
     { "source": "/musicas", "destination": "/musica" },
     { "source": "/player", "destination": "/musica" },
     { "source": "/som", "destination": "/musica" }
