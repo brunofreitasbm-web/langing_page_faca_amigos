@@ -187,6 +187,12 @@ aqui é a configuração técnica, não uma orientação legal.
 
 ## Resgate do cupom e resumo
 
+- **Um cupom por cliente a cada 30 dias.** Quem se cadastra de novo com o mesmo WhatsApp (com ou sem o 9), o mesmo
+  e-mail ou o mesmo aparelho antes de 30 dias, contados da emissão do cupom anterior, tem o Wi-Fi liberado, mas não
+  recebe cupom nem e-mail novos: o cadastro só soma uma visita. O cupom vale 15 dias, então entre o dia 16 e o 30 o
+  cliente fica sem cupom. Se o e-mail do primeiro cadastro falhou, ele pode tentar de novo. Quem digitou o e-mail
+  errado fica sem o cupom até os 30 dias; a recepção encontra o código pelo nome na aba Cupons Wi-Fi.
+
 - **Aba "Cupons Wi-Fi" do `/admin`** (entrada pelo Hub de Gestão; a equipe usa o login direto limitado): lista os
   cadastros, mostra o código, o nome e o status, e resgata no Playground ou no Circuito (um benefício por cupom, cupom
   vencido não resgata). O dono também vê o resumo do portal, o telefone, o e-mail e quem aceitou contato.
