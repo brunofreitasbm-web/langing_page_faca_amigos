@@ -5,7 +5,7 @@
 // verify_jwt desligado (chamada vem do roteador, sem chave pública),
 // CORS/JSON inline (deploy via MCP não resolve import relativo).
 //
-// Gera um cupom nominal "ESPERA-XXXX", grava o lead e dispara o e-mail via
+// Gera um cupom nominal "ESPERA-XXXX" (um por cliente a cada 30 dias), grava o lead e dispara o e-mail via
 // Brevo com o cupom — porque a janela do portal cativo fecha sozinha assim
 // que o celular detecta internet, e o cupom não pode existir só na tela.
 //
@@ -83,6 +83,51 @@ function generateCouponCode(): string {
 }
 
 const COUPON_VALIDITY_DAYS = 15;
+// Cada cliente recebe um cupom a cada 30 dias, contados da emissão do cupom anterior (não do vencimento nem do uso).
+// Nesse intervalo o Wi-Fi libera normalmente, mas não nasce cupom novo nem sai outro e-mail.
+const COUPON_INTERVAL_DAYS = 30;
+
+// Celular brasileiro com e sem o 9º dígito é a mesma linha. Compara DDD + os 8 últimos dígitos
+// ("55" + DDD + % + 8 dígitos casa com 12 e com 13 dígitos). Só tem dígitos, então o % é o único curinga.
+function phonePattern(digits: string): string {
+  const national = digits.slice(2);
+  return `55${national.slice(0, 2)}%${national.slice(-8)}`;
+}
+
+// O roteador manda o MAC em "AA:BB:CC:DD:EE:FF". Se o marcador não foi trocado (aparece "$(mac)") ou vier vazio,
+// todos os visitantes teriam o mesmo "MAC": nunca usar isso para reconhecer ninguém.
+function isValidMac(mac: string): boolean {
+  return /^([0-9a-f]{2}:){5}[0-9a-f]{2}$/.test(mac);
+}
+
+// Cadastro mais recente, dentro do intervalo, do mesmo cliente: mesmo telefone, mesmo e-mail ou mesmo aparelho.
+// Três consultas com eq/like em vez de um .or(): o e-mail aceita vírgula e parêntese, que quebrariam o filtro.
+// Cadastro cujo e-mail falhou ao enviar não conta: a pessoa nunca recebeu o cupom e pode tentar de novo.
+async function findRecentLead(
+  admin: Admin,
+  params: { phoneDigits: string; emailKey: string; mac: string; sinceIso: string },
+): Promise<{ id: string; visit_count: number | null } | null> {
+  const base = () =>
+    admin
+      .from("fa_wifi_leads")
+      .select("id, visit_count, created_at")
+      .gte("created_at", params.sinceIso)
+      .is("email_error", null)
+      .order("created_at", { ascending: false })
+      .limit(1);
+  const results = await Promise.all([
+    base().like("guardian_phone", phonePattern(params.phoneDigits)),
+    base().eq("guardian_email", params.emailKey),
+    ...(isValidMac(params.mac) ? [base().eq("mac", params.mac)] : []),
+  ]);
+  const rows: { id: string; visit_count: number | null; created_at: string }[] = [];
+  for (const r of results) {
+    if (r.error) console.error("Erro ao procurar cadastro recente do Wi-Fi:", r.error.message);
+    else rows.push(...((r.data ?? []) as typeof rows));
+  }
+  rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
+  return rows[0] ?? null;
+}
 
 // Unidade "FaçaAmigos Circuito (Parque Shopping)" no banco do kiosk (mesmo
 // projeto Supabase). Usada para criar o cupom nativo de +5 min — ver
@@ -205,7 +250,7 @@ async function sendCouponEmail(params: {
             <li><strong>Meia inclusiva no Playground:</strong> R$ 50 nos 30 minutos, contra R$ 60 do público geral, para crianças com laudo ou CIPTEA. Vale todos os dias, no Parque Shopping ou no Shopping Bosque Grão-Pará.</li>
             <li><strong>+5 minutos adicionais grátis no Circuito</strong>, em qualquer plano, de segunda a sexta.</li>
           </ul>
-          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 22px 0;font-style:italic;">Cada cupom vale um único benefício, em um único lugar: Playground do Parque Shopping, Playground do Grão-Pará ou Circuito.</p>
+          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 22px 0;font-style:italic;">Cada cupom vale um único benefício, em um único lugar: Playground do Parque Shopping, Playground do Grão-Pará ou Circuito. Cada cliente recebe um cupom a cada 30 dias.</p>
           <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 10px 0;font-weight:800;">Onde usar</p>${lugares}
           <div style="text-align:center;margin:18px 0 8px 0;">
             <a href="${siteUrl}" style="display:inline-block;background:#f0196b;color:#fff;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:9999px;font-size:15px;">Conhecer o Playground</a>
@@ -305,25 +350,22 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Reconexão: mesmo MAC já cadastrado nos últimos 15 dias → reaproveita o
-  // cupom vigente em vez de emitir outro (evita inflar cupons a cada visita
-  // do mesmo aparelho) e só incrementa o contador de visitas.
-  if (mac) {
-    const { data: existing } = await admin
+  // Um cupom por cliente a cada 30 dias. Quem já recebeu (mesmo telefone, e-mail ou aparelho) só soma uma visita:
+  // o Wi-Fi libera, mas não nasce cupom, cupom no caixa nem e-mail. A resposta é igual à de um cadastro novo, para
+  // ninguém descobrir, digitando um telefone ou e-mail, se aquela pessoa já usou o Wi-Fi da clínica.
+  const emailKey = guardianEmail.toLowerCase();
+  const recent = await findRecentLead(admin, {
+    phoneDigits: guardianPhone,
+    emailKey,
+    mac,
+    sinceIso: new Date(Date.now() - COUPON_INTERVAL_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+  });
+  if (recent) {
+    await admin
       .from("fa_wifi_leads")
-      .select("id, coupon_code, coupon_status, coupon_expires_at, visit_count")
-      .eq("mac", mac)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (existing && new Date(existing.coupon_expires_at) > new Date()) {
-      await admin
-        .from("fa_wifi_leads")
-        .update({ visit_count: (existing.visit_count ?? 1) + 1 })
-        .eq("id", existing.id);
-      return jsonResponse({ ok: true, coupon_code: existing.coupon_code, reused: true });
-    }
+      .update({ visit_count: (recent.visit_count ?? 1) + 1 })
+      .eq("id", recent.id);
+    return jsonResponse({ ok: true });
   }
 
   const couponExpiresAt = new Date(Date.now() + COUPON_VALIDITY_DAYS * 24 * 60 * 60 * 1000);
@@ -338,8 +380,8 @@ Deno.serve(async (req) => {
       .insert({
         guardian_name: guardianName,
         guardian_phone: guardianPhone,
-        guardian_email: guardianEmail,
-        mac: mac || null,
+        guardian_email: emailKey,
+        mac: isValidMac(mac) ? mac : null,
         coupon_code: couponCode,
         coupon_status: "issued",
         coupon_expires_at: couponExpiresAt.toISOString(),
@@ -436,5 +478,5 @@ Deno.serve(async (req) => {
     })
     .eq("id", data.id);
 
-  return jsonResponse({ ok: true, coupon_code: couponCode, email_sent: emailResult.sent });
+  return jsonResponse({ ok: true });
 });

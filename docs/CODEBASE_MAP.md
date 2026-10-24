@@ -93,7 +93,7 @@ WhatsApp: Clínica `5591991782027`, Playground/Circuito `5591992347673`. Não mi
 - **playground.html**: JSON-LD com 8 Offers; preços duplicados entre schema, tabela e cards; Bosque Grão-Pará aparece no schema como negócio ativo mas é "Em breve"; passaporte mensal fora do schema. Mesmos `@id` do hub (mudar um quebra o outro).
 - **circuito.html**: R$48 (20/30 min), minuto adicional R$3, 10ª entrada grátis por CPF. Única página com URLs absolutas para o hub; canonical no host playground.
 - **servicos.html**: serviços da Clínica, lista de espera por WhatsApp, JSON-LD com 7 serviços.
-- **wifi.html** (noindex): pós-portal; monta UTMs; cupom +15 dias calculado no cliente.
+- **wifi.html** (noindex): pós-portal; monta UTMs; texto do cupom sem data (vale 15 dias, 1 por cliente a cada 30).
 - **termos / politica-privacidade**: datas fixas (20/09/2026); texto de cookies precisa acompanhar `fa-track.js`.
 
 ### Produtos (Hotmart)
@@ -130,7 +130,7 @@ Padrões comuns: `Deno.serve` único roteado por `action`; CORS e helpers copiad
 | `guia-sequence` | 3 e-mails (24h/72h/144h) pós-resultado; descadastro | `x-run-key` (`SEQ_RUN_KEY`); HMAC (`SEQ_SECRET`) | leads, `fa_teste_ebook_seq`, `fa_ebook_compras` |
 | `hotmart-webhook` | Eventos de compra/reembolso/chargeback/carrinho; ingressos pagos; GA4 MP + Meta CAPI | `hottok` | `fa_hotmart_eventos`, `fa_ebook_compras`, `fa_ebook_carrinhos`, RPCs de eventos |
 | `hotmart-sync` | Polling da API de vendas (conferência do webhook) | `x-sync-key` | `fa_ebook_compras`, leads |
-| `wifi-lead-webhook` | Cadastro do portal Wi-Fi, cupom `ESPERA-XXXX`, e-mail | Pública (honeypot, 20/h por IP) | `fa_wifi_leads`, `fa_kiosk_coupons` |
+| `wifi-lead-webhook` | Cadastro do portal Wi-Fi, cupom `ESPERA-XXXX` (1 por cliente a cada 30 dias, por telefone, e-mail ou MAC), e-mail | Pública (honeypot, 20/h por IP) | `fa_wifi_leads`, `fa_kiosk_coupons` |
 | `wifi-coupon-admin` | Consulta/resgate manual de cupom | Bearer `WIFI_ADMIN_API_KEY` | `fa_wifi_leads` |
 | `geo-facts` | JSON público de preços/unidades do quiosque (GET, cache 1h) | Pública | `fa_kiosk_*` (somente leitura) |
 | `fa-health` | Rotina diária 07h Belém: saúde, drift de preços (GEO), follow-up de lead quente | `x-ops-key` | vários + RPC `fa_health_snapshot` |
