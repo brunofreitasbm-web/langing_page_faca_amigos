@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated_at": "2026-10-08T17:35:04.888Z",
+  "generated_at": "2026-10-24T13:04:21.727Z",
   "units": [
     {
       "id": "5fc99a57-81ee-4232-a105-1fcb4634cef4",
@@ -23,11 +23,7 @@
       "hours": {
         "open": "10:00",
         "close": "22:00",
-        "days": "segunda a sábado",
-        "sunday": {
-          "open": "10:00",
-          "close": "21:00"
-        }
+        "days": "todos os dias"
       },
       "discounts": {
         "geral_pct": 40,
@@ -72,19 +68,22 @@
           "overage_list_brl": 3,
           "overage_brl": 1.8,
           "overage_inclusive_brl": 1.5
+        },
+        {
+          "id": "7a1e0001-0000-4000-8000-000000000091",
+          "activity": "PLAYGROUND",
+          "name": "1 hora e meia",
+          "asset_kind": null,
+          "duration_min": 90,
+          "list_brl": 260,
+          "price_brl": 156,
+          "inclusive_brl": 130,
+          "overage_list_brl": 3,
+          "overage_brl": 1.8,
+          "overage_inclusive_brl": 1.5
         }
       ],
       "packages": [
-        {
-          "id": "7a1e0002-0000-4000-8000-000000000001",
-          "activity": "PLAYGROUND",
-          "name": "PORTO SEGURO",
-          "included_minutes": 600,
-          "validity_days": 30,
-          "list_brl": 1400,
-          "price_brl": 840,
-          "inclusive_brl": 700
-        },
         {
           "id": "7a1e0002-0000-4000-8000-000000000002",
           "activity": "PLAYGROUND",
@@ -94,6 +93,16 @@
           "list_brl": 450,
           "price_brl": 270,
           "inclusive_brl": 225
+        },
+        {
+          "id": "7a1e0002-0000-4000-8000-000000000001",
+          "activity": "PLAYGROUND",
+          "name": "PORTO SEGURO",
+          "included_minutes": 600,
+          "validity_days": 30,
+          "list_brl": 1400,
+          "price_brl": 840,
+          "inclusive_brl": 700
         }
       ],
       "loyalty": {
@@ -156,6 +165,19 @@
           "overage_inclusive_brl": 1.5
         },
         {
+          "id": "7a1e0001-0000-4000-8000-000000000090",
+          "activity": "PLAYGROUND",
+          "name": "1 hora e meia",
+          "asset_kind": null,
+          "duration_min": 90,
+          "list_brl": 260,
+          "price_brl": 156,
+          "inclusive_brl": 130,
+          "overage_list_brl": 3,
+          "overage_brl": 1.8,
+          "overage_inclusive_brl": 1.5
+        },
+        {
           "id": "e3345467-f583-412c-ab49-82b989fb000d",
           "activity": "PLAYGROUND",
           "name": "2 horas",
@@ -184,16 +206,6 @@
       ],
       "packages": [
         {
-          "id": "5e3b3e92-9694-458b-880e-69fe937590d3",
-          "activity": "PLAYGROUND",
-          "name": "PORTO SEGURO",
-          "included_minutes": 600,
-          "validity_days": 30,
-          "list_brl": 1400,
-          "price_brl": 840,
-          "inclusive_brl": 700
-        },
-        {
           "id": "1dc648d9-8c66-4559-a3a7-0424f814626a",
           "activity": "PLAYGROUND",
           "name": "DAY USE",
@@ -202,6 +214,16 @@
           "list_brl": 450,
           "price_brl": 270,
           "inclusive_brl": 225
+        },
+        {
+          "id": "5e3b3e92-9694-458b-880e-69fe937590d3",
+          "activity": "PLAYGROUND",
+          "name": "PORTO SEGURO",
+          "included_minutes": 600,
+          "validity_days": 30,
+          "list_brl": 1400,
+          "price_brl": 840,
+          "inclusive_brl": 700
         }
       ],
       "loyalty": {
