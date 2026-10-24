@@ -178,7 +178,7 @@ Extensões exigidas e não declaradas: `pg_cron`, `pg_net`, `vault`.
 
 ## 9. Hotspot MikroTik (`hotspot/`, não publicado)
 
-Portal cativo para um hEX S (arquivos vão em `flash/hotspot/`). `login.html` valida cadastro (LGPD/opt-in), faz POST em `wifi-lead-webhook` e só então autentica a conta compartilhada no roteador (gate de marketing, não autenticação por família). `alogin.html`, `status.html`, `rlogin.html` (cookie de MAC), `error.html`+`errors.txt`, `md5.js` (CHAP). `LEIA-ME-HOTSPOT.md` cobre isolamento da LAN, DHCP, walled garden. Credencial `visitante/visitante` é por desenho, trocar antes de instalar.
+Portal cativo para um hEX S (arquivos vão em `flash/hotspot/`). `login.html` valida cadastro (LGPD/opt-in), faz POST em `wifi-lead-webhook` e só então autentica a conta compartilhada no roteador (gate de marketing, não autenticação por família). `alogin.html`, `status.html`, `rlogin.html` (redirect ao login, não faz reconexão), `error.html`+`errors.txt`, `md5.js` (CHAP). `LEIA-ME-HOTSPOT.md` cobre isolamento da LAN, DHCP, walled garden. Credencial `visitante/visitante` é por desenho, trocar antes de instalar.
 
 ## 10. Armadilhas e dívidas conhecidas (priorizadas)
 

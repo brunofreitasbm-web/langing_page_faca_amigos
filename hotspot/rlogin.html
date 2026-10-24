@@ -3,41 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Bem-vindo de volta! — FaçaAmigos</title>
+<title>FaçaAmigos — Wi-Fi</title>
 <meta name="robots" content="noindex, nofollow">
 <!--
-  rlogin.html é servido pelo RouterOS quando reconhece, via cookie, um aparelho que já
-  fez login antes (mesmo MAC). Não mostramos o formulário de cadastro de novo — o
-  RouterOS já preenche username/password abaixo a partir do cookie salvo. O submit é
-  automático; o visitante só vê esta tela por uma fração de segundo antes de cair no
-  alogin.html com a oferta do dia. Ver LEIA-ME-HOTSPOT.md para habilitar
-  "http-cookie-lifetime" no user profile.
+  rlogin.html é servido pelo RouterOS a quem AINDA NÃO ENTROU e abriu um endereço fora do
+  walled garden. A função dele é só mandar o visitante para o login.html, preservando o
+  endereço pedido. Não é a tela de "voltou de cookie" e não envia usuário nem senha: a
+  reconexão automática é feita pelo próprio roteador (login-by=cookie, ver
+  LEIA-ME-HOTSPOT.md, seção 5).
 -->
+<meta http-equiv="refresh" content="0; url=$(link-login-only)?dst=$(link-orig-esc)">
 <style>
   :root { --pink: #F0196B; --dark: #1A3F35; --ink-soft: #4C6B62; --cream: #FFF9F1; }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: 'Nunito', 'Segoe UI', sans-serif; color: var(--dark); background: var(--cream); display: flex; align-items: center; justify-content: center; height: 100vh; }
-  .wrap { text-align: center; }
+  .wrap { text-align: center; padding: 0 20px; }
   .logo-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 14px; }
   .logo-row img { width: 40px; height: 40px; border-radius: 50%; }
   .logo-row span { font-family: 'Fredoka One', sans-serif; font-size: 18px; }
   .logo-row .amigos { color: var(--pink); } .logo-row .faca { color: var(--dark); }
   p { color: var(--ink-soft); font-size: 14px; }
+  a { color: var(--pink); font-weight: 800; }
 </style>
 </head>
-<body onload="document.forms['sendin'].submit();">
+<body>
 <div class="wrap">
   <div class="logo-row">
     <img src="logo.png" alt="FaçaAmigos" onerror="this.style.display='none'">
     <span><span class="faca">Faça</span><span class="amigos">Amigos</span></span>
   </div>
-  <p>Que bom te ver de novo! Liberando seu Wi-Fi...</p>
+  <p>Abrindo o cadastro do Wi-Fi... <a href="$(link-login-only)?dst=$(link-orig-esc)">Toque aqui se não abrir</a></p>
 </div>
-<form name="sendin" action="$(link-login-only)" method="post" style="display:none">
-  <input type="hidden" name="username" value="$(username)">
-  <input type="hidden" name="password" value="$(password)">
-  <input type="hidden" name="dst" value="$(link-orig-esc)">
-  <input type="hidden" name="popup" value="true">
-</form>
 </body>
 </html>
