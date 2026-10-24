@@ -99,6 +99,70 @@ O assistente `/ip hotspot setup` faz isso de forma guiada, se preferir — só a
 - `session-timeout=1h` — cada visita renova a exibição do `alogin.html` (proposta 8 do plano).
 - `shared-users=254` — permite todas as famílias conectadas ao mesmo tempo usarem a mesma conta.
 
+## 4.1 Controle de banda
+
+Objetivo: nenhum aparelho de visitante consegue encher o link e atrapalhar o que a clínica usa
+(prontuário online, caixa, telemedicina). Dois níveis: um **teto para a rede de visitantes inteira**
+e um **limite por aparelho**.
+
+**Valores de exemplo, ajuste ao seu plano de internet.** Pressupõe link de 100 Mbps de download e
+100 Mbps de upload. Regra prática: teto dos visitantes entre 40% e 50% do link, e limite por
+aparelho = teto ÷ aparelhos simultâneos no pico. Com 40 Mbps e uns 10 aparelhos, dá 4 Mbps cada.
+
+```
+/queue simple add name=visitantes-total target=10.20.0.0/24 max-limit=40M/40M \
+    comment="teto da rede de visitantes"
+
+/ip hotspot user profile set up-visitantes \
+    rate-limit="2M/4M 4M/8M 1500k/3M 10s/10s" \
+    parent-queue=visitantes-total
+```
+
+- Em `rate-limit` e `max-limit`, o primeiro número de cada par é **upload** do aparelho e o segundo é
+  **download**. Aqui: 2M sobe / 4M desce, com rajada de 4M/8M para abrir páginas rápido.
+- Como a conta `visitante` é compartilhada, o RouterOS cria **uma fila por aparelho** (por sessão),
+  então o limite vale para cada celular e não para todos juntos. O teto de todos juntos é a fila
+  `visitantes-total`.
+- A fila `visitantes-total` precisa existir **antes** do `parent-queue`, senão o comando falha.
+
+### FastTrack desliga o controle de banda
+
+Se o roteador mantém a regra padrão de FastTrack, o tráfego marcado por ela **ignora as filas** e o
+limite não funciona. Confira e exclua a rede de visitantes dela:
+
+```
+/ip firewall filter print where action=fasttrack-connection
+/ip firewall filter set [find action=fasttrack-connection] \
+    src-address=!10.20.0.0/24 dst-address=!10.20.0.0/24
+```
+
+Se o primeiro comando não listar nada, não há o que fazer.
+
+### Aplicar e conferir
+
+O limite só vale para sessões novas. Para derrubar as atuais e forçar novo login:
+
+```
+/ip hotspot active remove [find]
+```
+
+Conecte um celular, faça o cadastro e rode um teste de velocidade. Depois confira:
+
+```
+/queue simple print stats
+/ip hotspot active print
+```
+
+Deve aparecer a fila `visitantes-total` e, durante a sessão, uma fila dinâmica para o aparelho.
+
+### O que NÃO usar
+
+- **`limit-bytes-total` e `limit-uptime` no usuário `visitante`.** Esses contadores são da conta, não
+  do aparelho. Como todo mundo usa a mesma conta, o primeiro que baixar muito corta a internet de
+  todos. O controle de tempo por aparelho já é o `session-timeout=1h` do perfil.
+- **Limite sem teto na rede.** Só o limite por aparelho não protege a clínica quando há muitos
+  aparelhos ao mesmo tempo. Use sempre os dois.
+
 ## 5. Reconexão automática por MAC (proposta 5 do plano)
 
 Para não mostrar o formulário de novo a quem já se cadastrou:
