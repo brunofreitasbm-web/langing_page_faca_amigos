@@ -5,7 +5,7 @@
 // verify_jwt desligado (chamada vem do roteador, sem chave pública),
 // CORS/JSON inline (deploy via MCP não resolve import relativo).
 //
-// Gera um cupom nominal "ESPERA-XXXX", grava o lead e dispara o e-mail via
+// Gera um cupom nominal "ESPERA-XXXX" (um por cliente a cada 30 dias), grava o lead e dispara o e-mail via
 // Brevo com o cupom — porque a janela do portal cativo fecha sozinha assim
 // que o celular detecta internet, e o cupom não pode existir só na tela.
 //
@@ -83,6 +83,51 @@ function generateCouponCode(): string {
 }
 
 const COUPON_VALIDITY_DAYS = 15;
+// Cada cliente recebe um cupom a cada 30 dias, contados da emissão do cupom anterior (não do vencimento nem do uso).
+// Nesse intervalo o Wi-Fi libera normalmente, mas não nasce cupom novo nem sai outro e-mail.
+const COUPON_INTERVAL_DAYS = 30;
+
+// Celular brasileiro com e sem o 9º dígito é a mesma linha. Compara DDD + os 8 últimos dígitos
+// ("55" + DDD + % + 8 dígitos casa com 12 e com 13 dígitos). Só tem dígitos, então o % é o único curinga.
+function phonePattern(digits: string): string {
+  const national = digits.slice(2);
+  return `55${national.slice(0, 2)}%${national.slice(-8)}`;
+}
+
+// O roteador manda o MAC em "AA:BB:CC:DD:EE:FF". Se o marcador não foi trocado (aparece "$(mac)") ou vier vazio,
+// todos os visitantes teriam o mesmo "MAC": nunca usar isso para reconhecer ninguém.
+function isValidMac(mac: string): boolean {
+  return /^([0-9a-f]{2}:){5}[0-9a-f]{2}$/.test(mac);
+}
+
+// Cadastro mais recente, dentro do intervalo, do mesmo cliente: mesmo telefone, mesmo e-mail ou mesmo aparelho.
+// Três consultas com eq/like em vez de um .or(): o e-mail aceita vírgula e parêntese, que quebrariam o filtro.
+// Cadastro cujo e-mail falhou ao enviar não conta: a pessoa nunca recebeu o cupom e pode tentar de novo.
+async function findRecentLead(
+  admin: Admin,
+  params: { phoneDigits: string; emailKey: string; mac: string; sinceIso: string },
+): Promise<{ id: string; visit_count: number | null } | null> {
+  const base = () =>
+    admin
+      .from("fa_wifi_leads")
+      .select("id, visit_count, created_at")
+      .gte("created_at", params.sinceIso)
+      .is("email_error", null)
+      .order("created_at", { ascending: false })
+      .limit(1);
+  const results = await Promise.all([
+    base().like("guardian_phone", phonePattern(params.phoneDigits)),
+    base().eq("guardian_email", params.emailKey),
+    ...(isValidMac(params.mac) ? [base().eq("mac", params.mac)] : []),
+  ]);
+  const rows: { id: string; visit_count: number | null; created_at: string }[] = [];
+  for (const r of results) {
+    if (r.error) console.error("Erro ao procurar cadastro recente do Wi-Fi:", r.error.message);
+    else rows.push(...((r.data ?? []) as typeof rows));
+  }
+  rows.sort((a, b) => b.created_at.localeCompare(a.created_at));
+  return rows[0] ?? null;
+}
 
 // Unidade "FaçaAmigos Circuito (Parque Shopping)" no banco do kiosk (mesmo
 // projeto Supabase). Usada para criar o cupom nativo de +5 min — ver
@@ -96,11 +141,14 @@ const CIRCUITO_BONUS_MINUTES = 5;
 // select id from fa_kiosk_units where name ilike '%playground (parque%'.
 const PLAYGROUND_UNIT_ID = "11111111-1111-1111-1111-111111111111";
 const PLAYGROUND_DISCOUNT_PCT = 50;
+// Unidade "Playground (Bosque Grão-Pará)": mesma meia inclusiva (DESCONTO_PCT 50) do Parque Shopping, no mesmo código.
+// Confirmar com: select id from fa_kiosk_units where name ilike '%grão-pará%'.
+const GRAOPARA_UNIT_ID = "5fc99a57-81ee-4232-a105-1fcb4634cef4";
 
 // Cria, no MESMO código do cupom "ESPERA-XXXX", um cupom nativo do kiosk
 // (fa_kiosk_coupons) com max_uses=1: +5 min no Circuito (MINUTOS_EXTRA) e meia
-// inclusiva no Playground (DESCONTO_PCT 50). (Texto abaixo descreve o Circuito; o
-// Playground funciona igual.) O check-in do
+// inclusiva nos dois Playgrounds, Parque Shopping e Bosque Grão-Pará (DESCONTO_PCT 50).
+// (Texto abaixo descreve o Circuito; os Playgrounds funcionam igual.) O check-in do
 // Circuito já aceita p_coupon_code — ao digitar o código, o kiosk aplica os
 // minutos extras e bloqueia qualquer segunda tentativa com o mesmo código,
 // em qualquer unidade ou dia. Isso resolve o risco de a família reusar ou
@@ -144,9 +192,37 @@ async function sendCouponEmail(params: {
     month: "2-digit",
     year: "numeric",
   });
-  const waPlayground = `https://wa.me/5591992347673?text=${encodeURIComponent(
-    `Olá! Sou ${params.guardianName}, vim da clínica e quero usar meu cupom ${params.couponCode}`,
-  )}`;
+  const siteUrl = "https://institutofacaamigos.com.br/playground?utm_source=wifi&amp;utm_medium=email&amp;utm_campaign=clinica_fatima&amp;utm_content=cupom";
+  const mapaParque = "https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m";
+  const mapaGraoPara =
+    "https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving";
+  // Um cartão por lugar onde o cupom vale. Endereços e horários espelham o site (assets/fa-footer.js e playground.html).
+  const lugar = (tag: string, nome: string, linhas: string[], mapa: string) => `
+          <table width="100%" cellpadding="0" cellspacing="0" role="presentation" style="background:#FFF9F1;border:1px solid #E7DFC9;border-radius:12px;margin:0 0 10px 0;">
+            <tr><td style="padding:14px 16px;">
+              <span style="display:inline-block;background:#FFE234;color:#1A3F35;font-family:Arial,sans-serif;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;padding:3px 8px;border-radius:9999px;">${tag}</span>
+              <div style="font-family:Arial,sans-serif;font-size:15px;font-weight:800;color:#1A3F35;margin:6px 0 4px 0;">${nome}</div>
+              ${linhas.map((l) => `<div style="font-family:Arial,sans-serif;font-size:13px;line-height:1.55;color:#3A4258;">${l}</div>`).join("")}
+              <div style="margin-top:8px;"><a href="${mapa}" style="font-family:Arial,sans-serif;font-size:13px;font-weight:800;color:#f0196b;text-decoration:underline;">Como chegar</a></div>
+            </td></tr>
+          </table>`;
+  const lugares = [
+    lugar("Playground", "Parque Shopping Belém", [
+      "Rod. Augusto Montenegro, 4300 · Térreo, próximo às Lojas Americanas",
+      "Todos os dias, das 10h às 22h",
+      "Piscina de bolinhas gigante, casa na árvore, cantinho de leitura, mediadores especializados e espaço sensorial completo.",
+    ], mapaParque),
+    lugar("Playground", "Shopping Bosque Grão-Pará", [
+      "Av. Centenário, 1052 · Val-de-Cans · 1º piso, em frente à Renner",
+      "Segunda a sábado, das 10h às 22h · Domingo, das 10h às 21h",
+      "Mesmos preços, mesma equipe qualificada e os mesmos atrativos inclusivos do Parque Shopping. Sem agendamento: é só chegar.",
+    ], mapaGraoPara),
+    lugar("Circuito", "Parque Shopping Belém", [
+      "Rod. Augusto Montenegro, 4300 · Térreo",
+      "Todos os dias, das 10h às 22h",
+      "Carrinhos elétricos a R$ 48 o passeio. Seu filho dirige, você acompanha de pertinho.",
+    ], mapaParque),
+  ].join("");
 
   const html = `<!DOCTYPE html>
 <html><body style="margin:0;padding:0;background:#FFF9F1;">
@@ -169,14 +245,15 @@ async function sendCouponEmail(params: {
               <div style="font-family:Arial,sans-serif;font-size:12px;color:#4C6B62;">Válido até ${expiresLabel}</div>
             </tr></td>
           </table>
-          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 6px 0;font-weight:800;">Apresente na recepção do Playground ou do quiosque do Circuito, no Parque Shopping, e escolha <strong>um</strong> destes benefícios:</p>
+          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 6px 0;font-weight:800;">Apresente o código na recepção e escolha <strong>um</strong> destes benefícios:</p>
           <ul style="font-family:Arial,sans-serif;font-size:14px;line-height:1.7;color:#3A4258;margin:0 0 8px 0;padding-left:20px;">
-            <li>Meia inclusiva (R$ 50 na entrada) para crianças com laudo ou CIPTEA — todo dia</li>
-            <li>+5 minutos grátis no Circuito, em qualquer plano — de segunda a sexta</li>
+            <li><strong>Meia inclusiva no Playground:</strong> R$ 50 nos 30 minutos, contra R$ 60 do público geral, para crianças com laudo ou CIPTEA. Vale todos os dias, no Parque Shopping ou no Shopping Bosque Grão-Pará.</li>
+            <li><strong>+5 minutos adicionais grátis no Circuito</strong>, em qualquer plano, de segunda a sexta.</li>
           </ul>
-          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 20px 0;font-style:italic;">Cada cupom vale um único benefício — no Playground ou no Circuito, nunca nos dois.</p>
-          <div style="text-align:center;margin-bottom:8px;">
-            <a href="${waPlayground}" style="display:inline-block;background:#25D366;color:#fff;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:9999px;font-size:15px;">Falar no WhatsApp</a>
+          <p style="font-family:Arial,sans-serif;font-size:12px;line-height:1.5;color:#8791A6;margin:0 0 22px 0;font-style:italic;">Cada cupom vale um único benefício, em um único lugar: Playground do Parque Shopping, Playground do Grão-Pará ou Circuito. Cada cliente recebe um cupom a cada 30 dias.</p>
+          <p style="font-family:Arial,sans-serif;font-size:14px;line-height:1.6;color:#3A4258;margin:0 0 10px 0;font-weight:800;">Onde usar</p>${lugares}
+          <div style="text-align:center;margin:18px 0 8px 0;">
+            <a href="${siteUrl}" style="display:inline-block;background:#f0196b;color:#fff;font-weight:800;text-decoration:none;padding:14px 26px;border-radius:9999px;font-size:15px;">Conhecer o Playground</a>
           </div>
         </td></tr>
         <tr><td style="padding:8px 32px 28px 32px;text-align:center;">
@@ -273,25 +350,22 @@ Deno.serve(async (req) => {
     }
   }
 
-  // Reconexão: mesmo MAC já cadastrado nos últimos 15 dias → reaproveita o
-  // cupom vigente em vez de emitir outro (evita inflar cupons a cada visita
-  // do mesmo aparelho) e só incrementa o contador de visitas.
-  if (mac) {
-    const { data: existing } = await admin
+  // Um cupom por cliente a cada 30 dias. Quem já recebeu (mesmo telefone, e-mail ou aparelho) só soma uma visita:
+  // o Wi-Fi libera, mas não nasce cupom, cupom no caixa nem e-mail. A resposta é igual à de um cadastro novo, para
+  // ninguém descobrir, digitando um telefone ou e-mail, se aquela pessoa já usou o Wi-Fi da clínica.
+  const emailKey = guardianEmail.toLowerCase();
+  const recent = await findRecentLead(admin, {
+    phoneDigits: guardianPhone,
+    emailKey,
+    mac,
+    sinceIso: new Date(Date.now() - COUPON_INTERVAL_DAYS * 24 * 60 * 60 * 1000).toISOString(),
+  });
+  if (recent) {
+    await admin
       .from("fa_wifi_leads")
-      .select("id, coupon_code, coupon_status, coupon_expires_at, visit_count")
-      .eq("mac", mac)
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
-    if (existing && new Date(existing.coupon_expires_at) > new Date()) {
-      await admin
-        .from("fa_wifi_leads")
-        .update({ visit_count: (existing.visit_count ?? 1) + 1 })
-        .eq("id", existing.id);
-      return jsonResponse({ ok: true, coupon_code: existing.coupon_code, reused: true });
-    }
+      .update({ visit_count: (recent.visit_count ?? 1) + 1 })
+      .eq("id", recent.id);
+    return jsonResponse({ ok: true });
   }
 
   const couponExpiresAt = new Date(Date.now() + COUPON_VALIDITY_DAYS * 24 * 60 * 60 * 1000);
@@ -306,8 +380,8 @@ Deno.serve(async (req) => {
       .insert({
         guardian_name: guardianName,
         guardian_phone: guardianPhone,
-        guardian_email: guardianEmail,
-        mac: mac || null,
+        guardian_email: emailKey,
+        mac: isValidMac(mac) ? mac : null,
         coupon_code: couponCode,
         coupon_status: "issued",
         coupon_expires_at: couponExpiresAt.toISOString(),
@@ -365,6 +439,19 @@ Deno.serve(async (req) => {
   if (!playgroundResult.synced) {
     console.error("Erro ao sincronizar cupom do Playground no kiosk:", playgroundResult.error);
   }
+  // Mesmo código no Playground do Grão-Pará. Falha aqui também não derruba o cadastro.
+  const graoparaResult = await syncKioskCoupon(admin, {
+    couponCode,
+    guardianName,
+    unitId: GRAOPARA_UNIT_ID,
+    kind: "DESCONTO_PCT",
+    value: PLAYGROUND_DISCOUNT_PCT,
+    label: "meia inclusiva Playground Grão-Pará",
+    expiresAtMs: couponExpiresAt.getTime(),
+  }).catch(onError);
+  if (!graoparaResult.synced) {
+    console.error("Erro ao sincronizar cupom do Grão-Pará no kiosk:", graoparaResult.error);
+  }
 
   const emailResult = await sendCouponEmail({
     guardianName,
@@ -385,8 +472,11 @@ Deno.serve(async (req) => {
       ...(playgroundResult.synced
         ? { playground_coupon_synced_at: new Date().toISOString() }
         : { playground_coupon_error: playgroundResult.error ?? "falha desconhecida" }),
+      ...(graoparaResult.synced
+        ? { graopara_coupon_synced_at: new Date().toISOString() }
+        : { graopara_coupon_error: graoparaResult.error ?? "falha desconhecida" }),
     })
     .eq("id", data.id);
 
-  return jsonResponse({ ok: true, coupon_code: couponCode, email_sent: emailResult.sent });
+  return jsonResponse({ ok: true });
 });

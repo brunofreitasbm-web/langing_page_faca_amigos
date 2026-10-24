@@ -93,7 +93,7 @@ WhatsApp: Clínica `5591991782027`, Playground/Circuito `5591992347673`. Não mi
 - **playground.html**: JSON-LD com 8 Offers; preços duplicados entre schema, tabela e cards; Bosque Grão-Pará aparece no schema como negócio ativo mas é "Em breve"; passaporte mensal fora do schema. Mesmos `@id` do hub (mudar um quebra o outro).
 - **circuito.html**: R$48 (20/30 min), minuto adicional R$3, 10ª entrada grátis por CPF. Única página com URLs absolutas para o hub; canonical no host playground.
 - **servicos.html**: serviços da Clínica, lista de espera por WhatsApp, JSON-LD com 7 serviços.
-- **wifi.html** (noindex): pós-portal; monta UTMs; cupom +15 dias calculado no cliente; avaliação Google só a partir da 3ª visita (`localStorage`).
+- **wifi.html** (noindex): pós-portal; monta UTMs; texto do cupom sem data (vale 15 dias, 1 por cliente a cada 30).
 - **termos / politica-privacidade**: datas fixas (20/09/2026); texto de cookies precisa acompanhar `fa-track.js`.
 
 ### Produtos (Hotmart)
@@ -130,7 +130,7 @@ Padrões comuns: `Deno.serve` único roteado por `action`; CORS e helpers copiad
 | `guia-sequence` | 3 e-mails (24h/72h/144h) pós-resultado; descadastro | `x-run-key` (`SEQ_RUN_KEY`); HMAC (`SEQ_SECRET`) | leads, `fa_teste_ebook_seq`, `fa_ebook_compras` |
 | `hotmart-webhook` | Eventos de compra/reembolso/chargeback/carrinho; ingressos pagos; GA4 MP + Meta CAPI | `hottok` | `fa_hotmart_eventos`, `fa_ebook_compras`, `fa_ebook_carrinhos`, RPCs de eventos |
 | `hotmart-sync` | Polling da API de vendas (conferência do webhook) | `x-sync-key` | `fa_ebook_compras`, leads |
-| `wifi-lead-webhook` | Cadastro do portal Wi-Fi, cupom `ESPERA-XXXX`, e-mail | Pública (honeypot, 20/h por IP) | `fa_wifi_leads`, `fa_kiosk_coupons` |
+| `wifi-lead-webhook` | Cadastro do portal Wi-Fi, cupom `ESPERA-XXXX` (1 por cliente a cada 30 dias, por telefone, e-mail ou MAC), e-mail | Pública (honeypot, 20/h por IP) | `fa_wifi_leads`, `fa_kiosk_coupons` |
 | `wifi-coupon-admin` | Consulta/resgate manual de cupom | Bearer `WIFI_ADMIN_API_KEY` | `fa_wifi_leads` |
 | `geo-facts` | JSON público de preços/unidades do quiosque (GET, cache 1h) | Pública | `fa_kiosk_*` (somente leitura) |
 | `fa-health` | Rotina diária 07h Belém: saúde, drift de preços (GEO), follow-up de lead quente | `x-ops-key` | vários + RPC `fa_health_snapshot` |
@@ -140,7 +140,7 @@ Padrões comuns: `Deno.serve` único roteado por `action`; CORS e helpers copiad
 - **Auth do painel**: `gestao-hub` (`launch painel|eventos`) cria ticket em `fa_gestao_painel_tickets` → `/admin#sso=` → `behavior-test-admin` `sso` cria sessão em `fa_teste_admin_sessions` → `eventos-admin` reutiliza o mesmo Bearer.
 - **E-mail de eventos**: `eventos-public`/`eventos-admin`/`hotmart-webhook` → `eventos-dispatch` (`x-ops-key`) → Brevo. O cron chama `run`.
 - **Compra de e-book**: link com `src/sck/utm/xcod` → Hotmart → `hotmart-webhook` (+ `hotmart-sync`) → `fa_ebook_compras` → para a `guia-sequence` do lead → GA4/Meta server-side.
-- **Wi-Fi**: MikroTik `login.html` → `wifi-lead-webhook` → lead + 2 cupons nativos (Circuito +5 min, Playground 50%) → e-mail → `/wifi`.
+- **Wi-Fi**: MikroTik `login.html` → `wifi-lead-webhook` → lead + 3 cupons nativos (Circuito +5 min, Playground Parque 50%, Playground Grão-Pará 50%) → e-mail → `/wifi`.
 
 ### Variáveis de ambiente (nomes)
 `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`; Clínica: `CLINICA_SUPABASE_URL`, `CLINICA_SUPABASE_ANON_KEY`, `CLINICA_SUPABASE_SERVICE_ROLE_KEY`; chaves de operação: `OPS_KEY`, `SEQ_RUN_KEY`, `SEQ_SECRET`, `HOTMART_SYNC_KEY`, `HOTMART_HOTTOK`, `HOTMART_BASIC_TOKEN`, `WIFI_ADMIN_API_KEY`, `EVENTOS_SECRET`, `GESTAO_SSO_SECRET_CACAU`; produtos: `HOTMART_PRODUCT_ID`, `HOTMART_CODIGO_PRODUCT_ID`, `EBOOK_URL`, `EBOOK2_URL`, `EBOOK_PRICE_*`; e-mail: `BREVO_API_KEY`, `BREVO_FROM`, `BREVO_REPLY_TO`, `BREVO_LIST_ID`, `BREVO_LIST_EVENTOS_*`; alertas: `ALERT_EMAIL`, `LEAD_NOTIFY_EMAIL`, `LEAD_WHATSAPP`; analytics: `GA4_API_SECRET`, `GA4_MEASUREMENT_ID`, `META_PIXEL_ID`, `META_CAPI_TOKEN`; outros: `GEMINI_API_KEY`, `SITE_URL`, `COMUNIDADE_WHATSAPP_*`, `GESTAO_URL_*`.
@@ -153,7 +153,7 @@ Convenção: **RLS ligada e nenhuma policy**; só a service role (Edge Functions
 |---|---|
 | Teste | `fa_leads_teste_comportamento`, `fa_teste_ebook_seq` (FK cascade), `fa_teste_config`, `fa_teste_admin_sessions` (`escopo` owner/equipe), `fa_teste_admin_login_attempts` |
 | E-books | `fa_ebook_compras` (PK `transaction`), `fa_hotmart_eventos` (idempotência por `event_id`), `fa_ebook_carrinhos` (sem recuperação por e-mail ainda) |
-| Wi-Fi | `fa_wifi_leads` (`coupon_code` único; liga a `fa_kiosk_coupons`) |
+| Wi-Fi | `fa_wifi_leads` (`coupon_code` único; liga a `fa_kiosk_coupons`; `kiosk_/playground_/graopara_coupon_synced_at` e `_error` dizem se cada cupom chegou ao caixa) |
 | Hub | `fa_gestao_contas` (mãe), `_desafios`, `_sessoes` (hash do token), `_login_attempts`, `_auditoria`, `_painel_tickets` (em uso), `_tickets_painel` (**órfã**) |
 | Eventos | `fa_eventos` 1:N `fa_eventos_ingresso_tipos` 1:N `fa_eventos_inscricoes` 1:N `fa_eventos_envios`; view `fa_eventos_publicos` (`security_invoker`); RPCs `fa_eventos_inscrever/cancelar/checkin/confirmar_*/expirar_promocoes/reprocessar_vagas` (lock `for update` no evento); `fa_health_snapshot()` |
 | Externas a este repo | `fa_kiosk_units/plans/packages/coupons/loyalty_rules/app_settings` (app dos quiosques); `profiles` e `auth` no projeto Supabase da Clínica |
@@ -178,7 +178,7 @@ Extensões exigidas e não declaradas: `pg_cron`, `pg_net`, `vault`.
 
 ## 9. Hotspot MikroTik (`hotspot/`, não publicado)
 
-Portal cativo para um hEX S (arquivos vão em `flash/hotspot/`). `login.html` valida cadastro (LGPD/opt-in), faz POST em `wifi-lead-webhook` e só então autentica a conta compartilhada no roteador (gate de marketing, não autenticação por família). `alogin.html`, `status.html`, `rlogin.html` (cookie de MAC), `error.html`+`errors.txt`, `md5.js` (CHAP). `LEIA-ME-HOTSPOT.md` cobre isolamento da LAN, DHCP, walled garden. Credencial `visitante/visitante` é por desenho, trocar antes de instalar.
+Portal cativo para um hEX S (arquivos vão em `flash/hotspot/`). `login.html` valida cadastro (LGPD/opt-in), faz POST em `wifi-lead-webhook` e só então autentica a conta compartilhada no roteador (gate de marketing, não autenticação por família). `alogin.html`, `status.html`, `rlogin.html` (redirect ao login, não faz reconexão), `error.html`+`errors.txt`, `md5.js` (CHAP). `LEIA-ME-HOTSPOT.md` cobre isolamento da LAN, DHCP, walled garden. Credencial `visitante/visitante` é por desenho, trocar antes de instalar.
 
 ## 10. Armadilhas e dívidas conhecidas (priorizadas)
 
@@ -195,26 +195,25 @@ Portal cativo para um hEX S (arquivos vão em `flash/hotspot/`). `login.html` va
 
 **Consistência / bugs prováveis**
 10. `window.VITE_SUPABASE_PUBLISHABLE_KEY` nunca é definido: o POST de vagas (`job-application-webhook`) sai sem Authorization (index, playground, circuito). Note que `job-application-webhook` **não existe** em `supabase/functions` (vive fora deste repo).
-11. `SEU_PLACE_ID_AQUI` não resolvido em `wifi.html` e `hotspot/alogin.html`.
-12. Dois caminhos de resgate do cupom `ESPERA` (`wifi-coupon-admin` não desativa `fa_kiosk_coupons`; o admin do painel sim).
-13. `hotmart-sync` possivelmente sem cron; `fa-health` monitora esse job e só conhece 2 jobs no `fa_health_snapshot`.
-14. Templates de e-mail do guia fixam o guia: quem tem `ebook_offer=codigo` recebe e-mail do guia; padrões de UTM divergem do código.
-15. Migrations `20261001150000` e `20261001160000` dependem de `fa_kiosk_coupons` (inexistente em banco novo). `fa_gestao_tickets_painel` é órfã e nunca limpa; a migration cita uma action `admin_sso` que não existe em `gestao-hub`.
-16. `eventos-dispatch`: `voucher_reenvio` pode ser bloqueado pelo unique `(inscricao_id,tipo)` conforme o comentário do código (a migration exclui esse tipo; conferir em produção).
-17. Envios com `status=erro` não são reprocessados por `run`; `wifi_resumo`, dashboard e CSV truncam em silêncio (20000/5000 linhas).
+11. Dois caminhos de resgate do cupom `ESPERA` (`wifi-coupon-admin` não desativa `fa_kiosk_coupons`; o admin do painel sim).
+12. `hotmart-sync` possivelmente sem cron; `fa-health` monitora esse job e só conhece 2 jobs no `fa_health_snapshot`.
+13. Templates de e-mail do guia fixam o guia: quem tem `ebook_offer=codigo` recebe e-mail do guia; padrões de UTM divergem do código.
+14. Migrations `20261001150000` e `20261001160000` dependem de `fa_kiosk_coupons` (inexistente em banco novo). `fa_gestao_tickets_painel` é órfã e nunca limpa; a migration cita uma action `admin_sso` que não existe em `gestao-hub`.
+15. `eventos-dispatch`: `voucher_reenvio` pode ser bloqueado pelo unique `(inscricao_id,tipo)` conforme o comentário do código (a migration exclui esse tipo; conferir em produção).
+16. Envios com `status=erro` não são reprocessados por `run`; `wifi_resumo`, dashboard e CSV truncam em silêncio (20000/5000 linhas).
 
 **Duplicação (risco de dessincronia)**
-18. Preços em ≥4 lugares (HTML, JSON-LD, `llms*.txt`, FAQ) + `fa-track.js` + `ESPERADO` em `fa-health`; só `llms*.txt` é checado.
-19. Motor do teste duplicado: `behavior-test-webhook`, `behavior-test-admin`, `admin.html`, `teste-perguntas.json`.
-20. Código HMAC duplicado em `eventos-public` e `eventos-dispatch`; CORS/helpers copiados em todas as funções.
-21. Modal de vagas e CSS triplicados (index, playground, circuito); endereço "Av." vs "Rod."; CEP correto é 66060-147 (66060-060 está errado); `CLINICA_FATIMA` e `utm_campaign=clinica_fatima` são legado mantido de propósito.
-22. Hardcodes: UUIDs de unidades (`geo-facts`, `wifi-lead-webhook`, `fa-health`), ids de template Brevo, `consent_at >= 2026-09-20T16:50Z` em `guia-sequence`, project ref em ops.
+17. Preços em ≥4 lugares (HTML, JSON-LD, `llms*.txt`, FAQ) + `fa-track.js` + `ESPERADO` em `fa-health`; só `llms*.txt` é checado.
+18. Motor do teste duplicado: `behavior-test-webhook`, `behavior-test-admin`, `admin.html`, `teste-perguntas.json`.
+19. Código HMAC duplicado em `eventos-public` e `eventos-dispatch`; CORS/helpers copiados em todas as funções.
+20. Modal de vagas e CSS triplicados (index, playground, circuito); endereço "Av." vs "Rod."; CEP correto é 66060-147 (66060-060 está errado); `CLINICA_FATIMA` e `utm_campaign=clinica_fatima` são legado mantido de propósito.
+21. Hardcodes: UUIDs de unidades (`geo-facts`, `wifi-lead-webhook`, `fa-health`), ids de template Brevo, `consent_at >= 2026-09-20T16:50Z` em `guia-sequence`, project ref em ops.
 
 **Documentação desatualizada**
-23. `LEIA-ME.txt`: Clarity/GA4 antigos (hoje Clarity `yr8qq61339` só com aceite, GA4 `G-37G5XLBXKG`), estrutura antiga do site (`hub.html`), BANDS/8 perguntas. `PUBLICAR.md` vale mais.
-24. `MAPA-DO-SITE.md` diz que `clinica.` é o site Next.js da Clínica, mas `middleware.js` serve o Hub de Gestão nesse host. **Confirmar com o dono do projeto.** O PUBLICAR diz "5 quadrados"; `gestao.html` tem 7.
-25. Política de privacidade cita Clarity e envio de conversão à Meta; precisa acompanhar o tracking real.
-26. Cache: `/assets/*` pode ter ficado em cache longo antes de 29/09; para troca urgente, renomear o arquivo.
+22. `LEIA-ME.txt`: Clarity/GA4 antigos (hoje Clarity `yr8qq61339` só com aceite, GA4 `G-37G5XLBXKG`), estrutura antiga do site (`hub.html`), BANDS/8 perguntas. `PUBLICAR.md` vale mais.
+23. `MAPA-DO-SITE.md` diz que `clinica.` é o site Next.js da Clínica, mas `middleware.js` serve o Hub de Gestão nesse host. **Confirmar com o dono do projeto.** O PUBLICAR diz "5 quadrados"; `gestao.html` tem 7.
+24. Política de privacidade cita Clarity e envio de conversão à Meta; precisa acompanhar o tracking real.
+25. Cache: `/assets/*` pode ter ficado em cache longo antes de 29/09; para troca urgente, renomear o arquivo.
 
 ## 11. Guia de navegação por tarefa
 

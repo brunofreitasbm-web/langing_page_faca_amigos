@@ -2,11 +2,18 @@ name: Verificação do site
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+# Evita rodar duas vezes (push + PR) e cancela runs antigos do mesmo branch.
+concurrency:
+  group: check-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
