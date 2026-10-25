@@ -26,7 +26,7 @@
   // o site passou a usar só o GTM-NPDJ58XR, em todas as páginas e no portal Wi-Fi. Ao criar tags
   // no painel, criar SÓ nesse container e conferir que a tag GA4 não duplica o gtag direto abaixo (page_view em
   // dobro). O scripts/check.mjs reprova a volta de um segundo container.
-  var IDS = { gtm: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG', clarity: 'yr1no82bvm' };
+  var IDS = { gtm: 'GTM-NPDJ58XR', ga4: 'G-37G5XLBXKG', clarity: 'yr1no82bvm', meta: '2388086018599846' };
   var CONSENT_KEY = 'fa_consent';
   var ORIGIN_KEY = 'fa_origin';
   var PARAMS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'gclid', 'fbclid', 'src', 'sck'];
@@ -160,6 +160,17 @@
   // banner e sem dado de pessoa. Não abre o banner; libera só a medição (analytics_storage) para os eventos do
   // painel chegarem ao GA4. Anúncios e o Clarity (gravação de sessão) continuam desligados, mesmo com aceite salvo.
   var KIOSK = document.documentElement.hasAttribute('data-fa-kiosk');
+  // Pixel da Meta: mesmo critério do Clarity (só com o aceite "todos"; quiosque nunca entra). Fica fora do portal
+  // Wi-Fi/hotspot, para o público de remarketing não virar quem só conectou na loja. Não ativar o pixel também
+  // pelo GTM: cada evento contaria em dobro. Os eventos de compra (AddToCart etc.) ficam em guia.html/codigo.html.
+  var metaLoaded = false;
+  function loadMetaPixel() {
+    if (metaLoaded || KIOSK || /^\/(wifi|hotspot)(\/|\.html|$)/.test(location.pathname)) return;
+    metaLoaded = true;
+    !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s); }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq('init', IDS.meta);
+    window.fbq('track', 'PageView');
+  }
   function applyConsent(choice) {
     if (KIOSK) {
       gtag('consent', 'update', { analytics_storage: 'granted' });
@@ -168,6 +179,7 @@
     if (choice === 'all') {
       gtag('consent', 'update', GRANTED);
       loadClarity();
+      loadMetaPixel();
       try { document.dispatchEvent(new CustomEvent('fa-consent-all')); } catch (e) { }
     }
   }

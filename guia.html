@@ -845,23 +845,13 @@
       var CONFIG = {
         checkout: 'https://pay.hotmart.com/M107692257Y', // checkout direto da Hotmart (o go.hotmart.com/M107692257Y cai na vitrine do marketplace)
         parcelas: 'ou 10x de R$ 17,91 no cartão',         // deixe vazio para ocultar
-        metaPixelId: '2388086018599846'                                   // ID do Pixel da Meta (não ativar também pelo GTM: contaria cada evento em dobro)
       };
 
-      // ---- Pixel da Meta (opcional) ----
-      // Só carrega com o aceite do banner (LGPD): fa-track.js guarda 'all' em fa_consent e avisa com 'fa-consent-all'.
-      if (CONFIG.metaPixelId) {
-        var carregarPixel = function () {
-          if (window.fbq) return;
-          !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-          fbq('init', CONFIG.metaPixelId);
-          fbq('track', 'PageView');
-          fbq('track', 'ViewContent', { content_name: 'O Brincar com Propósito', content_type: 'product', value: 149, currency: 'BRL' });
-        };
-        var aceitou = false;
-        try { aceitou = window.localStorage.getItem('fa_consent') === 'all'; } catch (e) { }
-        if (aceitou) carregarPixel(); else document.addEventListener('fa-consent-all', carregarPixel, { once: true });
-      }
+      // ---- Pixel da Meta ----
+      // O pixel (init + PageView) é carregado por assets/fa-track.js em todas as páginas, só com o aceite do banner.
+      // Aqui fica o evento específico desta página; 'fa-consent-all' cobre quem aceita depois de abrir.
+      function viewContentMeta() { if (window.fbq) fbq('track', 'ViewContent', { content_name: 'O Brincar com Propósito', content_type: 'product', value: 149, currency: 'BRL' }); }
+      if (window.fbq) viewContentMeta(); else document.addEventListener('fa-consent-all', viewContentMeta, { once: true });
 
       function push(o) { try { (window.dataLayer = window.dataLayer || []).push(o); } catch (e) { } }
 
