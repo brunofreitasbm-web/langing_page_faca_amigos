@@ -168,6 +168,7 @@
     if (choice === 'all') {
       gtag('consent', 'update', GRANTED);
       loadClarity();
+      try { document.dispatchEvent(new CustomEvent('fa-consent-all')); } catch (e) { }
     }
   }
   function setConsent(choice) {
