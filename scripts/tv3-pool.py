@@ -36,7 +36,7 @@ def plano(txt):
 def textos(slide):
     """Todas as strings visíveis do slide, com o campo de origem."""
     for k, v in slide.items():
-        if k in ('id', 'fam', 'layout', 'qr', 'image', 'images', 'requires', 'tag', 'unit', 'kickerClass'):
+        if k in ('id', 'fam', 'layout', 'qr', 'image', 'images', 'requires', 'tag', 'unit', 'kickerClass', 'imageFit'):
             continue
         if isinstance(v, str):
             yield k, v
@@ -68,6 +68,7 @@ def validar(slides, chaves_qr):
         if not isinstance(s.get('dur'), int) or not 5 <= s['dur'] <= 40: e('dur deve ser inteiro entre 5 e 40')
         if s.get('qr') is not None and s['qr'] not in chaves_qr: e(f'qr "{s.get("qr")}" não existe em scripts/tv3-qr.py')
         if s.get('requires') and s['requires'] not in REQUIRES: e('requires inválido')
+        if s.get('imageFit') not in (None, 'retrato'): e('imageFit inválido')
         if s.get('dia') and not all(isinstance(d, int) and 1 <= d <= 5 for d in s['dia']): e('dia inválido')
         lay = s.get('layout', 'padrao')
         if lay == 'respiro':

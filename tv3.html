@@ -741,6 +741,23 @@
     /* QR normal: svg preenche a caixa */
     .tv-qr-box svg { width: 100%; height: 100%; border-radius: 10px; }
 
+    /* Foto vertical (retrato): fica na lateral, nítida, em vez de esticada no cartão horizontal */
+    .tv-slide.retrato .tv-visual-card { background: var(--petrol-deep); }
+    .tv-slide.retrato .tv-slide-image {
+      left: auto;
+      right: 0;
+      width: 46%;
+      object-position: center 14%;
+      transform: none;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 24%);
+    }
+    .tv-slide.retrato.active .tv-slide-image { transform: none; }
+    .tv-slide.retrato .tv-image-overlay { background: linear-gradient(0deg, rgba(3, 45, 55, 0.55) 0%, rgba(3, 45, 55, 0) 40%); }
+    .tv-slide.retrato .tv-visual-text { max-width: 58%; }
+    .tv-slide.retrato .tv-headline { font-size: 58px; max-width: 100%; }
+    .tv-slide.retrato .tv-subtext { max-width: 100%; }
+
     /* Respiro: foto cheia e uma frase */
     .tv-slide.respiro .tv-image-overlay {
       background: linear-gradient(180deg, rgba(3, 45, 55, 0.05) 0%, rgba(3, 45, 55, 0.35) 55%, rgba(3, 45, 55, 0.9) 100%);
@@ -926,7 +943,7 @@
         {"id":"b_boasvindas","fam":"B","dur":15,"layout":"padrao","qr":null,"tag":"abertura","isabella":false,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"💛 Sala de espera","kickerClass":"teal","headline":"{{saudacao}}. Hoje é <em>{{diaSemana}}</em>.","subtext":"Enquanto a sessão acontece, esta sala é sua: sente, respire e use o tempo como quiser. Quem cuida também precisa de pausa."},
         {"id":"b_sessao40","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp"],"kicker":"🧩 Dentro da sessão","kickerClass":"teal","headline":"Na sessão, a terapia se parece com <em>brincar</em>.","subtext":"Cada brincadeira tem um propósito, como esperar a vez ou ampliar a comunicação, sempre no ritmo da criança. O que deu certo é reconhecido."},
         {"id":"b_metodo","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp"],"kicker":"🧠 Como a clínica trabalha","kickerClass":"teal","headline":"Uma equipe, <em>um plano só</em>.","subtext":"Terapia comportamental apoiada em ABA, Fonoaudiologia, Terapia Ocupacional, Psicopedagogia e orientação a pais e escola."},
-        {"id":"b_quemcuida","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/isabella-2.webp","images":["img/isabella-2.webp","img/isabella-3.webp"],"kicker":"🌱 Quem idealizou a clínica","kickerClass":"teal","headline":"Isabella Gonçalves Freitas, <em>psicóloga infantil</em>","subtext":"CRP 10/4727. Idealizadora do FaçaAmigos, conduz a clínica e escreve os textos de Aprender, no nosso site."},
+        {"id":"b_quemcuida","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":false,"imageFit":"retrato","image":"img/isabella-2.webp","images":["img/isabella-2.webp","img/isabella-3.webp"],"kicker":"🌱 Quem idealizou a clínica","kickerClass":"teal","headline":"Isabella Gonçalves Freitas, <em>psicóloga infantil</em>","subtext":"CRP 10/4727. Idealizadora do FaçaAmigos, conduz a clínica e escreve os textos de Aprender, no nosso site."},
         {"id":"b_orientacao_casa","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp","img/clinica-fachada.webp"],"kicker":"🏠 Para levar para casa","kickerClass":"teal","headline":"A orientação da sessão fica <em>no portal</em>.","subtext":"A equipe marca o tema de cada orientação: Rotina, Comunicação, Alimentação, Sono ou Escola. Você vê no portal, com a data."},
         {"id":"b_escola","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-fachada.webp"],"kicker":"🏫 Escola e família","kickerClass":"teal","headline":"A escola também pode <em>entrar na conversa</em>.","subtext":"Quando fizer sentido para a família, a clínica apoia o diálogo com a coordenação pedagógica. Ninguém vai sozinho à reunião."},
         {"id":"b_espera","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🫶 Para quem espera","kickerClass":"teal","headline":"Esperar também cansa. <em>Pode descansar.</em>","subtext":"Respirar, olhar o celular ou ficar em silêncio, tudo vale. O seu descanso também importa."},
@@ -1206,7 +1223,7 @@
         const hasQr = !!(s.qr && QR[s.qr]);
         const el = document.createElement('article');
         const cls = layout === 'respiro' ? 'respiro solo' : layout === 'tutorial' ? 'tutorial' : (hasQr ? '' : 'solo');
-        el.className = 'tv-slide' + (cls ? ' ' + cls : '');
+        el.className = 'tv-slide' + (cls ? ' ' + cls : '') + (s.imageFit === 'retrato' ? ' retrato' : '');
         el.setAttribute('data-id', s.id);
         el.setAttribute('data-fam', s.fam);
         const imgTag = '<img class="tv-slide-image" src="' + esc(slideImage(s) || '') + '" alt="" decoding="async">';
