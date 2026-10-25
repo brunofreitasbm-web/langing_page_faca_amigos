@@ -3,6 +3,7 @@
 
 <head>
   <script src="/assets/fa-track.js"></script>
+  <script src="/assets/fa-fotos.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FaçaAmigos TV3 — Clínica de Terapia Comportamental</title>
@@ -1197,10 +1198,25 @@
         return v;
       }
       function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+      // Fotos novas da fotógrafa (assets/fa-fotos.js): cada slide recebe uma foto nova do mesmo tema da
+      // sua foto fixa (sala sensorial com sala sensorial, fachada com fachada; os slides que divulgam o
+      // Playground e o Circuito recebem fotos deles). Foto da clínica com criança reconhecível só chega
+      // aqui aprovada à mão (scripts/fotos/regras.mjs). Retrato da Isabella e foto do Grão-Pará ficam fixos.
+      // Foto vertical só entra em slide sem QR, no layout retrato (foto na lateral, sem esticar).
+      const fotosNovas = window.FAFotos ? FAFotos.sorteio() : null;
+      if (fotosNovas) FAFotos.vigiar({ tv: true }, fotosNovas.atualizar);
+      let rodadaFotos = -1;
+
       function slideImage(s) {
         if (s.requires === 'fotoGraoPara') return CONFIG.fotoGraoPara;
-        if (s.images && s.images.length) return s.images[(OV.dia - 1) % s.images.length];
-        return s.image;
+        const fixa = s.images && s.images.length ? s.images[(OV.dia - 1) % s.images.length] : s.image;
+        if (fotosNovas && s.imageFit !== 'retrato') {
+          if (state.n !== rodadaFotos) { rodadaFotos = state.n; fotosNovas.novaVolta(); }
+          const solo = (s.layout || 'padrao') === 'padrao' && !(s.qr && QR[s.qr]);
+          const f = fotosNovas.pegar(FAFotos.temaDaImagem(fixa), solo ? null : (x) => x.w >= x.h);
+          if (f) return { src: f.webp, pos: f.pos, retrato: f.h > f.w };
+        }
+        return fixa;
       }
 
       function mockHTML() {
@@ -1223,10 +1239,12 @@
         const hasQr = !!(s.qr && QR[s.qr]);
         const el = document.createElement('article');
         const cls = layout === 'respiro' ? 'respiro solo' : layout === 'tutorial' ? 'tutorial' : (hasQr ? '' : 'solo');
-        el.className = 'tv-slide' + (cls ? ' ' + cls : '') + (s.imageFit === 'retrato' ? ' retrato' : '');
+        const img = slideImage(s) || '';
+        el.className = 'tv-slide' + (cls ? ' ' + cls : '') + (s.imageFit === 'retrato' || img.retrato ? ' retrato' : '');
         el.setAttribute('data-id', s.id);
         el.setAttribute('data-fam', s.fam);
-        const imgTag = '<img class="tv-slide-image" src="' + esc(slideImage(s) || '') + '" alt="" decoding="async">';
+        const imgTag = '<img class="tv-slide-image" src="' + esc(img.src || img) + '" alt="" decoding="async"' +
+          (img.pos && !img.retrato ? ' style="object-position:' + esc(img.pos) + '"' : '') + '>';
 
         if (layout === 'respiro') {
           el.innerHTML = '<div class="tv-visual-card">' + imgTag + '<div class="tv-image-overlay"></div>' +
