@@ -197,6 +197,26 @@ async function testeLayout() {
     ok(imgs.every((u) => u), 'todo slide tem imagem');
     await page.context().close();
   }
+  await testeRetrato();
+}
+
+async function testeRetrato() {
+  // foto vertical em cartão horizontal: não pode ser ampliada demais (fica borrada) nem cortar o rosto
+  for (const dia of [1, 2]) {
+    const page = await abrir(`dia=${dia}`, { width: 1920, height: 1080 });
+    const ids = await page.evaluate(() => window.TV3.POOL.filter((s) => s.imageFit === 'retrato').map((s) => s.id));
+    for (const id of ids) {
+      await page.evaluate((i) => window.TV3.show(i), id);
+      const r = await page.evaluate(async () => {
+        const im = document.querySelector('.tv-slide.active .tv-slide-image');
+        if (!im.complete) await new Promise((res) => { im.onload = res; im.onerror = res; });
+        const b = im.getBoundingClientRect(), card = document.querySelector('.tv-slide.active .tv-visual-card').getBoundingClientRect();
+        return { ampliacao: b.width / im.naturalWidth, largura: b.width / card.width };
+      });
+      ok(r.ampliacao <= 1.6 && r.largura < 0.6, `${id} (dia ${dia}): foto vertical ampliada ${r.ampliacao.toFixed(2)}x e ocupa ${Math.round(r.largura * 100)}% do cartão`);
+    }
+    await page.context().close();
+  }
 }
 
 // ---------------------------------------------------------------- COPY
