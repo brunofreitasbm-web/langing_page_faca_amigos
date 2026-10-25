@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [qr|motor|layout|copy|todos]
+// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [qr|motor|layout|copy|audio|todos]
 //
 // Variáveis de ambiente:
 //   PW_MODULE        caminho do playwright (padrão /opt/node-tools/node_modules/playwright/index.mjs)
@@ -218,7 +218,94 @@ async function testeCopy() {
   await page.context().close();
 }
 
-const testes = { qr: testeQR, motor: testeMotor, layout: testeLayout, copy: testeCopy };
+// ---------------------------------------------------------------- ÁUDIO
+// Belém é UTC-3. 2026-12-01 é terça; 2026-12-05 sábado; 2026-12-06 domingo.
+async function abrirComSom(query, isoUtc, { rejeitar = false } = {}) {
+  const ctx = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
+  await ctx.addInitScript((rej) => {
+    window.__som = { plays: [], pauses: 0 };
+    HTMLMediaElement.prototype.play = function () {
+      window.__som.plays.push(this.getAttribute('src'));
+      if (rej) return Promise.reject(new DOMException('bloqueado', 'NotAllowedError'));
+      Object.defineProperty(this, 'paused', { configurable: true, get: () => false });
+      return Promise.resolve();
+    };
+    HTMLMediaElement.prototype.pause = function () {
+      window.__som.pauses++;
+      Object.defineProperty(this, 'paused', { configurable: true, get: () => true });
+    };
+  }, rejeitar);
+  const page = await ctx.newPage();
+  await page.clock.install({ time: new Date(isoUtc) });
+  await page.goto(`${BASE}/tv3.html?debug=1${query ? '&' + query : ''}`);
+  return page;
+}
+const plays = (page) => page.evaluate(() => window.__som.plays.slice());
+
+async function testeAudio() {
+  console.log('\n# ÁUDIO');
+  const casos = [
+    ['terça 10h05 (música)', '2026-12-01T13:05:00Z', '', true],
+    ['terça 10h25 (pausa do ciclo)', '2026-12-01T13:25:00Z', '', false],
+    ['terça 10h35 (música de novo)', '2026-12-01T13:35:00Z', '', true],
+    ['terça 19h (fora do expediente)', '2026-12-01T22:00:00Z', '', false],
+    ['terça 7h50 (antes de abrir)', '2026-12-01T10:50:00Z', '', false],
+    ['sábado 9h (expediente)', '2026-12-05T12:00:00Z', '', true],
+    ['sábado 13h (fora do expediente)', '2026-12-05T16:00:00Z', '', false],
+    ['domingo 11h (fechado)', '2026-12-06T14:00:00Z', '', false],
+    ['terça 10h05 com ?som=0', '2026-12-01T13:05:00Z', 'som=0', false]
+  ];
+  for (const [nome, iso, q, esperaTocar] of casos) {
+    const page = await abrirComSom(q, iso);
+    const p = await plays(page);
+    const certo = esperaTocar ? p.length >= 1 && /^audio\/musica\/[a-z0-9-]+\.mp3$/.test(p[0]) : p.length === 0;
+    ok(certo, `${nome}: ${esperaTocar ? 'toca uma faixa do salão' : 'em silêncio'}`, JSON.stringify(p));
+    await page.context().close();
+  }
+  // o ciclo muda com o relógio andando
+  let page = await abrirComSom('', '2026-12-01T13:19:57Z');
+  ok((await plays(page)).length >= 1, 'ciclo: toca às 10h19m57s');
+  await page.clock.runFor(15000);
+  const pausou = await page.evaluate(() => window.__som.pauses);
+  ok(pausou >= 1, 'ciclo: pausa depois das 10h20 (silêncio de 10 min)', `pauses=${pausou}`);
+  await page.context().close();
+  page = await abrirComSom('', '2026-12-01T13:29:57Z');
+  ok((await plays(page)).length === 0, 'ciclo: em silêncio às 10h29m57s');
+  await page.clock.runFor(15000);
+  ok((await plays(page)).length >= 1, 'ciclo: volta a tocar depois das 10h30');
+  await page.context().close();
+  // volume baixo e tecla S
+  page = await abrirComSom('', '2026-12-01T13:05:00Z');
+  await page.clock.runFor(3000);
+  const vol = await page.evaluate(() => window.TV3.som.audio.volume);
+  ok(Math.abs(vol - 0.12) < 0.005, `volume final da trilha é ${vol.toFixed(2)} (esperado 0,12)`);
+  await page.keyboard.press('s');
+  await page.clock.runFor(3000);
+  ok((await page.evaluate(() => window.__som.pauses)) >= 1, 'tecla S desliga a trilha');
+  ok((await page.evaluate(() => localStorage.getItem('fa-tv3-som'))) === '0', 'a escolha fica salva na TV');
+  await page.context().close();
+  // aviso de som bloqueado só dentro do HUD
+  page = await abrirComSom('', '2026-12-01T13:05:00Z', { rejeitar: true });
+  await page.clock.runFor(1000);
+  const aviso = await page.evaluate(() => {
+    const achados = [...document.querySelectorAll('body *')].filter((el) => el.children.length === 0 && !/^(SCRIPT|STYLE)$/.test(el.tagName) && /liberar o som/i.test(el.textContent));
+    return { n: achados.length, tudoNoHud: achados.every((el) => el.closest('.tv-hud')), hudOculto: getComputedStyle(document.querySelector('.tv-hud')).opacity === '0' };
+  });
+  ok(aviso.n === 1 && aviso.tudoNoHud && aviso.hudOculto, 'som bloqueado: o aviso existe só dentro do HUD, que fica oculto para a sala', JSON.stringify(aviso));
+  await page.context().close();
+  // as 20 faixas existem
+  page = await abrir('');
+  const faltam = await page.evaluate(async () => {
+    const r = await Promise.all(window.TV3.FAIXAS.map((u) => fetch(u, { method: 'HEAD' }).then((x) => (x.ok ? null : u)).catch(() => u)));
+    return r.filter(Boolean);
+  });
+  ok(faltam.length === 0, `as ${20} faixas da trilha existem`, faltam.join(','));
+  const n = await page.evaluate(() => window.TV3.FAIXAS.length);
+  ok(n === 20, `a trilha tem ${n} faixas`);
+  await page.context().close();
+}
+
+const testes = { qr: testeQR, motor: testeMotor, layout: testeLayout, copy: testeCopy, audio: testeAudio };
 try {
   for (const [nome, fn] of Object.entries(testes)) if (only === 'todos' || only === nome) await fn();
 } finally {

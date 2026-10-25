@@ -860,6 +860,7 @@
       <button class="tv-hud-btn" id="btnPause">⏸ [Espaço] Pausar</button>
       <button class="tv-hud-btn" id="btnNext">▶ [→] Próximo</button>
       <button class="tv-hud-btn" id="btnRotate">🔄 [R] Girar</button>
+      <button class="tv-hud-btn" id="btnSom">🔊 [S] Som</button>
       <button class="tv-hud-btn" id="btnFull">⛶ [F] Tela Cheia</button>
     </nav>
 
@@ -881,6 +882,9 @@
         beneficioFamilia: 'Família da Clínica tem condição especial no Playground e no Circuito. Pergunte na recepção.',
         wifiSsid: '',                 // vazio = não mostra Wi-Fi. Preencher quando o portal cativo estiver instalado
         fotoGraoPara: '',             // caminho da foto do Grão-Pará (ex.: img/playground-grao-para.webp). Vazio = slide desligado
+        somVolume: 0.12,              // volume da trilha (0 a 1). Baixo de propósito: é fundo, não atração
+        somTocaMin: 20,               // a cada ciclo: minutos de música...
+        somPausaMin: 10,              // ...e minutos de silêncio
         whatsapp: '(91) 99178-2027'   // WhatsApp oficial da Clínica
       };
 
@@ -1384,6 +1388,109 @@
       }
 
       // ======================================================================
+      // TRILHA INSTRUMENTAL (sem voz): 20 faixas do salão em volume baixo.
+      // Só toca no expediente (seg a sex 8h às 18h, sáb 8h às 12h, hora de Belém) e em ciclos de
+      // 20 min de música e 10 min de silêncio. Tecla S liga e desliga; ?som=0|1 força.
+      // As faixas já têm sonoridade uniforme (-11 a -12,4 LUFS), então só o volume é ajustado.
+      // ======================================================================
+      const FAIXAS = [
+        'abraco-de-brincar', 'de-um-lado-pro-outro', 'jardim-de-amigos', 'lugar-de-ser-feliz',
+        'mittens-in-the-toy-chest', 'nosso-recreio', 'nuvem-mansa', 'o-chao-e-sol',
+        'o-chao-e-um-convite', 'o-mundo-e-um-jardim', 'o-nosso-papel', 'o-passo-miudo',
+        'o-playground-da-gente', 'open-palms', 'passo-miudo', 'small-footsteps-on-cedar',
+        'sunlight-on-the-conservatory', 'sunlight-on-the-slide', 'the-highest-arc', 'through-the-garden-gate'
+      ].map((n) => 'audio/musica/' + n + '.mp3');
+      const SOM_CHAVE = 'fa-tv3-som';
+
+      function lerPreferenciaSom() {
+        const q = urlParams.get('som');
+        if (q === '0' || q === '1') return q === '1';
+        try {
+          const v = localStorage.getItem(SOM_CHAVE);
+          if (v === '0' || v === '1') return v === '1';
+        } catch (e) { /* armazenamento bloqueado: segue ligado */ }
+        return true;
+      }
+
+      const som = { on: lerPreferenciaSom(), audio: new Audio(), fila: [], i: 0, bloqueado: false, erros: 0, rampa: null, saindo: false };
+
+      function dentroDoExpediente() {
+        const b = belemNow(), h = b.hours + b.minutes / 60;
+        if (b.weekday >= 1 && b.weekday <= 5) return h >= 8 && h < 18;
+        if (b.weekday === 6) return h >= 8 && h < 12;
+        return false;
+      }
+      function tocaAgora() {
+        if (!som.on || !dentroDoExpediente()) return false;
+        return belemNow().minutes % (CONFIG.somTocaMin + CONFIG.somPausaMin) < CONFIG.somTocaMin;
+      }
+
+      function atualizarBotaoSom() {
+        const btn = document.getElementById('btnSom');
+        if (!btn) return;
+        btn.textContent = som.on && som.bloqueado && tocaAgora() ? '🔇 Toque para liberar o som' : som.on ? '🔊 [S] Som ligado' : '🔇 [S] Som desligado';
+      }
+
+      // sobe ou desce o volume em 2 s, sem corte seco
+      function rampaVolume(alvo, aoFim) {
+        clearInterval(som.rampa);
+        const ini = som.audio.volume;
+        let k = 0;
+        som.rampa = setInterval(() => {
+          k++;
+          som.audio.volume = Math.max(0, Math.min(1, ini + (alvo - ini) * (k / 20)));
+          if (k >= 20) { clearInterval(som.rampa); if (aoFim) aoFim(); }
+        }, 100);
+      }
+
+      function iniciarFaixa() {
+        const p = som.audio.play();
+        if (p && p.then) {
+          p.then(() => { som.bloqueado = false; som.erros = 0; rampaVolume(CONFIG.somVolume); atualizarBotaoSom(); })
+            .catch(() => { som.bloqueado = true; atualizarBotaoSom(); });
+        }
+      }
+      function proximaFaixa() {
+        if (som.i >= som.fila.length) { som.fila = shuffle(FAIXAS); som.i = 0; }
+        som.audio.src = som.fila[som.i++];
+        som.audio.volume = 0;
+        iniciarFaixa();
+      }
+
+      function aplicarSom() {
+        const deve = tocaAgora();
+        if (deve && som.audio.paused) {
+          if (!som.audio.getAttribute('src')) proximaFaixa(); else iniciarFaixa();
+        } else if (!deve && !som.audio.paused && !som.saindo) {
+          som.saindo = true;
+          rampaVolume(0, () => {
+            som.saindo = false;
+            if (!tocaAgora()) som.audio.pause(); else rampaVolume(CONFIG.somVolume); // voltou a valer durante a descida
+          });
+        }
+        atualizarBotaoSom();
+      }
+
+      function toggleSound() {
+        som.on = !som.on;
+        try { localStorage.setItem(SOM_CHAVE, som.on ? '1' : '0'); } catch (e) { /* sem armazenamento */ }
+        aplicarSom();
+      }
+
+      som.audio.addEventListener('ended', () => {
+        som.audio.removeAttribute('src');
+        if (tocaAgora()) proximaFaixa();
+      });
+      som.audio.addEventListener('error', () => {
+        // faixa ausente ou corrompida: pula para a próxima, sem laço infinito
+        if (++som.erros < 25 && tocaAgora()) setTimeout(proximaFaixa, 300);
+      });
+      // o navegador pode segurar o som até o primeiro toque ou tecla: qualquer gesto libera
+      ['pointerdown', 'keydown', 'touchstart', 'click'].forEach((evt) => {
+        window.addEventListener(evt, () => { if (som.bloqueado) aplicarSom(); }, { passive: true });
+      });
+
+      // ======================================================================
       // CONTROLE DE INTERAÇÃO & HUD
       // ======================================================================
       function showHud() {
@@ -1410,6 +1517,8 @@
           rotateStage();
         } else if (e.key === 'f' || e.key === 'F') {
           toggleFullscreen();
+        } else if (e.key === 's' || e.key === 'S') {
+          toggleSound();
         }
       });
 
@@ -1419,6 +1528,7 @@
       document.getElementById('btnPause').addEventListener('click', togglePause);
       document.getElementById('btnRotate').addEventListener('click', rotateStage);
       document.getElementById('btnFull').addEventListener('click', toggleFullscreen);
+      document.getElementById('btnSom').addEventListener('click', toggleSound);
 
       // ?rot=90 ou ?rot=270 (TV deitada)
       if (urlParams.has('rot')) {
@@ -1439,12 +1549,14 @@
       window.addEventListener('orientationchange', fitStage);
 
       // Gancho de teste (scripts/tv3-test.mjs): só existe com ?debug=1
-      if (DEBUG) window.TV3 = { QR, qrSvg, CONFIG, POOL, OV, state, eligible, buildRound, show: (id) => { clearTimeout(slideTimer); showSlide(POOL.filter((x) => x.id === id)[0], true); } };
+      if (DEBUG) window.TV3 = { QR, qrSvg, CONFIG, POOL, OV, state, som, FAIXAS, tocaAgora, dentroDoExpediente, eligible, buildRound, show: (id) => { clearTimeout(slideTimer); showSlide(POOL.filter((x) => x.id === id)[0], true); } };
 
       fitStage();
       applyAmenities();
       updateClock();
       setInterval(updateClock, 1000);
+      aplicarSom();
+      setInterval(aplicarSom, 5000);
       playNext();
 
     })();
