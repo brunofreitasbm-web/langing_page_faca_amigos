@@ -312,6 +312,7 @@ Só o site: nada de migration, função ou secret. Arquivos novos: `familia.html
 1. Antes de ligar a TV, cumprir o checklist de instalação do `PLANO-TV3.md` (celular do responsável cadastrado na avaliação,
    SMS do Portal funcionando, cartão de mesa, resposta da recepção sobre o benefício). Enquanto faltar, usar `?portal=0`.
 2. A Isabella revisa os slides marcados [ISABELLA] em `conteudo/tv3-roteiro-slides.md`.
-3. Na TV, abrir `/tv3` (deitada: `/tv3?rot=90`), tela cheia, e deixar. Chrome em modo quiosque com
+3. Na TV (em pé, 43" ou menos), abrir `/tv3`, tela cheia, e deixar. Se a imagem vier de lado ou de cabeça para baixo,
+   tecla `R` até acertar (fica salvo na TV). Cartão de mesa com o QR de `/familia` em cada assento é obrigatório. Chrome em modo quiosque com
    `--autoplay-policy=no-user-gesture-required` para a trilha tocar sem clique.
 4. Mudar texto ou QR: ver "Como mudar um texto" no `PLANO-TV3.md`.
