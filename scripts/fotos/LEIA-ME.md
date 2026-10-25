@@ -1,15 +1,40 @@
 # Fotos do Drive nas TVs e nas landings
 
-A fotógrafa sobe as fotos na pasta dela no Google Drive. A cada 10 minutos (das 8h às 22h50 de Belém)
-o GitHub Actions roda `scripts/fotos/sync.mjs`, que:
+A fotógrafa sobe as fotos na pasta dela no Google Drive, mais ou menos uma vez por semana. **Toda segunda
+às 8h17** (Belém) o GitHub Actions roda `scripts/fotos/sync.mjs`, que:
 
-1. lista a pasta e as subpastas;
-2. baixa cada foto nova, converte HEIC do iPhone para JPEG e manda uma versão reduzida para a IA (Claude);
-3. a IA diz se é foto de verdade (ou logo, arte, print), o tema (o que a foto mostra), a nota de qualidade, se tem
+1. lista a pasta e as subpastas (só a lista de arquivos, sem custo de IA);
+2. compara com o **catálogo** e separa só as fotos que ainda não estão nele;
+3. baixa cada foto nova, converte HEIC do iPhone para WebP e manda uma versão reduzida para a IA, que diz
+   se é foto de verdade (ou logo, arte, print), o tema (o que a foto mostra), a nota de qualidade, se tem
    criança reconhecível, se tem algo sensível, e escreve o texto alternativo e a copy da TV;
-4. `regras.mjs` decide o destino e publica no Supabase Storage (bucket `fotos-site`);
-5. as páginas leem `fotos-site/manifest.json` sozinhas: TVs a cada 10 min, landings a cada visita.
-   Não precisa de deploy nem de commit.
+4. grava a resposta no catálogo e publica no Supabase Storage (bucket `fotos-site`) o que pode ir ao ar;
+5. as páginas leem `fotos-site/manifest.json` sozinhas (TVs a cada hora, landings a cada visita). Não
+   precisa de deploy nem de commit.
+
+**Fotógrafa subiu fotos e você não quer esperar a segunda?** GitHub → Actions → Fotos do Drive →
+**Run workflow**. Vale também para tirar uma foto do ar na hora.
+
+### Catálogo
+
+O catálogo (`estado.json`, no bucket privado `fotos-estado`) guarda, para cada foto já lida, a resposta da
+IA, pela "impressão digital" do arquivo (md5). Por isso:
+
+- cada foto é lida pela IA **uma vez só**, para sempre. A rodada de uma semana sem fotos novas não chama a IA;
+- mover uma foto entre pastas (para `Aprovadas`, por exemplo) não gera nova leitura;
+- a mesma foto duplicada em duas pastas conta como uma;
+- numa sessão grande, o catálogo é salvo a cada 10 fotos: se a rodada cair no meio, a seguinte continua
+  de onde parou, sem pagar a IA de novo.
+
+### Rodízio
+
+O catálogo só cresce, então as telas fazem rodízio para as fotos antigas voltarem a aparecer:
+
+- **fotos da última semana** sempre entram;
+- o resto do catálogo é sorteado **uma vez por dia**: o mesmo dia mostra a mesma seleção em qualquer tela,
+  e no dia seguinte entram outras. As TVs recarregam de madrugada e pegam o sorteio novo;
+- tv2: até 20 fotos por dia, além dos slides fixos. Landings: até 6 (Circuito e hub) e 4 (Playground);
+- tv e tv3: cada volta de slides começa por outra foto de cada tema.
 
 ## Onde cada foto aparece
 
@@ -42,17 +67,16 @@ A IA dá um **tema** a cada foto, pelo que ela mostra (não pelo lugar onde foi 
 | Arquivo de alguém fora de `FOTOS_DONOS` | não | não |
 
 **Aprovar para o site:** crie uma subpasta chamada `Aprovadas` dentro da pasta da fotógrafa e arraste (ou
-copie) a foto para lá. Em até 10 minutos ela entra em:
+copie) a foto para lá. Na próxima rodada (segunda, ou na hora pelo Run workflow) ela entra em:
 
 - `/circuito`, no começo da galeria "Vem ver de perto" (fotos do Circuito, até 6);
 - `/playground`, na galeria "Vem ver o nosso espaço", depois da foto da fachada (Playground e equipe, até 4);
 - `/` (hub), na seção "Momentos recentes", que só aparece quando houver 3 ou mais aprovadas (até 6, todas as unidades).
 
 **Tirar do ar:** apague a foto do Drive, ou mova para uma subpasta `Recusadas` (também vale `Não usar`,
-`Ignorar`, `Privado`). Na rodada seguinte ela sai das TVs e do site, e os arquivos são apagados do
+`Ignorar`, `Privado`). Na próxima rodada ela sai das TVs e do site, e os arquivos são apagados do
 Storage de verdade. Para tirar só do site, tire de `Aprovadas`.
 
-Fotos repetidas (mesmo arquivo em duas pastas) contam como uma só.
 
 ## Configuração (uma vez)
 
@@ -99,7 +123,7 @@ GitHub → **Actions → Fotos do Drive (TVs e landings) → Run workflow**. O r
 foto nova, a unidade e o destino (ou o motivo de ter ficado de fora). Depois disso roda sozinho.
 
 Opcional: a variável (não segredo) `FOTOS_MAX_POR_RODADA` limita quantas fotos novas a IA vê por rodada
-(padrão 25). Numa pasta com centenas de fotos, a primeira carga leva algumas rodadas.
+(padrão 200, uns 50 minutos de rodada). O que passar disso fica para a rodada seguinte.
 
 ## Quando algo dá errado
 

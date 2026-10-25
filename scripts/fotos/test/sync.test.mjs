@@ -129,3 +129,46 @@ test('sem FOTOS_DONOS não roda', async () => {
   const c = cenario(() => []);
   await assert.rejects(sincronizar({ ...c, storage: storageFalso(), imagem, config: { maxPorRodada: 1 } }), /FOTOS_DONOS/);
 });
+
+test('catálogo: falha ao publicar não faz a IA reler as fotos', async () => {
+  const storage = storageFalso();
+  const muitas = Array.from({ length: 25 }, (_, i) => arq(`carro${i}`, `mm${i}`));
+  const c = cenario(() => muitas);
+  // a publicação falha depois da classificação
+  const gravarOriginal = storage.gravar;
+  storage.gravar = async (b, cam, ...r) => { if (cam.startsWith('img/')) throw new Error('runner perdido'); return gravarOriginal(b, cam, ...r); };
+  const r1 = await sincronizar({ ...c, storage, imagem, config, log: () => {} });
+  assert.equal(c.chamadas.classificar, 25);
+  assert.ok(r1.resumo.erros.length > 0);
+  storage.gravar = gravarOriginal;
+  const r2 = await sincronizar({ ...c, storage, imagem, config, log: () => {} });
+  assert.equal(c.chamadas.classificar, 25, 'nenhuma foto relida pela IA');
+  assert.equal(r2.manifesto.length, 25);
+});
+
+test('catálogo: salvamento parcial a cada 10 fotos', async () => {
+  const storage = storageFalso();
+  const muitas = Array.from({ length: 25 }, (_, i) => arq(`carro${i}`, `pp${i}`));
+  const c = cenario(() => muitas);
+  const tamanhos = [];
+  const gravarOriginal = storage.gravar;
+  storage.gravar = async (b, cam, dados, ...r) => {
+    if (cam === 'estado.json') tamanhos.push(Object.keys(JSON.parse(dados.toString()).fotos).length);
+    return gravarOriginal(b, cam, dados, ...r);
+  };
+  await sincronizar({ ...c, storage, imagem, config, log: () => {} });
+  assert.deepEqual(tamanhos, [10, 20, 25]);
+});
+
+test('catálogo: segunda semana só chama a IA para as fotos novas', async () => {
+  const storage = storageFalso();
+  let lista = Array.from({ length: 12 }, (_, i) => arq(`carro${i}`, `sem1-${i}`));
+  const c = cenario(() => lista);
+  await sincronizar({ ...c, storage, imagem, config, log: () => {} });
+  assert.equal(c.chamadas.classificar, 12);
+  lista = lista.concat(Array.from({ length: 3 }, (_, i) => arq(`carro${i + 50}`, `sem2-${i}`)));
+  const r = await sincronizar({ ...c, storage, imagem, config, log: () => {} });
+  assert.equal(c.chamadas.classificar, 15);
+  assert.equal(r.resumo.novas.length, 3);
+  assert.equal(r.manifesto.length, 15);
+});

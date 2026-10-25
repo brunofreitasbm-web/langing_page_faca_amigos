@@ -1,12 +1,13 @@
 name: Fotos do Drive (TVs e landings)
 
-# Lê a pasta da fotógrafa no Google Drive, classifica as fotos novas com IA e publica no Supabase
-# Storage (bucket fotos-site), de onde as TVs e as landings leem o manifest.json. Não faz commit
-# nem deploy: as páginas buscam o manifesto sozinhas. Configuração em scripts/fotos/LEIA-ME.md.
+# Lê a pasta da fotógrafa no Google Drive, classifica só as fotos que ainda não estão no catálogo e
+# publica no Supabase Storage (bucket fotos-site), de onde as TVs e as landings leem o manifest.json.
+# Não faz commit nem deploy. Configuração em scripts/fotos/LEIA-ME.md.
 on:
   schedule:
-    # A cada 10 min, das 8h às 22h50 de Belém (UTC-3). O GitHub pode atrasar alguns minutos.
-    - cron: '*/10 11-23,0-1 * * *'
+    # Toda segunda às 8h17 de Belém (UTC-3). A fotógrafa sobe fotos ~1x por semana; para publicar
+    # ou tirar do ar na hora, use "Run workflow" (Actions → Fotos do Drive).
+    - cron: '17 11 * * 1'
   workflow_dispatch:
     inputs:
       permitir_remocao_em_massa:
@@ -24,7 +25,8 @@ concurrency:
 jobs:
   sincronizar:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    # ~15 s por foto nova: 200 fotos cabem com folga. O catálogo é salvo a cada 10 fotos.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:

@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 // Sincroniza a pasta da fotógrafa no Google Drive com as TVs (tv, tv2, tv3) e as landings.
-// Roda a cada 10 minutos no GitHub Actions (.github/workflows/fotos-drive.yml). Passo a passo de
-// configuração em scripts/fotos/LEIA-ME.md.
+// Roda uma vez por semana no GitHub Actions (.github/workflows/fotos-drive.yml), ou na hora pelo
+// botão "Run workflow". Passo a passo de configuração em scripts/fotos/LEIA-ME.md.
+//
+// O catálogo (estado.json, bucket privado) guarda a classificação de cada foto já lida, pela chave
+// do conteúdo (md5). A IA só vê foto que não está no catálogo; mover entre pastas não relê.
 //
 // Fluxo de cada rodada:
 //   1. lista a pasta (e subpastas) no Drive;
@@ -19,6 +22,7 @@ import {
 import { BUCKET_PRIVADO, BUCKET_PUBLICO } from './storage.mjs';
 
 const MAX_TENTATIVAS = 3;
+const SALVAR_A_CADA = 10; // fotos classificadas entre um salvamento do catálogo e outro
 const LIMITE_BYTES = 80 * 1024 * 1024;
 
 export async function sincronizar({ drive, storage, classificar, imagem, config, log = console.log }) {
@@ -71,6 +75,10 @@ export async function sincronizar({ drive, storage, classificar, imagem, config,
         fotos[g.chave] = { ...registro, status: 'classificada', c: normalizarClassificacao(r.dados) };
       }
       resumo.novas.push(g.chave);
+      // Salva o catálogo no meio da rodada: se o job cair (timeout, runner), a IA não relê o que já leu.
+      if (resumo.novas.length % SALVAR_A_CADA === 0) {
+        await storage.gravar(BUCKET_PRIVADO, 'estado.json', Buffer.from(JSON.stringify(estado)), 'application/json', 'no-cache');
+      }
     } catch (e) {
       fotos[g.chave] = { ...registro, status: 'erro', erro: String(e.message).slice(0, 300) };
       resumo.erros.push(`${arq.name}: ${e.message}`);
@@ -180,7 +188,7 @@ async function main() {
     imagem,
     config: {
       donos: env.FOTOS_DONOS,
-      maxPorRodada: Number(env.FOTOS_MAX_POR_RODADA) || 25,
+      maxPorRodada: Number(env.FOTOS_MAX_POR_RODADA) || 200,
       permitirRemocaoEmMassa: env.FOTOS_PERMITIR_REMOCAO_EM_MASSA === '1',
     },
   });

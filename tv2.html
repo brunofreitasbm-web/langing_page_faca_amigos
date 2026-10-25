@@ -790,11 +790,14 @@
       // balcão ou do playground nunca. Entram no sorteio junto com as fixas, com a copy que a IA
       // escreveu no estilo acima; se a fotógrafa apagar ou recusar, saem na próxima volta.
       // ----------------------------------------------------------------------
-      const FOTOS_MAX = 20; // as 20 mais recentes, para as fixas não sumirem do sorteio
-      function syncFotos(fotos) {
-        const ativas = new Set(fotos.slice(0, FOTOS_MAX).map(f => f.id));
+      // Até 20 por dia, para as fixas não sumirem do sorteio: as da última semana e um rodízio diário
+      // do resto do catálogo (FAFotos.doDia). A TV recarrega toda madrugada e pega o rodízio novo.
+      const FOTOS_MAX = 20;
+      function syncFotos(todas) {
+        const fotos = FAFotos.doDia(todas, FOTOS_MAX);
+        const ativas = new Set(fotos.map(f => f.id));
         SLIDES.forEach(s => { if (s.fotoId) s.off = !ativas.has(s.fotoId); });
-        fotos.slice(0, FOTOS_MAX).forEach(f => {
+        fotos.forEach(f => {
           if (SLIDES.some(s => s.fotoId === f.id)) return;
           const s = {
             fotoId: f.id, image: f.webp.replace(/\.webp$/, ''), pos: f.pos,

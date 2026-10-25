@@ -7,6 +7,7 @@
  * window.FAFotos.carregar({ site: true, unidades })  → Promise<[foto]> só as aprovadas para o site
  * window.FAFotos.vigiar(filtro, fn, ms)              → chama fn(fotos) agora e de novo a cada `ms` quando mudar
  * window.FAFotos.sorteio()                           → { atualizar(fotos), novaVolta(), pegar(tema, aceita) }
+ * window.FAFotos.doDia(fotos, n)                     → n fotos: as da última semana primeiro, o resto em rodízio diário
  * window.FAFotos.temaDaImagem('img/hero-piscina-bolinhas.webp') → 'piscina_bolinhas'
  *
  * Cada foto: { id, webp, jpg, webpP, w, h, tema, unidade, alt, rotulo, legenda, kicker, headline, plano, sfx, pos }
@@ -36,7 +37,8 @@
       id: f.id, w: f.w, h: f.h, tema: f.tema, unidade: f.unidade, tv: !!f.tv, site: f.site,
       webp: BASE + f.src + '.webp', jpg: BASE + f.src + '.jpg', webpP: BASE + f.src + '-p.webp',
       alt: f.alt || '', rotulo: f.rotulo || '', legenda: f.legenda || '',
-      kicker: f.kicker || '', headline: f.headline || '', plano: f.plano, sfx: f.sfx, pos: f.pos || '50% 45%'
+      kicker: f.kicker || '', headline: f.headline || '', plano: f.plano, sfx: f.sfx, pos: f.pos || '50% 45%',
+      adicionada: f.adicionada || ''
     };
   }
 
@@ -64,7 +66,8 @@
       });
     }
     rodada();
-    if (!desligado) setInterval(rodada, ms || 10 * 60 * 1000);
+    // O catálogo muda ~1x por semana: uma consulta por hora basta.
+    if (!desligado) setInterval(rodada, ms || 60 * 60 * 1000);
   }
 
   /* Escapa texto puro para atributo/HTML (use no alt). Rótulo, legenda, kicker e headline já vêm do
@@ -95,8 +98,31 @@
   /* Distribui as fotos novas pelos slides: pegar(tema) devolve a próxima foto daquele tema ainda não
      usada nesta volta (ou null, e o slide fica com a foto fixa). O cursor por tema anda a cada volta,
      então com várias fotos do mesmo tema cada volta mostra outras. */
+  function diaBelem() { return Math.floor((Date.now() - 3 * 3600000) / 86400000); }
+
+  /* Rodízio do catálogo: as fotos da última semana sempre entram; as outras são embaralhadas com o dia
+     como semente, então o mesmo dia mostra as mesmas (em qualquer tela e a cada recarga) e o dia
+     seguinte mostra outras. Assim as fotos antigas do catálogo voltam a aparecer. */
+  function doDia(fotos, n) {
+    var hoje = diaBelem();
+    var semana = hoje - 7;
+    var novas = [], resto = [];
+    fotos.forEach(function (f) {
+      var dia = Math.floor((Date.parse(f.adicionada) - 3 * 3600000) / 86400000);
+      (dia > semana ? novas : resto).push(f);
+    });
+    var semente = hoje;
+    function aleatorio() { semente = (semente * 1103515245 + 12345) % 2147483648; return semente / 2147483648; }
+    for (var i = resto.length - 1; i > 0; i--) {
+      var j = Math.floor(aleatorio() * (i + 1));
+      var t = resto[i]; resto[i] = resto[j]; resto[j] = t;
+    }
+    return novas.concat(resto).slice(0, n);
+  }
+
   function sorteio() {
-    var fotos = [], usadas = {}, cursor = {};
+    // Cursor começa no dia de hoje: cada dia começa por outras fotos de cada tema, e não sempre pelas mesmas.
+    var fotos = [], usadas = {}, cursor = {}, inicio = diaBelem();
     return {
       atualizar: function (lista) { fotos = lista || []; },
       novaVolta: function () { usadas = {}; },
@@ -104,7 +130,7 @@
         if (!tema) return null;
         var c = fotos.filter(function (f) { return f.tema === tema && !usadas[f.id] && (!aceita || aceita(f)); });
         if (!c.length) return null;
-        cursor[tema] = (cursor[tema] || 0) + 1;
+        cursor[tema] = (cursor[tema] === undefined ? inicio : cursor[tema]) + 1;
         var f = c[cursor[tema] % c.length];
         usadas[f.id] = true;
         return f;
@@ -126,7 +152,7 @@
     opcoes = opcoes || {};
     if (!grade) return Promise.resolve(0);
     return carregar(filtro).then(function (fotos) {
-      fotos = fotos.slice(0, opcoes.max || 6);
+      fotos = doDia(fotos, opcoes.max || 6);
       if (!fotos.length) return 0;
       var html = fotos.map(figuraHtml).join('');
       if (opcoes.onde === 'inicio') grade.insertAdjacentHTML('afterbegin', html);
@@ -138,7 +164,7 @@
 
   window.FAFotos = {
     carregar: carregar, vigiar: vigiar, galeria: galeria, figuraHtml: figuraHtml, esc: esc, base: BASE,
-    temaDaImagem: temaDaImagem, sorteio: sorteio,
+    temaDaImagem: temaDaImagem, sorteio: sorteio, doDia: doDia,
     // tv2 é exclusiva do Circuito: só carrinho ou pelúcia andando (igual a TEMAS_TV2 em scripts/fotos/regras.mjs)
     TEMAS_TV2: ['crianca_dirigindo', 'pelucia_motorizada', 'frota_carrinhos']
   };
