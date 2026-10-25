@@ -216,7 +216,6 @@
     .tv-clock-date {
       font-size: 13px;
       font-weight: 800;
-      text-transform: capitalize;
       color: var(--teal-soft);
       line-height: 1.2;
     }
@@ -333,8 +332,8 @@
 
     .tv-headline {
       font-family: var(--font-display);
-      font-size: clamp(34px, 2.6vw, 48px);
-      line-height: 1.18;
+      font-size: clamp(40px, 2.9vw, 56px);
+      line-height: 1.16;
       color: var(--white);
       margin-bottom: 14px;
       text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
@@ -347,7 +346,7 @@
     }
 
     .tv-subtext {
-      font-size: 20px;
+      font-size: 23px;
       font-weight: 600;
       line-height: 1.45;
       color: rgba(255, 255, 255, 0.94);
@@ -397,7 +396,7 @@
     }
 
     .tv-action-desc {
-      font-size: 17px;
+      font-size: 19px;
       font-weight: 600;
       color: var(--ink-soft);
       line-height: 1.4;
@@ -406,19 +405,21 @@
     /* QR CODE CONTAINER */
     .tv-qr-wrapper {
       display: flex;
+      flex-direction: column;
+      text-align: center;
       align-items: center;
-      gap: 24px;
+      gap: 16px;
       background: var(--white);
-      padding: 24px;
+      padding: 20px 24px;
       border-radius: 28px;
       box-shadow: 0 10px 30px rgba(6, 82, 100, 0.1);
       border: 1.5px solid rgba(6, 82, 100, 0.12);
-      margin: 20px 0;
+      margin: 14px 0;
     }
 
     .tv-qr-box {
-      width: 150px;
-      height: 150px;
+      width: 270px;
+      height: 270px;
       flex-shrink: 0;
       background: var(--white);
       border-radius: 16px;
@@ -436,25 +437,26 @@
     .tv-qr-text {
       display: flex;
       flex-direction: column;
+      align-items: center;
       gap: 6px;
     }
 
     .tv-qr-callout {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 24px;
       color: var(--pink);
       line-height: 1.15;
     }
 
     .tv-qr-instructions {
-      font-size: 15px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--petrol-deep);
       line-height: 1.35;
     }
 
     .tv-qr-subhint {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--ink-soft);
     }
@@ -476,7 +478,7 @@
     }
 
     .tv-highlight-text {
-      font-size: 15px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--petrol-deep);
       line-height: 1.35;
@@ -501,13 +503,13 @@
     }
 
     .tv-step-num {
-      width: 38px;
-      height: 38px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       background: var(--yellow);
       color: var(--petrol-deep);
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 26px;
       display: grid;
       place-items: center;
       flex-shrink: 0;
@@ -521,13 +523,13 @@
     }
 
     .tv-step-body strong {
-      font-size: 16px;
+      font-size: 22px;
       color: var(--white);
       line-height: 1.2;
     }
 
     .tv-step-body span {
-      font-size: 13.5px;
+      font-size: 17px;
       color: rgba(255, 255, 255, 0.9);
       font-weight: 600;
     }
@@ -703,6 +705,93 @@
       background: var(--pink);
       transform: scale(1.05);
     }
+
+    /* ==========================================================================
+       LAYOUTS DA TV3: padrão (com ou sem QR), tutorial, respiro, mock, comparativo
+       ========================================================================== */
+    .tv-slide.solo { grid-template-columns: 1fr; }
+    .tv-slide.solo .tv-headline { font-size: 64px; max-width: 84%; }
+    .tv-slide.solo .tv-subtext { font-size: 30px; max-width: 76%; line-height: 1.4; }
+    .tv-slide.solo .tv-kicker { font-size: 18px; padding: 10px 22px; }
+
+    .tv-slide.tutorial { grid-template-columns: 1.05fr 0.95fr; }
+    .tv-slide.tutorial .tv-tutorial-steps { gap: 14px; margin-top: 22px; }
+    .tv-slide.tutorial .tv-step-item { padding: 16px 22px; }
+
+    .tv-action-card.tutorial {
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 18px;
+      padding: 32px 36px;
+    }
+    .tv-qr-big {
+      background: var(--white);
+      border-radius: 30px;
+      padding: 6px;
+      line-height: 0;
+      box-shadow: 0 14px 38px rgba(6, 82, 100, 0.18);
+      border: 1.5px solid rgba(6, 82, 100, 0.12);
+    }
+    .tv-qr-big svg { width: 348px; height: 348px; border-radius: 22px; }
+    .tv-action-card.tutorial .tv-qr-callout { font-size: 34px; }
+    .tv-action-card.tutorial .tv-qr-instructions { font-size: 21px; }
+    .tv-action-card.tutorial .tv-qr-subhint { font-size: 17px; }
+
+    /* QR normal: svg preenche a caixa */
+    .tv-qr-box svg { width: 100%; height: 100%; border-radius: 10px; }
+
+    /* Respiro: foto cheia e uma frase */
+    .tv-slide.respiro .tv-image-overlay {
+      background: linear-gradient(180deg, rgba(3, 45, 55, 0.05) 0%, rgba(3, 45, 55, 0.35) 55%, rgba(3, 45, 55, 0.9) 100%);
+    }
+    .tv-quote {
+      font-family: var(--font-display);
+      font-size: 62px;
+      line-height: 1.2;
+      max-width: 72%;
+      color: var(--white);
+      text-shadow: 0 4px 18px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Mock do cabeçalho do Portal (reconhecimento no celular) */
+    .tv-mock {
+      margin-top: 22px;
+      max-width: 660px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.32);
+    }
+    .tv-mock-head {
+      background: linear-gradient(120deg, var(--pink) 0%, var(--petrol-deep) 62%, #1A3F35 100%);
+      color: var(--white);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: var(--font-display);
+      font-size: 30px;
+    }
+    .tv-mock-head em { color: var(--yellow); font-style: normal; }
+    .tv-mock-tabs { display: flex; gap: 10px; padding: 16px 20px; flex-wrap: wrap; }
+    .tv-mock-tabs span {
+      background: var(--petrol-soft);
+      color: var(--petrol);
+      font-weight: 900;
+      font-size: 19px;
+      border-radius: 999px;
+      padding: 8px 18px;
+    }
+
+    /* Comparativo neutro (WhatsApp x Portal): nenhum lado é "o errado" */
+    .tv-vs-box.left { background: rgba(255, 255, 255, 0.14); border: 1.5px solid rgba(255, 255, 255, 0.35); }
+    .tv-vs-box.right { background: rgba(46, 207, 181, 0.25); border: 1.5px solid rgba(46, 207, 181, 0.6); }
+    .tv-vs-box.left .tv-vs-header { color: var(--white); }
+    .tv-vs-box.right .tv-vs-header { color: #A7F3D0; }
+    .tv-vs-header { font-size: 17px; }
+    .tv-vs-list { font-size: 19px; gap: 9px; }
+    .tv-vs-box { padding: 18px 22px; }
   </style>
 </head>
 
@@ -785,7 +874,13 @@
       // ======================================================================
       const CONFIG = {
         experiment: 'base-2026-12',   // rótulo do experimento (formato <o-que-mudou>-AAAA-MM)
+        roundMin: 10,                 // alvo de duração de uma volta, em minutos
+        maxCopias: 2,                 // quantas vezes um slide com weight pode aparecer por volta
+        cadenciaPortalSeg: 360,       // no máximo 6 min sem QR do Portal na tela
+        portalAtivo: true,            // false esconde a família A (use enquanto o Portal não estiver liberado)
+        beneficioFamilia: 'Família da Clínica tem condição especial no Playground e no Circuito. Pergunte na recepção.',
         wifiSsid: '',                 // vazio = não mostra Wi-Fi. Preencher quando o portal cativo estiver instalado
+        fotoGraoPara: '',             // caminho da foto do Grão-Pará (ex.: img/playground-grao-para.webp). Vazio = slide desligado
         whatsapp: '(91) 99178-2027'   // WhatsApp oficial da Clínica
       };
 
@@ -810,379 +905,80 @@
       }
       function calculateCurrentCycleDay() { return (belemNow().dayIndex % 5) + 1; }
 
-      const SLIDE_DURATION = 14000; // 14 segundos por slide (provisório até o motor de voltas)
-
-      const SLIDES = [
-        // 1. ACOLHIMENTO CLÍNICO
-        {
-          id: 'clinica_tempo',
-          kicker: '💙 Acolhimento e Afeto',
-          kickerClass: 'teal',
-          headline: 'Cada conquista tem seu <em>ritmo</em>.',
-          subtext: 'Na Clínica FaçaAmigos, respeitamos o tempo e a individualidade do seu filho. Cada evolução em sala é comemorada como uma grande vitória.',
-          image: 'img/clinica-atividade-pedagogica.webp',
-          badge: 'Clínica FaçaAmigos',
-          actionTitle: 'Terapia Comportamental',
-          actionDesc: 'Equipe multidisciplinar alinhada para desenvolver autonomia, linguagem e socialização.',
-          qr: 'clinica',
-          qrTitle: 'Conheça nossos métodos',
-          qrDesc: 'Aponte a câmera do celular para ler mais sobre o nosso plano terapêutico.',
-          qrHint: 'Psicologia ABA • Fono • TO',
-          highlightIcon: '🌱',
-          highlightText: 'Ambiente estruturado com foco no bem-estar emocional de toda a família.'
-        },
-
-        // 2. TUTORIAL: MURAL DA FAMÍLIA (ACESSO PASSO A PASSO)
-        {
-          id: 'mural_tutorial',
-          kicker: '📱 Portal Exclusivo da Família',
-          kickerClass: 'pink',
-          headline: 'O acompanhamento do seu filho na <em>palma da mão</em>.',
-          subtext: 'Acesse o Mural da Família enquanto aguarda na sala de espera em 3 passos simples:',
-          image: 'img/inclusao-cantinho-leitura.webp',
-          steps: [
-            { num: '1', title: 'Aponte a Câmera', desc: 'Escaneie o QR Code ao lado no seu celular' },
-            { num: '2', title: 'Digite seu CPF', desc: 'Use o mesmo CPF informado no cadastro da clínica' },
-            { num: '3', title: 'Acesse o Mural', desc: 'Pronto! Acompanhe fotos, recados e evoluções em tempo real' }
-          ],
-          badge: 'Sistema da Clínica',
-          actionTitle: 'Mural da Família',
-          actionDesc: 'Acesso direto, sem baixar aplicativo pesado na loja. Funciona na hora no navegador!',
-          qr: 'portal',
-          qrTitle: 'Acessar agora mesmo',
-          qrDesc: 'Aponte a câmera do seu celular para fazer login direto com seu CPF.',
-          qrHint: 'sistema.institutofacaamigos.com.br',
-          highlightIcon: '⚡',
-          highlightText: 'Dica: adicione à tela inicial do celular como um atalho rápido.'
-        },
-
-        // 3. COMPARATIVO PERSUASIVO: MURAL VS WHATSAPP MANUAL
-        {
-          id: 'mural_vantagens',
-          kicker: '⚡ Canal Oficial e Direto',
-          kickerClass: 'teal',
-          headline: 'Mural da Família <em>vs</em> WhatsApp Manual',
-          subtext: 'Por que usar o sistema próprio da clínica é muito mais rápido, seguro e eficiente:',
-          image: 'img/equipe-recepcao.webp',
-          comparativo: {
-            bad: {
-              header: '⚠️ WhatsApp / E-mail Manual',
-              items: [
-                'Mensagens se perdem no fluxo do dia',
-                'Demora na triagem manual de recados',
-                'Sem registro oficial no prontuário'
-              ]
-            },
-            good: {
-              header: '✨ Mural da Família Oficial',
-              items: [
-                'Canal direto com a coordenação clínica',
-                'Evoluções que o terapeuta alimenta na hora',
-                'Histórico seguro 24h com proteção LGPD'
-              ]
-            }
-          },
-          badge: 'Comunicação Direta',
-          actionTitle: 'Fale com a Coordenação',
-          actionDesc: 'Dúvidas sobre o plano, justificativas de ausência e avisos com resposta garantida.',
-          qr: 'portal',
-          qrTitle: 'Conecte-se ao Mural',
-          qrDesc: 'Veja as mensagens com o selo "✓ Resposta Recebida" da coordenação.',
-          qrHint: 'Sem filas e sem espera',
-          highlightIcon: '🛡️',
-          highlightText: 'Mais velocidade e respeito pelo tempo precioso da sua família.'
-        },
-
-        // 4. ENVIO DE DOCUMENTOS E LAUDOS
-        {
-          id: 'mural_documentos',
-          kicker: '📄 Envio Rápido de Documentos',
-          kickerClass: 'pink',
-          headline: 'Envie laudos e exames <em>sem burocracia</em>.',
-          subtext: 'Tire uma foto do laudo médico, guia do plano ou receita e anexe direto no sistema pelo celular:',
-          image: 'img/clinica-recursos-terapeuticos.webp',
-          steps: [
-            { num: '1', title: 'Clique em Enviar', desc: 'No Mural, toque em "Enviar documento para a clínica"' },
-            { num: '2', title: 'Tire Foto ou Anexe', desc: 'Envie foto ou PDF direto da galeria do seu celular' },
-            { num: '3', title: 'Equipe Notificada', desc: 'O documento já entra no prontuário para a equipe clínica analisar' }
-          ],
-          badge: 'Prontuário Digital',
-          actionTitle: 'Zero Papel e Deslocamento',
-          actionDesc: 'Não precisa imprimir nem ir à recepção: laudos e relatórios atualizados com 1 toque.',
-          qr: 'portal',
-          qrTitle: 'Anexar documento agora',
-          qrDesc: 'Acesse com seu CPF e envie pendências enquanto aguarda na sala.',
-          qrHint: 'Seguro • Confidencial • LGPD',
-          highlightIcon: '📁',
-          highlightText: 'Baixe relatórios devolutivos e declarações liberadas a qualquer momento.'
-        },
-
-        // 5. FOTO DA CRIANÇA NO MURAL DA CLÍNICA
-        {
-          id: 'mural_foto',
-          kicker: '💛 Seu Filho no Nosso Mural',
-          kickerClass: 'teal',
-          headline: 'Envie a fotinho dele para o <em>nosso mural</em>.',
-          subtext: 'No Mural da Família você anexa uma foto recente da criança. Ela aparece no mural da recepção e ajuda toda a equipe a acolher com carinho logo na chegada!',
-          image: 'img/clinica-painel-sensorial.webp',
-          badge: 'Acolhimento da Equipe',
-          actionTitle: 'Cantinho Especial',
-          actionDesc: 'Toda a equipe reconhece na hora quem é quem quando vocês chegam.',
-          qr: 'portal',
-          qrTitle: 'Enviar foto no portal',
-          qrDesc: 'Leva menos de 1 minuto para carregar a foto no perfil da criança.',
-          qrHint: 'Participação voluntária',
-          highlightIcon: '📸',
-          highlightText: 'Momentos especiais compartilhados entre os terapeutas e os pais.'
-        },
-
-        // 6. MARKETING DO MAPEAMENTO GRÁTIS (CALL TO ACTION CENTRAL)
-        {
-          id: 'mapeamento_gratis_1',
-          kicker: '📝 Aproveite o seu tempo de espera',
-          kickerClass: 'pink',
-          headline: 'Faça o <em>Mapeamento Grátis</em> no celular.',
-          subtext: 'Enquanto aguarda a sessão, descubra um retrato detalhado sobre o desenvolvimento do seu filho em cerca de 5 minutos.',
-          image: 'img/ambiente-sensorial.webp',
-          badge: 'Questionário Online',
-          actionTitle: 'Mapeamento Comportamental',
-          actionDesc: '100% gratuito, sem diagnósticos precipitados ou julgamentos. Um guia inicial claro para a sua família.',
-          qr: 'teste',
-          qrTitle: 'Começar agora mesmo',
-          qrDesc: 'Escaneie o QR Code e preencha direto no seu celular. O resultado chega no seu e-mail.',
-          qrHint: 'Leva apenas 5 minutos',
-          highlightIcon: '⏱️',
-          highlightText: 'Mais de 1.000 famílias em Belém já realizaram o mapeamento do FaçaAmigos.'
-        },
-
-        // 3. PUBLICIDADE: PLAYGROUND PARQUE SHOPPING
-        {
-          id: 'play_parque',
-          kicker: '🎈 Lazer Inclusivo em Belém',
-          kickerClass: 'teal',
-          headline: 'O playground feito para <em>todas as crianças</em>.',
-          subtext: 'No Parque Shopping Belém, um espaço adaptado, seguro e acolhedor onde seu filho brinca com respeito às suas necessidades sensoriais.',
-          image: 'img/playground-piscina-casinha.webp',
-          badge: 'Parque Shopping Belém',
-          actionTitle: 'Playground Adaptado',
-          actionDesc: 'Monitores treinados, piscina de bolinhas sensorial e espaço para o brincar livre.',
-          qr: 'playground',
-          qrTitle: 'Ver localização e fotos',
-          qrDesc: 'Térreo, próximo às Lojas Americanas. Aberto todos os dias das 10h às 22h.',
-          qrHint: 'Sem agendamento • É só chegar',
-          highlightIcon: '🧸',
-          highlightText: 'Você senta, toma um café e acompanha de perto com total tranquilidade.'
-        },
-
-        // 4. CORPO CLÍNICO E MÉTODO
-        {
-          id: 'clinica_equipe',
-          kicker: '👩‍⚕️ Rigor Técnico e Cuidado',
-          kickerClass: 'teal',
-          headline: 'Coordenação com <em>olhar humano</em>.',
-          subtext: 'Supervisão técnica sob a liderança da psicóloga infantil Isabella Gonçalves Freitas (CRP 10/4727), unindo ciência do comportamento e acolhimento.',
-          image: 'img/isabella-2.webp',
-          badge: 'Direção Clínica',
-          actionTitle: 'Plano Terapêutico Singular',
-          actionDesc: 'Metas personalizadas e reavaliações periódicas para acompanhar o progresso real da criança.',
-          qr: 'clinica',
-          qrTitle: 'Fale com a nossa equipe',
-          qrDesc: 'Tire dúvidas sobre os relatórios de evolução e orientações para a rotina de casa.',
-          qrHint: 'Atendimento humanizado',
-          highlightIcon: '🤝',
-          highlightText: 'Diálogo aberto com a família e integração direta com a escola.'
-        },
-
-        // 5. PUBLICIDADE: PLAYGROUND SHOPPING BOSQUE GRÃO-PARÁ
-        {
-          id: 'play_grao_para',
-          kicker: '✨ Nova Unidade no Bosque',
-          kickerClass: 'pink',
-          headline: 'Playground no <em>Shopping Grão-Pará</em>.',
-          subtext: 'Agora você também encontra a diversão inclusiva do FaçaAmigos no Shopping Bosque Grão-Pará, com a mesma equipe dedicada e acolhedora.',
-          image: 'img/playground-fachada-recepcao.webp',
-          badge: 'Bosque Grão-Pará',
-          actionTitle: '1º Piso (em frente à Renner)',
-          actionDesc: 'Ambiente climatizado, seguro e estruturado para o desenvolvimento psicomotor.',
-          qr: 'playground',
-          qrTitle: 'Horários do Grão-Pará',
-          qrDesc: 'Segunda a Sábado das 10h às 22h • Domingos das 10h às 21h.',
-          qrHint: 'Mesmos valores e benefícios',
-          highlightIcon: '⭐',
-          highlightText: 'Um ponto de encontro seguro para os fins de semana com a família.'
-        },
-
-        // 6. DICA PSICOEDUCATIVA PARA PAIS
-        {
-          id: 'dica_rotina',
-          kicker: '💡 Dica para o dia a dia',
-          kickerClass: 'teal',
-          headline: 'A previsibilidade reduz a <em>ansiedade</em>.',
-          subtext: 'Estruturar o dia com rotinas visuais simples ajuda a criança a antecipar transições de tarefas, diminuindo crises e inseguranças em casa.',
-          image: 'img/clinica-recursos-terapeuticos.webp',
-          badge: 'Orientação Parental',
-          actionTitle: 'Construindo Rotinas',
-          actionDesc: 'Pequenas mudanças no ambiente doméstico geram grandes saltos na regulação emocional.',
-          qr: 'clinica',
-          qrTitle: 'Artigos no Portal Aprender',
-          qrDesc: 'Acesse guias práticos gratuitos para aplicar no dia a dia com seu filho.',
-          qrHint: 'Conteúdo gratuito FaçaAmigos',
-          highlightIcon: '🗓️',
-          highlightText: 'Nossos terapeutas preparam orientações práticas para a família.'
-        },
-
-        // 7. PUBLICIDADE: CIRCUITO DE CARRINHOS ELÉTRICOS
-        {
-          id: 'circuito_parque',
-          kicker: '🏎️ Circuito de Carrinhos',
-          kickerClass: 'pink',
-          headline: 'Ele no volante.<br><em>Você no controle.</em>',
-          subtext: 'Minicarros, jeeps off-road e pelúcias elétricas no Parque Shopping Belém. Um passeio inesquecível de 20 a 30 minutos com total segurança.',
-          image: 'img/circuito-lamborghini-menino.webp',
-          badge: 'Parque Shopping Belém',
-          actionTitle: 'Circuito FaçaAmigos',
-          actionDesc: 'Veículos com controle remoto para os pais ou direção autônoma guiada.',
-          qr: 'circuito',
-          qrTitle: 'Conheça os veículos',
-          qrDesc: 'Lamborghini, Range Rover, Bombeiro e Pelúcias gigantes prontas no corredor.',
-          qrHint: 'A partir de 20 minutos',
-          highlightIcon: '🎮',
-          highlightText: 'Estímulo à coordenação motora, noção espacial e muita gargalhada.'
-        },
-
-        // 8. MARKETING DO MAPEAMENTO: INDIQUE PARA AMIGOS
-        {
-          id: 'mapeamento_indicar',
-          kicker: '📲 Rede de Apoio e Informação',
-          kickerClass: 'teal',
-          headline: 'Conhece outra família que <em>precisa de ajuda</em>?',
-          subtext: 'Muitos pais têm dúvidas sobre marcos do desenvolvimento e não sabem por onde começar. Envie o Mapeamento Gratuito para quem você ama.',
-          image: 'img/ambiente-sensorial.webp',
-          badge: 'Compartilhe Cuidado',
-          actionTitle: 'Mapeamento Compartilhável',
-          actionDesc: 'Um gesto simples de carinho que pode abrir portas para uma intervenção precoce oportuna.',
-          qr: 'teste',
-          qrTitle: 'Copie e envie o link',
-          qrDesc: 'Aponte o celular, copie o link e compartilhe no WhatsApp da família ou da escola.',
-          qrHint: 'Apoio sem rótulos',
-          highlightIcon: '💚',
-          highlightText: 'Intervenção precoce faz toda a diferença no desenvolvimento infantil.'
-        },
-
-        // 9. PUBLICIDADE: CIRCUITO - PELÚCIAS GIGANTES
-        {
-          id: 'circuito_pelucias',
-          kicker: '🐾 Pelúcias Motorizadas',
-          kickerClass: 'pink',
-          headline: 'Um abraço gigante que <em>anda de verdade</em>.',
-          subtext: 'Capivaras, ursos e unicórnios motorizados para um passeio calmo e divertido pelo shopping. Uma experiência sensorial única.',
-          image: 'img/circuito-capivara-menina.webp',
-          badge: 'Circuito Parque Shopping',
-          actionTitle: 'Passeio com Pelúcias',
-          actionDesc: 'Perfeito para crianças menores que adoram animais de pelúcia com movimentos suaves.',
-          qr: 'circuito',
-          qrTitle: 'Passeio no Shopping',
-          qrDesc: 'Localizado no piso térreo do Parque Shopping Belém.',
-          qrHint: 'Diversão para todas as idades',
-          highlightIcon: '🦄',
-          highlightText: 'O sucesso absoluto entre as crianças de 2 a 8 anos.'
-        },
-
-        // 10. SOCIALIZAÇÃO NO PLAYGROUND
-        {
-          id: 'play_socializacao',
-          kicker: '🧩 Brincar com Propósito',
-          kickerClass: 'teal',
-          headline: 'O brincar como extensão da <em>terapia</em>.',
-          subtext: 'Interagir com outras crianças em um ambiente amigável e sensorial estimula a socialização, a troca de turnos e a linguagem de forma natural.',
-          image: 'img/playground-mediadora-tapete.webp',
-          badge: 'Brincar Inclusivo',
-          actionTitle: 'Desenvolvimento Social',
-          actionDesc: 'Mediação atenta para garantir conforto e interação positiva entre todos.',
-          qr: 'playground',
-          qrTitle: 'Parque Shopping & Grão-Pará',
-          qrDesc: 'Leve seu filho para brincar após a sessão ou no fim de semana.',
-          qrHint: 'Diversão acessível e inclusiva',
-          highlightIcon: '🎯',
-          highlightText: 'Toda criança merece um espaço onde possa se sentir acolhida e feliz.'
-        },
-
-        // 11. CONFORTO DA SALA DE ESPERA
-        {
-          id: 'espera_conforto',
-          kicker: '☕ Espaço Pensado em Você',
-          kickerClass: 'teal',
-          headline: 'Sua dedicação é o maior <em>apoio</em> dele.',
-          subtext: 'Sabemos que a rotina de terapias exige energia, paciência e amor. Relaxe, tome uma água ou um café fresquinho enquanto aguarda.',
-          image: 'img/equipe-recepcao.webp',
-          badge: 'Cuidado com os Pais',
-          actionTitle: 'Conforto & Recepção',
-          actionDesc: 'Wi-Fi gratuito de alta velocidade, café, água e suporte completo da nossa recepção.',
-          qr: 'clinica',
-          qrTitle: 'Fale com a Recepção',
-          qrDesc: 'Qualquer dúvida sobre horários ou sessões, avise nossa equipe no balcão.',
-          qrHint: 'Estamos aqui com você',
-          highlightIcon: '🛋️',
-          highlightText: 'Cuidar de quem cuida também faz parte da nossa missão diária.'
-        },
-
-        // 12. PUBLICIDADE: CIRCUITO - FROTA E AUTONOMIA
-        {
-          id: 'circuito_frota',
-          kicker: '🏁 Aventura e Autonomia',
-          kickerClass: 'pink',
-          headline: 'Hoje ele é o <em>piloto</em> da vez.',
-          subtext: 'Veículos seguros com cinto de segurança e velocidade controlada. Um momento especial de alegria que quebra a rotina da semana.',
-          image: 'img/circuito-frota-alinhada.webp',
-          badge: 'Circuito FaçaAmigos',
-          actionTitle: 'Parque Shopping Belém',
-          actionDesc: 'Escolha entre mais de 10 modelos de carros, jeeps e pelúcias elétricas.',
-          qr: 'circuito',
-          qrTitle: 'Visite o quiosque',
-          qrDesc: 'Em frente à Renner no Parque Shopping Belém.',
-          qrHint: 'Atendimento por ordem de chegada',
-          highlightIcon: '🚗',
-          highlightText: 'A alegria de dirigir seu próprio carrinho elétrico!'
-        },
-
-        // 13. CLÍNICA: AVALIAÇÃO E SEGUIMENTO
-        {
-          id: 'clinica_avaliacao',
-          kicker: '🔍 Avaliação Comportamental',
-          kickerClass: 'teal',
-          headline: 'Intervenção baseada em <em>evidências</em>.',
-          subtext: 'Nossos protocolos clínicos utilizam métricas científicas para mapear déficits e excessos comportamentais, construindo pontes para a vida real.',
-          image: 'img/clinica-fachada.webp',
-          badge: 'Centro Clínico Umarizal',
-          actionTitle: 'Estrutura Completa',
-          actionDesc: 'Salas acolhedoras preparadas para terapia individualizada com respeito ao neurodesenvolvimento.',
-          qr: 'clinica',
-          qrTitle: 'Dúvidas sobre o tratamento?',
-          qrDesc: 'Converse com a coordenação clínica sobre as diretrizes do atendimento.',
-          qrHint: 'Transparência e ciência',
-          highlightIcon: '🔬',
-          highlightText: 'Acolhimento humanizado aliado às melhores práticas científicas.'
-        },
-
-        // 14. MAPEAMENTO: REFORÇO FINAL DO FUNIL
-        {
-          id: 'mapeamento_final',
-          kicker: '📋 Comece em 5 minutos',
-          kickerClass: 'pink',
-          headline: 'Um olhar cuidadoso sobre <em>5 áreas vitais</em>.',
-          subtext: 'Comunicação, interação social, comportamento motor, sensorialidade e flexibilidade. O Mapeamento Gratuito te dá um ponto de partida seguro.',
-          image: 'img/inclusao-cantinho-leitura.webp',
-          badge: 'Mapeamento Grátis',
-          actionTitle: 'Sem Custos • Online',
-          actionDesc: 'Não é um laudo médico, mas uma bússola inicial preciosa feita por especialistas.',
-          qr: 'teste',
-          qrTitle: 'Fazer o teste agora',
-          qrDesc: 'Basta aproximar o celular do QR Code abaixo para carregar as perguntas.',
-          qrHint: 'institutofacaamigos.com.br/teste',
-          highlightIcon: '📊',
-          highlightText: 'Receba uma análise clara e sugestões práticas diretamente no seu e-mail.'
-        }
+      // POOL:BEGIN (gerado por scripts/tv3-pool.py a partir de conteudo/tv3-slides.json, não editar à mão)
+      const POOL = [
+        {"id":"a_dor22h","fam":"A","dur":15,"layout":"padrao","qr":null,"unit":"arcoA","pos":0,"isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🌙 Quando a casa fica quieta","kickerClass":"pink","headline":"A dúvida da sessão chega às <em>22h</em>.","subtext":"A casa quieta, a criança dormindo e a sua cabeça ainda na sessão. As metas do plano e as orientações da equipe ficam no portal, para você rever quando quiser."},
+        {"id":"a_tut","fam":"A","dur":20,"layout":"tutorial","qr":"portal","unit":"arcoA","pos":1,"isabella":false,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp"],"kicker":"📱 Portal da Família","kickerClass":"pink","headline":"Enquanto a sessão acontece, <em>entre no portal</em>.","subtext":"Quando você entrar, a agenda, os documentos e os recados da coordenação ficam no seu celular. São três passos.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código com a câmera e toque em Entrar no portal.","qrHint":"Na tela de entrada, toque em Família","steps":[{"num":"1","title":"Aponte e toque em Família","desc":"Leia o QR, toque em Entrar e depois na aba Família."},{"num":"2","title":"Digite o celular cadastrado","desc":"É o número que você informou à recepção."},{"num":"3","title":"Digite o código do SMS","desc":"6 números, valem 5 minutos. CPF só no primeiro acesso."}]},
+        {"id":"a_lembrete","fam":"A","dur":10,"layout":"padrao","qr":"portal","weight":2,"isabella":false,"image":"img/clinica-painel-sensorial.webp","kicker":"📱 Portal da Família","kickerClass":"pink","headline":"Aponte a câmera e <em>entre no portal</em>.","subtext":"Leia o QR, toque em Entrar e depois na aba Família.","badge":"Portal da Família","actionTitle":"Seu celular, o portal","actionDesc":"Agenda, documentos e recados da coordenação no mesmo lugar.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"📞","highlightText":"Celular ainda não cadastrado? Fale com a recepção."},
+        {"id":"a_mock","fam":"A","dur":15,"layout":"padrao","qr":"portal","mock":true,"isabella":false,"image":"img/clinica-fachada.webp","kicker":"👀 Você vai reconhecer","kickerClass":"pink","headline":"É <em>esta tela</em> que abre no seu celular.","subtext":"Rosa e petróleo no topo, com FaçaAmigos · Família e, logo abaixo, a próxima sessão do seu filho.","badge":"Portal da Família","actionTitle":"A próxima sessão no topo","actionDesc":"Dia, hora e terapeuta logo ao abrir, com os botões de falta e remarcação ao lado.","qrTitle":"Abra no seu celular","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"💛","highlightText":"A saudação da primeira tela usa o nome do seu filho."},
+        {"id":"a_agenda","fam":"A","dur":15,"layout":"padrao","qr":"portal","isabella":false,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-fachada.webp"],"kicker":"🗓️ Agenda no celular","kickerClass":"pink","headline":"A próxima sessão <em>já está lá</em> quando você abre.","subtext":"Cada sessão agendada mostra dia, hora e terapeuta. Abaixo, a frequência do mês: sessões realizadas e faltas.","badge":"Portal da Família","actionTitle":"Agenda e frequência do mês","actionDesc":"Próximas sessões com dia, hora e terapeuta, e a contagem do mês.","qrTitle":"Veja a sua agenda","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"🗓️","highlightText":"Na hora de combinar a semana, o horário já está na tela."},
+        {"id":"a_falta","fam":"A","dur":15,"layout":"padrao","qr":"portal","isabella":false,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-painel-sensorial.webp","img/clinica-recursos-terapeuticos.webp"],"kicker":"📝 Falta e remarcação","kickerClass":"pink","headline":"Se não puder vir, <em>avise pelo portal</em>.","subtext":"Escolha o motivo e anexe o atestado em PDF, JPG ou PNG. Para pedir outro horário, toque em Pedir remarcação.","badge":"Portal da Família","actionTitle":"Avisar falta e pedir remarcação","actionDesc":"Os dois botões ficam na próxima sessão, no topo do portal.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"📎","highlightText":"O aviso fica registrado na própria sessão, com o atestado anexo."},
+        {"id":"a_docs","fam":"A","dur":15,"layout":"padrao","qr":"portal","isabella":false,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp"],"kicker":"📄 Documentos pelo celular","kickerClass":"pink","headline":"Carteirinha ou laudo? <em>Envie por foto</em>.","subtext":"Fotografe ou anexe o PDF, até 25 MB. Quando a equipe revisar, o envio ganha o status Conferido.","badge":"Portal da Família","actionTitle":"Enviar documento","actionDesc":"Carteirinha do plano, pedido médico ou laudo, em foto ou PDF de até 25 MB.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"✅","highlightText":"Cada envio mostra o status: Aguardando revisão ou Conferido."},
+        {"id":"a_baixar","fam":"A","dur":15,"layout":"padrao","qr":"portal","isabella":false,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"⬇️ Documentos liberados","kickerClass":"pink","headline":"Documentos liberados pela equipe, <em>para baixar</em>.","subtext":"Relatórios, laudos e guias liberados aparecem no portal. O link de download vale 15 minutos e cada acesso fica registrado.","badge":"Portal da Família","actionTitle":"Baixar quando precisar","actionDesc":"Toque em Abrir ao lado do documento. Se o link vencer, toque de novo.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"🔒","highlightText":"O acesso fica registrado para proteger os dados do seu filho."},
+        {"id":"a_metas","fam":"A","dur":15,"layout":"padrao","qr":"portal","isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp"],"kicker":"🎯 Metas do plano","kickerClass":"pink","headline":"As metas do plano ficam <em>no seu celular</em>.","subtext":"Quando a equipe clínica aprova o plano terapêutico, as metas aparecem no portal. Cada uma mostra se está Ativa ou Atingida.","badge":"Portal da Família","actionTitle":"Metas ativas e atingidas","actionDesc":"A lista do plano terapêutico, em linguagem simples, sempre à mão.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"🌟","highlightText":"Na conversa com a terapeuta, você já sabe o que está no plano."},
+        {"id":"a_coord","fam":"A","dur":15,"layout":"padrao","qr":"portal","isabella":false,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-fachada.webp","img/clinica-recursos-terapeuticos.webp"],"kicker":"💬 Fale com a Coordenação","kickerClass":"pink","headline":"Dúvida para a coordenação? <em>Escreva no portal</em>.","subtext":"Toque em Fale com a Coordenação e envie a sua mensagem. A resposta fica registrada no portal, com o selo Resposta Recebida.","badge":"Portal da Família","actionTitle":"Um recado, um registro","actionDesc":"Você escreve quando puder e relê a conversa quando precisar.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"🗂️","highlightText":"Mensagens e respostas ficam juntas, na mesma tela."},
+        {"id":"a_vs_whats","fam":"A","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp"],"kicker":"🤝 Dois canais","kickerClass":"pink","headline":"Dois canais, <em>cada um no seu papel</em>.","subtext":"O WhatsApp segue como canal oficial da clínica. O portal junta o que você vai querer achar depois.","comparativo":{"left":{"header":"WhatsApp oficial","items":["Urgências do dia","Conversa rápida com a recepção","Dúvida de horário e endereço"]},"right":{"header":"Portal da Família","items":["Agenda e frequência do mês","Documentos enviados e liberados","Histórico de recados e respostas"]}}},
+        {"id":"a_fecho","fam":"A","dur":15,"layout":"padrao","qr":"portal","tag":"fechamento","isabella":false,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-fachada.webp","img/clinica-painel-sensorial.webp"],"kicker":"📱 Antes de ir embora","kickerClass":"pink","headline":"Antes de a sessão acabar, <em>você já entrou</em>.","subtext":"Combine com você mesmo. Da próxima vez que este QR aparecer, você aponta a câmera. Na próxima sessão, a agenda e os recados já estarão no seu celular.","badge":"Portal da Família","actionTitle":"Entre agora, com calma","actionDesc":"São três passos. Ao abrir, a próxima sessão do seu filho aparece no topo.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"🤝","highlightText":"A recepção ajuda com o cadastro do celular, se precisar."},
+        {"id":"b_boasvindas","fam":"B","dur":15,"layout":"padrao","qr":null,"tag":"abertura","isabella":false,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"💛 Sala de espera","kickerClass":"teal","headline":"{{saudacao}}. Hoje é <em>{{diaSemana}}</em>.","subtext":"Enquanto a sessão acontece, esta sala é sua: sente, respire e use o tempo como quiser. Quem cuida também precisa de pausa."},
+        {"id":"b_sessao40","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp"],"kicker":"🧩 Dentro da sessão","kickerClass":"teal","headline":"Na sessão, a terapia se parece com <em>brincar</em>.","subtext":"Cada brincadeira tem um propósito, como esperar a vez ou ampliar a comunicação, sempre no ritmo da criança. O que deu certo é reconhecido."},
+        {"id":"b_metodo","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp"],"kicker":"🧠 Como a clínica trabalha","kickerClass":"teal","headline":"Uma equipe, <em>um plano só</em>.","subtext":"Terapia comportamental apoiada em ABA, Fonoaudiologia, Terapia Ocupacional, Psicopedagogia e orientação a pais e escola."},
+        {"id":"b_quemcuida","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/isabella-2.webp","images":["img/isabella-2.webp","img/isabella-3.webp"],"kicker":"🌱 Quem idealizou a clínica","kickerClass":"teal","headline":"Isabella Gonçalves Freitas, <em>psicóloga infantil</em>","subtext":"CRP 10/4727. Idealizadora do FaçaAmigos, conduz a clínica e escreve os textos de Aprender, no nosso site."},
+        {"id":"b_orientacao_casa","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp","img/clinica-fachada.webp"],"kicker":"🏠 Para levar para casa","kickerClass":"teal","headline":"A orientação da sessão fica <em>no portal</em>.","subtext":"A equipe marca o tema de cada orientação: Rotina, Comunicação, Alimentação, Sono ou Escola. Você vê no portal, com a data."},
+        {"id":"b_escola","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-fachada.webp"],"kicker":"🏫 Escola e família","kickerClass":"teal","headline":"A escola também pode <em>entrar na conversa</em>.","subtext":"Quando fizer sentido para a família, a clínica apoia o diálogo com a coordenação pedagógica. Ninguém vai sozinho à reunião."},
+        {"id":"b_espera","fam":"B","dur":15,"layout":"padrao","qr":null,"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🫶 Para quem espera","kickerClass":"teal","headline":"Esperar também cansa. <em>Pode descansar.</em>","subtext":"Respirar, olhar o celular ou ficar em silêncio, tudo vale. O seu descanso também importa."},
+        {"id":"b_wifi","fam":"B","dur":10,"layout":"padrao","qr":null,"requires":"wifiSsid","isabella":false,"image":"img/clinica-fachada.webp","kicker":"📶 Wi-Fi para visitantes","kickerClass":"teal","headline":"Conecte à rede <em>{{wifiSsid}}</em>.","subtext":"Depois de conectar, faça o cadastro rápido que abre no celular. Em seguida, o portal fica a um toque."},
+        {"id":"b_horario","fam":"B","dur":10,"layout":"padrao","qr":null,"isabella":false,"image":"img/clinica-fachada.webp","kicker":"🕗 Horário da clínica","kickerClass":"teal","headline":"Atendimento de <em>segunda a sábado</em>.","subtext":"Segunda a sexta, das 8h às 18h. Sábado, das 8h às 12h. WhatsApp oficial: (91) 99178-2027."},
+        {"id":"c_rotina","fam":"C","dur":15,"layout":"padrao","qr":"aprender:rotina","dia":[1,3,5],"isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp"],"kicker":"🖼️ Dica para hoje","kickerClass":"yellow","headline":"Um momento do dia, <em>de 4 a 6 passos</em>.","subtext":"Para começar uma rotina visual, escolha só um momento, como a manhã ou a hora de dormir. Liste os passos na ordem real da sua casa.","badge":"Aprender","actionTitle":"Rotina visual em 20 minutos","actionDesc":"Passo a passo para montar em casa, com ícones colados na altura da criança.","qrTitle":"Leia o passo a passo","qrDesc":"Aponte a câmera e abra o texto no seu celular.","qrHint":"Texto escrito pela Isabella","highlightIcon":"🖼️","highlightText":"Ao terminar cada passo, deixe a criança marcar o ícone."},
+        {"id":"c_transicao","fam":"C","dur":15,"layout":"padrao","qr":"aprender:rotina","dia":[2,4,5],"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp","img/clinica-fachada.webp"],"kicker":"🔔 Dica para hoje","kickerClass":"yellow","headline":"Avise o que vem <em>depois do banho</em>.","subtext":"Para muitas crianças, trocar de atividade é o momento mais difícil do dia. Saber o próximo passo antes poupa a energia que ele gastaria tentando adivinhar.","badge":"Aprender","actionTitle":"Rotina visual em casa","actionDesc":"Como deixar o próximo passo previsível, com um passo a passo de 20 minutos.","qrTitle":"Leia o passo a passo","qrDesc":"Aponte a câmera e abra o texto no seu celular.","qrHint":"Texto escrito pela Isabella","highlightIcon":"🗓️","highlightText":"Antecipar o próximo passo deixa a transição mais previsível."},
+        {"id":"c_calma","fam":"C","dur":15,"layout":"padrao","qr":"aprender:crise","dia":[1,2,4],"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-fachada.webp","img/clinica-recursos-terapeuticos.webp"],"kicker":"🌿 Dica para hoje","kickerClass":"yellow","headline":"Na crise, baixe <em>luz, som e gente</em>.","subtext":"Se for crise, reduza o estímulo ao redor e fique por perto, sem exigir explicação. A conversa vem depois.","badge":"Aprender","actionTitle":"Birra ou crise: como diferenciar","actionDesc":"Três sinais para observar na hora e o que fazer em cada caso.","qrTitle":"Leia o texto completo","qrDesc":"Aponte a câmera e abra o texto no seu celular.","qrHint":"Texto escrito pela Isabella","highlightIcon":"🌿","highlightText":"Cada sinal é uma pista. Nenhum fecha uma resposta sozinho."},
+        {"id":"c_apos_crise","fam":"C","dur":15,"layout":"padrao","qr":"aprender:crise","dia":[2,3,5],"isabella":true,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp"],"kicker":"🫧 Dica para hoje","kickerClass":"yellow","headline":"Primeiro o corpo acalma. <em>Depois, as palavras.</em>","subtext":"Depois de uma crise, espere o corpo acalmar antes de conversar. É nesse momento que o cérebro volta a conseguir ouvir.","badge":"Aprender","actionTitle":"Birra ou crise: o que fazer","actionDesc":"O que fazer na hora, e o que muda quando é birra.","qrTitle":"Leia o texto completo","qrDesc":"Aponte a câmera e abra o texto no seu celular.","qrHint":"Texto escrito pela Isabella","highlightIcon":"💬","highlightText":"Na birra, nomeie o que você entende e mantenha o combinado, com calma."},
+        {"id":"c_brincar_chao","fam":"C","dur":15,"layout":"padrao","qr":"aprender:brincar","dia":[1,3,4],"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp"],"kicker":"🎨 Dica para hoje","kickerClass":"yellow","headline":"10 minutos de brincar <em>trabalham habilidades</em>.","subtext":"Caça ao tesouro de cores: peça para achar 3 objetos de uma cor pela casa. Trabalha atenção e seguir instruções, no ritmo de brincadeira.","badge":"Aprender","actionTitle":"5 brincadeiras de 10 minutos","actionDesc":"Cada ideia diz qual habilidade ela trabalha, de atenção a esperar a vez.","qrTitle":"Leia as 5 brincadeiras","qrDesc":"Aponte a câmera e abra o texto no seu celular.","qrHint":"Texto escrito pela Isabella","highlightIcon":"🌈","highlightText":"Dia agitado? O telefone sem fio de sentimentos é mais calmo."},
+        {"id":"c_elogio","fam":"C","dur":15,"layout":"padrao","qr":null,"dia":[1,2,5],"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp","img/clinica-fachada.webp"],"kicker":"🌟 Dica para hoje","kickerClass":"yellow","headline":"Hoje, diga o que <em>deu certo</em>.","subtext":"Reconhecer o que deu certo é a base do reforço positivo. Escolha um acerto do dia e conte para a criança, com atenção e afeto."},
+        {"id":"c_construir","fam":"C","dur":15,"layout":"padrao","qr":null,"dia":[3,4,5],"isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🗣️ Dica para hoje","kickerClass":"yellow","headline":"Empilhar e derrubar, <em>revezando</em>.","subtext":"Empilhe blocos com a criança e derrubem juntos, revezando quem constrói. Trabalha a atenção compartilhada: ela olha o objeto e depois olha para você."},
+        {"id":"c_esperar","fam":"C","dur":15,"layout":"padrao","qr":null,"dia":[1,2,3,4],"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp","img/clinica-recursos-terapeuticos.webp"],"kicker":"⏳ Dica para hoje","kickerClass":"yellow","headline":"Esperar a vez <em>também se treina</em> brincando.","subtext":"No Siga o líder, um dá o comando (pular, girar, ficar parado) e o outro segue. Depois troca. A criança treina esperar a vez."},
+        {"id":"d_fds","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-mediadora-tapete.webp","images":["img/playground-mediadora-tapete.webp","img/hero-piscina-bolinhas.webp","img/playground-piscina-casinha.webp"],"kicker":"🌤️ Fim de semana no Playground","kickerClass":"yellow","headline":"Primeira visita? Vá no <em>Horário Inclusivo</em>.","subtext":"Das 10h às 16h, todos os dias: som mais baixo, menos lotação e equipe reforçada. Sábado de manhã também vale."},
+        {"id":"d_parque","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-fachada-recepcao.webp","images":["img/playground-fachada-recepcao.webp","img/playground-piscina-casinha.webp","img/galeria-oficinas.webp"],"kicker":"📍 Playground no Parque Shopping","kickerClass":"yellow","headline":"Playground no Parque Shopping, <em>no térreo</em>.","subtext":"Próximo às Lojas Americanas. Todos os dias, das 10h às 22h. É só chegar: não precisa agendar."},
+        {"id":"d_graopara","fam":"D","dur":15,"layout":"padrao","qr":null,"requires":"fotoGraoPara","isabella":false,"image":"img/FOTO-GRAO-PARA.webp","kicker":"📍 Playground no Grão-Pará","kickerClass":"yellow","headline":"No Grão-Pará, <em>1º piso</em>, em frente à Renner.","subtext":"Shopping Bosque Grão-Pará. Segunda a sábado, das 10h às 22h. Domingo, das 10h às 21h. Mesmos preços do Parque Shopping."},
+        {"id":"d_prova","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/hero-piscina-bolinhas.webp","images":["img/hero-piscina-bolinhas.webp","img/playground-piscina-casinha.webp"],"kicker":"📊 Números do Playground","kickerClass":"yellow","headline":"+1.100 famílias e <em>7.500 visitas</em> no Playground.","subtext":"Dados do sistema de entrada e saída do Playground. A equipe tem nota 4,9 de 5 em 118 avaliações por WhatsApp, de julho a outubro de 2026."},
+        {"id":"d_beneficio","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-mediadora-tapete.webp","images":["img/playground-mediadora-tapete.webp","img/galeria-oficinas.webp"],"kicker":"💛 Família FaçaAmigos","kickerClass":"yellow","headline":"Você faz parte da <em>Família FaçaAmigos</em>.","subtext":"Seu vínculo com a clínica vale também fora dela. {{beneficio}}"},
+        {"id":"d_quando_ir","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-piscina-casinha.webp","images":["img/playground-piscina-casinha.webp","img/hero-piscina-bolinhas.webp"],"kicker":"🗓️ Para planejar o sábado","kickerClass":"yellow","headline":"Prefira a <em>manhã</em> ou o começo da tarde.","subtext":"No sistema (jul a out/2026), sábado é o dia mais cheio e das 17h às 20h o horário mais cheio. Quem entra por 30 minutos fica, em média, 50 minutos."},
+        {"id":"d_circuito","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/circuito-quiosque.webp","images":["img/circuito-quiosque.webp","img/circuito-frota-alinhada.webp","img/circuito-jeep-menino.webp"],"kicker":"🚗 Circuito no Parque Shopping","kickerClass":"yellow","headline":"Circuito: R$ 48 por <em>20 ou 30 minutos</em>.","subtext":"20 minutos nas pelúcias e no jeep, ou 30 minutos nos carros e na moto. No quiosque do Circuito, no Parque Shopping."},
+        {"id":"e_indicar","fam":"E","dur":15,"layout":"padrao","qr":"teste","isabella":false,"image":"img/isabella-3.webp","images":["img/isabella-3.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"💌 Para quem você lembrou","kickerClass":"teal","headline":"Uma mãe que ainda não sabe <em>por onde começar</em>?","subtext":"Pode ser mãe, pai ou avó. Envie o Mapeamento Comportamental: 25 perguntas, cerca de 5 minutos, gratuito.","badge":"Mapeamento","actionTitle":"Indique o Mapeamento","actionDesc":"Gratuito, cerca de 5 minutos, para crianças de 4 a 17 anos.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, abra a página e envie o link para quem você lembrou.","qrHint":"Mande o link por WhatsApp","highlightIcon":"📩","highlightText":"O resultado aparece na tela e também chega por e-mail."},
+        {"id":"e_oque_e","fam":"E","dur":15,"layout":"padrao","qr":"teste","isabella":true,"image":"img/isabella-3.webp","images":["img/isabella-3.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🧭 Mapeamento Comportamental","kickerClass":"teal","headline":"25 perguntas em cerca de <em>5 minutos</em>.","subtext":"Para crianças de 4 a 17 anos. Passa por cinco áreas: Emoções e segurança, Rotina e limites, Foco e energia, Amizades e convivência, Empatia e gentileza.","badge":"Mapeamento","actionTitle":"Um retrato inicial, gratuito","actionDesc":"Criado por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727).","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código e responda no seu celular, no seu ritmo.","qrHint":"Resultado na tela e por e-mail","highlightIcon":"🧡","highlightText":"Não substitui avaliação profissional."},
+        {"id":"r_1","fam":"R","dur":10,"layout":"respiro","qr":null,"dia":[1,2,4],"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/ambiente-sensorial.webp"],"quote":"Respire fundo. Chegar até aqui já é uma forma de cuidar."},
+        {"id":"r_2","fam":"R","dur":10,"layout":"respiro","qr":null,"dia":[2,3,5],"isabella":true,"image":"img/inclusao-cantinho-leitura.webp","images":["img/inclusao-cantinho-leitura.webp","img/clinica-atividade-pedagogica.webp"],"quote":"Cada criança tem o seu tempo. Cada família também."},
+        {"id":"r_3","fam":"R","dur":10,"layout":"respiro","qr":null,"dia":[1,3,4],"isabella":true,"image":"img/ambiente-sensorial.webp","images":["img/ambiente-sensorial.webp","img/clinica-painel-sensorial.webp"],"quote":"Solte os ombros. Aqui você encontra acolhimento."},
+        {"id":"r_4","fam":"R","dur":10,"layout":"respiro","qr":null,"dia":[2,4,5],"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/inclusao-cantinho-leitura.webp"],"quote":"Pequenas vitórias merecem festa, mesmo as que ninguém viu."}
       ];
+      // POOL:END
+
+      // ======================================================================
+      // PARÂMETROS DE URL (todos opcionais)
+      //   ?dia=1..5      força o dia do ciclo        ?exp=rotulo   rótulo do experimento
+      //   ?rot=90        gira o palco                ?slide=<id>   fixa um slide
+      //   ?portal=0      esconde a família A (Portal ainda não liberado)
+      //   ?seed=x &vel=50 &debug=1                   só para teste
+      // ======================================================================
+      const urlParams = new URLSearchParams(window.location.search);
+      const DEBUG = urlParams.has('debug');
+      const OV = {
+        dia: [1, 2, 3, 4, 5].indexOf(+urlParams.get('dia')) >= 0 ? +urlParams.get('dia') : calculateCurrentCycleDay(),
+        exp: (urlParams.get('exp') || CONFIG.experiment).slice(0, 40),
+        slide: urlParams.get('slide'),
+        seed: urlParams.get('seed'),
+        vel: DEBUG ? Math.min(100, Math.max(1, +urlParams.get('vel') || 1)) : 1
+      };
+      if (urlParams.get('portal') === '0') CONFIG.portalAtivo = false;
+
+      // Embaralhamento (Fisher-Yates). Com ?seed= fica determinístico, para teste.
+      function hashStr(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+      function mulberry32(a) { return function () { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+      const rnd = OV.seed ? mulberry32(hashStr(OV.seed)) : Math.random;
+      function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+        return a;
+      }
 
       // ======================================================================
       // QR CODE LOCAL: matrizes pré-geradas (scripts/tv3-qr.py), sem serviço externo.
@@ -1211,7 +1007,140 @@
       }
 
       // ======================================================================
-      // CRIAÇÃO E MONTAGEM DO DOM DOS SLIDES
+      // MOTOR DE VOLTAS
+      // Uma volta mostra cada slide elegível uma vez (~10 min). Abre em boas-vindas e fecha no
+      // Portal. As famílias se alternam, o QR do Portal aparece no máximo a cada
+      // CONFIG.cadenciaPortalSeg e uma dica (família C) vem antes do pedido do Portal.
+      // ======================================================================
+      const isPortal = (s) => s.qr === 'portal';
+
+      function eligible() {
+        return POOL.filter((s) =>
+          (!s.dia || s.dia.indexOf(OV.dia) >= 0) &&
+          (!s.requires || CONFIG[s.requires]) &&
+          (CONFIG.portalAtivo || s.fam !== 'A'));
+      }
+
+      // Slides com o mesmo `unit` andam juntos (ex.: a dor e o tutorial do Portal)
+      function toUnits(list) {
+        const units = [], byUnit = {};
+        list.forEach((s) => {
+          if (s.unit) {
+            if (!byUnit[s.unit]) { byUnit[s.unit] = { fam: s.fam, slides: [], dur: 0 }; units.push(byUnit[s.unit]); }
+            byUnit[s.unit].slides.push(s);
+            byUnit[s.unit].dur += s.dur;
+          } else {
+            units.push({ fam: s.fam, slides: [s], dur: s.dur });
+          }
+        });
+        units.forEach((u) => u.slides.sort((a, b) => (a.pos || 0) - (b.pos || 0)));
+        return units;
+      }
+
+      // Escolhe sempre a família com maior "déficit" (restantes / já colocados): espalha por igual
+      function interleave(units, famAntes, famDepois) {
+        const q = {};
+        shuffle(units).forEach((u) => { (q[u.fam] = q[u.fam] || []).push(u); });
+        const placed = {}, out = [];
+        let prev = famAntes, left = units.length;
+        while (left > 0) {
+          const fams = Object.keys(q).filter((f) => q[f].length);
+          let cand = fams.filter((f) => f !== prev);
+          if (!cand.length) cand = fams;
+          let best = null, bestScore = -1;
+          cand.forEach((f) => {
+            const score = q[f].length / ((placed[f] || 0) + 1) + rnd() * 0.01;
+            if (score > bestScore) { best = f; bestScore = score; }
+          });
+          out.push(q[best].shift());
+          placed[best] = (placed[best] || 0) + 1;
+          prev = best;
+          left--;
+        }
+        // reparo: troca pares até não sobrar duas famílias iguais coladas (inclusive nas pontas)
+        const cost = () => {
+          let c = 0;
+          for (let i = 0; i <= out.length; i++) {
+            const a = i === 0 ? famAntes : out[i - 1].fam;
+            const b = i === out.length ? famDepois : out[i].fam;
+            if (a && a === b) c++;
+          }
+          return c;
+        };
+        let c = cost();
+        for (let it = 0; it < 600 && c > 0; it++) {
+          const i = Math.floor(rnd() * out.length), k = Math.floor(rnd() * out.length);
+          if (i === k) continue;
+          let t = out[i]; out[i] = out[k]; out[k] = t;
+          const c2 = cost();
+          if (c2 <= c) c = c2; else { t = out[i]; out[i] = out[k]; out[k] = t; }
+        }
+        return out;
+      }
+
+      // Maior intervalo sem QR do Portal na tela (do fim de um ao começo do próximo)
+      function maiorLacuna(seq) {
+        let t = 0, fim = 0, pior = 0, ate = -1, antes = -1, ultimo = -1;
+        seq.forEach((s, i) => {
+          if (isPortal(s)) {
+            if (t - fim > pior) { pior = t - fim; ate = i; antes = ultimo; }
+            fim = t + s.dur; ultimo = i;
+          }
+          t += s.dur;
+        });
+        if (t - fim > pior) { pior = t - fim; ate = seq.length; antes = ultimo; }
+        return { pior: pior, ate: ate, antes: antes };
+      }
+
+      function garantirCadencia(seq) {
+        for (let n = 0; n < 20; n++) {
+          const g = maiorLacuna(seq);
+          if (g.pior <= CONFIG.cadenciaPortalSeg) break;
+          // move um QR do Portal "solto" (fora de arco e sem tag) para o meio da maior lacuna
+          const k = seq.findIndex((s, i) => isPortal(s) && !s.unit && !s.tag && i !== g.ate);
+          if (k < 0) break;
+          const m = seq.splice(k, 1)[0];
+          const ate = g.ate > k ? g.ate - 1 : g.ate, antes = g.antes > k ? g.antes - 1 : g.antes;
+          seq.splice(Math.max(1, Math.floor((antes + 1 + ate) / 2)), 0, m);
+        }
+        return seq;
+      }
+
+      // Reciprocidade: uma dica (C) até duas posições antes do pedido do Portal (arco A)
+      function puxarDicaAntesDoArco(seq) {
+        const i = seq.findIndex((s) => s.unit === 'arcoA');
+        if (i < 0) return seq;
+        if (seq.slice(Math.max(0, i - 2), i).some((s) => s.fam === 'C')) return seq;
+        const k = seq.findIndex((s, idx) => s.fam === 'C' && idx > 0 && idx < seq.length - 1 && seq[idx - 1].fam !== seq[idx + 1].fam);
+        if (k < 0) return seq;
+        const c = seq.splice(k, 1)[0];
+        const j = seq.findIndex((s) => s.unit === 'arcoA');
+        if (j > 0 && seq[j - 1].fam !== 'C') seq.splice(j, 0, c); else seq.splice(k, 0, c);
+        return seq;
+      }
+
+      function buildRound() {
+        if (OV.slide) {
+          const only = POOL.filter((s) => s.id === OV.slide);
+          return only;
+        }
+        const el = eligible();
+        const open = el.filter((s) => s.tag === 'abertura')[0] || null;
+        const close = el.filter((s) => s.tag === 'fechamento')[0] || null;
+        const body = el.filter((s) => s !== open && s !== close);
+        let units = toUnits(body);
+        const alvo = CONFIG.roundMin * 60;
+        const total = () => (open ? open.dur : 0) + (close ? close.dur : 0) + units.reduce((a, u) => a + u.dur, 0);
+        for (let c = 2; c <= CONFIG.maxCopias && total() < alvo; c++) {
+          units = units.concat(toUnits(body.filter((s) => (s.weight || 1) >= c && !s.unit)));
+        }
+        let seq = interleave(units, open && open.fam, close && close.fam).reduce((a, u) => a.concat(u.slides), []);
+        const full = [].concat(open || [], seq, close || []);
+        return puxarDicaAntesDoArco(garantirCadencia(full));
+      }
+
+      // ======================================================================
+      // MONTAGEM DO SLIDE (criado na hora e removido depois: a TV não guarda 40 fotos decodificadas)
       // ======================================================================
       const container = document.getElementById('slideContainer');
       const progressBar = document.getElementById('progressBar');
@@ -1219,7 +1148,8 @@
       const stage = document.getElementById('tvStage');
       const tvHud = document.getElementById('tvHud');
 
-      let currentIndex = 0;
+      const state = { round: [], idx: -1, n: 0, currentMs: 0 };
+      let currentEl = null;
       let slideTimer = null;
       let progressTimer = null;
       let isPaused = false;
@@ -1227,155 +1157,163 @@
       let progressStartTime = 0;
       let hudTimeout = null;
 
-      function renderSlides() {
-        container.innerHTML = '';
-        SLIDES.forEach((item, index) => {
-          const slideEl = document.createElement('article');
-          slideEl.className = 'tv-slide' + (index === 0 ? ' active' : '');
-          slideEl.id = 'slide-' + item.id;
-          slideEl.setAttribute('data-index', index);
+      const DIAS_SEMANA = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
+      function fill(t) {
+        if (typeof t !== 'string' || t.indexOf('{{') < 0) return t;
+        const b = belemNow();
+        const vals = {
+          saudacao: b.hours < 12 ? 'Bom dia' : b.hours < 18 ? 'Boa tarde' : 'Boa noite',
+          diaSemana: DIAS_SEMANA[b.weekday],
+          beneficio: CONFIG.beneficioFamilia,
+          wifiSsid: CONFIG.wifiSsid
+        };
+        return t.replace(/\{\{(\w+)\}\}/g, (m, k) => (vals[k] !== undefined ? vals[k] : m));
+      }
+      function deepFill(v) {
+        if (typeof v === 'string') return fill(v);
+        if (Array.isArray(v)) return v.map(deepFill);
+        if (v && typeof v === 'object') { const o = {}; Object.keys(v).forEach((k) => { o[k] = deepFill(v[k]); }); return o; }
+        return v;
+      }
+      function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+      function slideImage(s) {
+        if (s.requires === 'fotoGraoPara') return CONFIG.fotoGraoPara;
+        if (s.images && s.images.length) return s.images[(OV.dia - 1) % s.images.length];
+        return s.image;
+      }
 
-          const qrHTML = qrSvg(item.qr, 140);
+      function mockHTML() {
+        return '<div class="tv-mock"><div class="tv-mock-head"><img src="img/logo-simbolo.png" alt="" width="36" height="36"><span>FaçaAmigos <em>· Família</em></span></div>' +
+          '<div class="tv-mock-tabs"><span>Agenda</span><span>Documentos</span><span>Mural</span><span>Coordenação</span></div></div>';
+      }
+      function stepsHTML(steps) {
+        return '<div class="tv-tutorial-steps">' + steps.map((st) =>
+          '<div class="tv-step-item"><div class="tv-step-num">' + esc(st.num) + '</div><div class="tv-step-body"><strong>' + st.title + '</strong><span>' + st.desc + '</span></div></div>').join('') + '</div>';
+      }
+      function vsHTML(c) {
+        const col = (side, d) => '<div class="tv-vs-box ' + side + '"><div class="tv-vs-header">' + d.header + '</div><ul class="tv-vs-list">' +
+          d.items.map((it) => '<li><span>•</span> <span>' + it + '</span></li>').join('') + '</ul></div>';
+        return '<div class="tv-vs-grid">' + col('left', c.left) + col('right', c.right) + '</div>';
+      }
 
-          let visualExtraHTML = '';
-          if (item.steps && item.steps.length) {
-            visualExtraHTML = `
-              <div class="tv-tutorial-steps">
-                ${item.steps.map(s => `
-                  <div class="tv-step-item">
-                    <div class="tv-step-num">${s.num}</div>
-                    <div class="tv-step-body">
-                      <strong>${s.title}</strong>
-                      <span>${s.desc}</span>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            `;
-          } else if (item.comparativo) {
-            const c = item.comparativo;
-            visualExtraHTML = `
-              <div class="tv-vs-grid">
-                <div class="tv-vs-box bad">
-                  <div class="tv-vs-header">${c.bad.header}</div>
-                  <ul class="tv-vs-list">
-                    ${c.bad.items.map(it => `<li><span>✕</span> <span>${it}</span></li>`).join('')}
-                  </ul>
-                </div>
-                <div class="tv-vs-box good">
-                  <div class="tv-vs-header">${c.good.header}</div>
-                  <ul class="tv-vs-list">
-                    ${c.good.items.map(it => `<li><span>✓</span> <span>${it}</span></li>`).join('')}
-                  </ul>
-                </div>
-              </div>
-            `;
-          }
+      function buildSlideEl(raw) {
+        const s = deepFill(raw);
+        const layout = s.layout || 'padrao';
+        const hasQr = !!(s.qr && QR[s.qr]);
+        const el = document.createElement('article');
+        const cls = layout === 'respiro' ? 'respiro solo' : layout === 'tutorial' ? 'tutorial' : (hasQr ? '' : 'solo');
+        el.className = 'tv-slide' + (cls ? ' ' + cls : '');
+        el.setAttribute('data-id', s.id);
+        el.setAttribute('data-fam', s.fam);
+        const imgTag = '<img class="tv-slide-image" src="' + esc(slideImage(s) || '') + '" alt="" decoding="async">';
 
-          slideEl.innerHTML = `
-            <div class="tv-visual-card">
-              <img class="tv-slide-image" src="${item.image}" alt="${item.headline}" loading="${index < 2 ? 'eager' : 'lazy'}">
-              <div class="tv-image-overlay"></div>
-              <div class="tv-visual-text">
-                <span class="tv-kicker ${item.kickerClass}">${item.kicker}</span>
-                <h1 class="tv-headline">${item.headline}</h1>
-                <p class="tv-subtext">${item.subtext}</p>
-                ${visualExtraHTML}
-              </div>
-            </div>
+        if (layout === 'respiro') {
+          el.innerHTML = '<div class="tv-visual-card">' + imgTag + '<div class="tv-image-overlay"></div>' +
+            '<div class="tv-visual-text"><p class="tv-quote">' + s.quote + '</p></div></div>';
+          return el;
+        }
 
-            <aside class="tv-action-card">
-              <div class="tv-action-header">
-                <div class="tv-pill-badge">${item.badge}</div>
-                <h2 class="tv-action-title">${item.actionTitle}</h2>
-                <p class="tv-action-desc">${item.actionDesc}</p>
-              </div>
+        let extra = '';
+        if (s.mock) extra += mockHTML();
+        if (s.steps && s.steps.length) extra += stepsHTML(s.steps);
+        if (s.comparativo) extra += vsHTML(s.comparativo);
 
-              <div class="tv-qr-wrapper">
-                <div class="tv-qr-box">
-                  ${qrHTML}
-                </div>
-                <div class="tv-qr-text">
-                  <div class="tv-qr-callout">${item.qrTitle}</div>
-                  <div class="tv-qr-instructions">${item.qrDesc}</div>
-                  <div class="tv-qr-subhint">👉 ${item.qrHint}</div>
-                </div>
-              </div>
+        let html = '<div class="tv-visual-card">' + imgTag + '<div class="tv-image-overlay"></div><div class="tv-visual-text">' +
+          (s.kicker ? '<span class="tv-kicker ' + (s.kickerClass || '') + '">' + s.kicker + '</span>' : '') +
+          '<h1 class="tv-headline">' + s.headline + '</h1>' +
+          (s.subtext ? '<p class="tv-subtext">' + s.subtext + '</p>' : '') + extra + '</div></div>';
 
-              <div class="tv-highlight-box">
-                <div class="tv-highlight-icon">${item.highlightIcon}</div>
-                <div class="tv-highlight-text">${item.highlightText}</div>
-              </div>
-            </aside>
-          `;
-
-          container.appendChild(slideEl);
-        });
-
-        updateCounter();
+        if (hasQr && layout === 'tutorial') {
+          html += '<aside class="tv-action-card tutorial"><div class="tv-qr-big">' + qrSvg(s.qr, 348) + '</div>' +
+            (s.qrTitle ? '<div class="tv-qr-callout">' + s.qrTitle + '</div>' : '') +
+            (s.qrDesc ? '<div class="tv-qr-instructions">' + s.qrDesc + '</div>' : '') +
+            (s.qrHint ? '<div class="tv-qr-subhint">👉 ' + s.qrHint + '</div>' : '') + '</aside>';
+        } else if (hasQr) {
+          const head = (s.badge || s.actionTitle || s.actionDesc)
+            ? '<div class="tv-action-header">' + (s.badge ? '<div class="tv-pill-badge">' + s.badge + '</div>' : '') +
+              (s.actionTitle ? '<h2 class="tv-action-title">' + s.actionTitle + '</h2>' : '') +
+              (s.actionDesc ? '<p class="tv-action-desc">' + s.actionDesc + '</p>' : '') + '</div>'
+            : '';
+          html += '<aside class="tv-action-card">' + head +
+            '<div class="tv-qr-wrapper"><div class="tv-qr-box">' + qrSvg(s.qr, 178) + '</div><div class="tv-qr-text">' +
+            (s.qrTitle ? '<div class="tv-qr-callout">' + s.qrTitle + '</div>' : '') +
+            (s.qrDesc ? '<div class="tv-qr-instructions">' + s.qrDesc + '</div>' : '') +
+            (s.qrHint ? '<div class="tv-qr-subhint">👉 ' + s.qrHint + '</div>' : '') + '</div></div>' +
+            (s.highlightText ? '<div class="tv-highlight-box"><div class="tv-highlight-icon">' + (s.highlightIcon || '') + '</div><div class="tv-highlight-text">' + s.highlightText + '</div></div>' : '') +
+            '</aside>';
+        }
+        el.innerHTML = html;
+        return el;
       }
 
       function updateCounter() {
-        slideCounter.textContent = (currentIndex + 1) + ' / ' + SLIDES.length;
+        slideCounter.textContent = state.round.length ? (state.idx + 1) + ' / ' + state.round.length : '';
       }
 
-      function showSlide(index) {
-        const slides = container.querySelectorAll('.tv-slide');
-        if (!slides.length) return;
-
-        slides[currentIndex].classList.remove('active');
-        currentIndex = (index + SLIDES.length) % SLIDES.length;
-        slides[currentIndex].classList.add('active');
-
+      // instant=true: sem transição (usado pelos testes)
+      function showSlide(item, instant) {
+        const el = buildSlideEl(item);
+        if (instant) el.style.transition = 'none';
+        container.appendChild(el);
+        const prev = currentEl;
+        currentEl = el;
+        if (instant) {
+          el.classList.add('active');
+        } else {
+          requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('active')));
+        }
+        if (prev) {
+          prev.classList.remove('active');
+          if (instant) prev.remove(); else setTimeout(() => { if (prev !== currentEl && prev.parentNode) prev.remove(); }, 1300);
+        }
         updateCounter();
-        resetProgressBar();
+        armTimer(OV.slide || instant ? 1e9 : item.dur * 1000 / OV.vel);
 
-        // Disparo para dataLayer e Analytics
         if (window.dataLayer) {
           window.dataLayer.push({
             event: 'tv3_slide',
-            tv3_slide_id: SLIDES[currentIndex].id,
-            tv3_slide_index: currentIndex,
-            tv3_kicker: SLIDES[currentIndex].kicker
+            tv3_slide_id: item.id,
+            tv3_slide_index: state.idx,
+            tv3_fam: item.fam,
+            tv3_round: state.n,
+            tv3_dia: OV.dia,
+            tv3_experiment: OV.exp
           });
         }
       }
 
-      function nextSlide() {
-        showSlide(currentIndex + 1);
+      function playNext() {
+        if (!POOL.length) return;
+        if (state.idx + 1 >= state.round.length) {
+          state.round = buildRound();
+          state.idx = -1;
+          state.n++;
+          if (!state.round.length) return;
+        }
+        state.idx++;
+        showSlide(state.round[state.idx]);
       }
-
-      function prevSlide() {
-        showSlide(currentIndex - 1);
-      }
+      function nextSlide() { playNext(); }
+      function prevSlide() { state.idx = Math.max(-1, state.idx - 2); playNext(); }
 
       // ======================================================================
       // BARRA DE PROGRESSO E TEMPORIZADOR
       // ======================================================================
-      function resetProgressBar() {
+      function armTimer(ms) {
         clearInterval(progressTimer);
         clearTimeout(slideTimer);
         progressBar.style.width = '0%';
-
+        state.currentMs = ms;
         if (isPaused) return;
 
         progressStartTime = Date.now();
         progressTimer = setInterval(() => {
           if (isPaused) return;
-          const elapsed = Date.now() - progressStartTime;
-          const pct = Math.min(100, (elapsed / SLIDE_DURATION) * 100);
+          const pct = Math.min(100, ((Date.now() - progressStartTime) / ms) * 100);
           progressBar.style.width = pct + '%';
-
-          if (pct >= 100) {
-            clearInterval(progressTimer);
-          }
+          if (pct >= 100) clearInterval(progressTimer);
         }, 80);
-
-        slideTimer = setTimeout(() => {
-          if (!isPaused) {
-            nextSlide();
-          }
-        }, SLIDE_DURATION);
+        slideTimer = setTimeout(() => { if (!isPaused) playNext(); }, ms);
       }
 
       function togglePause() {
@@ -1387,7 +1325,7 @@
           clearTimeout(slideTimer);
         } else {
           btn.innerHTML = '⏸ [Espaço] Pausar';
-          resetProgressBar();
+          armTimer(state.currentMs);
         }
       }
 
@@ -1429,7 +1367,8 @@
         const timeEl = document.getElementById('clockTime');
         const dateEl = document.getElementById('clockDate');
         timeEl.textContent = [b.hours, b.minutes, b.seconds].map(n => String(n).padStart(2, '0')).join(':');
-        dateEl.textContent = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Belem' });
+        const d = new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Belem' });
+        dateEl.textContent = d.charAt(0).toUpperCase() + d.slice(1);
       }
 
       // Cabeçalho e rodapé: só mostram o que foi configurado
@@ -1481,8 +1420,7 @@
       document.getElementById('btnRotate').addEventListener('click', rotateStage);
       document.getElementById('btnFull').addEventListener('click', toggleFullscreen);
 
-      // Verificação de parâmetros na URL (Ex: ?rot=90 ou ?rot=270)
-      const urlParams = new URLSearchParams(window.location.search);
+      // ?rot=90 ou ?rot=270 (TV deitada)
       if (urlParams.has('rot')) {
         const r = parseInt(urlParams.get('rot'), 10);
         if ([0, 90, 180, 270].includes(r)) currentRotation = r;
@@ -1501,14 +1439,13 @@
       window.addEventListener('orientationchange', fitStage);
 
       // Gancho de teste (scripts/tv3-test.mjs): só existe com ?debug=1
-      if (urlParams.has('debug')) window.TV3 = { QR, qrSvg, CONFIG, SLIDES };
+      if (DEBUG) window.TV3 = { QR, qrSvg, CONFIG, POOL, OV, state, eligible, buildRound, show: (id) => { clearTimeout(slideTimer); showSlide(POOL.filter((x) => x.id === id)[0], true); } };
 
-      renderSlides();
       fitStage();
       applyAmenities();
       updateClock();
       setInterval(updateClock, 1000);
-      resetProgressBar();
+      playNext();
 
     })();
   </script>
