@@ -23,7 +23,7 @@ LAYOUTS = {'padrao', 'tutorial', 'respiro'}
 REQUIRES = {'wifiSsid', 'fotoGraoPara'}
 LIMITES = {
     'headline': 58, 'subtext': 165, 'kicker': 34, 'actionTitle': 34, 'actionDesc': 105,
-    'qrTitle': 30, 'qrDesc': 88, 'qrHint': 38, 'highlightText': 88, 'quote': 88, 'badge': 30,
+    'qrTitle': 30, 'qrDesc': 88, 'qrHint': 48, 'highlightText': 88, 'quote': 88, 'badge': 30,
 }
 PROIBIDAS = re.compile(r'promessa|confian[çc]a|oferta|garantid|garantia|\bcura\b|crian[çc]a (normal|especial|problem)|!|—|IASEP|PROASA|conv[êe]nio|Mural da Fam', re.I)
 TAG = re.compile(r'<[^>]+>')

@@ -809,6 +809,116 @@
     .tv-vs-header { font-size: 17px; }
     .tv-vs-list { font-size: 19px; gap: 9px; }
     .tv-vs-box { padding: 18px 22px; }
+
+    /* ==========================================================================
+       TV EM PÉ (retrato, palco 1080x1920). Medido para TV de 43" ou menos vista a 3 a 5 m:
+       1080 px de palco = ~54 cm, ou seja ~20 px por cm. Regra prática de leitura: altura da letra
+       >= distância / 200 (4 m = 2 cm = ~40 px). O celular lê um QR de até ~10x a largura dele.
+       Mínimos no palco: corpo 40 px, instruções 30 a 34 px, dicas e rótulos 26 a 28 px.
+       ========================================================================== */
+    #tvStage.portrait-mode .tv-visual-text { padding: 44px 44px 48px; }
+    #tvStage.portrait-mode .tv-kicker { font-size: 26px; padding: 10px 24px; margin-bottom: 20px; }
+    #tvStage.portrait-mode .tv-headline { font-size: 80px; line-height: 1.1; margin-bottom: 18px; max-width: 100%; }
+    #tvStage.portrait-mode .tv-subtext { font-size: 40px; line-height: 1.36; max-width: 100%; }
+
+    #tvStage.portrait-mode .tv-tutorial-steps { gap: 14px; margin-top: 22px; }
+    #tvStage.portrait-mode .tv-step-item { padding: 16px 24px; gap: 20px; }
+    #tvStage.portrait-mode .tv-step-num { width: 60px; height: 60px; font-size: 32px; }
+    #tvStage.portrait-mode .tv-step-body strong { font-size: 38px; }
+    #tvStage.portrait-mode .tv-step-body span { font-size: 30px; }
+
+    #tvStage.portrait-mode .tv-action-card { padding: 34px 36px; gap: 18px; }
+    #tvStage.portrait-mode .tv-pill-badge { font-size: 26px; padding: 8px 18px; }
+    #tvStage.portrait-mode .tv-action-title { font-size: 46px; }
+    #tvStage.portrait-mode .tv-action-desc { font-size: 32px; }
+
+    /* QR de ação: ao lado do texto, para sobrar altura para a foto */
+    #tvStage.portrait-mode .tv-qr-wrapper { flex-direction: row; text-align: left; align-items: center; gap: 28px; padding: 22px; margin: 6px 0; }
+    #tvStage.portrait-mode .tv-qr-box { width: 460px; height: 460px; padding: 8px; }
+    #tvStage.portrait-mode .tv-qr-text { flex: 1; min-width: 0; align-items: flex-start; gap: 10px; }
+    #tvStage.portrait-mode .tv-qr-callout { font-size: 40px; }
+    #tvStage.portrait-mode .tv-qr-instructions { font-size: 30px; }
+    #tvStage.portrait-mode .tv-qr-subhint { font-size: 28px; }
+    #tvStage.portrait-mode .tv-highlight-box { padding: 20px 26px; gap: 20px; }
+    #tvStage.portrait-mode .tv-highlight-icon { font-size: 44px; }
+    #tvStage.portrait-mode .tv-highlight-text { font-size: 32px; }
+
+    /* Tutorial: o QR é o maior da TV; o texto de instrução fica por conta dos 3 passos */
+    #tvStage.portrait-mode .tv-slide.tutorial .tv-subtext { display: none; }
+    #tvStage.portrait-mode .tv-action-card.tutorial { padding: 28px 36px; gap: 14px; }
+    #tvStage.portrait-mode .tv-qr-big svg { width: 680px; height: 680px; }
+    #tvStage.portrait-mode .tv-slide.tutorial .tv-headline { font-size: 66px; margin-bottom: 8px; }
+    #tvStage.portrait-mode .tv-slide.tutorial .tv-tutorial-steps { gap: 12px; margin-top: 16px; }
+    #tvStage.portrait-mode .tv-slide.tutorial .tv-step-item { padding: 12px 22px; }
+    #tvStage.portrait-mode .tv-slide.tutorial .tv-step-num { width: 52px; height: 52px; font-size: 28px; }
+    #tvStage.portrait-mode .tv-slide.tutorial .tv-step-body strong { font-size: 36px; }
+    #tvStage.portrait-mode .tv-slide.tutorial .tv-step-body span { font-size: 28px; }
+    /* cartões em que o texto ocupa quase tudo: a foto escurece por igual para o título branco ter contraste */
+    #tvStage.portrait-mode .tv-slide:not(.solo):not(.respiro) .tv-image-overlay {
+      background: linear-gradient(180deg, rgba(3, 45, 55, 0.58) 0%, rgba(3, 45, 55, 0.8) 45%, rgba(3, 45, 55, 0.95) 100%);
+    }
+    #tvStage.portrait-mode .tv-action-card.tutorial .tv-qr-callout { font-size: 52px; }
+    #tvStage.portrait-mode .tv-action-card.tutorial .tv-qr-instructions { display: none; }
+    #tvStage.portrait-mode .tv-action-card.tutorial .tv-qr-subhint { font-size: 36px; font-weight: 800; color: var(--petrol-deep); }
+
+    /* Sem QR: foto grande, título grande */
+    #tvStage.portrait-mode .tv-slide.solo .tv-headline { font-size: 84px; max-width: 100%; }
+    #tvStage.portrait-mode .tv-slide.solo .tv-subtext { font-size: 42px; max-width: 100%; }
+    #tvStage.portrait-mode .tv-slide.solo .tv-kicker { font-size: 28px; padding: 12px 26px; }
+
+    /* Respiro */
+    #tvStage.portrait-mode .tv-quote { font-size: 76px; max-width: 94%; }
+
+    /* Foto vertical: em pé ela cobre o cartão inteiro, com foco no rosto */
+    #tvStage.portrait-mode .tv-slide.retrato .tv-slide-image { left: 0; right: auto; width: 100%; object-position: center 22%; -webkit-mask-image: none; mask-image: none; }
+    #tvStage.portrait-mode .tv-slide.retrato .tv-visual-card { background: var(--dark); }
+    #tvStage.portrait-mode .tv-slide.retrato .tv-image-overlay { background: linear-gradient(180deg, rgba(6, 82, 100, 0.1) 0%, rgba(3, 45, 55, 0.4) 40%, rgba(3, 45, 55, 0.95) 100%); }
+    #tvStage.portrait-mode .tv-slide.retrato .tv-visual-text { max-width: none; }
+    #tvStage.portrait-mode .tv-slide.retrato .tv-headline { font-size: 80px; }
+
+    /* Mock do Portal e comparativo */
+    #tvStage.portrait-mode .tv-mock { max-width: 100%; }
+    #tvStage.portrait-mode .tv-mock { margin-top: 16px; }
+    #tvStage.portrait-mode .tv-mock-head { font-size: 36px; padding: 14px 24px; }
+    #tvStage.portrait-mode .tv-mock-tabs { padding: 12px 16px; }
+    #tvStage.portrait-mode .tv-mock-tabs span { font-size: 28px; padding: 8px 20px; }
+    #tvStage.portrait-mode .tv-vs-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 22px; }
+    #tvStage.portrait-mode .tv-vs-header { font-size: 28px; }
+    #tvStage.portrait-mode .tv-vs-list { font-size: 30px; gap: 8px; }
+
+    /* QR do Portal: o maior possível. Sem o cabeçalho do painel (título e descrição repetem o cartão da foto) */
+    #tvStage.portrait-mode .tv-slide.qrgrande .tv-action-header { display: none; }
+    #tvStage.portrait-mode .tv-slide.qrgrande .tv-qr-wrapper { flex-direction: column; text-align: center; gap: 14px; padding: 18px 24px; }
+    #tvStage.portrait-mode .tv-slide.qrgrande .tv-qr-box { width: 540px; height: 540px; }
+    #tvStage.portrait-mode .tv-slide.qrgrande .tv-qr-text { align-items: center; }
+    #tvStage.portrait-mode .tv-slide.qrgrande .tv-qr-callout { font-size: 48px; }
+    #tvStage.portrait-mode .tv-slide.qrgrande .tv-qr-instructions { font-size: 32px; }
+    #tvStage.portrait-mode .tv-slide.qrgrande .tv-qr-subhint { font-size: 30px; }
+
+    /* Contraste: foto escurece mais cedo nos cartões só de texto; caixas do comparativo sólidas; grifo fino */
+    #tvStage.portrait-mode .tv-slide.solo .tv-image-overlay {
+      background: linear-gradient(180deg, rgba(6, 82, 100, 0.05) 0%, rgba(3, 45, 55, 0.5) 40%, rgba(3, 45, 55, 0.9) 60%, rgba(3, 45, 55, 0.96) 100%);
+    }
+    #tvStage.portrait-mode .tv-vs-box.left { background: rgba(3, 45, 55, 0.84); border-color: rgba(255, 255, 255, 0.4); }
+    #tvStage.portrait-mode .tv-vs-box.right { background: rgba(6, 82, 100, 0.9); border-color: rgba(46, 207, 181, 0.75); }
+    #tvStage.portrait-mode .tv-headline em { background: linear-gradient(180deg, transparent 84%, rgba(240, 25, 107, 0.9) 84%); }
+    #tvStage.portrait-mode .tv-qr-subhint { font-size: 30px; }
+
+    /* Cabeçalho: nada abaixo de 20 px; a etiqueta "sala de espera" sai para dar lugar às letras maiores */
+    #tvStage.portrait-mode .tv-brand-main { font-size: 34px; }
+    #tvStage.portrait-mode .tv-brand-badge { font-size: 18px; }
+    #tvStage.portrait-mode .tv-brand-sub { font-size: 20px; }
+    #tvStage.portrait-mode .tv-live-tag { display: none; }
+    #tvStage.portrait-mode .tv-header-center { padding: 8px 18px; }
+    #tvStage.portrait-mode .tv-header-info { font-size: 22px; }
+    #tvStage.portrait-mode .tv-clock-time { font-size: 46px; }
+    #tvStage.portrait-mode .tv-clock-date { font-size: 20px; }
+
+    /* Rodapé e botões de controle */
+    #tvStage.portrait-mode .tv-amenity-item { font-size: 26px; }
+    #tvStage.portrait-mode .tv-amenity-icon { width: 40px; height: 40px; font-size: 24px; }
+    #tvStage.portrait-mode .tv-slide-counter { font-size: 24px; padding: 6px 20px; }
+    #tvStage.portrait-mode .tv-hud { left: 30px; right: 30px; bottom: 86px; flex-wrap: wrap; justify-content: flex-end; }
   </style>
 </head>
 
@@ -929,7 +1039,7 @@
       // POOL:BEGIN (gerado por scripts/tv3-pool.py a partir de conteudo/tv3-slides.json, não editar à mão)
       const POOL = [
         {"id":"a_dor22h","fam":"A","dur":15,"layout":"padrao","qr":null,"unit":"arcoA","pos":0,"isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🌙 Quando a casa fica quieta","kickerClass":"pink","headline":"A dúvida da sessão chega às <em>22h</em>.","subtext":"A casa quieta, a criança dormindo e a sua cabeça ainda na sessão. As metas do plano e as orientações da equipe ficam no portal, para você rever quando quiser."},
-        {"id":"a_tut","fam":"A","dur":20,"layout":"tutorial","qr":"portal","unit":"arcoA","pos":1,"isabella":false,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp"],"kicker":"📱 Portal da Família","kickerClass":"pink","headline":"Enquanto a sessão acontece, <em>entre no portal</em>.","subtext":"Quando você entrar, a agenda, os documentos e os recados da coordenação ficam no seu celular. São três passos.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código com a câmera e toque em Entrar no portal.","qrHint":"Na tela de entrada, toque em Família","steps":[{"num":"1","title":"Aponte e toque em Família","desc":"Leia o QR, toque em Entrar e depois na aba Família."},{"num":"2","title":"Digite o celular cadastrado","desc":"É o número que você informou à recepção."},{"num":"3","title":"Digite o código do SMS","desc":"6 números, valem 5 minutos. CPF só no primeiro acesso."}]},
+        {"id":"a_tut","fam":"A","dur":20,"layout":"tutorial","qr":"portal","unit":"arcoA","pos":1,"isabella":false,"image":"img/clinica-fachada.webp","images":["img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp"],"kicker":"📱 Portal da Família","kickerClass":"pink","headline":"Enquanto a sessão acontece, <em>entre no portal</em>.","subtext":"Quando você entrar, a agenda, os documentos e os recados da coordenação ficam no seu celular. São três passos.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código com a câmera e toque em Entrar no portal.","qrHint":"ou digite institutofacaamigos.com.br/familia","steps":[{"num":"1","title":"Aponte e toque em Família","desc":"Leia o QR, toque em Entrar e depois na aba Família."},{"num":"2","title":"Digite o celular cadastrado","desc":"É o número que você informou à recepção."},{"num":"3","title":"Digite o código do SMS","desc":"6 números, valem 5 minutos. CPF só no primeiro acesso."}]},
         {"id":"a_lembrete","fam":"A","dur":10,"layout":"padrao","qr":"portal","weight":2,"isabella":false,"image":"img/clinica-painel-sensorial.webp","kicker":"📱 Portal da Família","kickerClass":"pink","headline":"Aponte a câmera e <em>entre no portal</em>.","subtext":"Leia o QR, toque em Entrar e depois na aba Família.","badge":"Portal da Família","actionTitle":"Seu celular, o portal","actionDesc":"Agenda, documentos e recados da coordenação no mesmo lugar.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"📞","highlightText":"Celular ainda não cadastrado? Fale com a recepção."},
         {"id":"a_mock","fam":"A","dur":15,"layout":"padrao","qr":"portal","mock":true,"isabella":false,"image":"img/clinica-fachada.webp","kicker":"👀 Você vai reconhecer","kickerClass":"pink","headline":"É <em>esta tela</em> que abre no seu celular.","subtext":"Rosa e petróleo no topo, com FaçaAmigos · Família e, logo abaixo, a próxima sessão do seu filho.","badge":"Portal da Família","actionTitle":"A próxima sessão no topo","actionDesc":"Dia, hora e terapeuta logo ao abrir, com os botões de falta e remarcação ao lado.","qrTitle":"Abra no seu celular","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"💛","highlightText":"A saudação da primeira tela usa o nome do seu filho."},
         {"id":"a_agenda","fam":"A","dur":15,"layout":"padrao","qr":"portal","isabella":false,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-fachada.webp"],"kicker":"🗓️ Agenda no celular","kickerClass":"pink","headline":"A próxima sessão <em>já está lá</em> quando você abre.","subtext":"Cada sessão agendada mostra dia, hora e terapeuta. Abaixo, a frequência do mês: sessões realizadas e faltas.","badge":"Portal da Família","actionTitle":"Agenda e frequência do mês","actionDesc":"Próximas sessões com dia, hora e terapeuta, e a contagem do mês.","qrTitle":"Veja a sua agenda","qrDesc":"Leia o código, toque em Entrar no portal e depois na aba Família.","qrHint":"Na tela de entrada, toque em Família","highlightIcon":"🗓️","highlightText":"Na hora de combinar a semana, o horário já está na tela."},
@@ -957,15 +1067,15 @@
         {"id":"c_elogio","fam":"C","dur":15,"layout":"padrao","qr":null,"dia":[1,2,5],"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp","img/clinica-fachada.webp"],"kicker":"🌟 Dica para hoje","kickerClass":"yellow","headline":"Hoje, diga o que <em>deu certo</em>.","subtext":"Reconhecer o que deu certo é a base do reforço positivo. Escolha um acerto do dia e conte para a criança, com atenção e afeto."},
         {"id":"c_construir","fam":"C","dur":15,"layout":"padrao","qr":null,"dia":[3,4,5],"isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-fachada.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🗣️ Dica para hoje","kickerClass":"yellow","headline":"Empilhar e derrubar, <em>revezando</em>.","subtext":"Empilhe blocos com a criança e derrubem juntos, revezando quem constrói. Trabalha a atenção compartilhada: ela olha o objeto e depois olha para você."},
         {"id":"c_esperar","fam":"C","dur":15,"layout":"padrao","qr":null,"dia":[1,2,3,4],"isabella":true,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-painel-sensorial.webp","img/clinica-recursos-terapeuticos.webp"],"kicker":"⏳ Dica para hoje","kickerClass":"yellow","headline":"Esperar a vez <em>também se treina</em> brincando.","subtext":"No Siga o líder, um dá o comando (pular, girar, ficar parado) e o outro segue. Depois troca. A criança treina esperar a vez."},
-        {"id":"d_fds","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-mediadora-tapete.webp","images":["img/playground-mediadora-tapete.webp","img/hero-piscina-bolinhas.webp","img/playground-piscina-casinha.webp"],"kicker":"🌤️ Fim de semana no Playground","kickerClass":"yellow","headline":"Primeira visita? Vá no <em>Horário Inclusivo</em>.","subtext":"Das 10h às 16h, todos os dias: som mais baixo, menos lotação e equipe reforçada. Sábado de manhã também vale."},
-        {"id":"d_parque","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-fachada-recepcao.webp","images":["img/playground-fachada-recepcao.webp","img/playground-piscina-casinha.webp","img/galeria-oficinas.webp"],"kicker":"📍 Playground no Parque Shopping","kickerClass":"yellow","headline":"Playground no Parque Shopping, <em>no térreo</em>.","subtext":"Próximo às Lojas Americanas. Todos os dias, das 10h às 22h. É só chegar: não precisa agendar."},
+        {"id":"d_fds","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/ambiente-sensorial.webp","images":["img/ambiente-sensorial.webp","img/playground-salao-amarelinha.webp","img/playground-mediadora-tapete.webp","img/inclusao-cantinho-leitura.webp"],"kicker":"🌤️ Fim de semana no Playground","kickerClass":"yellow","headline":"Primeira visita? Vá no <em>Horário Inclusivo</em>.","subtext":"Das 10h às 16h, todos os dias: som mais baixo, menos lotação e equipe reforçada. Sábado de manhã também vale."},
+        {"id":"d_parque","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-fachada-recepcao.webp","images":["img/playground-fachada-recepcao.webp","img/playground-piscina-casinha.webp","img/playground-salao-amarelinha.webp","img/galeria-oficinas.webp"],"kicker":"📍 Playground no Parque Shopping","kickerClass":"yellow","headline":"Playground no Parque Shopping, <em>no térreo</em>.","subtext":"Próximo às Lojas Americanas. Todos os dias, das 10h às 22h. É só chegar: não precisa agendar."},
         {"id":"d_graopara","fam":"D","dur":15,"layout":"padrao","qr":null,"requires":"fotoGraoPara","isabella":false,"image":"img/FOTO-GRAO-PARA.webp","kicker":"📍 Playground no Grão-Pará","kickerClass":"yellow","headline":"No Grão-Pará, <em>1º piso</em>, em frente à Renner.","subtext":"Shopping Bosque Grão-Pará. Segunda a sábado, das 10h às 22h. Domingo, das 10h às 21h. Mesmos preços do Parque Shopping."},
-        {"id":"d_prova","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/hero-piscina-bolinhas.webp","images":["img/hero-piscina-bolinhas.webp","img/playground-piscina-casinha.webp"],"kicker":"📊 Números do Playground","kickerClass":"yellow","headline":"+1.100 famílias e <em>7.500 visitas</em> no Playground.","subtext":"Dados do sistema de entrada e saída do Playground. A equipe tem nota 4,9 de 5 em 118 avaliações por WhatsApp, de julho a outubro de 2026."},
-        {"id":"d_beneficio","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-mediadora-tapete.webp","images":["img/playground-mediadora-tapete.webp","img/galeria-oficinas.webp"],"kicker":"💛 Família FaçaAmigos","kickerClass":"yellow","headline":"Você faz parte da <em>Família FaçaAmigos</em>.","subtext":"Seu vínculo com a clínica vale também fora dela. {{beneficio}}"},
-        {"id":"d_quando_ir","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-piscina-casinha.webp","images":["img/playground-piscina-casinha.webp","img/hero-piscina-bolinhas.webp"],"kicker":"🗓️ Para planejar o sábado","kickerClass":"yellow","headline":"Prefira a <em>manhã</em> ou o começo da tarde.","subtext":"No sistema (jul a out/2026), sábado é o dia mais cheio e das 17h às 20h o horário mais cheio. Quem entra por 30 minutos fica, em média, 50 minutos."},
-        {"id":"d_circuito","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/circuito-quiosque.webp","images":["img/circuito-quiosque.webp","img/circuito-frota-alinhada.webp","img/circuito-jeep-menino.webp"],"kicker":"🚗 Circuito no Parque Shopping","kickerClass":"yellow","headline":"Circuito: R$ 48 por <em>20 ou 30 minutos</em>.","subtext":"20 minutos nas pelúcias e no jeep, ou 30 minutos nos carros e na moto. No quiosque do Circuito, no Parque Shopping."},
-        {"id":"e_indicar","fam":"E","dur":15,"layout":"padrao","qr":"teste","isabella":false,"image":"img/isabella-3.webp","images":["img/isabella-3.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"💌 Para quem você lembrou","kickerClass":"teal","headline":"Uma mãe que ainda não sabe <em>por onde começar</em>?","subtext":"Pode ser mãe, pai ou avó. Envie o Mapeamento Comportamental: 25 perguntas, cerca de 5 minutos, gratuito.","badge":"Mapeamento","actionTitle":"Indique o Mapeamento","actionDesc":"Gratuito, cerca de 5 minutos, para crianças de 4 a 17 anos.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, abra a página e envie o link para quem você lembrou.","qrHint":"Mande o link por WhatsApp","highlightIcon":"📩","highlightText":"O resultado aparece na tela e também chega por e-mail."},
-        {"id":"e_oque_e","fam":"E","dur":15,"layout":"padrao","qr":"teste","isabella":true,"image":"img/isabella-3.webp","images":["img/isabella-3.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🧭 Mapeamento Comportamental","kickerClass":"teal","headline":"25 perguntas em cerca de <em>5 minutos</em>.","subtext":"Para crianças de 4 a 17 anos. Passa por cinco áreas: Emoções e segurança, Rotina e limites, Foco e energia, Amizades e convivência, Empatia e gentileza.","badge":"Mapeamento","actionTitle":"Um retrato inicial, gratuito","actionDesc":"Criado por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727).","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código e responda no seu celular, no seu ritmo.","qrHint":"Resultado na tela e por e-mail","highlightIcon":"🧡","highlightText":"Não substitui avaliação profissional."},
+        {"id":"d_prova","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-piscina-casinha.webp","images":["img/playground-piscina-casinha.webp","img/playground-salao-amarelinha.webp","img/playground-fachada-recepcao.webp","img/equipe-recepcao.webp"],"kicker":"📊 Números do Playground","kickerClass":"yellow","headline":"+1.100 famílias e <em>7.500 visitas</em> no Playground.","subtext":"Dados do sistema de entrada e saída do Playground. A equipe tem nota 4,9 de 5 em 118 avaliações por WhatsApp, de julho a outubro de 2026."},
+        {"id":"d_beneficio","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/inclusao-cantinho-leitura.webp","images":["img/inclusao-cantinho-leitura.webp","img/galeria-oficinas.webp","img/playground-oficina-camiseta.webp","img/ambiente-sensorial.webp"],"kicker":"💛 Família FaçaAmigos","kickerClass":"yellow","headline":"Você faz parte da <em>Família FaçaAmigos</em>.","subtext":"Seu vínculo com a clínica vale também fora dela. {{beneficio}}"},
+        {"id":"d_quando_ir","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/playground-salao-amarelinha.webp","images":["img/playground-salao-amarelinha.webp","img/playground-mediadora-tapete.webp","img/ambiente-sensorial.webp","img/playground-piscina-casinha.webp"],"kicker":"🗓️ Para planejar o sábado","kickerClass":"yellow","headline":"Prefira a <em>manhã</em> ou o começo da tarde.","subtext":"No sistema (jul a out/2026), sábado é o dia mais cheio e das 17h às 20h o horário mais cheio. Quem entra por 30 minutos fica, em média, 50 minutos."},
+        {"id":"d_circuito","fam":"D","dur":15,"layout":"padrao","qr":null,"isabella":false,"image":"img/circuito-carrinhos.webp","images":["img/circuito-carrinhos.webp","img/circuito-frota-quiosque.webp","img/circuito-jeep-menino.webp","img/circuito-frota-alinhada.webp"],"kicker":"🚗 Circuito no Parque Shopping","kickerClass":"yellow","headline":"Circuito: R$ 48 por <em>20 ou 30 minutos</em>.","subtext":"20 minutos nas pelúcias e no jeep, ou 30 minutos nos carros e na moto. No quiosque do Circuito, no Parque Shopping."},
+        {"id":"e_indicar","fam":"E","dur":15,"layout":"padrao","qr":"teste","isabella":false,"image":"img/clinica-atividade-pedagogica.webp","images":["img/clinica-atividade-pedagogica.webp","img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp"],"kicker":"💌 Para quem você lembrou","kickerClass":"teal","headline":"Conhece alguém que precisa de <em>um primeiro passo</em>?","subtext":"Pode ser mãe, pai ou avó. Envie o Mapeamento Comportamental: 25 perguntas, cerca de 5 minutos, gratuito.","badge":"Mapeamento","actionTitle":"Indique o Mapeamento","actionDesc":"Gratuito, cerca de 5 minutos, para crianças de 4 a 17 anos.","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código, abra a página e envie o link para quem você lembrou.","qrHint":"Mande o link por WhatsApp","highlightIcon":"📩","highlightText":"O resultado aparece na tela e também chega por e-mail."},
+        {"id":"e_oque_e","fam":"E","dur":15,"layout":"padrao","qr":"teste","isabella":true,"image":"img/clinica-recursos-terapeuticos.webp","images":["img/clinica-recursos-terapeuticos.webp","img/clinica-painel-sensorial.webp","img/clinica-atividade-pedagogica.webp"],"kicker":"🧭 Mapeamento Comportamental","kickerClass":"teal","headline":"25 perguntas em cerca de <em>5 minutos</em>.","subtext":"Para crianças de 4 a 17 anos. Passa por cinco áreas: Emoções e segurança, Rotina e limites, Foco e energia, Amizades e convivência, Empatia e gentileza.","badge":"Mapeamento","actionTitle":"Um retrato inicial, gratuito","actionDesc":"Criado por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727).","qrTitle":"Aponte a câmera aqui","qrDesc":"Leia o código e responda no seu celular, no seu ritmo.","qrHint":"Resultado na tela e por e-mail","highlightIcon":"🧡","highlightText":"Não substitui avaliação profissional."},
         {"id":"r_1","fam":"R","dur":10,"layout":"respiro","qr":null,"dia":[1,2,4],"isabella":true,"image":"img/clinica-painel-sensorial.webp","images":["img/clinica-painel-sensorial.webp","img/ambiente-sensorial.webp"],"quote":"Respire fundo. Chegar até aqui já é uma forma de cuidar."},
         {"id":"r_2","fam":"R","dur":10,"layout":"respiro","qr":null,"dia":[2,3,5],"isabella":true,"image":"img/inclusao-cantinho-leitura.webp","images":["img/inclusao-cantinho-leitura.webp","img/clinica-atividade-pedagogica.webp"],"quote":"Cada criança tem o seu tempo. Cada família também."},
         {"id":"r_3","fam":"R","dur":10,"layout":"respiro","qr":null,"dia":[1,3,4],"isabella":true,"image":"img/ambiente-sensorial.webp","images":["img/ambiente-sensorial.webp","img/clinica-painel-sensorial.webp"],"quote":"Solte os ombros. Aqui você encontra acolhimento."},
@@ -1197,10 +1307,35 @@
         return v;
       }
       function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+      // Foto de cada slide no dia: slides da mesma família recebem fotos diferentes sempre que o acervo permite,
+      // e a rotação por dia muda quem fica com qual. Depois, o slide pula a foto do slide anterior.
+      const fotoDoDia = {};
+      function montarFotosDoDia() {
+        const usadas = {};
+        POOL.forEach((s) => {
+          if (s.requires === 'fotoGraoPara') return;
+          const lista = s.images && s.images.length ? s.images : [s.image];
+          const set = usadas[s.fam] = usadas[s.fam] || {};
+          let escolha = null;
+          for (let k = 0; k < lista.length && !escolha; k++) {
+            const c = lista[(OV.dia - 1 + k) % lista.length];
+            if (!set[c]) escolha = c;
+          }
+          if (!escolha) escolha = lista[(OV.dia - 1) % lista.length];
+          set[escolha] = true;
+          fotoDoDia[s.id] = escolha;
+        });
+      }
+      montarFotosDoDia();
+
+      let ultimaFoto = '';
       function slideImage(s) {
         if (s.requires === 'fotoGraoPara') return CONFIG.fotoGraoPara;
-        if (s.images && s.images.length) return s.images[(OV.dia - 1) % s.images.length];
-        return s.image;
+        const lista = s.images && s.images.length ? s.images : [s.image];
+        let c = fotoDoDia[s.id] || lista[0];
+        if (c === ultimaFoto && lista.length > 1) c = lista[(lista.indexOf(c) + 1) % lista.length];
+        ultimaFoto = c;
+        return c;
       }
 
       function mockHTML() {
@@ -1223,7 +1358,7 @@
         const hasQr = !!(s.qr && QR[s.qr]);
         const el = document.createElement('article');
         const cls = layout === 'respiro' ? 'respiro solo' : layout === 'tutorial' ? 'tutorial' : (hasQr ? '' : 'solo');
-        el.className = 'tv-slide' + (cls ? ' ' + cls : '') + (s.imageFit === 'retrato' ? ' retrato' : '');
+        el.className = 'tv-slide' + (cls ? ' ' + cls : '') + (s.imageFit === 'retrato' ? ' retrato' : '') + (hasQr && s.qr === 'portal' && layout !== 'tutorial' ? ' qrgrande' : '');
         el.setAttribute('data-id', s.id);
         el.setAttribute('data-fam', s.fam);
         const imgTag = '<img class="tv-slide-image" src="' + esc(slideImage(s) || '') + '" alt="" decoding="async">';

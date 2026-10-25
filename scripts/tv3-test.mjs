@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [giro|qr|motor|layout|copy|audio|todos]
+// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [giro|qr|motor|layout|tamanhos|fotos|copy|audio|todos]
 //
 // Variáveis de ambiente:
 //   PW_MODULE        caminho do playwright (padrão /opt/node-tools/node_modules/playwright/index.mjs)
@@ -79,7 +79,8 @@ async function testeQR() {
       await page.evaluate((id) => window.TV3.show(id), tut.id);
       // offsetWidth não depende do giro nem da escala: é o tamanho no palco
       const w = await page.locator('.tv-slide.active .tv-qr-big').evaluate((el) => el.offsetWidth);
-      ok(w >= 360, `QR do tutorial mede ${w} px no palco (${c.nome})`);
+      const minimo = c.nome === 'paisagem' ? 360 : 660;
+      ok(w >= minimo, `QR do tutorial mede ${w} px no palco (${c.nome}, mínimo ${minimo})`);
     }
     ok(page.externas.filter((u) => /qrserver|qrcode/i.test(u)).length === 0, `nenhuma chamada a serviço externo de QR (${c.nome})`, page.externas.join(','));
     await page.context().close();
@@ -268,6 +269,79 @@ async function testeRetrato() {
   }
 }
 
+// ---------------------------------------------------------------- TAMANHOS (TV de 43" em pé, assentos a 3 a 5 m)
+// 1080 px de palco = ~54 cm (20 px por cm). Letra >= distância/200: a 4 m são 2 cm, ~40 px.
+async function testeTamanhos() {
+  console.log('\n# TAMANHOS (retrato)');
+  for (const c of CENARIOS.filter((x) => x.nome !== 'paisagem')) {
+    const page = await abrir(comQuery(c.query, 'dia=1'), c.viewport);
+    const slides = await page.evaluate(() => window.TV3.POOL.map((s) => s.id));
+    const problemas = [];
+    for (const id of slides) {
+      await page.evaluate((i) => window.TV3.show(i), id);
+      const r = await page.evaluate(() => {
+        const el = document.querySelector('.tv-slide.active');
+        const menores = [];
+        el.querySelectorAll('*').forEach((n) => {
+          if (n.closest('svg') || n.getClientRects().length === 0) return;
+          if (![...n.childNodes].some((k) => k.nodeType === 3 && k.textContent.trim())) return;
+          const fs = parseFloat(getComputedStyle(n).fontSize);
+          if (fs < 26) menores.push(`${n.className || n.tagName} ${fs}px`);
+        });
+        const tam = (sel) => [...el.querySelectorAll(sel)].filter((n) => n.getClientRects().length).map((n) => parseFloat(getComputedStyle(n).fontSize));
+        return { menores, sub: tam('.tv-subtext'), head: tam('.tv-headline'), quote: tam('.tv-quote'), qr: [...el.querySelectorAll('.tv-qr-box')].map((n) => n.offsetWidth), grande: el.classList.contains('qrgrande') };
+      });
+      if (r.menores.length) problemas.push(`${id}: letra pequena ${r.menores.slice(0, 2).join(', ')}`);
+      if (r.sub.some((v) => v < 38)) problemas.push(`${id}: subtexto ${Math.min(...r.sub)}px (mínimo 38)`);
+      if (r.head.some((v) => v < 60)) problemas.push(`${id}: título ${Math.min(...r.head)}px (mínimo 60)`);
+      if (r.quote.some((v) => v < 60)) problemas.push(`${id}: frase ${Math.min(...r.quote)}px (mínimo 60)`);
+      if (r.qr.some((v) => v < (r.grande ? 520 : 440))) problemas.push(`${id}: QR de ${Math.min(...r.qr)}px (mínimo ${r.grande ? 520 : 440})`);
+    }
+    ok(problemas.length === 0, `${c.nome}: letras e QR nos tamanhos mínimos em ${slides.length} slides`, problemas.slice(0, 5).join(' | '));
+    // cabeçalho e rodapé: letra legível e nada saindo da faixa
+    const f = await page.evaluate(() => {
+      const fonte = (sel) => parseFloat(getComputedStyle(document.querySelector(sel)).fontSize);
+      const h = document.querySelector('.tv-header'), ft = document.querySelector('.tv-footer');
+      return { sub: fonte('.tv-brand-sub'), data: fonte('.tv-clock-date'), rodape: fonte('.tv-amenity-item'), contador: fonte('.tv-slide-counter'), hx: h.scrollWidth - h.clientWidth, fx: ft.scrollWidth - ft.clientWidth };
+    });
+    ok(f.sub >= 20 && f.data >= 20 && f.rodape >= 24 && f.contador >= 24, `${c.nome}: cabeçalho e rodapé com letra mínima (sub ${f.sub}, data ${f.data}, rodapé ${f.rodape})`);
+    ok(f.hx <= 1 && f.fx <= 1, `${c.nome}: cabeçalho e rodapé sem estourar a largura`, `${f.hx}/${f.fx}`);
+    await page.context().close();
+  }
+}
+
+// ---------------------------------------------------------------- FOTOS
+async function testeFotos() {
+  console.log('\n# FOTOS');
+  for (const dia of [1, 3]) {
+    const page = await abrir(`paisagem&dia=${dia}&seed=fotos${dia}`, { width: 1920, height: 1080 });
+    const seq = await page.evaluate(() => {
+      const out = [];
+      for (let r = 0; r < 4; r++) {
+        window.TV3.buildRound().forEach((s) => {
+          window.TV3.show(s.id);
+          out.push({ id: s.id, n: (s.images || [s.image]).length, src: document.querySelector('.tv-slide.active .tv-slide-image').getAttribute('src') });
+        });
+      }
+      return out;
+    });
+    const repetidas = [];
+    for (let i = 1; i < seq.length; i++) if (seq[i].n > 1 && seq[i].src === seq[i - 1].src) repetidas.push(`${seq[i - 1].id} > ${seq[i].id}`);
+    ok(repetidas.length === 0, `dia ${dia}: nenhum slide repete a foto do slide anterior (${seq.length} slides vistos)`, repetidas.slice(0, 4).join(' | '));
+    const fotos = new Set(seq.map((x) => x.src));
+    // o acervo real tem só 4 fotos da clínica (11 a 12 no total por dia); abaixo de 10 é sinal de que a rotação quebrou
+    ok(fotos.size >= 10, `dia ${dia}: ${fotos.size} fotos diferentes aparecem`);
+    await page.context().close();
+  }
+  // os slides do Playground e do Circuito não caem todos na mesma foto, em nenhum dia do ciclo
+  for (const dia of [1, 2, 3, 4, 5]) {
+    const page = await abrir(`paisagem&dia=${dia}`, { width: 1920, height: 1080 });
+    const d = await page.evaluate(() => window.TV3.POOL.filter((s) => s.fam === 'D' && s.requires !== 'fotoGraoPara').map((s) => { window.TV3.show(s.id); return document.querySelector('.tv-slide.active .tv-slide-image').getAttribute('src'); }));
+    ok(new Set(d).size >= 5, `dia ${dia}: os ${d.length} slides do Playground e do Circuito usam ${new Set(d).size} fotos diferentes (mínimo 5)`);
+    await page.context().close();
+  }
+}
+
 // ---------------------------------------------------------------- COPY
 async function testeCopy() {
   console.log('\n# COPY');
@@ -374,7 +448,7 @@ async function testeAudio() {
   await page.context().close();
 }
 
-const testes = { giro: testeGiro, qr: testeQR, motor: testeMotor, layout: testeLayout, copy: testeCopy, audio: testeAudio };
+const testes = { giro: testeGiro, qr: testeQR, motor: testeMotor, layout: testeLayout, tamanhos: testeTamanhos, fotos: testeFotos, copy: testeCopy, audio: testeAudio };
 try {
   for (const [nome, fn] of Object.entries(testes)) if (only === 'todos' || only === nome) await fn();
 } finally {
