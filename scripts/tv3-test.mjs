@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [qr|motor|layout|copy|audio|todos]
+// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [giro|qr|motor|layout|copy|audio|todos]
 //
 // Variáveis de ambiente:
 //   PW_MODULE        caminho do playwright (padrão /opt/node-tools/node_modules/playwright/index.mjs)
@@ -43,6 +43,15 @@ async function abrir(query = '', viewport = { width: 1920, height: 1080 }, opts 
   return page;
 }
 
+// Como a TV pode estar instalada. A TV3 vive em pé (retrato 1080x1920).
+const CENARIOS = [
+  { nome: 'paisagem', query: 'paisagem', viewport: { width: 1920, height: 1080 } },
+  { nome: 'retrato nativo', query: '', viewport: { width: 1080, height: 1920 } },
+  { nome: 'giro 90', query: '', viewport: { width: 1920, height: 1080 } },
+  { nome: 'giro 270', query: 'giro=270', viewport: { width: 1920, height: 1080 } }
+];
+const comQuery = (...partes) => partes.filter(Boolean).join('&');
+
 function decodificar(buf) {
   const png = PNG.sync.read(buf);
   const r = jsQR(new Uint8ClampedArray(png.data), png.width, png.height);
@@ -52,8 +61,8 @@ function decodificar(buf) {
 // ---------------------------------------------------------------- QR
 async function testeQR() {
   console.log('\n# QR');
-  for (const rot of [0, 90]) {
-    const page = await abrir(rot ? `rot=${rot}` : '', { width: 1920, height: 1080 }, { dsf: 2 });
+  for (const c of CENARIOS) {
+    const page = await abrir(c.query, c.viewport, { dsf: 2 });
     const alvo = await page.evaluate(() => Object.fromEntries(Object.entries(window.TV3.QR).map(([k, v]) => [k, v.url])));
     const slides = await page.evaluate(() => window.TV3.POOL.filter((s) => s.qr).map((s) => ({ id: s.id, qr: s.qr, layout: s.layout })));
     let lidos = 0; const errados = [];
@@ -64,21 +73,61 @@ async function testeQR() {
       const lido = decodificar(await box.screenshot());
       if (key === sl.qr && lido === alvo[key]) lidos++; else errados.push(`${sl.id}/${key}: ${lido}`);
     }
-    ok(errados.length === 0 && lidos > 0, `todos os QR dos slides decodificam na URL certa (rot ${rot}, ${lidos} lidos)`, errados.join(' | '));
-    if (rot === 0) {
-      const tut = slides.find((x) => x.layout === 'tutorial');
-      if (tut) {
-        await page.evaluate((id) => window.TV3.show(id), tut.id);
-        const w = await page.locator('.tv-slide.active .tv-qr-big').evaluate((el) => el.getBoundingClientRect().width);
-        ok(w >= 360, `QR do tutorial mede ${Math.round(w)} px no palco (mínimo 360)`);
-      }
+    ok(errados.length === 0 && lidos > 0, `todos os QR dos slides decodificam na URL certa (${c.nome}, ${lidos} lidos)`, errados.join(' | '));
+    const tut = slides.find((x) => x.layout === 'tutorial');
+    if (tut) {
+      await page.evaluate((id) => window.TV3.show(id), tut.id);
+      // offsetWidth não depende do giro nem da escala: é o tamanho no palco
+      const w = await page.locator('.tv-slide.active .tv-qr-big').evaluate((el) => el.offsetWidth);
+      ok(w >= 360, `QR do tutorial mede ${w} px no palco (${c.nome})`);
     }
-    ok(page.externas.filter((u) => /qrserver|qrcode/i.test(u)).length === 0, `nenhuma chamada a serviço externo de QR (rot ${rot})`, page.externas.join(','));
+    ok(page.externas.filter((u) => /qrserver|qrcode/i.test(u)).length === 0, `nenhuma chamada a serviço externo de QR (${c.nome})`, page.externas.join(','));
     await page.context().close();
   }
   const page = await abrir('');
   const portal = await page.evaluate(() => window.TV3.QR.portal.url);
   ok(portal === 'https://institutofacaamigos.com.br/familia', 'QR do portal aponta para /familia', portal);
+  await page.context().close();
+}
+
+// ---------------------------------------------------------------- GIRO
+async function testeGiro() {
+  console.log('\n# GIRO');
+  const caixa = (page) => page.evaluate(() => { const r = document.getElementById('tvStage').getBoundingClientRect(); return { w: Math.round(r.width), h: Math.round(r.height), g: window.TV3.graus() }; });
+  const casos = [
+    ['auto, janela em paisagem 1920x1080 (player em paisagem)', '', { width: 1920, height: 1080 }, 90, 1920, 1080],
+    ['auto, janela em retrato 1080x1920 (a TV já gira a imagem)', '', { width: 1080, height: 1920 }, 0, 1080, 1920],
+    ['auto, janela em paisagem de 1280x720 (TV 720p)', '', { width: 1280, height: 720 }, 90, 1280, 720],
+    ['auto, janela em retrato 720x1280', '', { width: 720, height: 1280 }, 0, 720, 1280],
+    ['?giro=270', 'giro=270', { width: 1920, height: 1080 }, 270, 1920, 1080],
+    ['?giro=90 em janela retrato (forçado: o palco deitado encolhe para caber)', 'giro=90', { width: 1080, height: 1920 }, 90, 1080, 608],
+    ['?giro=0 em janela retrato', 'giro=0', { width: 1080, height: 1920 }, 0, 1080, 1920],
+    ['?rot=90 (apelido antigo)', 'rot=90', { width: 1920, height: 1080 }, 90, 1920, 1080],
+    ['?paisagem', 'paisagem', { width: 1920, height: 1080 }, 0, 1920, 1080],
+    ['?rot=0 abre em paisagem', 'rot=0', { width: 1920, height: 1080 }, 0, 1920, 1080]
+  ];
+  for (const [nome, q, vp, graus, w, h] of casos) {
+    const page = await abrir(q, vp);
+    const c = await caixa(page);
+    // o palco girado precisa ocupar a janela inteira (o defeito antigo deixava o palco em 56% do tamanho)
+    ok(c.g === graus && Math.abs(c.w - w) <= 2 && Math.abs(c.h - h) <= 2, `${nome}: gira ${c.g}º e ocupa ${c.w}x${c.h} (esperado ${graus}º, ${w}x${h})`);
+    await page.context().close();
+  }
+  // tecla R alterna, salva na TV e vale no recarregamento; a URL tem prioridade sobre o salvo
+  let page = await abrir('', { width: 1920, height: 1080 });
+  const ciclo = [];
+  for (let i = 0; i < 4; i++) { await page.keyboard.press('r'); ciclo.push(await page.evaluate(() => window.TV3.giro())); }
+  ok(ciclo.join(',') === '90,270,0,auto', `tecla R alterna auto > 90 > 270 > 0 > auto (${ciclo.join(',')})`);
+  await page.keyboard.press('r'); // 90
+  ok((await page.evaluate(() => localStorage.getItem('fa-tv3-giro'))) === '90', 'a escolha do giro fica salva na TV');
+  await page.reload();
+  ok((await page.evaluate(() => window.TV3.giro())) === '90', 'depois de recarregar, vale o giro salvo');
+  await page.goto(`${BASE}/tv3.html?debug=1&giro=270`);
+  ok((await page.evaluate(() => window.TV3.giro())) === '270', 'a URL tem prioridade sobre o giro salvo');
+  await page.context().close();
+  page = await abrir('paisagem', { width: 1920, height: 1080 });
+  await page.keyboard.press('r');
+  ok((await page.evaluate(() => window.TV3.graus())) === 0, 'em paisagem a tecla R não gira');
   await page.context().close();
 }
 
@@ -169,32 +218,32 @@ async function testeMotor() {
 async function testeLayout() {
   console.log('\n# LAYOUT');
   const dir = process.env.TV3_SHOTS || '';
-  for (const rot of [0, 90]) {
-    const page = await abrir(rot ? `rot=${rot}&dia=1` : 'dia=1', { width: 1920, height: 1080 });
+  for (const c of CENARIOS) {
+    const page = await abrir(comQuery(c.query, 'dia=1'), c.viewport);
     const slides = await page.evaluate(() => window.TV3.POOL.map((s) => ({ id: s.id, layout: s.layout, qr: s.qr })));
     const estouros = [];
     const visto = new Set();
     for (const sl of slides) {
       await page.evaluate((id) => window.TV3.show(id), sl.id);
+      // offsetTop e scrollHeight não mudam com o giro nem com a escala do palco
       const r = await page.evaluate(() => {
         const el = document.querySelector('.tv-slide.active');
-        const card = el.querySelector('.tv-visual-card').getBoundingClientRect();
         const txt = el.querySelector('.tv-visual-text');
-        const t = txt ? txt.getBoundingClientRect() : null;
         const act = el.querySelector('.tv-action-card');
+        const card = el.querySelector('.tv-visual-card');
         return {
-          topo: t ? Math.round(t.top - card.top) : 0,
+          topo: txt ? txt.offsetTop : 0,
           acao: act ? act.scrollHeight - act.clientHeight : 0,
-          card: el.querySelector('.tv-visual-card').scrollHeight - el.querySelector('.tv-visual-card').clientHeight
+          cartao: card.scrollHeight - card.clientHeight
         };
       });
       if (r.topo < 0 || r.acao > 1) estouros.push(`${sl.id} (topo ${r.topo}, ação ${r.acao})`);
       const tipo = (sl.layout || 'padrao') + (sl.qr ? '+qr' : '');
-      if (dir && !visto.has(tipo + rot)) { visto.add(tipo + rot); await page.screenshot({ path: path.join(dir, `layout-${tipo}-rot${rot}-${sl.id}.png`) }); }
+      if (dir && !visto.has(tipo)) { visto.add(tipo); await page.screenshot({ path: path.join(dir, `layout-${c.nome.replace(/ /g, '-')}-${tipo}-${sl.id}.png`) }); }
     }
-    ok(estouros.length === 0, `nenhum texto estoura o cartão em ${slides.length} slides (rot ${rot})`, estouros.join(' | '));
+    ok(estouros.length === 0, `nenhum texto estoura o cartão em ${slides.length} slides (${c.nome})`, estouros.join(' | '));
     const imgs = await page.evaluate(() => window.TV3.POOL.filter((s) => s.requires !== 'fotoGraoPara').map((s) => s.image));
-    ok(imgs.every((u) => u), 'todo slide tem imagem');
+    ok(imgs.every((u) => u), `todo slide tem imagem (${c.nome})`);
     await page.context().close();
   }
   await testeRetrato();
@@ -203,7 +252,7 @@ async function testeLayout() {
 async function testeRetrato() {
   // foto vertical em cartão horizontal: não pode ser ampliada demais (fica borrada) nem cortar o rosto
   for (const dia of [1, 2]) {
-    const page = await abrir(`dia=${dia}`, { width: 1920, height: 1080 });
+    const page = await abrir(`paisagem&dia=${dia}`, { width: 1920, height: 1080 });
     const ids = await page.evaluate(() => window.TV3.POOL.filter((s) => s.imageFit === 'retrato').map((s) => s.id));
     for (const id of ids) {
       await page.evaluate((i) => window.TV3.show(i), id);
@@ -325,7 +374,7 @@ async function testeAudio() {
   await page.context().close();
 }
 
-const testes = { qr: testeQR, motor: testeMotor, layout: testeLayout, copy: testeCopy, audio: testeAudio };
+const testes = { giro: testeGiro, qr: testeQR, motor: testeMotor, layout: testeLayout, copy: testeCopy, audio: testeAudio };
 try {
   for (const [nome, fn] of Object.entries(testes)) if (only === 'todos' || only === nome) await fn();
 } finally {
