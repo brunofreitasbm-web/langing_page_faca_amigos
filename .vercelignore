@@ -11,6 +11,8 @@ conteudo/
 # Arquivo morto (imagens sem uso no site): fica no repositório, não vai para o ar
 _arquivo/
 MAPA-DO-SITE.md
+PLANO-TV3.md
+EXPERIMENTOS-TV3.md
 
 # Documentação interna (mapa da base de código, lista riscos de segurança)
 docs/

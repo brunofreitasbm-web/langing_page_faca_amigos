@@ -1,74 +1,96 @@
-# Plano de Implantação: TV3 — Clínica FaçaAmigos
+# TV3: mídia indoor da sala de espera da Clínica FaçaAmigos
 
-Mídia indoor para a sala de espera do Centro de Terapia Comportamental.
+Endereço: `/tv3` (atalhos `/clinica/tv` e `/tv-clinica`). Página interna, noindex.
 
----
+## Para quem é e o que a TV faz
 
-## 1. Perfil do Público & Contexto
-- **Público:** Pais e mães aguardando sessões terapêuticas (tempo médio de permanência: 2 a 3 horas).
-- **Estado emocional:** Ansiedade, cansaço, busca por orientação e acolhimento.
-- **Objetivo central:** Acolher, orientar, divulgar o ecossistema e converter o tempo ocioso em engajamento ativo.
+O pai ou a mãe fica 2 a 3 horas por visita, 2 a 3 vezes por semana, enquanto o filho está em sessão. Já contratou a
+clínica (abertura prevista para dezembro/2026). A TV tem **uma ação principal**: fazer o responsável entrar no
+**Portal da Família**. O resto do tempo ela orienta, acolhe, conta como funciona a clínica, convida para o
+Playground e o Circuito no fim de semana e pede a indicação do Mapeamento.
 
----
+O nome certo é **Portal da Família**. "Mural" é só uma seção dentro dele. O login é por celular cadastrado e código de
+6 números por SMS (CPF só no primeiro acesso), e a tela de entrada abre na aba **Equipe**: por isso o QR vai para
+`/familia`, que explica a aba Família e leva ao login.
 
-## 2. Estrutura do Ciclo (Prevenção de Fadiga)
-Para um período de 3 horas, um loop curto de 1 minuto gera irritação. 
-- **Ciclo completo:** Bloco de 15 a 20 minutos rotativo.
-- **Duração por slide:** 10 a 15 segundos (leitura calma e confortável).
-- **Relógio e utilidades:** Horário ao vivo e previsão do tempo discretos na barra lateral/topo.
+## Como a TV funciona
 
-```
-[Bloco Terapêutico / Acolhimento] (40%)
-   ↓
-[Mapeamento Grátis via QR Code] (25%)
-   ↓
-[Playground Parque Shopping & Grão-Pará] (20%)
-   ↓
-[Circuito de Carrinhos Elétricos] (15%)
-```
+- **Volta de ~9 min.** Cada slide aparece uma vez por volta (`a_lembrete` aparece duas). Hoje são 36 a 39 slides por
+  volta, conforme o dia do ciclo e o que está ligado. Em 2,5 h o pai vê a volta umas 16 vezes.
+- **Abre em `b_boasvindas` e fecha em `a_fecho`.** No meio, as famílias de conteúdo se alternam (nunca duas iguais coladas).
+- **QR do Portal a cada 6 min no máximo**, e uma dica (família C) vem antes de cada pedido do Portal.
+- **Ciclo de 5 dias** (dia de Belém): troca as dicas (C), os respiros (R) e as fotos de alguns slides.
+- **Famílias:** A Portal da Família (12) · B Clínica (9) · C Dicas para casa (8) · D Playground e Circuito (7) ·
+  E Indicação do Mapeamento (2) · R Respiro (4). Total 42.
+- **QR local.** As matrizes ficam dentro do HTML (`scripts/tv3-qr.py`). A TV não depende de internet para mostrar o QR.
+- **Trilha instrumental baixa**, sem voz: 20 faixas do salão, volume 0,12, só no expediente (seg a sex 8h às 18h,
+  sáb 8h às 12h), 20 min de música e 10 de silêncio a cada meia hora. Tecla `S` liga e desliga.
 
----
+## Configuração (`CONFIG`, no topo do script de `tv3.html`)
 
-## 3. Grade de Conteúdo dos Slides
+| Campo | O que faz |
+|---|---|
+| `portalAtivo` | `false` esconde a família A inteira. Use enquanto o Portal ou o cadastro do celular não estiverem prontos |
+| `beneficioFamilia` | Texto do slide `d_beneficio`. Trocar quando o mecanismo do benefício for definido |
+| `wifiSsid` | Nome da rede. Vazio esconde Wi-Fi do cabeçalho, do rodapé e o slide `b_wifi` |
+| `fotoGraoPara` | Caminho da foto do Grão-Pará. Vazio desliga o slide `d_graopara` |
+| `somVolume`, `somTocaMin`, `somPausaMin` | Volume e ciclo da trilha |
+| `experiment` | Rótulo do experimento (ver `EXPERIMENTOS-TV3.md`) |
 
-### Bloco A — Clínica & Psicoeducação (40%)
-1. **Boas-vindas & Acolhimento:** Mensagens de reforço positivo ("Cada pequeno passo é uma grande vitória").
-2. **Nosso Método (ABA, Fono, TO, Psicopedagogia):** Explicação visual e simplificada do trabalho em sala.
-3. **Equipe Clínica:** Destaque para a coordenação de Isabella Freitas (CRP 10/4727) e terapeutas.
-4. **Dicas Práticas para Casa:** Ideias de rotina visual, regulação sensorial e comunicação alternativa.
-5. **Avisos da Recepção:** Conexão Wi-Fi, café, água e suporte à família.
+## Parâmetros de URL
 
-### Bloco B — Marketing do Mapeamento Grátis (25%)
-1. **Chamada Direta:** "Aproveite seu tempo de espera: faça o Mapeamento Comportamental grátis".
-2. **QR Code Gigante:** Direcionamento direto para `/teste` com UTM `tv3_sala_espera`.
-3. **Proposta de Valor:** "Leva apenas 5 minutos no celular. Retrato preliminar do desenvolvimento no seu e-mail".
-4. **Compartilhamento:** "Conhece outra mãe ou pai com dúvidas? Escaneie e compartilhe o link".
+`?dia=1..5` força o dia do ciclo · `?exp=rotulo` rótulo do experimento · `?slide=<id>` fixa um slide ·
+`?portal=0` esconde a família A · `?som=0|1` força o som · `?rot=90|270` gira o palco (TV deitada) ·
+`?debug=1&seed=x&vel=50` só para teste.
 
-### Bloco C — Playground (Parque Shopping & Grão-Pará) (20%)
-1. **Espaço Inclusivo:** Ambiente adaptado com monitores treinados para regulação e brincadeiras livres.
-2. **Unidade Parque Shopping:** Térreo, próximo às Lojas Americanas (todos os dias das 10h às 22h).
-3. **Unidade Bosque Grão-Pará:** 1º piso, em frente à Renner (segunda a sábado 10h-22h, domingos 10h-21h).
-4. **Benefício Terapêutico:** Brincar como extensão da socialização infantil.
+Teclas: `←` `→` troca, espaço pausa, `R` gira, `F` tela cheia, `S` som. Os botões aparecem com o mouse.
 
-### Bloco D — Circuito de Carrinhos (Parque Shopping) (15%)
-1. **Autonomia e Diversão:** Crianças no volante de minicarros, jeeps e pelúcias elétricas motorizadas.
-2. **Localização:** Piso térreo do Parque Shopping Belém.
-3. **Vídeo / Fotos:** Slides dinâmicos com crianças sorrindo e dirigindo.
+## Instalação na TV (checklist da recepção)
 
----
+Sem estes itens a TV promete uma ação que falha. Enquanto algum faltar, abra com `?portal=0` ou mude `portalAtivo`.
 
-## 4. Arquitetura Técnica (`tv3.html`)
-- **Base Técnica:** Baseada em `tv.html` e `tv2.html` (HTML5, Vanilla CSS, JS sem dependências externas pesadas).
-- **Identidade Visual:** Paleta oficial da Clínica (Petróleo `#065264`, Rosa `#F0196B`, Turquesa `#2ECFB5`, Amarelo `#FFE234` e Creme `#FFF9F1`).
-- **Layout:** Adaptável para 16:9 Horizontal (Full HD 1920x1080) e Vertical (com rotação 90°/270° via URL param, igual `tv2.html`).
-- **Tracking:** Disparo de eventos `tv3_slide` e `tv3_qr_scan` para mensuração do painel indoor.
-- **Resiliência:** Cache offline automático e auto-recarregamento preventivo de madrugada.
+1. A recepção **cadastra o celular do responsável** na avaliação. Telefone não cadastrado recebe "entre em contato com a recepção".
+2. O **SMS com o código** (Twilio) está funcionando em produção para a família.
+3. **Cartão de mesa** com o mesmo QR de `/familia` em cada assento. O pai está de celular na mão e a mesa está a 40 cm.
+4. A recepção sabe responder **"qual é a condição especial no Playground"** (texto de `beneficioFamilia`).
+5. Chrome em modo quiosque com `--autoplay-policy=no-user-gesture-required`. Sem isso, o som espera o primeiro toque.
+6. Se a TV está deitada, abrir `/tv3?rot=90` (ou `270` se a imagem ficar de cabeça para baixo).
+7. Foto do Grão-Pará em `img/` e `fotoGraoPara` preenchido liga o slide `d_graopara`.
+8. Revisão da Isabella dos slides marcados **[ISABELLA]** em `conteudo/tv3-roteiro-slides.md`.
 
----
+## Como mudar um texto
 
-## 5. Próximos Passos de Execução
-1. Criar o arquivo `tv3.html` com o player e transições.
-2. Gerar QR Codes otimizados de alto contraste para o `/teste`.
-3. Montar a esteira de slides intercalando fotos da clínica, playgrounds e circuito.
-4. Adicionar barra de utilidades (relógio em tempo real e aviso de Wi-Fi).
-5. Testar em navegador e validar em tela cheia.
+1. Edite `conteudo/tv3-slides.json` (o que a TV mostra) e o mesmo trecho em `conteudo/tv3-roteiro-slides.md` (versão
+   legível, com a fonte de cada fato).
+2. `python3 scripts/tv3-pool.py` valida (tamanho, palavras proibidas, QR existente) e grava no `tv3.html`.
+3. Mudou uma URL de QR? Edite `QR_URLS` em `scripts/tv3-qr.py` e rode `python3 scripts/tv3-qr.py`. Precisa de `pip install segno`.
+4. `node scripts/tv3-test.mjs` (precisa de Playwright e de `npm i --no-save jsqr pngjs`; ver o cabeçalho do arquivo).
+
+**Regras de texto:** nunca "promessa", "confiança", "oferta", "garantido", "cura"; nunca "criança normal/especial";
+sem exclamação; sem convênio; sem prognóstico; número só com fonte. O validador barra o que dá para barrar.
+
+## O que os testes verificam (`scripts/tv3-test.mjs`)
+
+- Todo QR da tela decodifica na URL esperada, em paisagem e girado; o do tutorial mede 360 px ou mais.
+- Em 1.500 voltas simuladas: abertura, fechamento, famílias alternadas, ausência de repetição, QR do Portal a cada 6 min e dica antes do pedido.
+- Nenhum texto estoura o cartão nos 42 slides, em paisagem e girado.
+- A trilha toca nos horários certos, pausa no ciclo, respeita `?som=0` e a tecla `S`, e as 20 faixas existem.
+
+## Limites conhecidos
+
+- A volta tem ~9 min, não 11: os filtros por dia e os slides desligados reduzem o miolo. Para alongar, escrever mais
+  slides (com revisão da Isabella), não repetir os mesmos.
+- A nota "4,9 em 118 avaliações" e o "+1.100 famílias" são números do **Playground** (sistema do quiosque, jul a out/2026).
+  Atualizar `d_prova` se a TV for ao ar bem depois. A clínica não tem número próprio ainda e nenhum slide inventa um.
+- A licença das 20 faixas instrumentais não está documentada no repositório.
+- O celular do pai só chega ao login do sistema se a recepção cadastrou o número (item 1 do checklist).
+
+## Pendências em outros lugares (não resolvidas aqui)
+
+- `clinica_facaamigos`: aceitar `?perfil=familia` em `/login` (hoje abre na aba Equipe). Depois disso `/familia` pode virar redirecionamento.
+- `clinica_facaamigos`: o robô de WhatsApp diz para remarcar "por aqui mesmo", enquanto a falta é avisada pelo portal. Alinhar as duas respostas.
+- `clinica_facaamigos`: avisar o pai quando a coordenação responder (hoje ele só vê ao abrir o portal).
+- `clinica_facaamigos`: a barra de progresso das metas é fixa em 65%.
+- `clinica_facaamigos`: a pasta "Modelos de PDF PLanos" tem dados reais de pacientes de terceiros. Tirar do Git.
+- `clinica.html` (este repositório): a seção do Mural foi colada sem fechar `</div>` e `</section>` e promete funções que o portal não tem
+  (evolução em tempo real, "resposta garantida", justificativa por recibo).
