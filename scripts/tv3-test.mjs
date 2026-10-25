@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [giro|qr|motor|layout|tamanhos|fotos|copy|audio|todos]
+// Testes da /tv3 com Playwright. Uso: node scripts/tv3-test.mjs [giro|qr|motor|layout|tamanhos|fotos|fotosnovas|copy|audio|todos]
 //
 // Variáveis de ambiente:
 //   PW_MODULE        caminho do playwright (padrão /opt/node-tools/node_modules/playwright/index.mjs)
@@ -39,7 +39,8 @@ async function abrir(query = '', viewport = { width: 1920, height: 1080 }, opts 
   page.on('request', (rq) => { const u = rq.url(); if (!u.startsWith(BASE) && !u.startsWith('data:') && !u.startsWith('blob:')) externas.push(u); });
   page.externas = externas;
   if (opts.clock) await page.clock.install({ time: new Date(opts.clock) });
-  await page.goto(`${BASE}/tv3.html?debug=1${query ? '&' + query : ''}`);
+  const q = /(^|&)fotos=/.test(query) ? query : (query ? query + '&' : '') + 'fotos=0';
+  await page.goto(`${BASE}/tv3.html?debug=1&${q}`);
   return page;
 }
 
@@ -342,6 +343,72 @@ async function testeFotos() {
   }
 }
 
+// ---------------------------------------------------------------- FOTOS NOVAS (PR das fotos da fotógrafa: assets/fa-fotos.js)
+// Manifesto de mentira: uma foto de cada tema, algumas verticais. Nada de rede de verdade.
+const SB = 'https://ivjvpdzsfjdpyabbzzuj.supabase.co/storage/v1/object/public/fotos-site/';
+const TEMAS_FALSOS = ['piscina_bolinhas', 'oficina_arte', 'acolhimento', 'brincadeira', 'cantinho_calma', 'fachada_playground', 'equipe',
+  'frota_carrinhos', 'quiosque_circuito', 'pelucia_motorizada', 'crianca_dirigindo', 'clinica_sensorial'];
+// cada tema tem uma foto horizontal e uma vertical (-v): a vertical tentaria entrar em slide com QR se a regra falhasse
+const FALSAS = TEMAS_FALSOS.flatMap((t, i) => [[t, 1600, 1067, `f-${i}-h`], [t, 1067, 1600, `f-${i}-v`]]);
+async function abrirComFotosNovas(query, viewport) {
+  const ctx = await browser.newContext({ viewport });
+  const hoje = new Date().toISOString();
+  await ctx.route(SB + '**', async (route) => {
+    const u = route.request().url();
+    if (/manifest\.json/.test(u)) {
+      return route.fulfill({ contentType: 'application/json', body: JSON.stringify({ fotos: FALSAS.map(([tema, w, h, id]) => ({ id, tema, w, h, tv: true, site: false, unidade: 'parque', src: id, alt: 'foto ' + id, pos: '40% 30%', adicionada: hoje })) }) });
+    }
+    const webp = /\.webp/.test(u);
+    return route.fulfill({ contentType: webp ? 'image/webp' : 'image/jpeg', body: fs.readFileSync(path.join(ROOT, 'img', webp ? 'inclusao-cantinho-leitura.webp' : 'playground-fachada-recepcao.jpg')) });
+  });
+  const page = await ctx.newPage();
+  const manifesto = page.waitForResponse((r) => /manifest\.json/.test(r.url()));
+  await page.goto(`${BASE}/tv3.html?debug=1&dia=1${query ? '&' + query : ''}`);
+  await manifesto;
+  await page.waitForTimeout(300);
+  return page;
+}
+
+async function testeFotosNovas() {
+  console.log('\n# FOTOS NOVAS (manifesto de mentira)');
+  for (const c of CENARIOS) {
+    const page = await abrirComFotosNovas(c.query, c.viewport);
+    const slides = await page.evaluate(() => window.TV3.POOL.filter((s) => s.requires !== 'fotoGraoPara').map((s) => ({ id: s.id, retrato: s.imageFit === 'retrato', qr: !!(s.qr && window.TV3.QR[s.qr]), layout: s.layout || 'padrao' })));
+    const vistos = [];
+    const estouros = [];
+    for (const sl of slides) {
+      await page.evaluate((id) => window.TV3.show(id), sl.id);
+      const r = await page.evaluate(() => {
+        const el = document.querySelector('.tv-slide.active');
+        const im = el.querySelector('.tv-slide-image');
+        const txt = el.querySelector('.tv-visual-text');
+        const act = el.querySelector('.tv-action-card');
+        const card = el.querySelector('.tv-visual-card');
+        return { src: im.getAttribute('src'), classeRetrato: el.classList.contains('retrato'), pos: im.style.objectPosition, topo: txt ? txt.offsetTop : 0, acao: act ? act.scrollHeight - act.clientHeight : 0, cartao: card.scrollHeight - card.clientHeight };
+      });
+      vistos.push({ ...sl, ...r, nova: r.src.startsWith(SB) });
+      if (r.topo < 0 || r.acao > 1) estouros.push(`${sl.id} (topo ${r.topo}, ação ${r.acao})`);
+    }
+    const novas = vistos.filter((v) => v.nova);
+    // o manifesto falso tem ~13 fotos e cada uma entra uma vez por volta: 6 já prova a troca
+    ok(novas.length >= 6, `${c.nome}: ${novas.length} de ${vistos.length} slides passam a mostrar foto nova`);
+    ok(novas.filter((v) => !/-v\.webp/.test(v.src)).every((v) => v.pos === '40% 30%'), `${c.nome}: a foto nova horizontal usa o foco (object-position) do catálogo`);
+    const verticais = novas.filter((v) => /-v\.webp/.test(v.src));
+    ok(verticais.length > 0 && verticais.every((v) => !v.qr && v.layout === 'padrao' && v.classeRetrato), `${c.nome}: foto vertical só em slide sem QR e com a classe retrato (${verticais.length} vistas)`, verticais.map((v) => v.id).join(','));
+    ok(vistos.filter((v) => v.qr).every((v) => !/-v\.webp/.test(v.src)), `${c.nome}: slide com QR nunca recebe foto vertical`);
+    const fixos = vistos.filter((v) => v.retrato);
+    ok(fixos.length > 0 && fixos.every((v) => !v.nova), `${c.nome}: slide de retrato (imageFit) fica com a foto fixa (${fixos.map((v) => v.id).join(',')})`);
+    const srcs = novas.map((v) => v.src);
+    ok(new Set(srcs).size === srcs.length, `${c.nome}: a mesma foto nova não repete dentro de uma volta (${srcs.length} fotos)`, srcs.join(' '));
+    ok(estouros.length === 0, `${c.nome}: nenhum texto estoura com as fotos novas em ${vistos.length} slides`, estouros.join(' | '));
+    // volta seguinte: o cursor anda e as fotos novas voltam a ser distribuídas
+    await page.evaluate(() => { window.TV3.state.n++; });
+    const volta2 = await page.evaluate(() => window.TV3.POOL.filter((s) => s.id.startsWith('d_')).slice(0, 3).map((s) => { window.TV3.show(s.id); return document.querySelector('.tv-slide.active .tv-slide-image').getAttribute('src'); }));
+    ok(volta2.some((u) => u.startsWith(SB)), `${c.nome}: na volta seguinte as fotos novas continuam a entrar`);
+    await page.context().close();
+  }
+}
+
 // ---------------------------------------------------------------- COPY
 async function testeCopy() {
   console.log('\n# COPY');
@@ -448,7 +515,7 @@ async function testeAudio() {
   await page.context().close();
 }
 
-const testes = { giro: testeGiro, qr: testeQR, motor: testeMotor, layout: testeLayout, tamanhos: testeTamanhos, fotos: testeFotos, copy: testeCopy, audio: testeAudio };
+const testes = { giro: testeGiro, qr: testeQR, motor: testeMotor, layout: testeLayout, tamanhos: testeTamanhos, fotos: testeFotos, fotosnovas: testeFotosNovas, copy: testeCopy, audio: testeAudio };
 try {
   for (const [nome, fn] of Object.entries(testes)) if (only === 'todos' || only === nome) await fn();
 } finally {

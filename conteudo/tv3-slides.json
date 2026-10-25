@@ -708,9 +708,9 @@
     "layout": "padrao",
     "qr": null,
     "isabella": false,
-    "image": "img/ambiente-sensorial.webp",
+    "image": "img/playground-fachada-recepcao.webp",
     "images": [
-      "img/ambiente-sensorial.webp",
+      "img/playground-fachada-recepcao.webp",
       "img/playground-salao-amarelinha.webp",
       "img/playground-mediadora-tapete.webp",
       "img/inclusao-cantinho-leitura.webp"
@@ -784,7 +784,7 @@
       "img/inclusao-cantinho-leitura.webp",
       "img/galeria-oficinas.webp",
       "img/playground-oficina-camiseta.webp",
-      "img/ambiente-sensorial.webp"
+      "img/playground-mediadora-tapete.webp"
     ],
     "kicker": "💛 Família FaçaAmigos",
     "kickerClass": "yellow",
@@ -802,7 +802,7 @@
     "images": [
       "img/playground-salao-amarelinha.webp",
       "img/playground-mediadora-tapete.webp",
-      "img/ambiente-sensorial.webp",
+      "img/playground-oficina-camiseta.webp",
       "img/playground-piscina-casinha.webp"
     ],
     "kicker": "🗓️ Para planejar o sábado",

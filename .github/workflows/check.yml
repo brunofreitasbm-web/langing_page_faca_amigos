@@ -23,3 +23,6 @@ jobs:
         run: node scripts/check.mjs
       - name: Verificar llms.txt/llms-full.txt contra o snapshot do quiosque
         run: node scripts/geo-build.mjs --check
+      - name: Testes do sincronizador de fotos (scripts/fotos)
+        working-directory: scripts/fotos
+        run: npm ci --no-audit --no-fund && npm test

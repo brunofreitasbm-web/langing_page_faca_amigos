@@ -1,0 +1,56 @@
+name: Fotos do Drive (TVs e landings)
+
+# Lê a pasta da fotógrafa no Google Drive, classifica só as fotos que ainda não estão no catálogo e
+# publica no Supabase Storage (bucket fotos-site), de onde as TVs e as landings leem o manifest.json.
+# Não faz commit nem deploy. Configuração em scripts/fotos/LEIA-ME.md.
+on:
+  schedule:
+    # Toda segunda às 8h17 de Belém (UTC-3). A fotógrafa sobe fotos ~1x por semana; para publicar
+    # ou tirar do ar na hora, use "Run workflow" (Actions → Fotos do Drive).
+    - cron: '17 11 * * 1'
+  workflow_dispatch:
+    inputs:
+      permitir_remocao_em_massa:
+        description: 'Permitir tirar do ar mais da metade das fotos de uma vez (só se foi de propósito)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fotos-drive
+  cancel-in-progress: false
+
+jobs:
+  sincronizar:
+    runs-on: ubuntu-24.04
+    # ~15 s por foto nova: 200 fotos cabem com folga. O catálogo é salvo a cada 10 fotos.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/fotos
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: scripts/fotos/package-lock.json
+      - name: Instalar conversor de HEIC (fotos do iPhone)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends libheif-examples libheif-plugin-libde265 >/dev/null
+      - name: Instalar dependências
+        working-directory: scripts/fotos
+        run: npm ci --no-audit --no-fund
+      - name: Sincronizar
+        working-directory: scripts/fotos
+        env:
+          FOTOS_DRIVE_FOLDER_ID: ${{ secrets.FOTOS_DRIVE_FOLDER_ID }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          FOTOS_DONOS: ${{ secrets.FOTOS_DONOS }}
+          FOTOS_MAX_POR_RODADA: ${{ vars.FOTOS_MAX_POR_RODADA }}
+          FOTOS_PERMITIR_REMOCAO_EM_MASSA: ${{ inputs.permitir_remocao_em_massa && '1' || '' }}
+        run: node sync.mjs

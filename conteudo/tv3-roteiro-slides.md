@@ -544,7 +544,7 @@ Família C · 15 s · sem QR, layout padrao, dias 1,2,3,4
 ### `d_fds`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Convite concreto para o fim de semana, com o horário mais calmo; reduz o receio da primeira visita.
-- **Imagem:** `img/ambiente-sensorial.webp` (alternativas: `img/playground-salao-amarelinha.webp`, `img/playground-mediadora-tapete.webp`, `img/inclusao-cantinho-leitura.webp`)
+- **Imagem:** `img/playground-fachada-recepcao.webp` (alternativas: `img/playground-salao-amarelinha.webp`, `img/playground-mediadora-tapete.webp`, `img/inclusao-cantinho-leitura.webp`)
 - **Texto na tela:**
   - Kicker: 🌤️ Fim de semana no Playground
   - Headline: Primeira visita? Vá no <em>Horário Inclusivo</em>.
@@ -594,7 +594,7 @@ Família D · 15 s · sem QR, layout padrao
 ### `d_beneficio`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Identidade (pertencimento) em vez de desconto. O detalhe do benefício vem de CONFIG.beneficioFamilia.
-- **Imagem:** `img/inclusao-cantinho-leitura.webp` (alternativas: `img/galeria-oficinas.webp`, `img/playground-oficina-camiseta.webp`, `img/ambiente-sensorial.webp`)
+- **Imagem:** `img/inclusao-cantinho-leitura.webp` (alternativas: `img/galeria-oficinas.webp`, `img/playground-oficina-camiseta.webp`, `img/playground-mediadora-tapete.webp`)
 - **Texto na tela:**
   - Kicker: 💛 Família FaçaAmigos
   - Headline: Você faz parte da <em>Família FaçaAmigos</em>.
@@ -606,7 +606,7 @@ Família D · 15 s · sem QR, layout padrao
 ### `d_quando_ir`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Ajuda o pai a escolher o horário mais tranquilo (alívio) e a planejar o tempo real de visita.
-- **Imagem:** `img/playground-salao-amarelinha.webp` (alternativas: `img/playground-mediadora-tapete.webp`, `img/ambiente-sensorial.webp`, `img/playground-piscina-casinha.webp`)
+- **Imagem:** `img/playground-salao-amarelinha.webp` (alternativas: `img/playground-mediadora-tapete.webp`, `img/playground-oficina-camiseta.webp`, `img/playground-piscina-casinha.webp`)
 - **Texto na tela:**
   - Kicker: 🗓️ Para planejar o sábado
   - Headline: Prefira a <em>manhã</em> ou o começo da tarde.
