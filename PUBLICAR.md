@@ -302,3 +302,16 @@ Aplicado em produção em 23/10/2026: migração (registrada no Supabase como `w
 - **Páginas:** `hotspot/login.html` ganha a regra no rodapé do formulário. `hotspot/alogin.html` e `wifi.html` deixam de calcular uma data de validade no navegador (ela estaria errada para quem já recebeu) e passam a dizer "vale por 15 dias · 1 por cliente a cada 30 dias". O e-mail do cupom também cita a regra.
 - **Sem migração** (os índices de telefone, e-mail e MAC já existem). Ordem: (1) deploy de `wifi-lead-webhook` (`--no-verify-jwt`); (2) site; (3) copiar `login.html` e `alogin.html` para o roteador.
 - **Limites conhecidos.** Quem usa outro telefone, outro e-mail e outro aparelho recebe outro cupom; só a recepção percebe. Dois cadastros simultâneos do mesmo cliente podem emitir dois cupons.
+
+## Lote 13: TV da sala de espera da Clínica (/tv3) e página /familia, 25/10/2026 (pendente, feito só no código)
+
+Só o site: nada de migration, função ou secret. Arquivos novos: `familia.html` (rewrite em `vercel.json`),
+`conteudo/tv3-slides.json` e `conteudo/tv3-roteiro-slides.md` (fora do ar pelo `.vercelignore`), `scripts/tv3-*.{py,mjs}`,
+`PLANO-TV3.md` e `EXPERIMENTOS-TV3.md`. O `tv3.html` foi reescrito (motor de voltas, QR local, trilha instrumental).
+
+1. Antes de ligar a TV, cumprir o checklist de instalação do `PLANO-TV3.md` (celular do responsável cadastrado na avaliação,
+   SMS do Portal funcionando, cartão de mesa, resposta da recepção sobre o benefício). Enquanto faltar, usar `?portal=0`.
+2. A Isabella revisa os slides marcados [ISABELLA] em `conteudo/tv3-roteiro-slides.md`.
+3. Na TV, abrir `/tv3` (deitada: `/tv3?rot=90`), tela cheia, e deixar. Chrome em modo quiosque com
+   `--autoplay-policy=no-user-gesture-required` para a trilha tocar sem clique.
+4. Mudar texto ou QR: ver "Como mudar um texto" no `PLANO-TV3.md`.

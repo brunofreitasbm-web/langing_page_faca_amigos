@@ -17,6 +17,7 @@
     { "source": "/tv3", "destination": "/tv3" },
     { "source": "/clinica/tv", "destination": "/tv3" },
     { "source": "/tv-clinica", "destination": "/tv3" },
+    { "source": "/familia", "destination": "/familia" },
     { "source": "/musicas", "destination": "/musica" },
     { "source": "/player", "destination": "/musica" },
     { "source": "/som", "destination": "/musica" }
