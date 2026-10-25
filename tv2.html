@@ -3,6 +3,7 @@
 
 <head>
   <script src="/assets/fa-track.js"></script>
+  <script src="/assets/fa-fotos.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FaçaAmigos Circuito TV2</title>
@@ -760,29 +761,52 @@
         return copy;
       }
 
+      function buildSlideEl(s) {
+        const el = document.createElement('div');
+        el.className = 'c-slide';
+        el.innerHTML = `
+          <img src="${s.image}.webp" alt="" width="1080" height="1180" decoding="async" style="object-position:${s.pos}">
+          <div class="c-slide-copy">
+            <div class="c-kicker">${s.kicker}</div>
+            <h1 class="c-headline">${s.headline}</h1>
+          </div>
+        `;
+        // Fallback para TVs sem suporte a WebP
+        el.querySelector('img').addEventListener('error', function onErr(e) {
+          e.target.removeEventListener('error', onErr);
+          e.target.src = s.image + '.jpg';
+        });
+        dom.zone.insertBefore(el, dom.zone.querySelector('.c-progress'));
+        s.el = el;
+      }
+
       function buildSlides() {
-        SLIDES.forEach((s, i) => {
-          const el = document.createElement('div');
-          el.className = 'c-slide';
-          el.innerHTML = `
-            <img src="${s.image}.webp" alt="" width="1080" height="1180" decoding="async" style="object-position:${s.pos}">
-            <div class="c-slide-copy">
-              <div class="c-kicker">${s.kicker}</div>
-              <h1 class="c-headline">${s.headline}</h1>
-            </div>
-          `;
-          // Fallback para TVs sem suporte a WebP
-          el.querySelector('img').addEventListener('error', function onErr(e) {
-            e.target.removeEventListener('error', onErr);
-            e.target.src = s.image + '.jpg';
-          });
-          dom.zone.insertBefore(el, dom.zone.querySelector('.c-progress'));
-          SLIDES[i].el = el;
+        SLIDES.forEach(buildSlideEl);
+      }
+
+      // ----------------------------------------------------------------------
+      // FOTOS NOVAS DA FOTÓGRAFA (assets/fa-fotos.js). Entram no sorteio junto com as fixas, com a
+      // copy que a IA escreveu no estilo acima; se a fotógrafa apagar ou recusar, saem na próxima volta.
+      // ----------------------------------------------------------------------
+      const FOTOS_MAX = 20; // as 20 mais recentes, para as fixas não sumirem do sorteio
+      function syncFotos(fotos) {
+        const ativas = new Set(fotos.slice(0, FOTOS_MAX).map(f => f.id));
+        SLIDES.forEach(s => { if (s.fotoId) s.off = !ativas.has(s.fotoId); });
+        fotos.slice(0, FOTOS_MAX).forEach(f => {
+          if (SLIDES.some(s => s.fotoId === f.id)) return;
+          const s = {
+            fotoId: f.id, image: f.webp.replace(/\.webp$/, ''), pos: f.pos,
+            plan: f.plano === 20 ? 20 : 30, sfx: f.sfx || 'vroom',
+            kicker: f.kicker || '📸 Hoje no Circuito',
+            headline: f.headline || 'Olha quem <em>passou</em> por aqui.'
+          };
+          SLIDES.push(s);
+          buildSlideEl(s);
         });
       }
 
       function nextOrder() {
-        let order = shuffle(SLIDES.map((_, i) => i));
+        let order = shuffle(SLIDES.map((_, i) => i).filter(i => !SLIDES[i].off));
         const last = state.order[state.order.length - 1];
         if (order[0] === last && order.length > 1) order.push(order.shift());
         return order;
@@ -797,7 +821,7 @@
           (window.dataLayer = window.dataLayer || []).push({
             event: 'tv2_slide',
             tv2_experiment: EXPERIMENT,
-            tv2_slide: slide.image.replace('img/circuito-', ''),
+            tv2_slide: slide.fotoId ? 'foto-' + slide.fotoId : slide.image.replace('img/circuito-', ''),
             tv2_plan: slide.plan
           });
         } catch (e) { /* medição nunca derruba a vitrine */ }
@@ -814,6 +838,7 @@
         }
 
         const slide = SLIDES[state.order[state.index]];
+        if (slide.off) { state.index--; state.order.splice(state.index + 1, 1); return show(); }
         slide.el.classList.add('active');
         dom.plans.forEach(p => p.classList.toggle('on', Number(p.dataset.plan) === slide.plan));
         playSfx(slide.sfx);
@@ -886,6 +911,7 @@
       buildSlides();
       state.order = nextOrder();
       show();
+      if (window.FAFotos) FAFotos.vigiar({ tv: 'tv2' }, syncFotos);
     })();
   </script>
 </body>

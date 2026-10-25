@@ -3,6 +3,7 @@
 
 <head>
   <script src="/assets/fa-track.js"></script>
+  <script src="/assets/fa-fotos.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FaçaAmigos TV3 — Clínica de Terapia Comportamental</title>
@@ -1197,8 +1198,24 @@
         return v;
       }
       function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+      // Fotos novas da fotógrafa (assets/fa-fotos.js). Só chegam aqui fotos da clínica sem criança
+      // reconhecível ou aprovadas à mão (regra em scripts/fotos/regras.mjs). Entram em um a cada dois
+      // slides que já giram entre fotos genéricas (com `images`); retrato e foto do Grão-Pará ficam fixos.
+      // Foto vertical só entra em slide sem QR, no layout retrato (foto na lateral, sem esticar).
+      let fotosClinica = [];
+      let fotoCursor = 0;
+      if (window.FAFotos) FAFotos.vigiar({ tv: 'tv3' }, (fotos) => { fotosClinica = fotos; });
+
       function slideImage(s) {
         if (s.requires === 'fotoGraoPara') return CONFIG.fotoGraoPara;
+        if (fotosClinica.length && s.images && s.images.length && s.imageFit !== 'retrato' && fotoCursor++ % 2 === 1) {
+          const solo = (s.layout || 'padrao') === 'padrao' && !(s.qr && QR[s.qr]);
+          const opcoes = solo ? fotosClinica : fotosClinica.filter((f) => f.w >= f.h);
+          if (opcoes.length) {
+            const f = opcoes[(fotoCursor >> 1) % opcoes.length];
+            return { src: f.webp, pos: f.pos, retrato: f.h > f.w };
+          }
+        }
         if (s.images && s.images.length) return s.images[(OV.dia - 1) % s.images.length];
         return s.image;
       }
@@ -1223,10 +1240,12 @@
         const hasQr = !!(s.qr && QR[s.qr]);
         const el = document.createElement('article');
         const cls = layout === 'respiro' ? 'respiro solo' : layout === 'tutorial' ? 'tutorial' : (hasQr ? '' : 'solo');
-        el.className = 'tv-slide' + (cls ? ' ' + cls : '') + (s.imageFit === 'retrato' ? ' retrato' : '');
+        const img = slideImage(s) || '';
+        el.className = 'tv-slide' + (cls ? ' ' + cls : '') + (s.imageFit === 'retrato' || img.retrato ? ' retrato' : '');
         el.setAttribute('data-id', s.id);
         el.setAttribute('data-fam', s.fam);
-        const imgTag = '<img class="tv-slide-image" src="' + esc(slideImage(s) || '') + '" alt="" decoding="async">';
+        const imgTag = '<img class="tv-slide-image" src="' + esc(img.src || img) + '" alt="" decoding="async"' +
+          (img.pos && !img.retrato ? ' style="object-position:' + esc(img.pos) + '"' : '') + '>';
 
         if (layout === 'respiro') {
           el.innerHTML = '<div class="tv-visual-card">' + imgTag + '<div class="tv-image-overlay"></div>' +

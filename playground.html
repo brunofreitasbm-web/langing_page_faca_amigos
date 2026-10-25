@@ -2748,6 +2748,13 @@
     })();
   </script>
   <script src="/assets/fa-footer.js?v=20261023" defer></script>
+  <!-- Fotos novas aprovadas (pasta "Aprovadas" no Drive da fotógrafa → scripts/fotos/sync.mjs) -->
+  <script src="/assets/fa-fotos.js" defer></script>
+  <script>
+    addEventListener('DOMContentLoaded', function () {
+      if (window.FAFotos) FAFotos.galeria(document.querySelector('#espaco .gal'), { site: true, unidades: ['playground', 'equipe'] }, { onde: 'apos-primeiro', max: 4 });
+    });
+  </script>
   <script src="/assets/fa-cta.js" defer data-label="Ver preços" data-href="#precos" data-event="ver_precos"></script>
   <script>
     // Estado de funcionamento pelo horário de Belém (UTC-3, sem horário de verão), referente ao Parque Shopping.
