@@ -87,6 +87,7 @@ flowchart LR
 | `/eventos/:slug` | evento.html | Detalhe e inscrição | não | `vercel.json` reescreve para `/evento`; canonical aponta para `/eventos` |
 | `/ingresso` | ingresso.html | Voucher com QR do inscrito | não | noindex, Disallow no robots |
 | `/wifi` | wifi.html | Portal do Wi-Fi da clínica | não | noindex, follow |
+| `/familia` | familia.html | Como entrar no Portal da Família (3 passos + botão para o login do sistema). Destino do QR da TV da sala de espera (`/tv3`) | não | noindex, nofollow |
 | `/termos` | termos.html | Termos de uso e de compra | sim | |
 | `/politica-privacidade` | politica-privacidade.html | LGPD | sim | dono: hub |
 | `/descadastrar` | descadastrar.html | Sair da sequência de e-mails | não | noindex |
