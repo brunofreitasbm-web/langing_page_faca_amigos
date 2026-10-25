@@ -1,6 +1,8 @@
 // Classificação de uma foto com a API do Claude (visão + saída em JSON estruturado).
 import Anthropic from '@anthropic-ai/sdk';
-import { UNIDADES, SFX, LIMITES } from './regras.mjs';
+import { TEMAS, SFX, LIMITES } from './regras.mjs';
+
+const LISTA_TEMAS = Object.entries(TEMAS).map(([k, t]) => `- ${k} (${t.unidade}): ${t.descricao}`).join('\n');
 
 export const MODELO_PADRAO = 'claude-opus-5-5';
 
@@ -11,10 +13,12 @@ As unidades:
 - playground: FaçaAmigos Playground, playground inclusivo dentro de shopping. Piscina de bolinhas, casa na árvore, tapetes, amarelinha, oficinas de pintura e de camiseta, cantinho da leitura, festas, mediadoras de uniforme acolhendo crianças.
 - circuito: FaçaAmigos Circuito, quiosque no corredor do Parque Shopping Belém com carrinhos elétricos infantis (Lamborghini, Range Rover, jeep, moto, caminhão de bombeiro) e pelúcias motorizadas gigantes (capivara, unicórnio, cachorro, Stitch, macaco). Placas "Faça Amigos" nos carrinhos.
 - clinica: Clínica FaçaAmigos, clínica de terapias infantis (fono, TO, psicologia, ABA). Salas de atendimento, painel sensorial, materiais terapêuticos, recepção da clínica, fachada.
-- equipe: foto posada ou de bastidor da equipe (adultos de uniforme), sem uma unidade clara.
-- outro: qualquer outra coisa (paisagem, comida, evento externo, objeto solto).
+
+Temas (escolha o assunto principal da foto; é ele que decide em qual slide de qual TV a foto entra):
+${LISTA_TEMAS}
 
 Critérios:
+- tema: o que a foto mostra de fato, não onde foi tirada. Foto no quiosque do circuito sem carrinho em destaque é quiosque_circuito, não crianca_dirigindo. Na dúvida entre dois temas, escolha o mais específico; se nenhum serve, outro.
 - e_foto: true só para fotografia real. Logo, arte do Canva, montagem com texto, print de tela, figurinha ou recorte com fundo removido é false.
 - qualidade (1 a 5): 5 é foto de vitrine; 3 é aceitável numa TV; 1 ou 2 é desfocada, tremida, escura, cortada no rosto, com dedo na lente, ou sem assunto. Liste os defeitos em problemas.
 - crianca_identificavel: true se o rosto de alguma criança dá para reconhecer (de frente ou de perfil nítido). De costas, de longe, desfocado ou só mãos é false.
@@ -23,7 +27,7 @@ Critérios:
 - alt: texto alternativo para quem usa leitor de tela, até ${LIMITES.alt} caracteres, descreve a cena sem nomes próprios.
 - rotulo (até ${LIMITES.rotulo}) e legenda (até ${LIMITES.legenda}): título curto e frase de apoio para o cartão da foto.
 - kicker (até ${LIMITES.kicker}) começa com um emoji; headline (até ${LIMITES.headline}) pode ter um único trecho entre <em> e </em>. Os dois vão na TV da unidade, em cima da foto, para pais que passam em frente. Tom acolhedor, frases curtas, falando com o pai ou a mãe. Para o circuito, siga este estilo: kicker "🏎️ Lamborghini do tamanho dele", headline "Olha a cara de quem <em>chegou</em>." Sem ponto de exclamação, sem travessão, sem prometer resultado, sem as palavras "normal" ou "especial" para criança, sem nomes próprios.
-- plano: só para o circuito. 20 se o destaque é pelúcia ou jeep, 30 se é carro ou moto. 0 nas outras unidades.
+- plano: só para o circuito. 20 se o destaque é pelúcia ou jeep, 30 se é carro ou moto. 0 nos outros temas.
 - sfx: som que combina com a foto (vroom carro andando, buzina, sirene bombeiro, plim pelúcia ou algo fofo, tada comemoração).
 - foco_x e foco_y: ponto de interesse principal (rosto ou ação) em porcentagem da largura e da altura, para recortar a foto sem cortar o assunto.
 - slug: 2 a 5 palavras em minúsculas separadas por hífen, sem acento, descrevendo a foto (ex.: menino-lamborghini-amarela).`;
@@ -31,11 +35,11 @@ Critérios:
 const ESQUEMA = {
   type: 'object',
   additionalProperties: false,
-  required: ['e_foto', 'unidade', 'qualidade', 'problemas', 'crianca_identificavel', 'sensivel', 'motivo_sensivel',
+  required: ['e_foto', 'tema', 'qualidade', 'problemas', 'crianca_identificavel', 'sensivel', 'motivo_sensivel',
     'descricao', 'alt', 'rotulo', 'legenda', 'kicker', 'headline', 'plano', 'sfx', 'foco_x', 'foco_y', 'slug'],
   properties: {
     e_foto: { type: 'boolean' },
-    unidade: { type: 'string', enum: UNIDADES },
+    tema: { type: 'string', enum: Object.keys(TEMAS) },
     qualidade: { type: 'integer', enum: [1, 2, 3, 4, 5] },
     problemas: { type: 'array', items: { type: 'string' } },
     crianca_identificavel: { type: 'boolean' },

@@ -785,8 +785,10 @@
       }
 
       // ----------------------------------------------------------------------
-      // FOTOS NOVAS DA FOTÓGRAFA (assets/fa-fotos.js). Entram no sorteio junto com as fixas, com a
-      // copy que a IA escreveu no estilo acima; se a fotógrafa apagar ou recusar, saem na próxima volta.
+      // FOTOS NOVAS DA FOTÓGRAFA (assets/fa-fotos.js). Esta TV é exclusiva do Circuito: só entram fotos
+      // que a IA marcou como criança dirigindo, pelúcia andando ou a frota (FAFotos.TEMAS_TV2); foto do
+      // balcão ou do playground nunca. Entram no sorteio junto com as fixas, com a copy que a IA
+      // escreveu no estilo acima; se a fotógrafa apagar ou recusar, saem na próxima volta.
       // ----------------------------------------------------------------------
       const FOTOS_MAX = 20; // as 20 mais recentes, para as fixas não sumirem do sorteio
       function syncFotos(fotos) {
@@ -911,7 +913,7 @@
       buildSlides();
       state.order = nextOrder();
       show();
-      if (window.FAFotos) FAFotos.vigiar({ tv: 'tv2' }, syncFotos);
+      if (window.FAFotos) FAFotos.vigiar({ tv: true, temas: FAFotos.TEMAS_TV2 }, syncFotos);
     })();
   </script>
 </body>

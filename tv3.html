@@ -1198,26 +1198,25 @@
         return v;
       }
       function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
-      // Fotos novas da fotógrafa (assets/fa-fotos.js). Só chegam aqui fotos da clínica sem criança
-      // reconhecível ou aprovadas à mão (regra em scripts/fotos/regras.mjs). Entram em um a cada dois
-      // slides que já giram entre fotos genéricas (com `images`); retrato e foto do Grão-Pará ficam fixos.
+      // Fotos novas da fotógrafa (assets/fa-fotos.js): cada slide recebe uma foto nova do mesmo tema da
+      // sua foto fixa (sala sensorial com sala sensorial, fachada com fachada; os slides que divulgam o
+      // Playground e o Circuito recebem fotos deles). Foto da clínica com criança reconhecível só chega
+      // aqui aprovada à mão (scripts/fotos/regras.mjs). Retrato da Isabella e foto do Grão-Pará ficam fixos.
       // Foto vertical só entra em slide sem QR, no layout retrato (foto na lateral, sem esticar).
-      let fotosClinica = [];
-      let fotoCursor = 0;
-      if (window.FAFotos) FAFotos.vigiar({ tv: 'tv3' }, (fotos) => { fotosClinica = fotos; });
+      const fotosNovas = window.FAFotos ? FAFotos.sorteio() : null;
+      if (fotosNovas) FAFotos.vigiar({ tv: true }, fotosNovas.atualizar);
+      let rodadaFotos = -1;
 
       function slideImage(s) {
         if (s.requires === 'fotoGraoPara') return CONFIG.fotoGraoPara;
-        if (fotosClinica.length && s.images && s.images.length && s.imageFit !== 'retrato' && fotoCursor++ % 2 === 1) {
+        const fixa = s.images && s.images.length ? s.images[(OV.dia - 1) % s.images.length] : s.image;
+        if (fotosNovas && s.imageFit !== 'retrato') {
+          if (state.n !== rodadaFotos) { rodadaFotos = state.n; fotosNovas.novaVolta(); }
           const solo = (s.layout || 'padrao') === 'padrao' && !(s.qr && QR[s.qr]);
-          const opcoes = solo ? fotosClinica : fotosClinica.filter((f) => f.w >= f.h);
-          if (opcoes.length) {
-            const f = opcoes[(fotoCursor >> 1) % opcoes.length];
-            return { src: f.webp, pos: f.pos, retrato: f.h > f.w };
-          }
+          const f = fotosNovas.pegar(FAFotos.temaDaImagem(fixa), solo ? null : (x) => x.w >= x.h);
+          if (f) return { src: f.webp, pos: f.pos, retrato: f.h > f.w };
         }
-        if (s.images && s.images.length) return s.images[(OV.dia - 1) % s.images.length];
-        return s.image;
+        return fixa;
       }
 
       function mockHTML() {

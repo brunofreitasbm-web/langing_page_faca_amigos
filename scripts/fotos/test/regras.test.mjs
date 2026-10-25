@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
-  agrupar, destinos, limparCopy, normalizarClassificacao, remocaoSegura, slugificar, textoPlano,
+  TEMAS, TEMAS_TV2, agrupar, destinos, limparCopy, normalizarClassificacao, remocaoSegura, slugificar, textoPlano,
 } from '../regras.mjs';
 
 const DONOS = ['fotografa@x.com', 'dono@x.com'];
@@ -9,7 +9,7 @@ const arq = (o) => ({ id: 'id' + Math.random(), name: 'IMG_1.HEIC', mimeType: 'i
   createdTime: '2026-10-20T10:00:00Z', owners: [{ emailAddress: 'fotografa@x.com' }], aprovada: false, pastaIgnorada: false, caminho: 'IMG_1.HEIC', ...o });
 
 const boa = (o) => normalizarClassificacao({
-  e_foto: true, unidade: 'playground', qualidade: 4, problemas: [], crianca_identificavel: true, sensivel: false,
+  e_foto: true, tema: 'oficina_arte', qualidade: 4, problemas: [], crianca_identificavel: true, sensivel: false,
   motivo_sensivel: '', descricao: 'x', alt: 'Criança pintando', rotulo: 'Oficina', legenda: 'Cores', kicker: '🎨 Oficina',
   headline: 'Hoje tem <em>tinta</em>.', plano: 0, sfx: 'plim', foco_x: 40, foco_y: 30, slug: 'Oficina de Camiseta', ...o,
 });
@@ -47,14 +47,30 @@ test('destinos: logo, sensível e baixa qualidade ficam fora', () => {
 });
 
 test('destinos: clínica com criança reconhecível espera aprovação', () => {
-  assert.equal(destinos(boa({ unidade: 'clinica' }), false).tv, false);
-  assert.equal(destinos(boa({ unidade: 'clinica', crianca_identificavel: false }), false).tv, true);
-  assert.equal(destinos(boa({ unidade: 'clinica' }), true).tv, true);
+  assert.equal(destinos(boa({ tema: 'clinica_terapia' }), false).tv, false);
+  assert.equal(destinos(boa({ tema: 'clinica_terapia', crianca_identificavel: false }), false).tv, true);
+  assert.equal(destinos(boa({ tema: 'clinica_terapia' }), true).tv, true);
 });
 
-test('destinos: "outro" só vai ao site com aprovação, nunca à TV', () => {
-  assert.equal(destinos(boa({ unidade: 'outro' }), false).tv, false);
-  assert.deepEqual(destinos(boa({ unidade: 'outro' }), true), { tv: false, site: true, motivo: '' });
+test('destinos: tema "outro" só vai ao site com aprovação, nunca à TV', () => {
+  assert.equal(destinos(boa({ tema: 'outro' }), false).tv, false);
+  assert.deepEqual(destinos(boa({ tema: 'outro' }), true), { tv: false, site: true, motivo: '' });
+});
+
+test('tema decide a unidade; tema inventado vira "outro"', () => {
+  assert.equal(boa({ tema: 'crianca_dirigindo' }).unidade, 'circuito');
+  assert.equal(boa({ tema: 'quiosque_circuito' }).unidade, 'circuito');
+  assert.equal(boa({ tema: 'equipe' }).unidade, 'equipe');
+  const c = boa({ tema: 'carro_voador' });
+  assert.equal(c.tema, 'outro');
+  assert.equal(c.unidade, 'outro');
+});
+
+test('só carrinho e pelúcia andando servem para a tv2', () => {
+  assert.ok(TEMAS_TV2.includes('crianca_dirigindo'));
+  assert.ok(TEMAS_TV2.includes('pelucia_motorizada'));
+  assert.ok(!TEMAS_TV2.includes('quiosque_circuito'));
+  assert.ok(TEMAS_TV2.every((t) => TEMAS[t].unidade === 'circuito'));
 });
 
 test('limparCopy escapa HTML e mantém só <em>', () => {
@@ -65,7 +81,7 @@ test('limparCopy escapa HTML e mantém só <em>', () => {
 });
 
 test('normalizar: valores fora do esquema viram padrão seguro', () => {
-  const c = normalizarClassificacao({ unidade: 'marte', qualidade: 9, foco_x: 300, sfx: 'boom', crianca_identificavel: undefined });
+  const c = normalizarClassificacao({ tema: 'marte', qualidade: 9, foco_x: 300, sfx: 'boom', crianca_identificavel: undefined });
   assert.equal(c.unidade, 'outro');
   assert.equal(c.qualidade, 5);
   assert.equal(c.foco_x, 100);

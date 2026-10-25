@@ -5,7 +5,7 @@ o GitHub Actions roda `scripts/fotos/sync.mjs`, que:
 
 1. lista a pasta e as subpastas;
 2. baixa cada foto nova, converte HEIC do iPhone para JPEG e manda uma versão reduzida para a IA (Claude);
-3. a IA diz se é foto de verdade (ou logo, arte, print), de qual unidade, a nota de qualidade, se tem
+3. a IA diz se é foto de verdade (ou logo, arte, print), o tema (o que a foto mostra), a nota de qualidade, se tem
    criança reconhecível, se tem algo sensível, e escreve o texto alternativo e a copy da TV;
 4. `regras.mjs` decide o destino e publica no Supabase Storage (bucket `fotos-site`);
 5. as páginas leem `fotos-site/manifest.json` sozinhas: TVs a cada 10 min, landings a cada visita.
@@ -13,13 +13,31 @@ o GitHub Actions roda `scripts/fotos/sync.mjs`, que:
 
 ## Onde cada foto aparece
 
+A IA dá um **tema** a cada foto, pelo que ela mostra (não pelo lugar onde foi tirada). O tema decide o lugar:
+
+| Tema | Exemplos |
+|---|---|
+| `crianca_dirigindo`, `pelucia_motorizada`, `frota_carrinhos` | criança ao volante, montada na capivara, carrinhos alinhados |
+| `quiosque_circuito` | balcão, fila, corredor, sem carrinho em destaque |
+| `piscina_bolinhas`, `acolhimento`, `oficina_arte`, `cantinho_calma`, `brincadeira`, `fachada_playground` | Playground |
+| `clinica_terapia`, `clinica_materiais`, `clinica_sensorial`, `clinica_fachada` | Clínica |
+| `equipe` | equipe posando ou em bastidor |
+| `outro` | nada acima: não vai para TV nenhuma |
+
+- **tv2.html (quiosque)** é exclusiva do Circuito: só cria slide novo com `crianca_dirigindo`,
+  `pelucia_motorizada` ou `frota_carrinhos`, com a copy escrita pela IA. Foto do balcão ou do Playground nunca entra.
+- **tv.html (salão)** e **tv3.html (clínica)**: cada slide tem o tema da foto fixa que já usa (slide da
+  piscina, slide do cantinho, slide do painel sensorial…) e só troca por foto nova **do mesmo tema**. Sem
+  foto nova do tema, fica a fixa. A mesma foto nova não aparece em dois slides na mesma volta. O mapa
+  foto fixa → tema fica em `/assets/fa-fotos.js` (`TEMA_POR_IMAGEM`).
+- Retrato da Isabella e foto do Grão-Pará nunca são trocados.
+
 | Situação | TV | Site |
 |---|---|---|
-| Foto boa do Playground ou da equipe | tv.html (salão), no cartão de foto do modo Equipe, em 1 de cada 2 slides | só se aprovada |
-| Foto boa do Circuito | tv2.html (quiosque), como slide novo com a copy escrita pela IA | só se aprovada |
-| Foto boa da Clínica **sem** criança reconhecível | tv3.html (sala de espera) | só se aprovada |
+| Foto boa, com tema | nos slides do mesmo tema (acima) | só se aprovada |
 | Foto da Clínica **com** criança reconhecível | só se aprovada (criança em terapia é dado de saúde) | só se aprovada |
 | Logo, arte do Canva, print, foto desfocada (nota abaixo de 3/5) | não | não (desfocada aprovada à mão vai) |
+| Tema `outro` | não | só se aprovada |
 | Algo sensível (choro, troca de roupa, documento, placa de carro…) | não | não, nem aprovada |
 | Arquivo de alguém fora de `FOTOS_DONOS` | não | não |
 

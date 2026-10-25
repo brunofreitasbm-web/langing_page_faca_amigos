@@ -1,10 +1,15 @@
 /* Fotos novas da fotógrafa (Google Drive → scripts/fotos/sync.mjs → Supabase Storage).
  *
- * window.FAFotos.carregar({ tv: 'tv2' })            → Promise<[foto]> só as liberadas para aquela TV
- * window.FAFotos.carregar({ site: true, unidades }) → Promise<[foto]> só as aprovadas para o site
- * window.FAFotos.vigiar(filtro, fn, ms)             → chama fn(fotos) agora e de novo a cada `ms` quando mudar
+ * O tema da foto (escolhido pela IA) decide o lugar: cada slide tem o tema da sua foto fixa
+ * (temaDaImagem) e só recebe foto nova do mesmo tema.
  *
- * Cada foto: { id, webp, jpg, webpP, w, h, unidade, alt, rotulo, legenda, kicker, headline, plano, sfx, pos }
+ * window.FAFotos.carregar({ tv: true, temas })       → Promise<[foto]> liberadas para TV, desses temas
+ * window.FAFotos.carregar({ site: true, unidades })  → Promise<[foto]> só as aprovadas para o site
+ * window.FAFotos.vigiar(filtro, fn, ms)              → chama fn(fotos) agora e de novo a cada `ms` quando mudar
+ * window.FAFotos.sorteio()                           → { atualizar(fotos), novaVolta(), pegar(tema, aceita) }
+ * window.FAFotos.temaDaImagem('img/hero-piscina-bolinhas.webp') → 'piscina_bolinhas'
+ *
+ * Cada foto: { id, webp, jpg, webpP, w, h, tema, unidade, alt, rotulo, legenda, kicker, headline, plano, sfx, pos }
  * Falha de rede nunca derruba a página: volta lista vazia e a página segue com as fotos fixas.
  * Desligar numa tela: ?fotos=0 na URL.
  */
@@ -28,7 +33,7 @@
 
   function montar(f) {
     return {
-      id: f.id, w: f.w, h: f.h, unidade: f.unidade, tv: f.tv, site: f.site,
+      id: f.id, w: f.w, h: f.h, tema: f.tema, unidade: f.unidade, tv: !!f.tv, site: f.site,
       webp: BASE + f.src + '.webp', jpg: BASE + f.src + '.jpg', webpP: BASE + f.src + '-p.webp',
       alt: f.alt || '', rotulo: f.rotulo || '', legenda: f.legenda || '',
       kicker: f.kicker || '', headline: f.headline || '', plano: f.plano, sfx: f.sfx, pos: f.pos || '50% 45%'
@@ -38,7 +43,8 @@
   function filtrar(fotos, filtro) {
     filtro = filtro || {};
     return fotos.filter(function (f) {
-      if (filtro.tv && f.tv !== filtro.tv) return false;
+      if (filtro.tv && !f.tv) return false;
+      if (filtro.temas && filtro.temas.indexOf(f.tema) < 0) return false;
       if (filtro.site && !f.site) return false;
       if (filtro.unidades && filtro.unidades.indexOf(f.unidade) < 0) return false;
       return true;
@@ -67,6 +73,45 @@
     return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
+  /* Tema de cada foto fixa do site (a ordem importa: a primeira regra que bate vale). Os nomes dos
+     temas são os de scripts/fotos/regras.mjs (TEMAS). Foto sem tema (ex.: retrato da Isabella) nunca é trocada. */
+  var TEMA_POR_IMAGEM = [
+    [/piscina/, 'piscina_bolinhas'], [/mediadora/, 'acolhimento'], [/oficina/, 'oficina_arte'],
+    [/cantinho/, 'cantinho_calma'], [/amarelinha/, 'brincadeira'], [/playground-fachada/, 'fachada_playground'],
+    [/equipe/, 'equipe'],
+    [/circuito-(frota|lamborghini-volante|bombeiro-painel)/, 'frota_carrinhos'],
+    [/circuito-(quiosque|totem)/, 'quiosque_circuito'],
+    [/circuito-(capivara|stitch|unicornio|cachorro)/, 'pelucia_motorizada'],
+    [/circuito-/, 'crianca_dirigindo'],
+    [/clinica-atividade/, 'clinica_terapia'], [/clinica-recursos/, 'clinica_materiais'],
+    [/sensorial/, 'clinica_sensorial'], [/clinica-fachada/, 'clinica_fachada']
+  ];
+  function temaDaImagem(caminho) {
+    var nome = String(caminho || '').split('/').pop();
+    for (var i = 0; i < TEMA_POR_IMAGEM.length; i++) if (TEMA_POR_IMAGEM[i][0].test(nome)) return TEMA_POR_IMAGEM[i][1];
+    return null;
+  }
+
+  /* Distribui as fotos novas pelos slides: pegar(tema) devolve a próxima foto daquele tema ainda não
+     usada nesta volta (ou null, e o slide fica com a foto fixa). O cursor por tema anda a cada volta,
+     então com várias fotos do mesmo tema cada volta mostra outras. */
+  function sorteio() {
+    var fotos = [], usadas = {}, cursor = {};
+    return {
+      atualizar: function (lista) { fotos = lista || []; },
+      novaVolta: function () { usadas = {}; },
+      pegar: function (tema, aceita) {
+        if (!tema) return null;
+        var c = fotos.filter(function (f) { return f.tema === tema && !usadas[f.id] && (!aceita || aceita(f)); });
+        if (!c.length) return null;
+        cursor[tema] = (cursor[tema] || 0) + 1;
+        var f = c[cursor[tema] % c.length];
+        usadas[f.id] = true;
+        return f;
+      }
+    };
+  }
+
   function figuraHtml(f) {
     return '<figure data-foto="' + esc(f.id) + '"><picture>' +
       '<source type="image/webp" srcset="' + f.webpP + ' 720w, ' + f.webp + ' 1600w" sizes="(max-width: 760px) 50vw, 380px">' +
@@ -91,5 +136,10 @@
     });
   }
 
-  window.FAFotos = { carregar: carregar, vigiar: vigiar, galeria: galeria, figuraHtml: figuraHtml, esc: esc, base: BASE };
+  window.FAFotos = {
+    carregar: carregar, vigiar: vigiar, galeria: galeria, figuraHtml: figuraHtml, esc: esc, base: BASE,
+    temaDaImagem: temaDaImagem, sorteio: sorteio,
+    // tv2 é exclusiva do Circuito: só carrinho ou pelúcia andando (igual a TEMAS_TV2 em scripts/fotos/regras.mjs)
+    TEMAS_TV2: ['crianca_dirigindo', 'pelucia_motorizada', 'frota_carrinhos']
+  };
 })();

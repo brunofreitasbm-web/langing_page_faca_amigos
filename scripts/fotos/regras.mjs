@@ -1,7 +1,7 @@
 // Regras puras (sem rede, sem disco) do sincronizador de fotos. Testadas em test/regras.test.mjs.
 //
 // Quem decide o quê:
-//   - TV: a IA decide sozinha (foto real, nítida, sem nada sensível). Clínica com criança reconhecível
+//   - TV: a IA decide sozinha (foto real, nítida, sem nada sensível) e o tema escolhe o slide. Clínica com criança reconhecível
 //     espera aprovação: foto de criança em terapia revela dado de saúde (LGPD, art. 11).
 //   - Site: só com aprovação humana (foto dentro de uma subpasta "Aprovadas" no Drive).
 //   - Nada vai para lugar nenhum se o dono do arquivo no Drive não estiver em FOTOS_DONOS: a pasta da
@@ -9,11 +9,32 @@
 import { createHash } from 'node:crypto';
 
 export const UNIDADES = ['playground', 'circuito', 'clinica', 'equipe', 'outro'];
+
+// Tema = o assunto da foto. É ele que decide o lugar: cada slide das TVs tem um tema (tirado da foto
+// fixa que ele usa, veja temaDaImagem em /assets/fa-fotos.js) e só recebe foto nova do mesmo tema.
+// A tv2 (quiosque) só cria slide novo com TEMAS_TV2: carrinho ou pelúcia andando, nada de balcão.
+export const TEMAS = {
+  piscina_bolinhas: { unidade: 'playground', descricao: 'piscina de bolinhas, casa na árvore com piscina' },
+  acolhimento: { unidade: 'playground', descricao: 'mediadora ou monitora acolhendo, brincando ou conversando com criança, no chão ou no tapete' },
+  oficina_arte: { unidade: 'playground', descricao: 'oficina de pintura, desenho, camiseta, massinha, trabalho manual' },
+  cantinho_calma: { unidade: 'playground', descricao: 'cantinho da leitura ou da calma, criança lendo ou descansando' },
+  brincadeira: { unidade: 'playground', descricao: 'outras brincadeiras no salão do playground: amarelinha, brinquedos, festa, grupo de crianças' },
+  fachada_playground: { unidade: 'playground', descricao: 'fachada, entrada ou recepção do playground, sem criança em destaque' },
+  crianca_dirigindo: { unidade: 'circuito', descricao: 'criança ao volante ou montada em carrinho elétrico, jeep, moto ou caminhão de bombeiro' },
+  pelucia_motorizada: { unidade: 'circuito', descricao: 'criança montada em pelúcia motorizada gigante (capivara, unicórnio, cachorro, Stitch, macaco)' },
+  frota_carrinhos: { unidade: 'circuito', descricao: 'carrinhos e pelúcias do circuito parados ou alinhados, sem criança, ou detalhe de volante e painel' },
+  quiosque_circuito: { unidade: 'circuito', descricao: 'quiosque, balcão, pagamento, fila ou corredor do circuito, sem carrinho em destaque' },
+  clinica_terapia: { unidade: 'clinica', descricao: 'atendimento, sessão ou atividade pedagógica na clínica' },
+  clinica_materiais: { unidade: 'clinica', descricao: 'materiais e brinquedos terapêuticos da clínica, sem pessoas' },
+  clinica_sensorial: { unidade: 'clinica', descricao: 'painel sensorial, sala ou ambiente sensorial da clínica' },
+  clinica_fachada: { unidade: 'clinica', descricao: 'fachada, recepção ou sala de espera da clínica' },
+  equipe: { unidade: 'equipe', descricao: 'equipe posando ou em bastidor, adultos de uniforme, mascote com a equipe' },
+  outro: { unidade: 'outro', descricao: 'nenhum dos temas acima' },
+};
+export const TEMAS_TV2 = ['crianca_dirigindo', 'pelucia_motorizada', 'frota_carrinhos'];
 export const SFX = ['vroom', 'buzina', 'sirene', 'plim', 'tada'];
 export const QUALIDADE_MINIMA = 3;
 
-// Qual TV mostra cada unidade (tv.html = salão do Playground, tv2 = quiosque do Circuito, tv3 = Clínica).
-export const TV_POR_UNIDADE = { playground: 'tv', equipe: 'tv', circuito: 'tv2', clinica: 'tv3' };
 
 // Limites de caracteres iguais aos que a copy das TVs já usa (scripts/tv3-pool.py).
 export const LIMITES = { alt: 140, rotulo: 30, legenda: 80, kicker: 34, headline: 58, descricao: 300 };
@@ -99,9 +120,11 @@ export function slugificar(txt) {
 /** Normaliza a resposta da IA: nada que vem dela vai para a página sem passar por aqui. */
 export function normalizarClassificacao(c) {
   const n = (v, min, max, pad) => (Number.isFinite(Number(v)) ? Math.min(max, Math.max(min, Math.round(Number(v)))) : pad);
-  const unidade = UNIDADES.includes(c.unidade) ? c.unidade : 'outro';
+  const tema = Object.hasOwn(TEMAS, c.tema) ? c.tema : 'outro';
+  const unidade = TEMAS[tema].unidade;
   const out = {
     e_foto: c.e_foto === true,
+    tema,
     unidade,
     qualidade: n(c.qualidade, 1, 5, 1),
     problemas: Array.isArray(c.problemas) ? c.problemas.map(String).slice(0, 6) : [],
@@ -137,9 +160,9 @@ export function destinos(c, aprovada) {
   // Aprovação humana vale mais que a nota da IA (a pessoa olhou), mas não publica o que a IA marcou
   // como sensível: nesse caso alguém precisa tirar a foto de "Aprovadas" ou mover para "Recusadas".
   if (c.sensivel) return { tv: false, site: false, motivo: `sensível: ${c.motivo_sensivel || 'sem detalhe'}` };
-  if (aprovada) return { tv: c.unidade in TV_POR_UNIDADE, site: true, motivo: '' };
+  if (aprovada) return { tv: c.tema !== 'outro', site: true, motivo: '' };
   if (c.qualidade < QUALIDADE_MINIMA) return { tv: false, site: false, motivo: `qualidade ${c.qualidade}/5 (${c.problemas.join(', ') || 'baixa'})` };
-  if (!(c.unidade in TV_POR_UNIDADE)) return { tv: false, site: false, motivo: 'não é de nenhuma unidade com TV; aprove para ir ao site' };
+  if (c.tema === 'outro') return { tv: false, site: false, motivo: 'tema não combina com nenhum slide; aprove para ir ao site' };
   if (c.unidade === 'clinica' && c.crianca_identificavel) return { tv: false, site: false, motivo: 'clínica com criança reconhecível: precisa de aprovação' };
   return { tv: true, site: false, motivo: '' };
 }
@@ -151,8 +174,9 @@ export function itemManifesto({ chave, c, d, arquivo, dims, criadaEm }) {
     src: arquivo,
     w: dims.w,
     h: dims.h,
+    tema: c.tema,
     unidade: c.unidade,
-    tv: TV_POR_UNIDADE[c.unidade] && d.tv ? TV_POR_UNIDADE[c.unidade] : null,
+    tv: d.tv,
     site: d.site,
     alt: c.alt,
     rotulo: c.rotulo,

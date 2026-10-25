@@ -24,12 +24,12 @@ const arq = (id, md5, o = {}) => ({ id, name: `${id}.jpg`, mimeType: 'image/jpeg
   createdTime: `2026-10-2${id.length}T10:00:00Z`, owners: [{ emailAddress: 'fotografa@x.com' }], aprovada: false, pastaIgnorada: false, caminho: `${id}.jpg`, ...o });
 
 const respostas = {
-  carro: { e_foto: true, unidade: 'circuito', qualidade: 5, problemas: [], crianca_identificavel: true, sensivel: false, motivo_sensivel: '',
+  carro: { e_foto: true, tema: 'crianca_dirigindo', qualidade: 5, problemas: [], crianca_identificavel: true, sensivel: false, motivo_sensivel: '',
     descricao: 'menino no carro', alt: 'Menino ao volante', rotulo: 'Lamborghini', legenda: 'No volante', kicker: '🏎️ Lamborghini',
     headline: 'Olha a cara de quem <em>chegou</em>.', plano: 30, sfx: 'vroom', foco_x: 50, foco_y: 40, slug: 'menino-lamborghini' },
-  logo: { e_foto: false, unidade: 'outro', qualidade: 5, problemas: [], crianca_identificavel: false, sensivel: false, motivo_sensivel: '',
+  logo: { e_foto: false, tema: 'outro', qualidade: 5, problemas: [], crianca_identificavel: false, sensivel: false, motivo_sensivel: '',
     descricao: 'logo', alt: 'Logo', rotulo: 'Logo', legenda: '', kicker: '', headline: '', plano: 0, sfx: 'plim', foco_x: 50, foco_y: 50, slug: 'logo' },
-  clinica: { e_foto: true, unidade: 'clinica', qualidade: 4, problemas: [], crianca_identificavel: true, sensivel: false, motivo_sensivel: '',
+  clinica: { e_foto: true, tema: 'clinica_terapia', qualidade: 4, problemas: [], crianca_identificavel: true, sensivel: false, motivo_sensivel: '',
     descricao: 'sessão', alt: 'Sala de terapia', rotulo: 'Sala', legenda: 'Sala', kicker: '🧩 Clínica', headline: 'Cuidado', plano: 0, sfx: 'plim', foco_x: 50, foco_y: 50, slug: 'sala-terapia' },
 };
 
@@ -54,7 +54,9 @@ test('rodada completa: publica na TV certa, descarta logo, segura clínica, apro
   assert.equal(c.chamadas.classificar, 3);
   assert.equal(r.manifesto.length, 1);
   const m = r.manifesto[0];
-  assert.equal(m.tv, 'tv2');
+  assert.equal(m.tv, true);
+  assert.equal(m.tema, 'crianca_dirigindo');
+  assert.equal(m.unidade, 'circuito');
   assert.equal(m.site, false);
   assert.equal(m.plano, 30);
   assert.equal(m.pos, '50% 40%');
@@ -77,7 +79,8 @@ test('rodada completa: publica na TV certa, descarta logo, segura clínica, apro
   r = await sincronizar({ ...c, storage, imagem, config, log: () => {} });
   assert.equal(c.chamadas.classificar, 3);
   const cl = r.manifesto.find((x) => x.unidade === 'clinica');
-  assert.equal(cl.tv, 'tv3');
+  assert.equal(cl.tv, true);
+  assert.equal(cl.tema, 'clinica_terapia');
   assert.equal(cl.site, true);
 
   // Sai de "Aprovadas": some do ar e os arquivos são apagados
