@@ -424,6 +424,9 @@
     .matriz-row .auto { color: var(--gray); font-size: 0.82rem; font-weight: 700; }
     .matriz-sub { grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; font-size: 0.85rem; font-weight: 800; }
     .matriz-sub .form-control { max-width: 240px; }
+    .senha-box { background: #FFF3C4; border: 2px solid #F3D36B; border-radius: 14px; padding: 14px 16px; margin: 14px 0; }
+    .senha-box .valor { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 1.5rem; font-weight: 900; letter-spacing: 1px; margin: 8px 0; user-select: all; word-break: break-all; }
+    .senha-box small { display: block; color: #7A5B00; font-weight: 700; }
     .prov-erro { display: block; margin-top: 4px; color: #7A5B00; font-size: 0.8rem; font-weight: 700; }
     .acesso-box { background: var(--cream); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
     .acesso-estado { color: var(--ink-soft); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; }
@@ -576,6 +579,7 @@
           <span>Faça<b>Amigos</b> · Gestão</span>
         </div>
         <div class="header-actions">
+          <button type="button" class="btn logout" id="equipeHubBtn" hidden>Equipe da Clínica</button>
           <button type="button" class="btn logout" id="pessoasBtn" hidden>Pessoas e acessos</button>
           <a href="https://ivjvpdzsfjdpyabbzzuj.supabase.co/storage/v1/object/public/kiosk-updates/kiosk/FacaAmigos-Setup-atual.exe"
              download
@@ -741,6 +745,7 @@
             <p>Quem entra no Hub, em quais sistemas e com qual nível.</p>
           </div>
           <div class="form-actions">
+            <button type="button" class="btn btn-ghost btn-sm" id="equipeBtn">Equipe da Clínica</button>
             <button type="button" class="btn btn-pink btn-sm" id="novaPessoaBtn">Nova pessoa</button>
             <button type="button" class="btn-link" id="voltarHubBtn">Voltar aos sistemas</button>
           </div>
@@ -750,6 +755,7 @@
         <div id="pessoasNotice" class="form-notice hub-error" role="status"></div>
 
         <div class="people-list" id="pessoasLista"></div>
+
 
         <section class="person-form" id="pessoaForm" hidden>
           <h2 id="pessoaFormTitulo">Nova pessoa</h2>
@@ -810,6 +816,76 @@
         </section>
       </div>
     </main>
+
+    <!-- ===== Equipe da Clínica (owner ou administrador da Clínica) ===== -->
+    <main class="hub-main" id="equipeMain" hidden>
+      <div class="wrap">
+        <div class="people-head">
+          <div>
+            <h1>Equipe da Clínica</h1>
+            <p>Terapeutas, recepção e faturamento.</p>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn-link" id="voltarEquipeBtn">Voltar aos sistemas</button>
+          </div>
+        </div>
+        <!-- Equipe da Clínica: terapeutas, recepção e faturamento. Não têm conta no Hub: entram direto na Clínica por CPF e senha. -->
+        <section class="person-form" id="equipeSection">
+          <p class="form-label" style="font-weight:600;">Terapeutas, recepção e faturamento entram direto na Clínica, por CPF e senha. Aqui você cria, redefine a senha e bloqueia, sem abrir a Clínica. Nada é apagado. Cada ação fica registrada com o seu nome.</p>
+          <div id="equipeError" class="form-error" role="alert"></div>
+          <div id="equipeNotice" class="form-notice" role="status"></div>
+          <div class="senha-box" id="senhaBox" hidden>
+            <b id="esTitulo"></b>
+            <div class="valor" id="esValor"></div>
+            <small>Aparece só agora e não fica guardada em lugar nenhum. A pessoa troca no primeiro acesso. Passe por um canal seguro.</small>
+            <div class="form-actions" style="margin-top:10px;">
+              <button type="button" class="btn btn-pink btn-sm" id="esCopiar">Copiar senha</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="esFechar">Fechar</button>
+            </div>
+          </div>
+          <div class="form-actions" style="margin: 10px 0;">
+            <input type="search" id="equipeBusca" class="form-control" placeholder="Buscar por nome" autocomplete="off" style="max-width:260px;">
+            <button type="button" class="btn btn-pink btn-sm" id="equipeNova">Nova pessoa da equipe</button>
+          </div>
+          <form id="equipeFormEl" novalidate hidden>
+            <div id="equipeFormError" class="form-error" role="alert"></div>
+            <div class="grid-2">
+              <div class="form-group">
+                <label for="ef-nome" class="form-label">Nome completo</label>
+                <input type="text" id="ef-nome" class="form-control" maxlength="120" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label for="ef-cpf" class="form-label">CPF (é o login)</label>
+                <input type="text" id="ef-cpf" class="form-control" inputmode="numeric" maxlength="14" autocomplete="off" required>
+              </div>
+              <div class="form-group">
+                <label for="ef-papel" class="form-label">Papel</label>
+                <select id="ef-papel" class="form-control"></select>
+              </div>
+              <div class="form-group">
+                <label for="ef-email" class="form-label">E-mail (opcional)</label>
+                <input type="email" id="ef-email" class="form-control" autocomplete="off">
+              </div>
+              <div class="form-group">
+                <label for="ef-conselho" class="form-label">Registro no conselho (opcional)</label>
+                <input type="text" id="ef-conselho" class="form-control" maxlength="40" autocomplete="off" placeholder="ex.: CRP 10/12345">
+              </div>
+              <div class="form-group">
+                <label for="ef-nasc" class="form-label">Nascimento (opcional)</label>
+                <input type="date" id="ef-nasc" class="form-control">
+              </div>
+            </div>
+            <label class="check"><input type="checkbox" id="ef-avaliador"> Avaliador(a)</label>
+            <label class="check"><input type="checkbox" id="ef-at"> Acompanhante terapêutico (AT)</label>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-pink btn-sm" id="ef-salvar">Criar e gerar senha temporária</button>
+              <button type="button" class="btn btn-ghost btn-sm" id="ef-cancelar">Cancelar</button>
+            </div>
+          </form>
+          <div class="people-list" id="equipeLista"></div>
+        </section>
+      </div>
+    </main>
   </div>
 
   <script>
@@ -850,6 +926,8 @@
       var esqueciSub = document.getElementById('esqueciSub');
       var hubMain = document.getElementById('hubMain');
       var pessoasMain = document.getElementById('pessoasMain');
+      var equipeMain = document.getElementById('equipeMain');
+      var equipeHubBtn = document.getElementById('equipeHubBtn');
       var pessoasBtn = document.getElementById('pessoasBtn');
       var balcaoDlBtn = document.getElementById('balcaoDlBtn');
 
@@ -871,6 +949,7 @@
         memToken = token;
       }
       function clearSession() {
+        limparSenha();
         try {
           localStorage.removeItem(TOKEN_KEY);
           localStorage.removeItem(EXPIRES_KEY);
@@ -912,13 +991,16 @@
         if (el) el.focus();
       }
 
-      function showHub(nome, apps, papel, niveis) {
+      function showHub(nome, apps, papel, niveis, podeEquipe) {
         loginScreen.hidden = true;
         hubScreen.hidden = false;
         hubMain.hidden = false;
         pessoasMain.hidden = true;
+        equipeMain.hidden = true;
         meuPapel = papel || 'gerente';
         pessoasBtn.hidden = meuPapel !== 'owner';
+        // Owner ou administrador da Clínica (o servidor decide e recusa quem não for).
+        equipeHubBtn.hidden = !podeEquipe;
         if (balcaoDlBtn) balcaoDlBtn.hidden = meuPapel !== 'owner';
         helloTitle.textContent = nome ? 'Olá, ' + nome.split(' ')[0] + '!' : 'Olá!';
 
@@ -1053,7 +1135,7 @@
           }
           saveSession(r.data.token, r.data.expires_at);
           challengeId = null;
-          showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis);
+          showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis, r.data.pode_gerir_equipe);
         });
       });
 
@@ -1220,10 +1302,12 @@
         carregarAuditoria();
       }
       function voltarHub() {
+        limparSenha();
         pessoasMain.hidden = true;
+        equipeMain.hidden = true;
         hubMain.hidden = false;
         // Os níveis podem ter mudado (inclusive os do próprio owner): recarrega os quadrados.
-        api('me').then(function (r) { if (r.ok) showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis); });
+        api('me').then(function (r) { if (r.ok) showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis, r.data.pode_gerir_equipe); });
       }
       pessoasBtn.addEventListener('click', abrirPessoas);
       document.getElementById('voltarHubBtn').addEventListener('click', voltarHub);
@@ -1643,6 +1727,160 @@
         });
       });
 
+      // ---------- equipe da Clínica (owner) ----------
+      var equipeSection = document.getElementById('equipeSection');
+      var equipeLista = document.getElementById('equipeLista');
+      var equipeError = document.getElementById('equipeError');
+      var equipeNotice = document.getElementById('equipeNotice');
+      var equipeFormEl = document.getElementById('equipeFormEl');
+      var equipeFormError = document.getElementById('equipeFormError');
+      var senhaBox = document.getElementById('senhaBox');
+      var equipe = [];
+      var equipePapeis = [];
+
+      function limparSenha() {
+        if (!senhaBox) return;
+        senhaBox.hidden = true;
+        document.getElementById('esValor').textContent = '';
+      }
+      function mostrarSenha(nome, senha) {
+        document.getElementById('esTitulo').textContent = 'Senha temporária de ' + nome + ':';
+        document.getElementById('esValor').textContent = senha;
+        senhaBox.hidden = false;
+        senhaBox.scrollIntoView({ block: 'nearest' });
+      }
+      document.getElementById('esFechar').addEventListener('click', limparSenha);
+      document.getElementById('esCopiar').addEventListener('click', function () {
+        var v = document.getElementById('esValor').textContent;
+        if (navigator.clipboard && v) navigator.clipboard.writeText(v).then(function () { showMsg(equipeNotice, 'Senha copiada.'); }, function () { showMsg(equipeError, 'Não consegui copiar: selecione a senha e copie à mão.'); });
+      });
+
+      function chamarEquipe(action, payload, okMsg) {
+        showMsg(equipeError, '');
+        showMsg(equipeNotice, '');
+        return api(action, payload).then(function (r) {
+          if (r.status === 401) { clearSession(); showMsg(senhaError, 'Sua sessão expirou. Entre de novo.'); showLogin('senha'); return r; }
+          if (!r.ok) showMsg(equipeError, r.data.error || 'Não foi possível concluir.');
+          else if (okMsg) showMsg(equipeNotice, okMsg);
+          return r;
+        });
+      }
+
+      function carregarEquipe() {
+        api('equipe_listar').then(function (r) {
+          if (!r.ok) { showMsg(equipeError, r.data.error || 'Não foi possível carregar a equipe.'); return; }
+          equipe = r.data.equipe || [];
+          equipePapeis = r.data.papeis || [];
+          var sel = document.getElementById('ef-papel');
+          if (!sel.options.length) {
+            equipePapeis.forEach(function (o) { var op = el('option', null, o.rotulo); op.value = o.id; sel.appendChild(op); });
+          }
+          renderEquipe();
+        });
+      }
+
+      function renderEquipe() {
+        var q = document.getElementById('equipeBusca').value.trim().toLowerCase();
+        equipeLista.textContent = '';
+        var itens = equipe.filter(function (p) { return !q || (p.nome || '').toLowerCase().indexOf(q) !== -1; });
+        if (!itens.length) equipeLista.appendChild(el('p', 'form-label', q ? 'Ninguém com esse nome.' : 'Nenhuma pessoa na equipe ainda.'));
+        itens.forEach(function (p) {
+          var card = el('div', 'person' + (p.ativo ? '' : ' off'));
+          var who = el('div', 'who');
+          who.appendChild(el('b', null, p.nome));
+          who.appendChild(el('small', null, (p.cpf || 'sem CPF') + (p.email ? ' · ' + p.email : '')));
+          var meta = el('div', 'meta');
+          var rotulo = equipePapeis.filter(function (o) { return o.id === p.papel; })[0];
+          meta.appendChild(el('span', 'chip', rotulo ? rotulo.rotulo : p.papel));
+          if (p.conselho) meta.appendChild(el('span', 'chip', p.conselho));
+          if (p.avaliador) meta.appendChild(el('span', 'chip', 'Avaliador(a)'));
+          if (p.at) meta.appendChild(el('span', 'chip', 'AT'));
+          if (!p.ativo) meta.appendChild(el('span', 'chip warn', 'Bloqueada'));
+          if (p.trocar_senha) meta.appendChild(el('span', 'chip warn', 'Ainda não trocou a senha'));
+          if (p.no_hub) meta.appendChild(el('span', 'chip', 'Conta no Hub'));
+          who.appendChild(meta);
+          card.appendChild(who);
+
+          var acts = el('div', 'acts');
+          if (p.no_hub) {
+            acts.appendChild(el('small', null, 'Conta do Hub: só o owner gerencia'));
+          } else {
+            var bSenha = el('button', 'btn btn-ghost btn-sm', 'Redefinir senha');
+            bSenha.type = 'button';
+            bSenha.addEventListener('click', function () {
+              if (!window.confirm('Gerar uma nova senha temporária para ' + p.nome + '? A senha atual deixa de valer. O PIN de assinatura não muda.')) return;
+              limparSenha();
+              chamarEquipe('equipe_resetar_senha', { id: p.id }).then(function (r) {
+                if (r && r.ok) { mostrarSenha(p.nome, r.data.senha_temporaria); carregarEquipe(); }
+              });
+            });
+            acts.appendChild(bSenha);
+            var bAtivo = el('button', 'btn btn-sm ' + (p.ativo ? 'btn-danger' : 'btn-ghost'), p.ativo ? 'Bloquear' : 'Reativar');
+            bAtivo.type = 'button';
+            bAtivo.addEventListener('click', function () {
+              if (p.ativo && !window.confirm('Bloquear ' + p.nome + '? O login dela na Clínica é bloqueado. Nada é apagado e reativar devolve o acesso.')) return;
+              chamarEquipe('equipe_ativo', { id: p.id, ativo: !p.ativo }, p.ativo ? 'Acesso bloqueado.' : 'Acesso reativado.').then(function (r) {
+                if (r && r.ok) carregarEquipe();
+              });
+            });
+            acts.appendChild(bAtivo);
+          }
+          card.appendChild(acts);
+          equipeLista.appendChild(card);
+        });
+      }
+
+      function abrirEquipe() {
+        limparSenha();
+        hubMain.hidden = true;
+        pessoasMain.hidden = true;
+        equipeMain.hidden = false;
+        equipeFormEl.hidden = true;
+        showMsg(equipeError, '');
+        showMsg(equipeNotice, '');
+        carregarEquipe();
+        window.scrollTo(0, 0);
+      }
+      equipeHubBtn.addEventListener('click', abrirEquipe);
+      document.getElementById('equipeBtn').addEventListener('click', abrirEquipe);
+      document.getElementById('voltarEquipeBtn').addEventListener('click', voltarHub);
+      document.getElementById('equipeBusca').addEventListener('input', renderEquipe);
+      document.getElementById('equipeNova').addEventListener('click', function () {
+        equipeFormEl.reset();
+        showMsg(equipeFormError, '');
+        equipeFormEl.hidden = false;
+        document.getElementById('ef-nome').focus();
+      });
+      document.getElementById('ef-cancelar').addEventListener('click', function () { equipeFormEl.hidden = true; });
+      equipeFormEl.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var nome = document.getElementById('ef-nome').value.trim();
+        var cpf = document.getElementById('ef-cpf').value.replace(/\D/g, '');
+        if (!nome) { showMsg(equipeFormError, 'Informe o nome.'); return; }
+        if (cpf.length !== 11) { showMsg(equipeFormError, 'Informe o CPF com 11 dígitos.'); return; }
+        showMsg(equipeFormError, '');
+        var btn = document.getElementById('ef-salvar');
+        btn.disabled = true;
+        limparSenha();
+        chamarEquipe('equipe_criar', {
+          nome: nome,
+          cpf: cpf,
+          email: document.getElementById('ef-email').value.trim(),
+          papel: document.getElementById('ef-papel').value,
+          conselho: document.getElementById('ef-conselho').value.trim(),
+          nascimento: document.getElementById('ef-nasc').value,
+          avaliador: document.getElementById('ef-avaliador').checked,
+          at: document.getElementById('ef-at').checked
+        }).then(function (r) {
+          btn.disabled = false;
+          if (!r.ok) { showMsg(equipeFormError, r.data.error || 'Não foi possível criar.'); return; }
+          equipeFormEl.hidden = true;
+          mostrarSenha(nome, r.data.senha_temporaria);
+          showMsg(equipeNotice, nome + ' criada. Passe a senha abaixo; a troca é obrigatória no primeiro acesso.');
+          carregarEquipe();
+        });
+      });
+
       // ---------- sair ----------
       document.getElementById('logoutBtn').addEventListener('click', function () {
         api('logout').then(function () {
@@ -1669,7 +1907,7 @@
             return;
           }
           if (window.location.hash === '#primeiro-acesso') return;
-          showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis);
+          showHub(r.data.nome, r.data.apps, r.data.papel, r.data.niveis, r.data.pode_gerir_equipe);
         });
       }
 
