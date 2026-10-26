@@ -1236,6 +1236,24 @@
         });
       }
 
+      // Desativar/reativar: o servidor devolve o que aconteceu em cada sistema (Clínica, Cacau...).
+      function alterarAtivo(c, ativo) {
+        acaoPessoas('conta_ativo', { email: c.email, ativo: ativo }, null).then(function (r) {
+          if (r && r.ok) {
+            var res = r.data.resultados || [];
+            var linhas = res.map(function (x) { return x.rotulo + ': ' + x.texto; });
+            var base = ativo ? 'Conta reativada.' : 'Conta desativada.';
+            if (r.data.falhas) {
+              showMsg(pessoasError, base + ' Mas ' + r.data.falhas + (r.data.falhas === 1 ? ' sistema não foi' : ' sistemas não foram') + ' ' + (ativo ? 'restaurado' : 'bloqueado') + ' — ' + linhas.join(' · ') + '. Use "' + (ativo ? 'Reativar' : 'Reaplicar bloqueio') + '" para tentar de novo.');
+            } else {
+              showMsg(pessoasNotice, base + (linhas.length ? ' ' + linhas.join(' · ') + '.' : ''));
+            }
+          }
+          carregarPessoas();
+          carregarAuditoria();
+        });
+      }
+
       function carregarPessoas() {
         api('contas_listar').then(function (r) {
           if (!r.ok) { showMsg(pessoasError, r.data.error || 'Não foi possível carregar as pessoas.'); return; }
@@ -1294,13 +1312,17 @@
           var bAtivo = el('button', 'btn btn-sm ' + (c.ativo ? 'btn-danger' : 'btn-ghost'), c.ativo ? 'Desativar' : 'Reativar');
           bAtivo.type = 'button';
           bAtivo.addEventListener('click', function () {
-            if (c.ativo && !window.confirm('Desativar ' + c.nome + '? O acesso ao Hub e ao painel é encerrado na hora.')) return;
-            acaoPessoas('conta_ativo', { email: c.email, ativo: !c.ativo }, c.ativo ? 'Conta desativada.' : 'Conta reativada.').then(function () {
-              carregarPessoas();
-              carregarAuditoria();
-            });
+            if (c.ativo && !window.confirm('Desativar ' + c.nome + '? O acesso ao Hub e ao painel é encerrado na hora, e o login dela é bloqueado nos sistemas onde tem conta. Nenhum PIN, biometria ou histórico é apagado, e reativar devolve o acesso.')) return;
+            alterarAtivo(c, !c.ativo);
           });
           acts.appendChild(bAtivo);
+          if (!c.ativo) {
+            // Repete o bloqueio nos sistemas (só refaz o que faltou), por exemplo depois de uma falha.
+            var bRepetir = el('button', 'btn btn-ghost btn-sm', 'Reaplicar bloqueio');
+            bRepetir.type = 'button';
+            bRepetir.addEventListener('click', function () { alterarAtivo(c, false); });
+            acts.appendChild(bRepetir);
+          }
 
           card.appendChild(who);
           card.appendChild(acts);

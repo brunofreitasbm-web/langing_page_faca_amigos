@@ -323,7 +323,7 @@ async function provisionar(
   user: UsuarioAuth,
   conta: Conta,
   email: string,
-): Promise<string | null> {
+): Promise<string> {
   if (conta.papel !== "gerente") return "";
 
   if (appId === "rh") {
@@ -1103,6 +1103,285 @@ const CAMPOS_MAPEAMENTO = [...new Set(APP_IDS.map((id) => APPS[id].campo))].filt
 const COLUNAS_PUBLICAS =
   "email, email_codigo, nome, playground_email, clinica_email, financeiro_email, rh_email, cacau_usuario, painel_usuario, ativo, papel, auth_modo, login_email, senha_definida_em, convidado_em, criado_por, created_at";
 
+// ---------------------------------------------------------------------
+// Desligar / religar a pessoa em cada sistema (conta_ativo)
+//
+// Desativar uma conta no Hub passa a bloquear o ACESSO dela em cada sistema onde ela tem identidade:
+//   - Supabase (Clínica, Gestão de Pessoas, Playground, Simulador): banimento do login
+//     (auth.admin ban_duration) e, quando o sistema tem a flag, `active = false` (Clínica: profiles;
+//     Playground: fa_kiosk_employees), que também corta a sessão que já estava aberta nas políticas RLS;
+//   - Cacau Show: ordem assinada para POST /api/auth/hub/acesso (colaboradores.ativo = 0).
+//
+// REGRAS DURAS:
+//   - NUNCA apaga nada: PIN, hash de PIN, biometria, ponto e histórico ficam intactos.
+//   - NUNCA toca em conta de unidade/quiosque (*_unit): é login compartilhado do tablet da loja.
+//   - Reativar desfaz SÓ o que o Hub bloqueou (fa_gestao_bloqueios). Quem já estava desativado no
+//     sistema por outro motivo continua desativado.
+//   - Idempotente: repetir a ordem não muda nada, e uma falha em um sistema não impede os outros.
+// ---------------------------------------------------------------------
+
+const BAN_LONGO = "876000h"; // ~100 anos; reativar usa "none"
+
+type EstadoSistema = "bloqueado" | "ja_bloqueado" | "restaurado" | "nada_a_restaurar" | "sem_conta" | "pulado" | "erro";
+type ResultadoSistema = { app: AppId; rotulo: string; estado: EstadoSistema; texto: string };
+type ParcialSistema = { estado: EstadoSistema; texto: string };
+
+const SISTEMAS_BLOQUEAVEIS: AppId[] = ["playground", "clinica", "financeiro", "rh", "cacau"];
+
+function clienteSupabase(tipo: "supabase_a" | "supabase_b"): SupabaseClient | null {
+  const url = tipo === "supabase_a" ? Deno.env.get("SUPABASE_URL") : Deno.env.get("CLINICA_SUPABASE_URL");
+  const key = tipo === "supabase_a"
+    ? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
+    : Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+}
+
+type UsuarioBloqueavel = UsuarioAuth & { banned_until?: string | null };
+
+// Procura pelo e-mail SEM criar ninguém (generateLink criaria o usuário se não existisse).
+async function acharUsuarioAuth(client: SupabaseClient, email: string): Promise<UsuarioBloqueavel | null> {
+  const alvo = email.toLowerCase();
+  const POR_PAGINA = 200;
+  for (let pagina = 1; pagina <= 25; pagina++) {
+    const { data, error } = await client.auth.admin.listUsers({ page: pagina, perPage: POR_PAGINA });
+    if (error) throw new Error(error.message);
+    const achou = data.users.find((u) => (u.email ?? "").toLowerCase() === alvo);
+    if (achou) return achou as unknown as UsuarioBloqueavel;
+    if (data.users.length < POR_PAGINA) return null;
+  }
+  return null;
+}
+
+async function bloqueioAberto(admin: Admin, email: string, modulo: AppId): Promise<Record<string, unknown> | null> {
+  const { data, error } = await admin
+    .from("fa_gestao_bloqueios")
+    .select("detalhe")
+    .eq("email", email)
+    .eq("modulo", modulo)
+    .is("desfeito_em", null)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data ? ((data.detalhe ?? {}) as Record<string, unknown>) : null;
+}
+
+// Mescla com o que já estava registrado: se uma tentativa anterior bloqueou só uma parte, a próxima
+// não pode esquecer o que foi feito.
+async function registrarBloqueio(admin: Admin, email: string, modulo: AppId, novo: Record<string, unknown>) {
+  const antes = await bloqueioAberto(admin, email, modulo);
+  const detalhe = { ...(antes ?? {}), ...novo };
+  const { error } = antes
+    ? await admin.from("fa_gestao_bloqueios").update({ detalhe }).eq("email", email).eq("modulo", modulo).is("desfeito_em", null)
+    : await admin.from("fa_gestao_bloqueios").insert({ email, modulo, detalhe });
+  if (error) throw new Error(`não consegui registrar o bloqueio: ${error.message}`);
+}
+
+async function desligarSupabase(admin: Admin, appId: AppId, email: string): Promise<ParcialSistema> {
+  const client = clienteSupabase(APPS[appId].tipo as "supabase_a" | "supabase_b");
+  if (!client) return { estado: "erro", texto: "sistema sem configuração no servidor" };
+  const user = await acharUsuarioAuth(client, email);
+  if (!user) return { estado: "sem_conta", texto: "sem conta com esse e-mail, nada a bloquear" };
+  if (ehContaDeUnidade(user)) return { estado: "pulado", texto: "é conta de unidade (quiosque), o Hub não mexe" };
+
+  const novo: Record<string, unknown> = {};
+  const erros: string[] = [];
+
+  const jaBanido = !!user.banned_until && Date.parse(user.banned_until) > Date.now();
+  if (!jaBanido) {
+    const { error } = await client.auth.admin.updateUserById(user.id, { ban_duration: BAN_LONGO });
+    if (error) erros.push(`login: ${error.message}`);
+    else novo.ban = true;
+  }
+
+  if (appId === "clinica") {
+    const { data: perfil, error } = await client.from("profiles").select("active").eq("id", user.id).maybeSingle();
+    if (error) erros.push(`perfil: ${error.message}`);
+    else if (perfil && perfil.active !== false) {
+      const { error: upErr } = await client.from("profiles").update({ active: false }).eq("id", user.id);
+      if (upErr) erros.push(`perfil: ${upErr.message}`);
+      else novo.perfil_ativo_antes = true;
+    }
+  }
+
+  if (appId === "playground") {
+    const { data: colab, error } = await client
+      .from("fa_kiosk_employees")
+      .select("id, active")
+      .eq("auth_user_id", user.id)
+      .maybeSingle();
+    if (error) erros.push(`colaborador: ${error.message}`);
+    else if (colab && colab.active !== false) {
+      const { error: upErr } = await client.from("fa_kiosk_employees").update({ active: false }).eq("id", colab.id);
+      if (upErr) erros.push(`colaborador: ${upErr.message}`);
+      else {
+        novo.colaborador_id = colab.id;
+        novo.colaborador_ativo_antes = true;
+        await client.from("fa_kiosk_audit_log").insert({
+          action: "HUB_DISABLE_EMPLOYEE",
+          severity: "ALERTA",
+          details_json: { employeeId: colab.id, via: "gestao-hub" },
+        });
+      }
+    }
+  }
+
+  if (Object.keys(novo).length) await registrarBloqueio(admin, email, appId, novo);
+  if (erros.length) return { estado: "erro", texto: erros.join("; ") };
+  return Object.keys(novo).length
+    ? { estado: "bloqueado", texto: "acesso bloqueado" }
+    : { estado: "ja_bloqueado", texto: "já estava bloqueado, nada a mudar" };
+}
+
+async function religarSupabase(admin: Admin, appId: AppId, email: string): Promise<ParcialSistema> {
+  const feito = await bloqueioAberto(admin, email, appId);
+  if (!feito) return { estado: "nada_a_restaurar", texto: "o Hub não tinha bloqueado aqui, nada a restaurar" };
+  const client = clienteSupabase(APPS[appId].tipo as "supabase_a" | "supabase_b");
+  if (!client) return { estado: "erro", texto: "sistema sem configuração no servidor" };
+  const user = await acharUsuarioAuth(client, email);
+  const erros: string[] = [];
+
+  if (user && !ehContaDeUnidade(user)) {
+    if (feito.ban === true) {
+      const { error } = await client.auth.admin.updateUserById(user.id, { ban_duration: "none" });
+      if (error) erros.push(`login: ${error.message}`);
+    }
+    if (appId === "clinica" && feito.perfil_ativo_antes === true) {
+      const { error } = await client.from("profiles").update({ active: true }).eq("id", user.id);
+      if (error) erros.push(`perfil: ${error.message}`);
+    }
+    if (appId === "playground" && feito.colaborador_ativo_antes === true && typeof feito.colaborador_id === "string") {
+      const { error } = await client.from("fa_kiosk_employees").update({ active: true }).eq("id", feito.colaborador_id);
+      if (error) erros.push(`colaborador: ${error.message}`);
+      else {
+        await client.from("fa_kiosk_audit_log").insert({
+          action: "HUB_ENABLE_EMPLOYEE",
+          severity: "ALERTA",
+          details_json: { employeeId: feito.colaborador_id, via: "gestao-hub" },
+        });
+      }
+    }
+  }
+  // Com erro, o bloqueio segue aberto: reativar de novo tenta o que faltou.
+  if (erros.length) return { estado: "erro", texto: erros.join("; ") };
+  const { error } = await admin
+    .from("fa_gestao_bloqueios")
+    .update({ desfeito_em: new Date().toISOString() })
+    .eq("email", email)
+    .eq("modulo", appId)
+    .is("desfeito_em", null);
+  if (error) return { estado: "erro", texto: `restaurei o acesso, mas não consegui fechar o registro: ${error.message}` };
+  return { estado: "restaurado", texto: "acesso restaurado" };
+}
+
+// Ordem assinada (HMAC-SHA256) para o Cacau: base64url(payload).base64url(assinatura), 60 s, uso único.
+async function ordemCacau(usuario: string, acao: "desligar" | "religar"): Promise<string | null> {
+  const secret = Deno.env.get("GESTAO_SSO_SECRET_CACAU");
+  if (!secret) return null;
+  const payload = {
+    u: usuario,
+    a: acao,
+    aud: "hub-operacoes-acesso",
+    exp: Math.floor(Date.now() / 1000) + 60,
+    jti: crypto.randomUUID(),
+  };
+  const payloadB64 = base64url(new TextEncoder().encode(JSON.stringify(payload)));
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payloadB64));
+  return `${payloadB64}.${base64url(new Uint8Array(sig))}`;
+}
+
+async function chamarCacau(usuario: string, acao: "desligar" | "religar"): Promise<{ mudou: boolean; encontrado: boolean } | { erro: string }> {
+  const ticket = await ordemCacau(usuario, acao);
+  if (!ticket) return { erro: "sistema sem configuração no servidor (GESTAO_SSO_SECRET_CACAU)" };
+  const base = (Deno.env.get(APPS.cacau.baseEnv) ?? APPS.cacau.baseDefault).replace(/\/+$/, "");
+  try {
+    const res = await fetch(`${base}/api/auth/hub/acesso`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticket }),
+      signal: AbortSignal.timeout(8000),
+    });
+    const corpo = await res.json().catch(() => ({}));
+    if (!res.ok) return { erro: String(corpo.error ?? `o Cacau respondeu ${res.status}`) };
+    return { mudou: corpo.mudou === true, encontrado: corpo.encontrado !== false };
+  } catch (e) {
+    return { erro: `o Cacau não respondeu (${e instanceof Error ? e.message : "falha de rede"})` };
+  }
+}
+
+async function desligarCacau(admin: Admin, email: string, usuario: string): Promise<ParcialSistema> {
+  const r = await chamarCacau(usuario, "desligar");
+  if ("erro" in r) return { estado: "erro", texto: r.erro };
+  if (!r.encontrado) return { estado: "sem_conta", texto: "usuário não existe no Cacau, nada a bloquear" };
+  if (!r.mudou) return { estado: "ja_bloqueado", texto: "já estava bloqueado, nada a mudar" };
+  await registrarBloqueio(admin, email, "cacau", { ativo_antes: true });
+  return { estado: "bloqueado", texto: "acesso bloqueado" };
+}
+
+async function religarCacau(admin: Admin, email: string, usuario: string): Promise<ParcialSistema> {
+  const feito = await bloqueioAberto(admin, email, "cacau");
+  if (!feito) return { estado: "nada_a_restaurar", texto: "o Hub não tinha bloqueado aqui, nada a restaurar" };
+  const r = await chamarCacau(usuario, "religar");
+  if ("erro" in r) return { estado: "erro", texto: r.erro };
+  const { error } = await admin
+    .from("fa_gestao_bloqueios")
+    .update({ desfeito_em: new Date().toISOString() })
+    .eq("email", email)
+    .eq("modulo", "cacau")
+    .is("desfeito_em", null);
+  if (error) return { estado: "erro", texto: `restaurei o acesso, mas não consegui fechar o registro: ${error.message}` };
+  return { estado: "restaurado", texto: "acesso restaurado" };
+}
+
+// Percorre os sistemas onde a pessoa tem identidade. Cada sistema é independente: erro em um
+// (rede, configuração) vira uma linha de resultado e não impede os outros.
+async function aplicarEmSistemas(
+  admin: Admin,
+  req: Request,
+  conta: Conta,
+  acao: "desligar" | "religar",
+  porQuem: string,
+): Promise<ResultadoSistema[]> {
+  const resultados: ResultadoSistema[] = [];
+  // Sem a tabela de registro o Hub bloquearia sem saber desfazer: se ela não existe (migração
+  // 20261026130000 ainda não aplicada), não mexe em sistema nenhum.
+  const { error: semTabela } = await admin.from("fa_gestao_bloqueios").select("id").limit(1);
+  if (semTabela) {
+    console.error("fa_gestao_bloqueios indisponível:", semTabela.message);
+    return [{
+      app: "cacau",
+      rotulo: "Hub",
+      estado: "erro",
+      texto: "nenhum sistema foi alterado: aplique a migração fa_gestao_bloqueios no Supabase e tente de novo",
+    }];
+  }
+  for (const appId of SISTEMAS_BLOQUEAVEIS) {
+    const app = APPS[appId];
+    const identidade = conta[app.campo];
+    if (typeof identidade !== "string" || !identidade) continue;
+    let parcial: ParcialSistema;
+    try {
+      if (app.tipo === "cacau") {
+        parcial = acao === "desligar" ? await desligarCacau(admin, conta.email, identidade) : await religarCacau(admin, conta.email, identidade);
+      } else {
+        parcial = acao === "desligar"
+          ? await desligarSupabase(admin, appId, identidade.toLowerCase())
+          : await religarSupabase(admin, appId, identidade.toLowerCase());
+      }
+    } catch (e) {
+      console.error(`${acao} ${appId}:`, e instanceof Error ? e.message : e);
+      parcial = { estado: "erro", texto: e instanceof Error ? e.message : "falha inesperada" };
+    }
+    resultados.push({ app: appId, rotulo: app.rotulo, ...parcial });
+    await auditar(admin, req, acao === "desligar" ? "sistema_bloqueado" : "sistema_restaurado", {
+      email: conta.email,
+      app: appId,
+      detalhe: `${parcial.estado}: ${parcial.texto} (por ${porQuem})`.slice(0, 200),
+    });
+  }
+  return resultados;
+}
+
 // Derruba o que a pessoa tem aberto: sessão do Hub e sessão do /admin (12 h), para um novo nível valer já.
 async function revogarSessoes(admin: Admin, email: string, painelUsuario: string | null) {
   await admin.from("fa_gestao_sessoes").delete().eq("email", email);
@@ -1264,7 +1543,10 @@ async function acaoOwner(
     if (error) return jsonResponse(req, { error: "não foi possível atualizar" }, 500);
     if (!ativo) await revogarSessoes(admin, atual.email, atual.painel_usuario);
     await auditar(admin, req, ativo ? "conta_reativada" : "conta_desativada", { email: atual.email, detalhe: `por ${dono.email}` });
-    return jsonResponse(req, { ok: true });
+    // Bloqueia (ou restaura) o acesso da pessoa nos sistemas. Desativar de novo uma conta já
+    // desativada refaz só o que faltou: serve para repetir depois de uma falha.
+    const resultados = await aplicarEmSistemas(admin, req, atual, ativo ? "religar" : "desligar", dono.email);
+    return jsonResponse(req, { ok: true, resultados, falhas: resultados.filter((r) => r.estado === "erro").length });
   }
 
   if (action === "sessoes_revogar") {
