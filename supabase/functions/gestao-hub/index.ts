@@ -305,7 +305,16 @@ async function provisionar(
   conta: Conta,
   email: string,
 ): Promise<string | null> {
-  if (conta.papel !== "gerente") return "";
+  if (conta.papel !== "gerente") {
+    if (conta.papel === "owner" && appId === "clinica") {
+      const { data: perfil } = await client.from("profiles").select("id, role").eq("id", user.id).maybeSingle();
+      if (perfil && perfil.role !== "gestor") {
+        await client.from("profiles").update({ role: "gestor" }).eq("id", user.id);
+        return "clinica=gestor(owner)";
+      }
+    }
+    return "";
+  }
 
   if (appId === "rh") {
     const atual = (user.app_metadata ?? {}) as Record<string, unknown>;
@@ -753,6 +762,64 @@ Deno.serve(async (req) => {
   }
   const admin = createClient(supabaseUrl, serviceRoleKey, { auth: { persistSession: false } });
 
+  // Valida a senha do Hub e sincroniza com o Supabase Auth da Clínica
+  if (action === "sincronizar_login_clinica") {
+    const raw = str(body.identifier || body.email);
+    const password = typeof body.password === "string" ? body.password : "";
+    if (!raw || !password) return jsonResponse(req, { ok: false }, 400);
+
+    const loginInput = raw.toLowerCase();
+    const contaHub = await acharContaPorLogin(admin, loginInput);
+    if (!contaHub || !contaHub.ativo || !contaHub.senha_hash || contaHub.auth_modo !== "hub") {
+      return jsonResponse(req, { ok: false });
+    }
+
+    const confere = await verificarSenhaHub(password, contaHub.senha_hash);
+    if (!confere) {
+      return jsonResponse(req, { ok: false });
+    }
+
+    const clinicaEmail = (contaHub.clinica_email || contaHub.login_email || contaHub.email).toLowerCase();
+    const b = clinicaAdmin();
+    if (b && clinicaEmail) {
+      const alvo = await acharUsuarioClinica(clinicaEmail);
+      if (alvo?.id) {
+        const { error: updErr } = await b.auth.admin.updateUserById(alvo.id, { password });
+        if (updErr) {
+          console.error("sincronizar_login_clinica updateUserById:", updErr.message);
+        }
+      }
+    }
+
+    return jsonResponse(req, { ok: true, email: clinicaEmail });
+  }
+
+  // Atualiza a senha no Hub quando redefinida pela Clínica
+  if (action === "atualizar_senha_hub") {
+    const clinicaKey = Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
+    const authHeader = req.headers.get("Authorization") || "";
+    const token = authHeader.replace(/^Bearer\s+/i, "").trim();
+    if (!clinicaKey || token !== clinicaKey) {
+      return jsonResponse(req, { error: "não autorizado" }, 401);
+    }
+
+    const raw = str(body.identifier || body.email);
+    const password = typeof body.new_password === "string" ? body.new_password : "";
+    if (!raw || !password) return jsonResponse(req, { error: "dados incompletos" }, 400);
+
+    const contaHub = await acharContaPorLogin(admin, raw.toLowerCase());
+    if (contaHub) {
+      await admin
+        .from("fa_gestao_contas")
+        .update({ senha_hash: await hashSenha(password), senha_definida_em: new Date().toISOString() })
+        .eq("email", contaHub.email);
+      await admin.from("fa_gestao_sessoes").delete().eq("email", contaHub.email);
+      await auditar(admin, req, "senha_redefinida", { email: contaHub.email, detalhe: "via_clinica" });
+    }
+
+    return jsonResponse(req, { ok: true });
+  }
+
   // --- passo 1: senha da Clínica → código por e-mail ---
   if (action === "login") {
     const raw = str(body.identifier || body.email);
@@ -789,6 +856,17 @@ Deno.serve(async (req) => {
     if (contaHub?.auth_modo === "hub") {
       if (!contaHub.senha_hash || !(await verificarSenhaHub(password, contaHub.senha_hash))) {
         return falhou(401, "senha", contaHub.email);
+      }
+      if (contaHub.clinica_email) {
+        const b = clinicaAdmin();
+        if (b) {
+          const alvo = await acharUsuarioClinica(contaHub.clinica_email);
+          if (alvo?.id) {
+            await b.auth.admin.updateUserById(alvo.id, { password }).catch((e) => {
+              console.error("sincronizar senha clinica falhou:", e?.message);
+            });
+          }
+        }
       }
       conta = contaHub;
     } else {
@@ -947,6 +1025,17 @@ Deno.serve(async (req) => {
         console.error("senha hub:", hubErr.message);
         return jsonResponse(req, { error: "não foi possível trocar a senha agora" }, 500);
       }
+      if (conta.clinica_email) {
+        const b = clinicaAdmin();
+        if (b) {
+          const alvo = await acharUsuarioClinica(conta.clinica_email);
+          if (alvo?.id) {
+            await b.auth.admin.updateUserById(alvo.id, { password: novaSenha }).catch((e) => {
+              console.error("sincronizar senha clinica falhou:", e?.message);
+            });
+          }
+        }
+      }
       await admin.from("fa_gestao_sessoes").delete().eq("email", conta.email);
       await auditar(admin, req, "senha_redefinida", { email: conta.email, detalhe: "hub" });
       return jsonResponse(req, { ok: true });
@@ -965,6 +1054,143 @@ Deno.serve(async (req) => {
     await admin.from("fa_gestao_sessoes").delete().eq("email", conta.email);
     await auditar(admin, req, "senha_redefinida", { email: conta.email });
     return jsonResponse(req, { ok: true });
+  }
+
+  // --- convite: consultar dados do link (público) ---
+  if (action === "convite_consultar") {
+    const token = str(body.token);
+    if (!token) return jsonResponse(req, { error: "token de convite obrigatório" }, 400);
+
+    const { data: convite, error } = await admin
+      .from("fa_gestao_convites")
+      .select("*")
+      .eq("token", token)
+      .maybeSingle();
+
+    if (error || !convite) {
+      return jsonResponse(req, { error: "convite não encontrado ou inválido" }, 404);
+    }
+    if (convite.usado_em) {
+      return jsonResponse(req, { error: "este convite já foi utilizado", usado: true }, 410);
+    }
+    if (new Date(convite.expires_at).getTime() < Date.now()) {
+      return jsonResponse(req, { error: "este convite expirou", expirado: true }, 410);
+    }
+
+    const appId = convite.sistema as AppId;
+    const sistemaInfo = APPS[appId];
+
+    return jsonResponse(req, {
+      ok: true,
+      convite: {
+        token: convite.token,
+        unidade: convite.unidade,
+        sistema: convite.sistema,
+        sistema_nome: sistemaInfo?.rotulo || convite.sistema,
+        funcao: convite.funcao,
+        permissao: convite.permissao,
+        destinatario_email: convite.destinatario_email
+      }
+    });
+  }
+
+  // --- convite: cadastrar usuário (público) ---
+  if (action === "convite_cadastrar") {
+    const token = str(body.token);
+    const nome = str(body.nome).slice(0, 120);
+    const dataNascimento = str(body.data_nascimento);
+    const emailReal = str(body.email).toLowerCase();
+    const senha = typeof body.password === "string" ? body.password : "";
+
+    if (!token) return jsonResponse(req, { error: "token inválido" }, 400);
+    if (!nome || nome.length < 3) return jsonResponse(req, { error: "informe seu nome completo" }, 400);
+    if (!EMAIL_RE.test(emailReal)) return jsonResponse(req, { error: "informe um e-mail válido" }, 400);
+    if (!dataNascimento) return jsonResponse(req, { error: "informe a data de nascimento" }, 400);
+    if (senha.length < SENHA_MIN) return jsonResponse(req, { error: `a senha precisa ter pelo menos ${SENHA_MIN} caracteres` }, 400);
+
+    const { data: convite, error: convErr } = await admin
+      .from("fa_gestao_convites")
+      .select("*")
+      .eq("token", token)
+      .maybeSingle();
+
+    if (convErr || !convite) return jsonResponse(req, { error: "convite não encontrado" }, 404);
+    if (convite.usado_em) return jsonResponse(req, { error: "este convite já foi utilizado" }, 410);
+    if (new Date(convite.expires_at).getTime() < Date.now()) return jsonResponse(req, { error: "este convite expirou" }, 410);
+
+    const appId = convite.sistema as AppId;
+    const sistemaInfo = APPS[appId];
+    if (!sistemaInfo) return jsonResponse(req, { error: "sistema de destino inválido" }, 400);
+
+    const { data: contaExistente } = await admin.from("fa_gestao_contas").select("email").eq("email", emailReal).maybeSingle();
+    const senhaHash = await hashSenha(senha);
+    const agoraIso = new Date().toISOString();
+
+    const dadosConta: Record<string, unknown> = {
+      email: emailReal,
+      email_codigo: emailReal,
+      nome,
+      data_nascimento: dataNascimento,
+      unidade: convite.unidade,
+      funcao: convite.funcao,
+      papel: "gerente",
+      auth_modo: "hub",
+      senha_hash: senhaHash,
+      senha_definida_em: agoraIso,
+      ativo: true,
+      criado_por: convite.criado_por || "convite"
+    };
+
+    if (sistemaInfo.campo && sistemaInfo.campo !== "painel_usuario") {
+      dadosConta[sistemaInfo.campo] = appId === "cacau" ? emailReal.split("@")[0] : emailReal;
+    }
+    if (appId === "painel" || appId === "eventos") {
+      dadosConta.painel_usuario = emailReal;
+    }
+
+    if (contaExistente) {
+      const { error: updErr } = await admin.from("fa_gestao_contas").update(dadosConta).eq("email", emailReal);
+      if (updErr) {
+        console.error("upd conta convite:", updErr.message);
+        return jsonResponse(req, { error: "não foi possível atualizar os dados" }, 500);
+      }
+    } else {
+      const { error: insErr } = await admin.from("fa_gestao_contas").insert(dadosConta);
+      if (insErr) {
+        console.error("ins conta convite:", insErr.message);
+        return jsonResponse(req, { error: "não foi possível criar o usuário" }, 500);
+      }
+    }
+
+    const nivelPermissao = convite.permissao === "admin" || convite.permissao === "ver" ? convite.permissao : "operar";
+    await admin.from("fa_gestao_permissoes").upsert({
+      email: emailReal,
+      modulo: appId,
+      nivel: nivelPermissao,
+      atualizado_por: convite.criado_por || "convite"
+    });
+
+    await admin.from("fa_gestao_convites").update({
+      usado_em: agoraIso,
+      usado_por: emailReal
+    }).eq("token", token);
+
+    await auditar(admin, req, "usuario_cadastrado_convite", {
+      email: emailReal,
+      app: appId,
+      detalhe: `unidade=${convite.unidade}; funcao=${convite.funcao}; perm=${nivelPermissao}`
+    });
+
+    const sistemaBase = (Deno.env.get(sistemaInfo.baseEnv) ?? sistemaInfo.baseDefault).replace(/\/+$/, "");
+
+    return jsonResponse(req, {
+      ok: true,
+      mensagem: "Cadastro concluído com sucesso!",
+      sistema_nome: sistemaInfo.rotulo,
+      sistema_url: sistemaBase,
+      unidade: convite.unidade,
+      funcao: convite.funcao
+    });
   }
 
   // --- daqui para baixo exige sessão ---
@@ -1027,7 +1253,7 @@ Deno.serve(async (req) => {
   }
 
   // --- gestão de pessoas e acessos: só owner ---
-  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar"];
+  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar", "convite_link_gerar"];
   if (ACOES_OWNER.includes(action)) {
     if (conta.papel !== "owner") {
       await auditar(admin, req, "acao_owner_negada", { email: conta.email, detalhe: action });
@@ -1093,6 +1319,81 @@ async function acaoOwner(
     const { data, error } = await q;
     if (error) return jsonResponse(req, { error: "falha ao listar" }, 500);
     return jsonResponse(req, { eventos: data ?? [] });
+  }
+
+  if (action === "convite_link_gerar") {
+    const unidade = str(body.unidade) || "Instituto Faça Amigos";
+    const sistema = str(body.sistema) as AppId;
+    const funcao = str(body.funcao) || "Supervisor";
+    const permissao = (str(body.permissao) || "operar") as Nivel;
+    const destinatarioEmail = str(body.destinatario_email).toLowerCase();
+
+    if (!sistema || !APPS[sistema]) {
+      return jsonResponse(req, { error: "selecione um sistema válido" }, 400);
+    }
+
+    const token = randomHex(24);
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+
+    const { error: insErr } = await admin.from("fa_gestao_convites").insert({
+      token,
+      unidade,
+      sistema,
+      funcao,
+      permissao,
+      destinatario_email: destinatarioEmail || null,
+      criado_por: dono.email,
+      expires_at: expiresAt,
+    });
+    if (insErr) {
+      console.warn("fa_gestao_convites insert warning:", insErr.message);
+    }
+
+    const link = `${HUB_URL}/#cadastro?token=${token}`;
+
+    let emailEnviado = false;
+    if (destinatarioEmail && EMAIL_RE.test(destinatarioEmail)) {
+      const sistemaNome = APPS[sistema]?.rotulo || sistema;
+      const html = moldeEmail(`
+        <p style="margin:0 0 12px;font-size:15px;">Olá!</p>
+        <p style="margin:0 0 16px;font-size:14px;color:#4C6B62;">
+          ${escapeHtml(dono.nome)} enviou um convite para você ingressar no sistema da <strong>${escapeHtml(unidade)}</strong> como <strong>${escapeHtml(funcao)}</strong>.
+        </p>
+        <div style="background:#FFF9F1;border:1.5px solid #2ECFB5;border-radius:16px;padding:16px;margin:16px 0;text-align:left;font-size:13px;line-height:1.6;">
+          <div><strong>Unidade:</strong> ${escapeHtml(unidade)}</div>
+          <div><strong>Sistema:</strong> ${escapeHtml(sistemaNome)}</div>
+          <div><strong>Função / Cargo:</strong> ${escapeHtml(funcao)}</div>
+          <div><strong>Permissão:</strong> ${escapeHtml(permissao)}</div>
+        </div>
+        <p style="margin:20px 0;">
+          <a href="${link}" style="display:inline-block;background:#f0196b;color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:12px 24px;border-radius:999px;">
+            Completar Meu Cadastro
+          </a>
+        </p>
+        <p style="margin:0;font-size:12px;color:#8B9A94;">Ou copie o link: ${link}</p>
+      `);
+      emailEnviado = await enviarEmail(destinatarioEmail, "Novo Colaborador", `Convite de acesso: ${sistemaNome} — Faça Amigos`, html);
+    }
+
+    await auditar(admin, req, "convite_link_gerado", {
+      email: dono.email,
+      detalhe: `unidade=${unidade}; sistema=${sistema}; funcao=${funcao}; perm=${permissao}; dest=${destinatarioEmail || "link"}`.slice(0, 300),
+    });
+
+    return jsonResponse(req, {
+      ok: true,
+      token,
+      link,
+      email_enviado: emailEnviado,
+      convite: {
+        unidade,
+        sistema,
+        sistema_nome: APPS[sistema]?.rotulo,
+        funcao,
+        permissao,
+        destinatario_email: destinatarioEmail || null,
+      },
+    });
   }
 
   if (!EMAIL_RE.test(alvoEmail)) return jsonResponse(req, { error: "e-mail inválido" }, 400);

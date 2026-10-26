@@ -493,6 +493,147 @@
     @media (prefers-reduced-motion: reduce) {
       .btn, .tile { transition: none; }
     }
+
+    /* ---------- Modal Criar Link de Usuário ---------- */
+    .btn-novo-link {
+      background: linear-gradient(135deg, var(--pink) 0%, #d80e5b 100%);
+      color: var(--white);
+      padding: 9px 18px;
+      font-size: 0.88rem;
+      font-weight: 800;
+      border-radius: 9999px;
+      border: none;
+      box-shadow: 0 4px 14px rgba(240, 25, 107, 0.32);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast);
+      text-decoration: none;
+    }
+    .btn-novo-link:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 18px rgba(240, 25, 107, 0.45);
+      filter: brightness(1.05);
+    }
+    .btn-novo-link:active { transform: scale(0.97); }
+
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(26, 63, 53, 0.68);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px 16px;
+      opacity: 1; transition: opacity 0.2s ease;
+    }
+    .modal-backdrop[hidden] { display: none !important; }
+
+    .modal-card {
+      width: 100%; max-width: 540px;
+      background: var(--white);
+      border-radius: var(--r-card);
+      box-shadow: 0 24px 60px rgba(26, 63, 53, 0.28);
+      padding: 28px 26px 26px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: modalPop 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+    @keyframes modalPop {
+      0% { opacity: 0; transform: scale(0.94) translateY(12px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .modal-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 18px; padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--gray-bg);
+    }
+    .modal-title { font-size: 1.35rem; color: var(--dark); line-height: 1.2; }
+    .modal-desc { color: var(--ink-soft); font-size: 0.88rem; font-weight: 600; margin-top: 4px; }
+    .modal-close {
+      background: none; border: none; font-size: 1.6rem; line-height: 1;
+      color: var(--gray); cursor: pointer; padding: 2px 6px; border-radius: 8px;
+      transition: color 0.15s, background 0.15s;
+    }
+    .modal-close:hover { color: var(--dark); background: var(--gray-bg); }
+
+    .resultado-link-box {
+      margin-top: 20px; padding: 18px 16px;
+      background: linear-gradient(135deg, #FFF9F1 0%, #F5FBF9 100%);
+      border: 2px solid var(--teal);
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(46, 207, 181, 0.15);
+    }
+    .resultado-link-box .link-title {
+      font-size: 0.95rem; font-weight: 800; color: #0E6857; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+    }
+    .resultado-link-input {
+      width: 100%; font-family: monospace; font-size: 0.88rem; font-weight: 700;
+      padding: 10px 14px; border-radius: 10px; border: 1.5px solid rgba(26, 63, 53, 0.15);
+      background: var(--white); color: var(--dark); margin-bottom: 12px;
+      word-break: break-all;
+    }
+    .resultado-acts { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn-copiar {
+      background: var(--teal); color: var(--dark); font-weight: 800; font-size: 0.85rem;
+      padding: 10px 18px; border-radius: 9999px; border: none; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: transform var(--t-fast), filter var(--t-fast);
+    }
+    .btn-copiar:hover { filter: brightness(1.08); transform: scale(1.02); }
+    .btn-whatsapp {
+      background: #25D366; color: var(--white); font-weight: 800; font-size: 0.85rem;
+      padding: 10px 18px; border-radius: 9999px; border: none; cursor: pointer;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: transform var(--t-fast), filter var(--t-fast);
+    }
+    .btn-whatsapp:hover { filter: brightness(1.08); transform: scale(1.02); }
+
+    /* ---------- Tela de Cadastro do Colaborador Convidado ---------- */
+    .cadastro-screen {
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 30px 16px;
+      background:
+        radial-gradient(circle at 10% 15%, rgba(46, 207, 181, 0.22), transparent 45%),
+        radial-gradient(circle at 90% 85%, rgba(240, 25, 107, 0.16), transparent 48%),
+        var(--cream);
+    }
+    .cadastro-card {
+      width: 100%; max-width: 480px; background: var(--white);
+      border-radius: var(--r-card); box-shadow: var(--shadow-lg);
+      padding: 36px 30px; text-align: center;
+    }
+    .badge-info-convite {
+      display: flex; flex-direction: column; gap: 6px; text-align: left;
+      background: var(--cream); border: 1.5px solid rgba(46, 207, 181, 0.4);
+      border-radius: 14px; padding: 14px 16px; margin: 16px 0 20px;
+    }
+    .badge-item-row {
+      display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem;
+    }
+    .badge-item-row span:first-child { color: var(--ink-soft); font-weight: 700; }
+    .badge-item-row span:last-child { color: var(--dark); font-weight: 800; }
+
+    .sucesso-box {
+      text-align: center; padding: 12px 0;
+    }
+    .sucesso-icon { font-size: 3rem; margin-bottom: 12px; display: inline-block; }
+    .sucesso-title { font-size: 1.6rem; color: var(--dark); margin-bottom: 6px; }
+    .sucesso-desc { color: var(--ink-soft); font-size: 0.94rem; font-weight: 600; line-height: 1.45; margin-bottom: 24px; }
+    .card-sistema-liberado {
+      background: linear-gradient(135deg, #E3F8F4 0%, #D5F5EF 100%);
+      border: 2px solid var(--teal); border-radius: 20px; padding: 22px 20px;
+      margin-bottom: 24px; box-shadow: 0 8px 24px rgba(46, 207, 181, 0.2);
+    }
+    .btn-acesso-direto {
+      background: var(--pink); color: var(--white); font-weight: 800; font-size: 1.05rem;
+      padding: 14px 30px; border-radius: 9999px; text-decoration: none; display: inline-block;
+      box-shadow: 0 6px 18px rgba(240, 25, 107, 0.35);
+      transition: transform var(--t-fast), filter var(--t-fast);
+    }
+    .btn-acesso-direto:hover { transform: translateY(-3px) scale(1.02); filter: brightness(1.08); }
+    .btn-acesso-direto:active { transform: scale(0.98); }
   </style>
 </head>
 
@@ -564,6 +705,90 @@
     </div>
   </div>
 
+  <!-- ================= CADASTRO DE USUÁRIO (VIA LINK DE CONVITE) ================= -->
+  <div class="cadastro-screen" id="cadastroScreen" hidden>
+    <div class="cadastro-card">
+      <img src="img/logo-simbolo.png" alt="" class="logo-simbolo" width="56" height="56" decoding="async" style="margin-bottom:12px;">
+      <h1>Cadastro de Usuário</h1>
+      <p class="sub" id="cadSubTitulo" style="color:var(--ink-soft);font-weight:600;margin-bottom:18px;">
+        Complete seus dados para acessar o sistema.
+      </p>
+
+      <div id="cadCarregando" class="form-notice show">Verificando dados do convite…</div>
+      <div id="cadError" class="form-error" role="alert"></div>
+
+      <div id="cadDadosConvite" class="badge-info-convite" hidden>
+        <div class="badge-item-row">
+          <span>Unidade:</span>
+          <span id="cadBadgeUnidade">—</span>
+        </div>
+        <div class="badge-item-row">
+          <span>Função:</span>
+          <span id="cadBadgeFuncao">—</span>
+        </div>
+        <div class="badge-item-row">
+          <span>Sistema:</span>
+          <span id="cadBadgeSistema">—</span>
+        </div>
+        <div class="badge-item-row">
+          <span>Permissão:</span>
+          <span id="cadBadgePermissao">—</span>
+        </div>
+      </div>
+
+      <form id="formCadastroConvidado" novalidate hidden>
+        <div class="form-group">
+          <label for="cad-nome" class="form-label">Nome Completo</label>
+          <input type="text" id="cad-nome" class="form-control" autocomplete="name" required placeholder="Ex.: Mariana Silva">
+        </div>
+
+        <div class="form-group">
+          <label for="cad-nasc" class="form-label">Data de Nascimento</label>
+          <input type="date" id="cad-nasc" class="form-control" required>
+        </div>
+
+        <div class="form-group">
+          <label for="cad-email" class="form-label">E-mail Real (de trabalho/pessoal)</label>
+          <input type="email" id="cad-email" class="form-control" autocomplete="email" required placeholder="seuemail@exemplo.com">
+        </div>
+
+        <div class="form-group">
+          <label for="cad-senha" class="form-label">Criar Senha (mínimo 8 caracteres)</label>
+          <input type="password" id="cad-senha" class="form-control" autocomplete="new-password" minlength="8" required placeholder="••••••••">
+        </div>
+
+        <div class="form-group">
+          <label for="cad-senha2" class="form-label">Confirmar Senha</label>
+          <input type="password" id="cad-senha2" class="form-control" autocomplete="new-password" minlength="8" required placeholder="••••••••">
+        </div>
+
+        <button type="submit" id="cadSubmitBtn" class="btn btn-pink" style="width:100%;margin-top:6px;">
+          Concluir Cadastro
+        </button>
+      </form>
+
+      <div id="cadSucessoBox" class="sucesso-box" hidden>
+        <span class="sucesso-icon" aria-hidden="true">🎉</span>
+        <h2 class="sucesso-title">Cadastro Concluído!</h2>
+        <p class="sucesso-desc">
+          Sua conta foi criada e o seu acesso está liberado. Clique abaixo para abrir o sistema:
+        </p>
+
+        <div class="card-sistema-liberado">
+          <div style="font-size:0.85rem;font-weight:800;color:var(--teal-dark);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Seu Sistema de Acesso</div>
+          <div id="cadSucessoSistemaNome" style="font-family:'Fredoka One',cursive;font-size:1.45rem;color:var(--dark);margin-bottom:14px;">—</div>
+          <a href="#" id="cadBtnAcessarSistema" class="btn-acesso-direto" target="_blank" rel="noopener">
+            Acessar Sistema Agora ↗
+          </a>
+        </div>
+
+        <p style="font-size:0.85rem;color:var(--gray);font-weight:600;">
+          Guarde sua senha para os próximos acessos.
+        </p>
+      </div>
+    </div>
+  </div>
+
   <!-- ================= HUB ================= -->
   <div id="hubScreen" hidden>
     <header class="hub-header">
@@ -573,6 +798,9 @@
           <span>Faça<b>Amigos</b> · Gestão</span>
         </div>
         <div class="header-actions">
+          <button type="button" class="btn btn-novo-link" id="btnAbrirCriarLink" title="Criar link para novo supervisor ou colaborador">
+            <span aria-hidden="true">🔗</span> Enviar Link de Usuário
+          </button>
           <button type="button" class="btn logout" id="pessoasBtn" hidden>Pessoas e acessos</button>
           <a href="https://ivjvpdzsfjdpyabbzzuj.supabase.co/storage/v1/object/public/kiosk-updates/kiosk/FacaAmigos-Setup-atual.exe"
              download
@@ -809,6 +1037,93 @@
     </main>
   </div>
 
+  <!-- ================= MODAL CRIAR / ENVIAR LINK DE USUÁRIO ================= -->
+  <div class="modal-backdrop" id="modalCriarLink" hidden role="dialog" aria-modal="true" aria-labelledby="modalCriarLinkTitulo">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="modalCriarLinkTitulo">Criar Link de Usuário</h2>
+          <p class="modal-desc">Configure a unidade, função e sistema para gerar o link de cadastro.</p>
+        </div>
+        <button type="button" class="modal-close" id="btnFecharModalLink" aria-label="Fechar modal">&times;</button>
+      </div>
+
+      <div id="modalLinkNotice" class="form-notice" role="status"></div>
+      <div id="modalLinkError" class="form-error" role="alert"></div>
+
+      <form id="formGerarLinkConvite" novalidate>
+        <div class="form-group">
+          <label for="selUnidade" class="form-label">Unidade de Negócio</label>
+          <select id="selUnidade" class="form-control" required>
+            <option value="Instituto Faça Amigos (Corporativo)">Instituto Faça Amigos (Corporativo / Matriz)</option>
+            <option value="Centro de Terapia Comportamental (Clínica)">Centro de Terapia Comportamental (Clínica)</option>
+            <option value="Playground da Criança — Shopping Boulevard">Playground da Criança — Shopping Boulevard</option>
+            <option value="Playground da Criança — Shopping Bosque Grão-Pará">Playground da Criança — Shopping Bosque Grão-Pará</option>
+            <option value="Cacau Show (Lojas)">Cacau Show (Lojas)</option>
+            <option value="Portal do Site & Eventos">Portal do Site & Eventos</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="selSistema" class="form-label">Sistema a Acessar</label>
+          <select id="selSistema" class="form-control" required>
+            <option value="clinica">🩺 Clínica (sistema.institutofacaamigos.com.br)</option>
+            <option value="playground">🎠 Playground (app.institutofacaamigos.com.br)</option>
+            <option value="cacau">🍫 Cacau Show (hub-operacoes)</option>
+            <option value="painel">🌐 Painel do Site / Mapeamento (institutofacaamigos.com.br/admin)</option>
+            <option value="eventos">🎟️ Eventos & Ingressos (institutofacaamigos.com.br/admin)</option>
+            <option value="financeiro">📊 Simulador Financeiro</option>
+            <option value="rh">👥 Gestão de Pessoas / RH (rh.institutofacaamigos.com.br)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="selFuncao" class="form-label">Função / Cargo</label>
+          <select id="selFuncao" class="form-control" required>
+            <option value="Supervisor(a)">Supervisor(a) — Terá autonomia de criar equipe</option>
+            <option value="Gerente">Gerente</option>
+            <option value="Coordenador(a)">Coordenador(a)</option>
+            <option value="Terapeuta">Terapeuta</option>
+            <option value="Estagiário(a)">Estagiário(a)</option>
+            <option value="PJ / CLT / Freelancer">PJ / CLT / Freelancer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="selPermissao" class="form-label">Nível de Permissão no Sistema</label>
+          <select id="selPermissao" class="form-control" required>
+            <option value="operar">Operador (Atendimento e operações rotineiras)</option>
+            <option value="admin">Administrador (Acesso completo e gestão)</option>
+            <option value="ver">Visualizador (Somente consulta e relatórios)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="txtDestinatarioEmail" class="form-label">E-mail do Destinatário (Opcional)</label>
+          <input type="email" id="txtDestinatarioEmail" class="form-control" placeholder="exemplo@email.com (envia direto por e-mail se preenchido)">
+        </div>
+
+        <button type="submit" id="btnSubmitGerarLink" class="btn btn-pink" style="width:100%;margin-top:8px;">
+          Gerar Link de Cadastro
+        </button>
+      </form>
+
+      <div id="boxLinkGerado" class="resultado-link-box" hidden>
+        <div class="link-title"><span>🔗</span> Link Gerado com Sucesso:</div>
+        <input type="text" id="inputLinkPronto" class="resultado-link-input" readonly>
+        <div class="resultado-acts">
+          <button type="button" class="btn-copiar" id="btnCopiarLinkGerado">
+            <span>📋</span> Copiar Link
+          </button>
+          <a href="#" class="btn-whatsapp" id="btnWhatsLinkGerado" target="_blank" rel="noopener">
+            <span>💬</span> Enviar no WhatsApp
+          </a>
+        </div>
+        <div id="statusEmailEnvio" style="margin-top:10px;font-size:0.85rem;font-weight:700;color:#11705F;" hidden></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     (function () {
       'use strict';
@@ -849,6 +1164,23 @@
       var pessoasMain = document.getElementById('pessoasMain');
       var pessoasBtn = document.getElementById('pessoasBtn');
       var balcaoDlBtn = document.getElementById('balcaoDlBtn');
+      var btnAbrirCriarLink = document.getElementById('btnAbrirCriarLink');
+
+      // Elementos do Modal de Criar Link
+      var modalCriarLink = document.getElementById('modalCriarLink');
+      var btnFecharModalLink = document.getElementById('btnFecharModalLink');
+      var formGerarLinkConvite = document.getElementById('formGerarLinkConvite');
+      var modalLinkNotice = document.getElementById('modalLinkNotice');
+      var modalLinkError = document.getElementById('modalLinkError');
+      var btnSubmitGerarLink = document.getElementById('btnSubmitGerarLink');
+      var boxLinkGerado = document.getElementById('boxLinkGerado');
+      var inputLinkPronto = document.getElementById('inputLinkPronto');
+      var btnCopiarLinkGerado = document.getElementById('btnCopiarLinkGerado');
+      var btnWhatsLinkGerado = document.getElementById('btnWhatsLinkGerado');
+      var statusEmailEnvio = document.getElementById('statusEmailEnvio');
+
+      // Elementos da Tela de Cadastro
+      var cadastroScreen = document.getElementById('cadastroScreen');
 
       var NIVEL_ROTULO = { nenhum: 'Sem acesso', ver: 'Visualizar', operar: 'Operar', admin: 'Administrar' };
 
@@ -917,6 +1249,7 @@
         meuPapel = papel || 'gerente';
         pessoasBtn.hidden = meuPapel !== 'owner';
         if (balcaoDlBtn) balcaoDlBtn.hidden = meuPapel !== 'owner';
+        if (btnAbrirCriarLink) btnAbrirCriarLink.hidden = meuPapel !== 'owner';
         helloTitle.textContent = nome ? 'Olá, ' + nome.split(' ')[0] + '!' : 'Olá!';
 
         var roleBadge = document.getElementById('userRoleBadge');
@@ -1548,6 +1881,189 @@
         esqueciSub.textContent = 'Primeiro acesso: informe o seu e-mail e enviaremos um código para você escolher a sua senha.';
         showMsg(esqueciError, '');
         showLogin('esqueci');
+      }
+
+      // ---------- Modal: Criar / Enviar Link de Usuário ----------
+      if (btnAbrirCriarLink) {
+        btnAbrirCriarLink.addEventListener('click', function () {
+          modalCriarLink.hidden = false;
+          boxLinkGerado.hidden = true;
+          showMsg(modalLinkNotice, '');
+          showMsg(modalLinkError, '');
+        });
+      }
+
+      if (btnFecharModalLink) {
+        btnFecharModalLink.addEventListener('click', function () {
+          modalCriarLink.hidden = true;
+        });
+      }
+
+      if (modalCriarLink) {
+        modalCriarLink.addEventListener('click', function (e) {
+          if (e.target === modalCriarLink) modalCriarLink.hidden = true;
+        });
+      }
+
+      if (formGerarLinkConvite) {
+        formGerarLinkConvite.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          var unidade = document.getElementById('selUnidade').value;
+          var sistema = document.getElementById('selSistema').value;
+          var funcao = document.getElementById('selFuncao').value;
+          var permissao = document.getElementById('selPermissao').value;
+          var destEmail = document.getElementById('txtDestinatarioEmail').value.trim();
+
+          btnSubmitGerarLink.disabled = true;
+          btnSubmitGerarLink.textContent = 'Gerando link…';
+          showMsg(modalLinkNotice, '');
+          showMsg(modalLinkError, '');
+
+          api('convite_link_gerar', {
+            unidade: unidade,
+            sistema: sistema,
+            funcao: funcao,
+            permissao: permissao,
+            destinatario_email: destEmail
+          }).then(function (r) {
+            btnSubmitGerarLink.disabled = false;
+            btnSubmitGerarLink.textContent = 'Gerar Link de Cadastro';
+            if (!r.ok || !r.data.link) {
+              showMsg(modalLinkError, r.data.error || 'Não foi possível gerar o link agora.');
+              return;
+            }
+
+            inputLinkPronto.value = r.data.link;
+            boxLinkGerado.hidden = false;
+
+            var sistemaNome = (r.data.convite && r.data.convite.sistema_nome) || sistema;
+            var txtWhats = 'Olá! Segue o seu link para criar usuário no sistema ' + sistemaNome + ' (' + unidade + ') como ' + funcao + ':\n\n' + r.data.link + '\n\nBasta clicar no link para completar o seu cadastro.';
+            btnWhatsLinkGerado.href = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(txtWhats);
+
+            if (r.data.email_enviado) {
+              statusEmailEnvio.hidden = false;
+              statusEmailEnvio.textContent = '✉️ Convite enviado com sucesso para ' + destEmail + '!';
+            } else {
+              statusEmailEnvio.hidden = true;
+            }
+
+            inputLinkPronto.select();
+          });
+        });
+      }
+
+      if (btnCopiarLinkGerado) {
+        btnCopiarLinkGerado.addEventListener('click', function () {
+          var lk = inputLinkPronto.value;
+          if (!lk) return;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(lk).then(function () {
+              var old = btnCopiarLinkGerado.innerHTML;
+              btnCopiarLinkGerado.innerHTML = '<span>✅</span> Copiado!';
+              setTimeout(function () { btnCopiarLinkGerado.innerHTML = old; }, 2500);
+            }).catch(function () {
+              inputLinkPronto.select();
+              document.execCommand('copy');
+            });
+          } else {
+            inputLinkPronto.select();
+            document.execCommand('copy');
+          }
+        });
+      }
+
+      // ---------- Fluxo de Auto-Cadastro de Convidado (#cadastro) ----------
+      function extrairTokenConvite() {
+        var hash = window.location.hash || '';
+        if (hash.indexOf('#cadastro') !== -1) {
+          var m = hash.match(/[?&]token=([^&]+)/);
+          if (m) return decodeURIComponent(m[1]);
+        }
+        var sp = new URLSearchParams(window.location.search);
+        if (sp.has('token')) return sp.get('token');
+        if (sp.has('convite')) return sp.get('convite');
+        return null;
+      }
+
+      var tokenConvite = extrairTokenConvite();
+      if (tokenConvite) {
+        if (hubScreen) hubScreen.hidden = true;
+        if (loginScreen) loginScreen.hidden = true;
+        if (pessoasMain) pessoasMain.hidden = true;
+        if (cadastroScreen) cadastroScreen.hidden = false;
+
+        var cadCarregando = document.getElementById('cadCarregando');
+        var cadError = document.getElementById('cadError');
+        var cadDadosConvite = document.getElementById('cadDadosConvite');
+        var formCadastroConvidado = document.getElementById('formCadastroConvidado');
+        var cadSucessoBox = document.getElementById('cadSucessoBox');
+        var cadSubmitBtn = document.getElementById('cadSubmitBtn');
+
+        api('convite_consultar', { token: tokenConvite }).then(function (r) {
+          if (cadCarregando) cadCarregando.hidden = true;
+          if (!r.ok || !r.data.convite) {
+            showMsg(cadError, r.data.error || 'Convite não encontrado ou expirado.');
+            return;
+          }
+
+          var c = r.data.convite;
+          document.getElementById('cadBadgeUnidade').textContent = c.unidade || 'Faça Amigos';
+          document.getElementById('cadBadgeFuncao').textContent = c.funcao || 'Colaborador';
+          document.getElementById('cadBadgeSistema').textContent = c.sistema_nome || c.sistema;
+          document.getElementById('cadBadgePermissao').textContent = c.permissao === 'admin' ? 'Administrador' : (c.permissao === 'ver' ? 'Visualizador' : 'Operador');
+
+          if (c.destinatario_email) {
+            document.getElementById('cad-email').value = c.destinatario_email;
+          }
+
+          cadDadosConvite.hidden = false;
+          formCadastroConvidado.hidden = false;
+          document.getElementById('cad-nome').focus();
+        });
+
+        formCadastroConvidado.addEventListener('submit', function (ev) {
+          ev.preventDefault();
+          var nome = document.getElementById('cad-nome').value.trim();
+          var nasc = document.getElementById('cad-nasc').value;
+          var email = document.getElementById('cad-email').value.trim().toLowerCase();
+          var s1 = document.getElementById('cad-senha').value;
+          var s2 = document.getElementById('cad-senha2').value;
+
+          if (!nome || nome.length < 3) { showMsg(cadError, 'Informe seu nome completo.'); return; }
+          if (!nasc) { showMsg(cadError, 'Informe sua data de nascimento.'); return; }
+          if (!email) { showMsg(cadError, 'Informe seu e-mail real.'); return; }
+          if (s1.length < 8) { showMsg(cadError, 'A senha precisa ter pelo menos 8 caracteres.'); return; }
+          if (s1 !== s2) { showMsg(cadError, 'As duas senhas não conferem.'); return; }
+
+          showMsg(cadError, '');
+          cadSubmitBtn.disabled = true;
+          cadSubmitBtn.textContent = 'Concluindo cadastro…';
+
+          api('convite_cadastrar', {
+            token: tokenConvite,
+            nome: nome,
+            data_nascimento: nasc,
+            email: email,
+            password: s1
+          }).then(function (r) {
+            cadSubmitBtn.disabled = false;
+            cadSubmitBtn.textContent = 'Concluir Cadastro';
+            if (!r.ok) {
+              showMsg(cadError, r.data.error || 'Não foi possível cadastrar agora.');
+              return;
+            }
+
+            formCadastroConvidado.hidden = true;
+            cadDadosConvite.hidden = true;
+            document.getElementById('cadSubTitulo').hidden = true;
+
+            document.getElementById('cadSucessoSistemaNome').textContent = r.data.sistema_nome || 'Sistema Faça Amigos';
+            var btnAcesso = document.getElementById('cadBtnAcessarSistema');
+            btnAcesso.href = r.data.sistema_url || '#';
+            btnAcesso.textContent = 'Acessar ' + (r.data.sistema_nome || 'Sistema') + ' ↗';
+            cadSucessoBox.hidden = false;
+          });
+        });
       }
     })();
   </script>
