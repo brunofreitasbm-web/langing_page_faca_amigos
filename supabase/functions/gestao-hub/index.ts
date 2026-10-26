@@ -319,6 +319,32 @@ const PAPEIS_NATIVOS: Partial<Record<AppId, { opcoes: OpcaoPapel[]; padrao: stri
   },
 };
 
+// Empresa (workspace) da Gestão de Pessoas. É o mesmo sistema com dois sites, um por empresa
+// (VITE_WORKSPACE_ID no build), e o que separa os dados é app_metadata.workspace_scope no login:
+// "all" enxerga as duas empresas (só donos), o id de uma enxerga só ela. Cada gerência pertence a UMA
+// empresa: o Hub grava só o escopo escolhido (nunca "all") e abre o site da empresa dela. A URL do
+// Grupo IB tem padrão; a da Porto Terapia vem do segredo GESTAO_URL_RH_PORTO_TERAPIA (sem padrão:
+// sem ele o Hub recusa abrir em vez de levar a pessoa ao site da outra empresa).
+type EscopoSistema = { id: string; rotulo: string; baseEnv: string; baseDefault: string | null };
+const ESCOPOS: Partial<Record<AppId, EscopoSistema[]>> = {
+  rh: [
+    { id: "grupoib", rotulo: "Grupo IB", baseEnv: "GESTAO_URL_RH", baseDefault: APPS.rh.baseDefault },
+    { id: "porto-terapia", rotulo: "Porto Terapia", baseEnv: "GESTAO_URL_RH_PORTO_TERAPIA", baseDefault: null },
+  ],
+};
+
+function escopoValido(appId: AppId, v: unknown): string | null {
+  return typeof v === "string" && ESCOPOS[appId]?.some((e) => e.id === v) ? v : null;
+}
+
+// Endereço do site da empresa; null se não estiver configurado.
+function baseDoEscopo(appId: AppId, escopo: string): string | null {
+  const e = ESCOPOS[appId]?.find((x) => x.id === escopo);
+  if (!e) return null;
+  const url = Deno.env.get(e.baseEnv) ?? e.baseDefault;
+  return url ? url.replace(/\/+$/, "") : null;
+}
+
 // Papel escolhido se for do catálogo; senão o padrão do sistema; null se o sistema não tem papel.
 function papelEfetivo(appId: AppId, escolhido: string | null | undefined): string | null {
   const cat = PAPEIS_NATIVOS[appId];
@@ -361,28 +387,41 @@ async function provisionar(
   email: string,
   papel: string | null,
   papelAnterior: string | null,
+  escopo: string | null,
 ): Promise<string> {
   if (conta.papel !== "gerente") return "";
   const papelAlvo = papel ?? papelEfetivo(appId, null);
 
   if (appId === "rh") {
+    // Sem empresa escolhida o Hub não dá acesso: nunca cai em "all" (as duas empresas).
+    if (!escopo) throw new RecusaAcesso("Escolha a empresa (Grupo IB ou Porto Terapia) desta pessoa na Gestão de Pessoas.");
     const atual = (user.app_metadata ?? {}) as Record<string, unknown>;
     // role/workspace_scope só em app_metadata: user_metadata é editável pela própria pessoa.
-    if (atual.role === papelAlvo) return "";
-    if (atual.role && atual.role !== papelAnterior) {
+    const escopoAtual = Array.isArray(atual.workspace_scope) ? (atual.workspace_scope as unknown[]) : [];
+    const mesmoEscopo = escopoAtual.length === 1 && escopoAtual[0] === escopo;
+    if (atual.role === papelAlvo && mesmoEscopo) return "";
+    // O Hub só ajusta o que ele mesmo deu antes; o papel e o escopo que a pessoa já tinha no sistema não.
+    const deleMesmo = papelAnterior !== null;
+    if (atual.role && atual.role !== papelAlvo && !(deleMesmo && atual.role === papelAnterior)) {
       console.error(`provisionar rh: ${email} já tem papel '${String(atual.role)}', não sobrescrevo`);
       throw new RecusaAcesso(
         `${email} já tem o papel "${String(atual.role)}" na Gestão de Pessoas e o Hub não troca papel existente. Use o e-mail de supervisor da pessoa ou ajuste o papel direto naquele sistema.`,
       );
     }
+    if (atual.role === papelAlvo && escopoAtual.length && !mesmoEscopo && !deleMesmo) {
+      const quais = escopoAtual.map((x) => String(x)).join(", ");
+      throw new RecusaAcesso(
+        `${email} já tem acesso a "${quais}" na Gestão de Pessoas e o Hub não troca o escopo de uma conta que ele não criou. Ajuste em Usuários do Sistema, dentro da Gestão de Pessoas, ou use outro e-mail.`,
+      );
+    }
     const { error } = await client.auth.admin.updateUserById(user.id, {
-      app_metadata: { ...atual, role: papelAlvo, workspace_scope: ["all"] },
+      app_metadata: { ...atual, role: papelAlvo, workspace_scope: [escopo] },
     });
     if (error) {
       console.error("provisionar rh:", error.message);
       throw new RecusaAcesso("A Gestão de Pessoas recusou criar o acesso agora. Tente de novo em instantes.");
     }
-    return `rh=${papelAlvo}`;
+    return `rh=${papelAlvo}(${escopo})`;
   }
 
   if (appId === "clinica") {
@@ -488,6 +527,7 @@ async function ticketSupabase(
   conta: Conta,
   papel: string | null,
   papelAnterior: string | null,
+  escopo: string | null,
 ): Promise<{ ticket: string; provisionado: string } | { erro: string }> {
   const url = tipo === "supabase_a" ? Deno.env.get("SUPABASE_URL") : Deno.env.get("CLINICA_SUPABASE_URL");
   const key = tipo === "supabase_a"
@@ -506,7 +546,7 @@ async function ticketSupabase(
     };
   }
   try {
-    const provisionado = await provisionar(client, appId, data.user, conta, email, papel, papelAnterior);
+    const provisionado = await provisionar(client, appId, data.user, conta, email, papel, papelAnterior, escopo);
     return { ticket: data.properties.hashed_token, provisionado };
   } catch (e) {
     if (e instanceof RecusaAcesso) return { erro: e.message };
@@ -1116,9 +1156,17 @@ Deno.serve(async (req) => {
       ticket = await ticketCacau(identidade, niveis[appId]);
     } else if (app.tipo === "painel") ticket = await ticketPainel(admin, conta.email, niveis);
     else {
-      const { escolhido, aplicado } = await papeisDaConta(admin, conta.email, appId);
+      const { escolhido, aplicado, escopo } = await papeisDaConta(admin, conta.email, appId);
       const papel = papelEfetivo(appId, escolhido);
-      const r = await ticketSupabase(app.tipo, identidade, appId, conta, papel, aplicado);
+      // Gestão de Pessoas: cada gerência abre o site da SUA empresa. Sem empresa escolhida, ou com o site
+      // da empresa sem endereço configurado, recusa em vez de levar a pessoa ao site da outra empresa.
+      if (appId === "rh" && conta.papel === "gerente") {
+        if (!escopo) return jsonResponse(req, { error: "Sua empresa na Gestão de Pessoas ainda não foi escolhida. Peça ao owner para escolher Grupo IB ou Porto Terapia." }, 409);
+        if (!baseDoEscopo(appId, escopo)) {
+          return jsonResponse(req, { error: "O endereço do site da sua empresa na Gestão de Pessoas ainda não foi configurado. Avise o owner." }, 409);
+        }
+      }
+      const r = await ticketSupabase(app.tipo, identidade, appId, conta, papel, aplicado, escopo);
       if ("erro" in r) {
         await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: `recusado: ${r.erro}`.slice(0, 200) });
         return jsonResponse(req, { error: r.erro }, 409);
@@ -1134,7 +1182,11 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "não foi possível abrir o sistema agora" }, 502);
     }
 
-    const base = (Deno.env.get(app.baseEnv) ?? app.baseDefault).replace(/\/+$/, "");
+    let base = (Deno.env.get(app.baseEnv) ?? app.baseDefault).replace(/\/+$/, "");
+    if (appId === "rh" && conta.papel === "gerente") {
+      const { escopo } = await papeisDaConta(admin, conta.email, appId);
+      base = (escopo && baseDoEscopo(appId, escopo)) || base;
+    }
     await auditar(admin, req, "launch", { email: conta.email, app: appId });
     return jsonResponse(req, { url: app.entrada(base, ticket) });
   }
@@ -1461,12 +1513,20 @@ type ResultadoProvisao = { app: AppId; rotulo: string; estado: "ok" | "erro" | "
 type ParcialProvisao = { estado: "ok" | "erro" | "pulado"; texto: string; papelAplicado?: string | null };
 
 // Papel escolhido pelo dono (permissoes.papel_nativo) e o que o Hub aplicou da última vez (provisionamento).
-async function papeisDaConta(admin: Admin, email: string, modulo: AppId): Promise<{ escolhido: string | null; aplicado: string | null }> {
+async function papeisDaConta(
+  admin: Admin,
+  email: string,
+  modulo: AppId,
+): Promise<{ escolhido: string | null; aplicado: string | null; escopo: string | null }> {
   const [{ data: p }, { data: v }] = await Promise.all([
-    admin.from("fa_gestao_permissoes").select("papel_nativo").eq("email", email).eq("modulo", modulo).maybeSingle(),
+    admin.from("fa_gestao_permissoes").select("papel_nativo, escopo").eq("email", email).eq("modulo", modulo).maybeSingle(),
     admin.from("fa_gestao_provisionamento").select("papel_aplicado").eq("email", email).eq("modulo", modulo).maybeSingle(),
   ]);
-  return { escolhido: (p?.papel_nativo as string | null | undefined) ?? null, aplicado: (v?.papel_aplicado as string | null | undefined) ?? null };
+  return {
+    escolhido: (p?.papel_nativo as string | null | undefined) ?? null,
+    aplicado: (v?.papel_aplicado as string | null | undefined) ?? null,
+    escopo: escopoValido(modulo, p?.escopo),
+  };
 }
 
 // `papelAplicado` só entra quando o Hub de fato criou ou mudou algo: um papel que já estava lá não é "do Hub".
@@ -1483,6 +1543,7 @@ async function provisionarSupabase(
   conta: Conta,
   papel: string | null,
   papelAnterior: string | null,
+  escopo: string | null,
 ): Promise<ParcialProvisao> {
   const client = clienteSupabase(APPS[appId].tipo as "supabase_a" | "supabase_b");
   if (!client) return { estado: "erro", texto: "sistema sem configuração no servidor" };
@@ -1502,7 +1563,7 @@ async function provisionarSupabase(
     return { estado: "erro", texto: "o login está bloqueado (a pessoa foi desligada). Reative a conta primeiro" };
   }
   try {
-    const feito = await provisionar(client, appId, user, conta, email, papel, papelAnterior);
+    const feito = await provisionar(client, appId, user, conta, email, papel, papelAnterior, escopo);
     const texto = [criado ? "login criado" : "", feito].filter(Boolean).join("; ") || "já estava em dia";
     return { estado: "ok", texto, papelAplicado: feito ? papel : null };
   } catch (e) {
@@ -1549,8 +1610,10 @@ async function provisionarModulos(
         if (app.tipo === "cacau") {
           parcial = await conferirCacau(identidade, niveis[appId]);
         } else {
-          const { escolhido, aplicado } = await papeisDaConta(admin, conta.email, appId);
-          parcial = await provisionarSupabase(appId, identidade.toLowerCase(), conta, papelEfetivo(appId, escolhido), aplicado);
+          const { escolhido, aplicado, escopo } = await papeisDaConta(admin, conta.email, appId);
+          parcial = appId === "rh" && !escopo
+            ? { estado: "erro", texto: "escolha a empresa (Grupo IB ou Porto Terapia) desta pessoa" }
+            : await provisionarSupabase(appId, identidade.toLowerCase(), conta, papelEfetivo(appId, escolhido), aplicado, escopo);
         }
       } catch (e) {
         console.error(`provisionar ${appId}:`, e instanceof Error ? e.message : e);
@@ -1586,13 +1649,19 @@ async function acaoOwner(
   if (action === "contas_listar") {
     const [{ data: contas, error }, { data: perms }, { data: provs }] = await Promise.all([
       admin.from("fa_gestao_contas").select(COLUNAS_PUBLICAS).order("created_at", { ascending: true }),
-      admin.from("fa_gestao_permissoes").select("email, modulo, nivel, papel_nativo"),
+      admin.from("fa_gestao_permissoes").select("email, modulo, nivel, papel_nativo, escopo"),
       admin.from("fa_gestao_provisionamento").select("email, modulo, estado, mensagem, atualizado_em"),
     ]);
     if (error) return jsonResponse(req, { error: "falha ao listar" }, 500);
     const porEmail = new Map<string, Record<string, string>>();
     const papeisPorEmail = new Map<string, Record<string, string>>();
+    const escoposPorEmail = new Map<string, Record<string, string>>();
     for (const p of perms ?? []) {
+      if (p.escopo) {
+        const ee = escoposPorEmail.get(p.email) ?? {};
+        ee[p.modulo] = p.escopo;
+        escoposPorEmail.set(p.email, ee);
+      }
       const m = porEmail.get(p.email) ?? {};
       m[p.modulo] = p.nivel;
       porEmail.set(p.email, m);
@@ -1613,6 +1682,7 @@ async function acaoOwner(
         ...c,
         permissoes: porEmail.get(c.email) ?? {},
         papeis: papeisPorEmail.get(c.email) ?? {},
+        escopos: escoposPorEmail.get(c.email) ?? {},
         provisionamento: provPorEmail.get(c.email) ?? {},
       })),
       modulos: APP_IDS.map((id) => ({
@@ -1622,6 +1692,7 @@ async function acaoOwner(
         campo_rotulo: APPS[id].campoRotulo,
         papeis: PAPEIS_NATIVOS[id]?.opcoes ?? [],
         papel_padrao: PAPEIS_NATIVOS[id]?.padrao ?? null,
+        escopos: (ESCOPOS[id] ?? []).map((e) => ({ id: e.id, rotulo: e.rotulo })),
       })),
       niveis: NIVEIS,
     });
@@ -1684,6 +1755,22 @@ async function acaoOwner(
       if (typeof v === "string" && PAPEIS_NATIVOS[id]?.opcoes.some((o) => o.id === v)) papeisEscolhidos[id] = v;
     }
 
+    // Empresa (workspace) em cada sistema que tem mais de uma. Gerência com acesso à Gestão de Pessoas
+    // PRECISA ter uma: é isso que impede de dar acesso às duas empresas por engano.
+    const recebidosEscopos = (body.escopos && typeof body.escopos === "object" ? body.escopos : {}) as Record<string, unknown>;
+    const escoposEscolhidos: Partial<Record<AppId, string>> = {};
+    for (const id of APP_IDS) {
+      const e = escopoValido(id, recebidosEscopos[id]);
+      if (e) escoposEscolhidos[id] = e;
+    }
+    if (papel === "gerente") {
+      for (const id of APP_IDS) {
+        if (permissoes[id] && ESCOPOS[id] && !escoposEscolhidos[id]) {
+          return jsonResponse(req, { error: `escolha a empresa (${ESCOPOS[id]!.map((x) => x.rotulo).join(" ou ")}) em ${APPS[id].rotulo}` }, 400);
+        }
+      }
+    }
+
     // Identidade da pessoa em cada sistema (o owner informa; o Hub cria o login e o papel ao salvar).
     const mapa = (body.mapeamentos && typeof body.mapeamentos === "object" ? body.mapeamentos : {}) as Record<string, unknown>;
     const campos: Record<string, string | null> = {};
@@ -1717,6 +1804,7 @@ async function acaoOwner(
       modulo,
       nivel,
       papel_nativo: papeisEscolhidos[modulo as AppId] ?? null,
+      escopo: escoposEscolhidos[modulo as AppId] ?? null,
       atualizado_por: dono.email,
     }));
     if (linhas.length) {
