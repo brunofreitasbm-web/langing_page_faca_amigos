@@ -87,6 +87,7 @@ flowchart LR
 | `/eventos/:slug` | evento.html | Detalhe e inscrição | não | `vercel.json` reescreve para `/evento`; canonical aponta para `/eventos` |
 | `/ingresso` | ingresso.html | Voucher com QR do inscrito | não | noindex, Disallow no robots |
 | `/wifi` | wifi.html | Portal do Wi-Fi da clínica | não | noindex, follow |
+| `/familia` | familia.html | Como entrar no Portal da Família (3 passos + botão para o login do sistema). Destino do QR da TV da sala de espera (`/tv3`) | não | noindex, nofollow |
 | `/termos` | termos.html | Termos de uso e de compra | sim | |
 | `/politica-privacidade` | politica-privacidade.html | LGPD | sim | dono: hub |
 | `/descadastrar` | descadastrar.html | Sair da sequência de e-mails | não | noindex |
@@ -94,6 +95,7 @@ flowchart LR
 | `/gestao` | gestao.html | Hub de Gestão | não | só pelo host `gestao.` |
 | `/tv` | tv.html | Vitrine Digital e canal de cultura para as Smart TVs das operações (/vitrine-digital) | não | noindex (uso interno nas lojas) |
 | `/tv2` | tv2.html | Vitrine Digital da TV 50" deitada 90º (retrato) do Quiosque do Circuito — só carrinhos, preço R$ 48,00 · 20/30 min | não | noindex (uso interno quiosque) |
+| `/tv3` | tv3.html | Mídia indoor da sala de espera da Clínica (atalhos `/clinica/tv` e `/tv-clinica`): voltas de ~9 min, conversão principal no Portal da Família. Ver `PLANO-TV3.md` | não | noindex (uso interno na clínica) |
 | `/404` | 404.html | Erro | não | links para home, circuito, guia, código, playground, teste |
 
 ## 4. Arquivos técnicos e de descoberta

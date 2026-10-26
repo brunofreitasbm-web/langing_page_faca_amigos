@@ -1,3 +1,10 @@
+IDS DE RASTREAMENTO VIGENTES (fonte única: assets/fa-track.js, objeto IDS)
+-------------------------------------------------------------------------
+- GTM: GTM-NPDJ58XR (único; scripts/check.mjs reprova um segundo)
+- GA4: G-37G5XLBXKG (gtag direto; não criar tag GA4 no GTM, senão page_view em dobro)
+- Clarity: yr1no82bvm (só após aceite). Contentsquare: removido.
+Qualquer ID diferente destes mais abaixo neste arquivo é histórico e está superado.
+
 ATUALIZAÇÃO 09/10/2026 — Playground e Circuito saem do subdomínio e vão para o domínio principal
 ---------------------------------------------------------------------------------------------
 - URLs novas: https://institutofacaamigos.com.br/playground e https://institutofacaamigos.com.br/circuito.
@@ -48,13 +55,13 @@ UM CONTAINER GTM SÓ — 29/09/2026
 O site carregava dois containers em todas as páginas (GTM-PN5D2BTS e GTM-NPDJ58XR). Baixei o código publicado
 dos dois (https://www.googletagmanager.com/gtm.js?id=...): os DOIS estão com a versão publicada vazia (0 tags,
 0 acionadores, 0 regras). Ou seja, nada era contado em dobro e nada era medido pelo GTM; só custava um download de
-~330 KB de gtm.js a mais por página. Ficou o GTM-PN5D2BTS: é o do primeiro commit (11/09), o que o PUBLICAR.md manda
+~330 KB de gtm.js a mais por página. Ficou o GTM-PN5D2BTS (SUPERADO em 09/10: hoje é o GTM-NPDJ58XR): era o do primeiro commit (11/09), o que o PUBLICAR.md manda
 usar e o único do portal Wi-Fi. O GTM-NPDJ58XR saiu do assets/fa-track.js e do <noscript> das 21 páginas (nas 13
 páginas que só tinham ele, o <noscript> passou a apontar para o PN5D2BTS). Contagem de GA4 e Meta: sem mudança,
 porque o GA4 vem do gtag direto do fa-track.js e o Meta não passa pelo GTM.
 SE VOCÊ TINHA TAGS EM RASCUNHO (não publicadas) NO GTM-NPDJ58XR, elas não sumiram do painel, mas o site não
 carrega mais esse container. Diga, e a troca se inverte com uma linha.
-Ao criar tags no GTM: só no GTM-PN5D2BTS, conferir que a tag GA4 não duplica o gtag direto (page_view em
+Ao criar tags no GTM: só no GTM-NPDJ58XR, conferir que a tag GA4 não duplica o gtag direto (page_view em
 dobro) e exigir consentimento (ad_storage) nas tags de anúncio. O scripts/check.mjs agora reprova um segundo
 container e <noscript> que aponte para container diferente do declarado no fa-track.js.
 
@@ -228,9 +235,7 @@ O QUE CONTINUA PENDENTE DE CONFIGURAÇÃO (não é código, são secrets/painéi
   vários (supabase/functions/hotmart-sync/index.ts, fetchSales); se só o id do guia estiver lá, as vendas do
   Código não param a sequência de e-mails. Para descobrir o id do Código:
   POST na hotmart-sync com ?list_products=1 e o cabeçalho x-sync-key.
-- DOIS CONTAINERS GTM (GTM-PN5D2BTS e GTM-NPDJ58XR) carregam em todas as páginas. NÃO foi verificado se os
-  dois têm as mesmas tags — se tiverem, todo evento é contado em dobro. Conferir em tagmanager.google.com o
-  que existe em cada um antes de remover qualquer um dos dois (está anotado no topo do fa-track.js).
+- (RESOLVIDO: desde 09/10/2026 só o GTM-NPDJ58XR carrega; ver o topo deste arquivo.)
 - Nenhuma compra volta para o GA4/Meta: hotmart-webhook e hotmart-sync gravam a venda no Supabase e param a
   sequência, mas não mandam purchase por Measurement Protocol nem por Conversions API. Enquanto isso não
   existir, dá para saber quem clicou no checkout, nunca quem comprou por qual anúncio.
@@ -550,8 +555,8 @@ CONTEÚDO DO PACOTE
 
 RASTREAMENTO JÁ CONFIGURADO NO index.html (não precisa mexer)
 ----------------------------------------------------------------
-- Google Analytics 4 (ID G-Q7LHH3C9P8) — origem de tráfego, sessões, páginas
-- Microsoft Clarity (ID xz0butjjbh) — mapa de calor + gravação de sessão
+- Google Analytics 4 (ID G-37G5XLBXKG) — origem de tráfego, sessões, páginas
+- Microsoft Clarity (ID yr1no82bvm, só após aceite) — mapa de calor + gravação de sessão
 - Hotjar/Contentsquare — segundo mapa de calor + gravação de sessão
 - SEO: Open Graph, Twitter Card, canonical e dados estruturados (Schema.org
   LocalBusiness) para aparecer melhor no Google e ao compartilhar o link
@@ -744,10 +749,10 @@ Antes estava inconsistente: index e circuito carregavam DOIS Clarity
 diferentes, a política de privacidade usava outro container do GTM e o
 hub não tinha rastreamento nenhum. Foi unificado em:
 - Google Tag Manager  GTM-NPDJ58XR
-- Google Analytics 4  G-Q7LHH3C9P8
-- Microsoft Clarity   xz0butjjbh
-- Contentsquare       c3b9c7ee91c87
-(os IDs GTM-K3NVZCCL e Clarity y3je6ymu3d foram removidos)
+- Google Analytics 4  G-37G5XLBXKG
+- Microsoft Clarity   yr1no82bvm
+- Contentsquare       removido
+(IDs antigos já removidos: GTM-K3NVZCCL, GTM-PN5D2BTS, GA4 G-Q7LHH3C9P8, Clarity xz0butjjbh e y3je6ymu3d)
 
 CONTEÚDO ALINHADO AO BANCO DE DADOS (Supabase)
 - WhatsApp corrigido em todas as páginas: (91) 99234-7673. Os links

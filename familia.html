@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <script src="/assets/fa-track.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal da Família | FaçaAmigos Clínica</title>
+  <meta name="description" content="Como entrar no Portal da Família da Clínica FaçaAmigos: agenda, documentos e recados da coordenação no celular.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://institutofacaamigos.com.br/familia">
+  <link rel="icon" type="image/png" href="img/logo-simbolo.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta name="theme-color" content="#065264">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800;900&display=swap"></noscript>
+
+  <style>
+    :root {
+      --petrol-deep: #032D37;
+      --petrol: #065264;
+      --petrol-soft: #E5F3F6;
+      --pink: #F0196B;
+      --pink-dark: #C81158;
+      --teal: #2ECFB5;
+      --teal-dark: #1FA893;
+      --yellow: #FFE234;
+      --cream: #FFF9F1;
+      --ink: #1A3F35;
+      --ink-soft: #425B53;
+      --white: #FFFFFF;
+      --gutter: 20px;
+      --max: 560px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body { font-family: 'Nunito', 'Segoe UI', sans-serif; color: var(--ink); background: var(--cream); line-height: 1.45; overflow-x: hidden; }
+    h1, h2 { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; line-height: 1.12; }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
+
+    .top {
+      background: linear-gradient(120deg, var(--pink) 0%, var(--petrol-deep) 62%, var(--ink) 100%);
+      color: var(--white); padding: 22px 0 30px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; margin-bottom: 22px; font-weight: 800; font-size: 15px; }
+    .brand b { font-family: 'Fredoka One', 'Nunito', sans-serif; font-weight: 400; font-size: 20px; }
+    .brand .fam { color: var(--yellow); }
+    .top h1 { font-size: clamp(30px, 8.5vw, 40px); margin-bottom: 10px; }
+    .top p { font-size: 17px; font-weight: 600; opacity: 0.95; max-width: 34ch; }
+
+    .main-btn { margin-top: 22px; }
+    .hint { margin: 10px 0 0; text-align: center; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+    h2.first { margin-top: 26px; }
+    .steps { list-style: none; margin: 0 0 22px; display: grid; gap: 12px; }
+    .steps li {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--white); border-radius: 18px; padding: 16px;
+      box-shadow: 0 6px 18px rgba(3, 45, 55, 0.08);
+    }
+    .num {
+      flex: 0 0 38px; height: 38px; border-radius: 50%;
+      background: var(--yellow); color: var(--petrol-deep);
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 20px;
+      display: grid; place-items: center;
+    }
+    .steps strong { display: block; font-size: 17px; color: var(--petrol-deep); }
+    .steps span { font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+
+    .btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; border-radius: 999px; padding: 18px 24px;
+      font-family: 'Fredoka One', 'Nunito', sans-serif; font-size: 20px;
+      background: var(--pink); color: var(--white);
+      box-shadow: 0 10px 26px rgba(240, 25, 107, 0.36);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { background: var(--pink-dark); transform: scale(0.98); }
+
+    .help {
+      margin: 18px 0 8px; background: var(--petrol-soft); border-radius: 18px;
+      padding: 16px; font-size: 15.5px; font-weight: 700; color: var(--petrol-deep);
+    }
+    .help a { color: var(--pink-dark); text-decoration: underline; text-underline-offset: 3px; }
+
+    h2 { font-size: 22px; color: var(--petrol-deep); margin: 30px 0 12px; }
+    .list { list-style: none; display: grid; gap: 10px; margin-bottom: 36px; }
+    .list li { display: flex; gap: 10px; font-size: 16px; font-weight: 700; }
+    .list li::before { content: "✓"; color: var(--teal-dark); font-weight: 900; }
+    footer { padding: 0 0 36px; font-size: 13.5px; font-weight: 600; color: var(--ink-soft); }
+  </style>
+</head>
+
+<body>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand">
+        <img src="img/logo-simbolo.png" alt="" width="40" height="40">
+        <span><b>FaçaAmigos</b> <span class="fam">· Família</span></span>
+      </div>
+      <h1>Portal da Família</h1>
+      <p>Agenda, documentos e recados da coordenação, no seu celular.</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <a class="btn main-btn" id="entrar" data-cta="portal_entrar" href="https://sistema.institutofacaamigos.com.br/login?utm_source=tv3&amp;utm_medium=indoor&amp;utm_campaign=portal_familia" rel="noopener">Entrar no portal</a>
+    <p class="hint">Na tela seguinte, toque na aba <b>Família</b>.</p>
+    <h2 class="first">Como entrar</h2>
+    <ol class="steps">
+      <li>
+        <div class="num">1</div>
+        <div><strong>Toque em Família</strong><span>Na tela de entrada, escolha a aba "Família (SMS)". A aba "Equipe" é de uso dos profissionais.</span></div>
+      </li>
+      <li>
+        <div class="num">2</div>
+        <div><strong>Digite o celular cadastrado</strong><span>É o número que você informou à recepção da clínica.</span></div>
+      </li>
+      <li>
+        <div class="num">3</div>
+        <div><strong>Digite o código do SMS</strong><span>São 6 números e valem por 5 minutos. No primeiro acesso, o sistema também pede o CPF.</span></div>
+      </li>
+    </ol>
+
+
+
+    <p class="help">Celular ainda não cadastrado? Fale com a recepção da clínica ou pelo <a data-cta="portal_whatsapp" href="https://wa.me/5591991782027" target="_blank" rel="noopener">WhatsApp (91) 99178-2027</a>.</p>
+
+    <h2>O que você encontra</h2>
+    <ul class="list">
+      <li>As próximas sessões, com dia, hora e terapeuta</li>
+      <li>Aviso de falta, com atestado anexo, e pedido de remarcação</li>
+      <li>Envio de carteirinha, pedido médico e laudo por foto ou PDF</li>
+      <li>Documentos liberados pela equipe, para baixar</li>
+      <li>As metas do plano terapêutico do seu filho</li>
+      <li>Recados para a coordenação, com a resposta registrada no portal</li>
+    </ul>
+  </main>
+
+  <footer class="wrap">
+    Centro de Terapia Comportamental FaçaAmigos · Rua Boaventura da Silva, 1573, Umarizal, Belém/PA
+  </footer>
+</body>
+</html>

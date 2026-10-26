@@ -4,6 +4,7 @@
 <head>
   <script src="/assets/fa-track.js"></script>
   <script src="/assets/fa-realtime.js"></script>
+  <script src="/assets/fa-fotos.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>FaçaAmigos TV — Salão</title>
@@ -1614,10 +1615,27 @@
       // ----------------------------------------------------------------------
       // RENDERIZAÇÃO DINÂMICA DOS SLIDES COM EMBARALHAMENTO RANDÔMICO
       // ----------------------------------------------------------------------
+      // Fotos novas da fotógrafa (assets/fa-fotos.js): cada slide recebe uma foto nova do mesmo tema da
+      // sua foto fixa (piscina com piscina, oficina com oficina, carrinho com carrinho). Sem foto do
+      // tema, fica a fixa. O texto do slide (mensagem para a equipe) continua; rótulo e legenda do
+      // cartão passam a ser os da foto nova.
+      const fotosNovas = window.FAFotos ? FAFotos.sorteio() : null;
+      if (fotosNovas) FAFotos.vigiar({ tv: true }, fotosNovas.atualizar);
+
+      function comFotoNova(slide) {
+        const f = fotosNovas && fotosNovas.pegar(FAFotos.temaDaImagem(slide.imageWebp));
+        if (!f) return slide;
+        return Object.assign({}, slide, {
+          imageWebp: f.webp, imageJpg: f.jpg, imageAlt: FAFotos.esc(f.alt), imagePos: f.pos,
+          label: f.rotulo || 'Hoje no FaçaAmigos', caption: f.legenda || ''
+        });
+      }
+
       function renderTeamSlides(cycleDay) {
         const rawSlides = FACA_AMIGOS_DATABASE.team[cycleDay] || FACA_AMIGOS_DATABASE.team[1];
         // Aplica randomização (shuffle)
-        state.currentPool = shuffleArray(rawSlides);
+        if (fotosNovas) fotosNovas.novaVolta();
+        state.currentPool = shuffleArray(rawSlides).map(comFotoNova);
         dom.teamContainer.innerHTML = '';
 
         state.currentPool.forEach((slide, idx) => {
@@ -1640,7 +1658,7 @@
             <div class="team-media-card">
               <picture>
                 <source srcset="${slide.imageWebp}" type="image/webp">
-                <img src="${slide.imageJpg}" alt="${slide.imageAlt}" width="800" height="600" ${loadingAttr} decoding="async">
+                <img src="${slide.imageJpg}" alt="${slide.imageAlt}" width="800" height="600" ${loadingAttr} decoding="async"${slide.imagePos ? ` style="object-position:${slide.imagePos}"` : ''}>
               </picture>
               <div class="team-media-overlay">
                 <div class="team-media-label">${slide.label}</div>

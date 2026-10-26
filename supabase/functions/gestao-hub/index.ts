@@ -292,19 +292,103 @@ const PAPEL_RH = "supervisor"; // app_metadata.role (Gestão de Pessoas)
 const PAPEL_PLAYGROUND = "GERENTE"; // fa_kiosk_employees.role (Playground)
 const CLINICA_ID = "c0000000-0000-0000-0000-000000000001";
 
-type UsuarioAuth = { id: string; app_metadata?: Record<string, unknown> | null };
+// Papéis que o dono pode dar a uma pessoa em cada sistema ao salvá-la no Hub. É o papel NATIVO do sistema
+// (o que a pessoa realmente tem lá dentro), separado do nível ver/operar/admin do Hub, que só decide se o
+// quadrado abre. Fora do catálogo de propósito:
+//   - "gestor" (Clínica) e "ADMIN" (Playground): só se dão direto no sistema;
+//   - "terapeuta" (Clínica): terapeuta entra direto no sistema, com fluxo próprio;
+//   - contas de unidade (*_unit): logins compartilhados do tablet, o Hub não mexe.
+// Sem entrada aqui = o sistema não tem papel para escolher (Simulador; Cacau, onde o cadastro é feito lá).
+type OpcaoPapel = { id: string; rotulo: string };
+const PAPEIS_NATIVOS: Partial<Record<AppId, { opcoes: OpcaoPapel[]; padrao: string }>> = {
+  clinica: {
+    opcoes: [
+      { id: PAPEL_CLINICA, rotulo: "Supervisão" },
+      { id: "recepcao", rotulo: "Recepção" },
+      { id: "faturamento", rotulo: "Faturamento" },
+    ],
+    padrao: PAPEL_CLINICA,
+  },
+  rh: { opcoes: [{ id: PAPEL_RH, rotulo: "Supervisor" }], padrao: PAPEL_RH },
+  playground: {
+    opcoes: [
+      { id: PAPEL_PLAYGROUND, rotulo: "Gerente" },
+      { id: "OPERADOR", rotulo: "Operador" },
+    ],
+    padrao: PAPEL_PLAYGROUND,
+  },
+};
+
+// Empresa (workspace) da Gestão de Pessoas. É o mesmo sistema com dois sites, um por empresa
+// (VITE_WORKSPACE_ID no build), e o que separa os dados é app_metadata.workspace_scope no login:
+// "all" enxerga as duas empresas (só donos), o id de uma enxerga só ela. Cada gerência pertence a UMA
+// empresa: o Hub grava só o escopo escolhido (nunca "all") e abre o site da empresa dela. A URL do
+// Grupo IB tem padrão; a da Porto Terapia vem do segredo GESTAO_URL_RH_PORTO_TERAPIA (sem padrão:
+// sem ele o Hub recusa abrir em vez de levar a pessoa ao site da outra empresa).
+type EscopoSistema = { id: string; rotulo: string; baseEnv: string; baseDefault: string | null };
+const ESCOPOS: Partial<Record<AppId, EscopoSistema[]>> = {
+  rh: [
+    { id: "grupoib", rotulo: "Grupo IB", baseEnv: "GESTAO_URL_RH", baseDefault: APPS.rh.baseDefault },
+    { id: "porto-terapia", rotulo: "Porto Terapia", baseEnv: "GESTAO_URL_RH_PORTO_TERAPIA", baseDefault: null },
+  ],
+};
+
+function escopoValido(appId: AppId, v: unknown): string | null {
+  return typeof v === "string" && ESCOPOS[appId]?.some((e) => e.id === v) ? v : null;
+}
+
+// Endereço do site da empresa; null se não estiver configurado.
+function baseDoEscopo(appId: AppId, escopo: string): string | null {
+  const e = ESCOPOS[appId]?.find((x) => x.id === escopo);
+  if (!e) return null;
+  const url = Deno.env.get(e.baseEnv) ?? e.baseDefault;
+  return url ? url.replace(/\/+$/, "") : null;
+}
+
+// Papel escolhido se for do catálogo; senão o padrão do sistema; null se o sistema não tem papel.
+function papelEfetivo(appId: AppId, escolhido: string | null | undefined): string | null {
+  const cat = PAPEIS_NATIVOS[appId];
+  if (!cat) return null;
+  return cat.opcoes.some((o) => o.id === escolhido) ? (escolhido as string) : cat.padrao;
+}
+
+type UsuarioAuth = {
+  id: string;
+  app_metadata?: Record<string, unknown> | null;
+  user_metadata?: Record<string, unknown> | null;
+  last_sign_in_at?: string | null;
+};
+
+// Recusa com motivo legível: chega ao dono no clique do quadrado (409), em vez de um "não foi possível
+// abrir o sistema agora" que não diz o que fazer.
+class RecusaAcesso extends Error {}
+
+// Contas de unidade/quiosque (intern_unit, professional_unit, employee_unit na Gestão de Pessoas) são
+// LOGINS COMPARTILHADOS do tablet da loja, não de uma pessoa: o estagiário só toca no próprio nome na
+// tela. O Hub nunca abre, provisiona, rebaixa nem desativa uma conta dessas. Só supervisores (pessoas)
+// entram por aqui.
+function ehContaDeUnidade(user: UsuarioAuth): boolean {
+  const papel = (user.app_metadata?.role ?? user.user_metadata?.role) as unknown;
+  return typeof papel === "string" && papel.endsWith("_unit");
+}
 
 // O magic link cria o usuário vazio se ele não existir, e cada sistema exige mais que isso para
 // abrir (RH: papel no claim; Playground: linha de colaborador; Clínica: perfil com o papel certo).
-// Aqui a pessoa é completada ANTES de o ticket sair, sempre de forma idempotente e sem rebaixar nem
-// sobrescrever o que já existe. Devolve uma descrição do que foi feito, "" se nada, null se recusou.
+// Aqui a pessoa é completada (ao salvar no Hub e, por garantia, ao abrir o quadrado), sempre de forma
+// idempotente. `papel` é o papel nativo escolhido; `papelAnterior` é o que o Hub aplicou da última vez:
+// o Hub só TROCA um papel que ele mesmo tinha dado, nunca um que a pessoa já tinha no sistema (nem baixa
+// "gestor"). Devolve uma descrição do que foi feito ("" se nada); se recusar ou falhar, lança RecusaAcesso
+// com o motivo.
 async function provisionar(
   client: SupabaseClient,
   appId: AppId,
   user: UsuarioAuth,
   conta: Conta,
   email: string,
-): Promise<string | null> {
+  papel: string | null,
+  papelAnterior: string | null,
+  escopo: string | null,
+): Promise<string> {
   if (conta.papel !== "gerente") {
     if (conta.papel === "owner" && appId === "clinica") {
       const { data: perfil } = await client.from("profiles").select("id, role").eq("id", user.id).maybeSingle();
@@ -315,86 +399,130 @@ async function provisionar(
     }
     return "";
   }
+  const papelAlvo = papel ?? papelEfetivo(appId, null);
 
   if (appId === "rh") {
+    // Sem empresa escolhida o Hub não dá acesso: nunca cai em "all" (as duas empresas).
+    if (!escopo) throw new RecusaAcesso("Escolha a empresa (Grupo IB ou Porto Terapia) desta pessoa na Gestão de Pessoas.");
     const atual = (user.app_metadata ?? {}) as Record<string, unknown>;
     // role/workspace_scope só em app_metadata: user_metadata é editável pela própria pessoa.
-    if (atual.role === PAPEL_RH) return "";
-    if (atual.role) {
+    const escopoAtual = Array.isArray(atual.workspace_scope) ? (atual.workspace_scope as unknown[]) : [];
+    const mesmoEscopo = escopoAtual.length === 1 && escopoAtual[0] === escopo;
+    if (atual.role === papelAlvo && mesmoEscopo) return "";
+    // O Hub só ajusta o que ele mesmo deu antes; o papel e o escopo que a pessoa já tinha no sistema não.
+    const deleMesmo = papelAnterior !== null;
+    if (atual.role && atual.role !== papelAlvo && !(deleMesmo && atual.role === papelAnterior)) {
       console.error(`provisionar rh: ${email} já tem papel '${String(atual.role)}', não sobrescrevo`);
-      return null;
+      throw new RecusaAcesso(
+        `${email} já tem o papel "${String(atual.role)}" na Gestão de Pessoas e o Hub não troca papel existente. Use o e-mail de supervisor da pessoa ou ajuste o papel direto naquele sistema.`,
+      );
+    }
+    if (atual.role === papelAlvo && escopoAtual.length && !mesmoEscopo && !deleMesmo) {
+      const quais = escopoAtual.map((x) => String(x)).join(", ");
+      throw new RecusaAcesso(
+        `${email} já tem acesso a "${quais}" na Gestão de Pessoas e o Hub não troca o escopo de uma conta que ele não criou. Ajuste em Usuários do Sistema, dentro da Gestão de Pessoas, ou use outro e-mail.`,
+      );
     }
     const { error } = await client.auth.admin.updateUserById(user.id, {
-      app_metadata: { ...atual, role: PAPEL_RH, workspace_scope: ["all"] },
+      app_metadata: { ...atual, role: papelAlvo, workspace_scope: [escopo] },
     });
     if (error) {
       console.error("provisionar rh:", error.message);
-      return null;
+      throw new RecusaAcesso("A Gestão de Pessoas recusou criar o acesso agora. Tente de novo em instantes.");
     }
-    return `rh=${PAPEL_RH}`;
+    return `rh=${papelAlvo}(${escopo})`;
   }
 
   if (appId === "clinica") {
     const { data: perfil, error } = await client.from("profiles").select("id, role, active").eq("id", user.id).maybeSingle();
     if (error) {
       console.error("provisionar clinica (lê perfil):", error.message);
-      return null;
+      throw new RecusaAcesso("Não consegui consultar o perfil na Clínica agora. Tente de novo em instantes.");
     }
     if (!perfil) {
       const { error: insErr } = await client.from("profiles").insert({
         id: user.id,
         clinic_id: CLINICA_ID,
-        role: PAPEL_CLINICA,
+        role: papelAlvo,
         full_name: conta.nome,
         email,
         active: true,
       });
       if (insErr) {
         console.error("provisionar clinica (cria perfil):", insErr.message);
-        return null;
+        throw new RecusaAcesso("A Clínica recusou criar o perfil agora. Tente de novo em instantes.");
       }
-      return `clinica=${PAPEL_CLINICA}(novo)`;
+      return `clinica=${papelAlvo}(novo)`;
     }
-    if (perfil.role === "gestor" || perfil.role === PAPEL_CLINICA) {
-      if (perfil.active === false) return null; // perfil desativado na Clínica: respeita
+    const desativadoNaClinica = () =>
+      new RecusaAcesso(`${email} está desativado na Clínica. Reative lá primeiro; o Hub respeita essa decisão.`);
+    if (perfil.role === "gestor" || perfil.role === papelAlvo) {
+      if (perfil.active === false) throw desativadoNaClinica();
       return "";
     }
-    if (perfil.active === false) return null;
-    // O trigger de auth.users cria todo usuário novo como 'terapeuta'. Sobe só dali; nunca de gestor.
-    const { error: upErr } = await client.from("profiles").update({ role: PAPEL_CLINICA }).eq("id", user.id);
+    if (perfil.active === false) throw desativadoNaClinica();
+    // O trigger de auth.users cria todo usuário novo como 'terapeuta'. Só esse usuário recém-criado (que
+    // nunca entrou) recebe o papel escolhido, ou quem tem o papel que o próprio Hub deu antes. Quem já é
+    // terapeuta de verdade, recepção, faturamento etc. fica como está.
+    const recemCriado = perfil.role === "terapeuta" && !user.last_sign_in_at;
+    const foiDadoPeloHub = papelAnterior !== null && perfil.role === papelAnterior;
+    if (!recemCriado && !foiDadoPeloHub) {
+      throw new RecusaAcesso(
+        `${email} já é "${String(perfil.role)}" na Clínica e o Hub não muda esse papel. Para dar acesso de gestão, ajuste o papel direto na Clínica ou use outro e-mail.`,
+      );
+    }
+    const { error: upErr } = await client.from("profiles").update({ role: papelAlvo }).eq("id", user.id);
     if (upErr) {
       console.error("provisionar clinica (atualiza perfil):", upErr.message);
-      return null;
+      throw new RecusaAcesso("A Clínica recusou atualizar o perfil agora. Tente de novo em instantes.");
     }
-    return `clinica=${PAPEL_CLINICA}(era ${perfil.role})`;
+    return `clinica=${papelAlvo}(era ${perfil.role})`;
   }
 
   if (appId === "playground") {
     const { data: colab, error } = await client
       .from("fa_kiosk_employees")
-      .select("id, active")
+      .select("id, active, role")
       .eq("auth_user_id", user.id)
       .maybeSingle();
     if (error) {
       console.error("provisionar playground (lê colaborador):", error.message);
-      return null;
+      throw new RecusaAcesso("Não consegui consultar o colaborador no Playground agora. Tente de novo em instantes.");
     }
-    if (colab) return colab.active === false ? null : ""; // já existe: papel e vínculo não são tocados
+    if (colab) {
+      if (colab.active === false) {
+        throw new RecusaAcesso(`${email} está desativado no Playground. Reative lá primeiro; o Hub respeita essa decisão.`);
+      }
+      if (colab.role === papelAlvo) return "";
+      // Só troca o papel que o próprio Hub deu antes; o de quem já existia no Playground não é tocado.
+      if (papelAnterior === null || colab.role !== papelAnterior) return "";
+      const { error: upErr } = await client.from("fa_kiosk_employees").update({ role: papelAlvo }).eq("id", colab.id);
+      if (upErr) {
+        console.error("provisionar playground (troca papel):", upErr.message);
+        throw new RecusaAcesso("O Playground recusou trocar o papel agora. Tente de novo em instantes.");
+      }
+      await client.from("fa_kiosk_audit_log").insert({
+        action: "HUB_CHANGE_EMPLOYEE_ROLE",
+        severity: "ALERTA",
+        details_json: { employeeId: colab.id, de: colab.role, para: papelAlvo, via: "gestao-hub" },
+      });
+      return `playground=${papelAlvo}(era ${colab.role})`;
+    }
     const { data: novo, error: insErr } = await client
       .from("fa_kiosk_employees")
-      .insert({ auth_user_id: user.id, full_name: conta.nome, role: PAPEL_PLAYGROUND, email, active: true })
+      .insert({ auth_user_id: user.id, full_name: conta.nome, role: papelAlvo, email, active: true })
       .select("id")
       .single();
     if (insErr || !novo) {
       console.error("provisionar playground (cria colaborador):", insErr?.message);
-      return null;
+      throw new RecusaAcesso("O Playground recusou criar o colaborador agora. Tente de novo em instantes.");
     }
     await client.from("fa_kiosk_audit_log").insert({
       action: "HUB_PROVISION_EMPLOYEE",
       severity: "ALERTA",
-      details_json: { employeeId: novo.id, role: PAPEL_PLAYGROUND, via: "gestao-hub" },
+      details_json: { employeeId: novo.id, role: papelAlvo, via: "gestao-hub" },
     });
-    return `playground=${PAPEL_PLAYGROUND}(novo)`;
+    return `playground=${papelAlvo}(novo)`;
   }
 
   return "";
@@ -406,21 +534,33 @@ async function ticketSupabase(
   email: string,
   appId: AppId,
   conta: Conta,
-): Promise<{ ticket: string; provisionado: string } | null> {
+  papel: string | null,
+  papelAnterior: string | null,
+  escopo: string | null,
+): Promise<{ ticket: string; provisionado: string } | { erro: string }> {
   const url = tipo === "supabase_a" ? Deno.env.get("SUPABASE_URL") : Deno.env.get("CLINICA_SUPABASE_URL");
   const key = tipo === "supabase_a"
     ? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
     : Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
-  if (!url || !key) return null;
+  if (!url || !key) return { erro: "Este sistema ainda não está ligado ao Hub (falta configuração no servidor)." };
   const client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data, error } = await client.auth.admin.generateLink({ type: "magiclink", email });
   if (error || !data?.properties?.hashed_token || !data.user) {
     console.error(`generateLink (${tipo}) falhou:`, error?.message);
-    return null;
+    return { erro: "O sistema não gerou a entrada agora. Confira o e-mail cadastrado para ele e tente de novo." };
   }
-  const provisionado = await provisionar(client, appId, data.user, conta, email);
-  if (provisionado === null) return null;
-  return { ticket: data.properties.hashed_token, provisionado };
+  if (ehContaDeUnidade(data.user)) {
+    return {
+      erro: `${email} é uma conta de unidade (quiosque compartilhado), não de uma pessoa. O Hub não abre nem altera essas contas: informe o e-mail individual do supervisor.`,
+    };
+  }
+  try {
+    const provisionado = await provisionar(client, appId, data.user, conta, email, papel, papelAnterior, escopo);
+    return { ticket: data.properties.hashed_token, provisionado };
+  } catch (e) {
+    if (e instanceof RecusaAcesso) return { erro: e.message };
+    throw e;
+  }
 }
 
 // ---------------------------------------------------------------------
@@ -938,6 +1078,7 @@ Deno.serve(async (req) => {
       papel: conta.papel,
       apps: appsDisponiveis(conta, niveis),
       niveis,
+      pode_gerir_equipe: conta.papel === "owner" || niveis.clinica === "admin",
     });
   }
 
@@ -1206,6 +1347,8 @@ Deno.serve(async (req) => {
       papel: conta.papel,
       apps: appsDisponiveis(conta, niveis),
       niveis,
+      // Mostra a "Equipe da Clínica": owner ou administrador da Clínica (administração delegada).
+      pode_gerir_equipe: conta.papel === "owner" || niveis.clinica === "admin",
     });
   }
 
@@ -1234,12 +1377,33 @@ Deno.serve(async (req) => {
 
     let provisionado = "";
     let ticket: string | null;
-    if (app.tipo === "cacau") ticket = await ticketCacau(identidade, niveis[appId]);
-    else if (app.tipo === "painel") ticket = await ticketPainel(admin, conta.email, niveis);
+    if (app.tipo === "cacau") {
+      // O Cacau Show não tem acesso só de leitura: avisar aqui, em vez de abrir a aba para a pessoa ouvir "acesso negado".
+      if (conta.papel !== "owner" && niveis[appId] === "ver") {
+        return jsonResponse(req, { error: "O Cacau Show ainda não tem acesso só de leitura. Peça ao owner para mudar seu nível para operar." }, 403);
+      }
+      ticket = await ticketCacau(identidade, niveis[appId]);
+    } else if (app.tipo === "painel") ticket = await ticketPainel(admin, conta.email, niveis);
     else {
-      const r = await ticketSupabase(app.tipo, identidade, appId, conta);
-      ticket = r?.ticket ?? null;
-      provisionado = r?.provisionado ?? "";
+      const { escolhido, aplicado, escopo } = await papeisDaConta(admin, conta.email, appId);
+      const papel = papelEfetivo(appId, escolhido);
+      // Gestão de Pessoas: cada gerência abre o site da SUA empresa. Sem empresa escolhida, ou com o site
+      // da empresa sem endereço configurado, recusa em vez de levar a pessoa ao site da outra empresa.
+      if (appId === "rh" && conta.papel === "gerente") {
+        if (!escopo) return jsonResponse(req, { error: "Sua empresa na Gestão de Pessoas ainda não foi escolhida. Peça ao owner para escolher Grupo IB ou Porto Terapia." }, 409);
+        if (!baseDoEscopo(appId, escopo)) {
+          return jsonResponse(req, { error: "O endereço do site da sua empresa na Gestão de Pessoas ainda não foi configurado. Avise o owner." }, 409);
+        }
+      }
+      const r = await ticketSupabase(app.tipo, identidade, appId, conta, papel, aplicado, escopo);
+      if ("erro" in r) {
+        await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: `recusado: ${r.erro}`.slice(0, 200) });
+        return jsonResponse(req, { error: r.erro }, 409);
+      }
+      ticket = r.ticket;
+      provisionado = r.provisionado;
+      // Se o clique completou a pessoa (ex.: trocou o papel), o Hub passa a saber o que aplicou.
+      if (provisionado && papel) await registrarProvisao(admin, conta.email, appId, "ok", provisionado, papel);
     }
     if (provisionado) await auditar(admin, req, "acesso_provisionado", { email: conta.email, app: appId, detalhe: provisionado });
     if (!ticket) {
@@ -1247,19 +1411,48 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "não foi possível abrir o sistema agora" }, 502);
     }
 
-    const base = (Deno.env.get(app.baseEnv) ?? app.baseDefault).replace(/\/+$/, "");
+    let base = (Deno.env.get(app.baseEnv) ?? app.baseDefault).replace(/\/+$/, "");
+    if (appId === "rh" && conta.papel === "gerente") {
+      const { escopo } = await papeisDaConta(admin, conta.email, appId);
+      base = (escopo && baseDoEscopo(appId, escopo)) || base;
+    }
     await auditar(admin, req, "launch", { email: conta.email, app: appId });
     return jsonResponse(req, { url: app.entrada(base, ticket) });
   }
 
   // --- gestão de pessoas e acessos: só owner ---
-  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar", "convite_link_gerar"];
+  const ACOES_OWNER = [
+    "contas_listar",
+    "conta_salvar",
+    "conta_provisionar",
+    "conta_ativo",
+    "convidar",
+    "conta_acesso",
+    "sessoes_revogar",
+    "auditoria_listar",
+    "convite_link_gerar",
+  ];
   if (ACOES_OWNER.includes(action)) {
     if (conta.papel !== "owner") {
       await auditar(admin, req, "acao_owner_negada", { email: conta.email, detalhe: action });
       return jsonResponse(req, { error: "apenas owner" }, 403);
     }
     return await acaoOwner(admin, req, body, action, conta);
+  }
+
+  // --- equipe da Clínica: owner OU administrador da Clínica (administração delegada) ---
+  // Quem é "administrador" é decidido aqui, no servidor, pelo nível do Hub: gerência com nível admin no
+  // módulo Clínica. Delegar NÃO dá poder sobre contas do Hub (criar, dar nível, desativar gerências
+  // continua só do owner) nem sobre papéis acima do da equipe: só terapeuta, recepção e faturamento, e
+  // nunca quem tem conta no Hub (inclusive o próprio administrador).
+  const ACOES_EQUIPE = ["equipe_listar", "equipe_criar", "equipe_resetar_senha", "equipe_ativo"];
+  if (ACOES_EQUIPE.includes(action)) {
+    const niveis = await carregarNiveis(admin, conta);
+    if (conta.papel !== "owner" && niveis.clinica !== "admin") {
+      await auditar(admin, req, "acao_equipe_negada", { email: conta.email, detalhe: action });
+      return jsonResponse(req, { error: "apenas o owner ou quem administra a Clínica" }, 403);
+    }
+    return await acaoEquipe(admin, req, body, action, conta);
   }
 
   return jsonResponse(req, { error: "ação inválida" }, 400);
@@ -1274,10 +1467,656 @@ const CAMPOS_MAPEAMENTO = [...new Set(APP_IDS.map((id) => APPS[id].campo))].filt
 const COLUNAS_PUBLICAS =
   "email, email_codigo, nome, playground_email, clinica_email, financeiro_email, rh_email, cacau_usuario, painel_usuario, ativo, papel, auth_modo, login_email, senha_definida_em, convidado_em, criado_por, created_at";
 
+// ---------------------------------------------------------------------
+// Desligar / religar a pessoa em cada sistema (conta_ativo)
+//
+// Desativar uma conta no Hub passa a bloquear o ACESSO dela em cada sistema onde ela tem identidade:
+//   - Supabase (Clínica, Gestão de Pessoas, Playground, Simulador): banimento do login
+//     (auth.admin ban_duration) e, quando o sistema tem a flag, `active = false` (Clínica: profiles;
+//     Playground: fa_kiosk_employees), que também corta a sessão que já estava aberta nas políticas RLS;
+//   - Cacau Show: ordem assinada para POST /api/auth/hub/acesso (colaboradores.ativo = 0).
+//
+// REGRAS DURAS:
+//   - NUNCA apaga nada: PIN, hash de PIN, biometria, ponto e histórico ficam intactos.
+//   - NUNCA toca em conta de unidade/quiosque (*_unit): é login compartilhado do tablet da loja.
+//   - Reativar desfaz SÓ o que o Hub bloqueou (fa_gestao_bloqueios). Quem já estava desativado no
+//     sistema por outro motivo continua desativado.
+//   - Idempotente: repetir a ordem não muda nada, e uma falha em um sistema não impede os outros.
+// ---------------------------------------------------------------------
+
+const BAN_LONGO = "876000h"; // ~100 anos; reativar usa "none"
+
+type EstadoSistema = "bloqueado" | "ja_bloqueado" | "restaurado" | "nada_a_restaurar" | "sem_conta" | "pulado" | "erro";
+type ResultadoSistema = { app: AppId; rotulo: string; estado: EstadoSistema; texto: string };
+type ParcialSistema = { estado: EstadoSistema; texto: string };
+
+const SISTEMAS_BLOQUEAVEIS: AppId[] = ["playground", "clinica", "financeiro", "rh", "cacau"];
+
+function clienteSupabase(tipo: "supabase_a" | "supabase_b"): SupabaseClient | null {
+  const url = tipo === "supabase_a" ? Deno.env.get("SUPABASE_URL") : Deno.env.get("CLINICA_SUPABASE_URL");
+  const key = tipo === "supabase_a"
+    ? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
+    : Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key) return null;
+  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+}
+
+type UsuarioBloqueavel = UsuarioAuth & { banned_until?: string | null };
+
+// Procura pelo e-mail SEM criar ninguém (generateLink criaria o usuário se não existisse).
+async function acharUsuarioAuth(client: SupabaseClient, email: string): Promise<UsuarioBloqueavel | null> {
+  const alvo = email.toLowerCase();
+  const POR_PAGINA = 200;
+  for (let pagina = 1; pagina <= 25; pagina++) {
+    const { data, error } = await client.auth.admin.listUsers({ page: pagina, perPage: POR_PAGINA });
+    if (error) throw new Error(error.message);
+    const achou = data.users.find((u) => (u.email ?? "").toLowerCase() === alvo);
+    if (achou) return achou as unknown as UsuarioBloqueavel;
+    if (data.users.length < POR_PAGINA) return null;
+  }
+  return null;
+}
+
+// Encerra as sessões que a pessoa já tinha abertas (projeto B: Clínica e Gestão de Pessoas). O banimento
+// só impede novas entradas e a renovação do token; sem isto, quem estava logado seguia até o app pedir
+// um token novo. A função do banco só age em quem já está banido e nunca em conta de unidade, e só
+// apaga sessão e refresh token (nada de usuário, PIN ou dado). O token de acesso já emitido ainda vale
+// até expirar (1 h), pois a API de dados confere só a assinatura dele.
+async function encerrarSessoes(client: SupabaseClient, userId: string): Promise<{ encerradas: number } | { erro: string }> {
+  const { data, error } = await client.rpc("hub_encerrar_sessoes", { p_user_id: userId });
+  if (error) {
+    console.error("hub_encerrar_sessoes:", error.message);
+    return { erro: `não consegui encerrar as sessões abertas: ${error.message}` };
+  }
+  return { encerradas: typeof data === "number" ? data : 0 };
+}
+
+async function bloqueioAberto(admin: Admin, email: string, modulo: AppId): Promise<Record<string, unknown> | null> {
+  const { data, error } = await admin
+    .from("fa_gestao_bloqueios")
+    .select("detalhe")
+    .eq("email", email)
+    .eq("modulo", modulo)
+    .is("desfeito_em", null)
+    .maybeSingle();
+  if (error) throw new Error(error.message);
+  return data ? ((data.detalhe ?? {}) as Record<string, unknown>) : null;
+}
+
+// Mescla com o que já estava registrado: se uma tentativa anterior bloqueou só uma parte, a próxima
+// não pode esquecer o que foi feito.
+async function registrarBloqueio(admin: Admin, email: string, modulo: AppId, novo: Record<string, unknown>) {
+  const antes = await bloqueioAberto(admin, email, modulo);
+  const detalhe = { ...(antes ?? {}), ...novo };
+  const { error } = antes
+    ? await admin.from("fa_gestao_bloqueios").update({ detalhe }).eq("email", email).eq("modulo", modulo).is("desfeito_em", null)
+    : await admin.from("fa_gestao_bloqueios").insert({ email, modulo, detalhe });
+  if (error) throw new Error(`não consegui registrar o bloqueio: ${error.message}`);
+}
+
+async function desligarSupabase(admin: Admin, appId: AppId, email: string): Promise<ParcialSistema> {
+  const client = clienteSupabase(APPS[appId].tipo as "supabase_a" | "supabase_b");
+  if (!client) return { estado: "erro", texto: "sistema sem configuração no servidor" };
+  const user = await acharUsuarioAuth(client, email);
+  if (!user) return { estado: "sem_conta", texto: "sem conta com esse e-mail, nada a bloquear" };
+  if (ehContaDeUnidade(user)) return { estado: "pulado", texto: "é conta de unidade (quiosque), o Hub não mexe" };
+
+  const novo: Record<string, unknown> = {};
+  const erros: string[] = [];
+
+  const jaBanido = !!user.banned_until && Date.parse(user.banned_until) > Date.now();
+  if (!jaBanido) {
+    const { error } = await client.auth.admin.updateUserById(user.id, { ban_duration: BAN_LONGO });
+    if (error) erros.push(`login: ${error.message}`);
+    else novo.ban = true;
+  }
+
+  if (appId === "clinica") {
+    const { data: perfil, error } = await client.from("profiles").select("active").eq("id", user.id).maybeSingle();
+    if (error) erros.push(`perfil: ${error.message}`);
+    else if (perfil && perfil.active !== false) {
+      const { error: upErr } = await client.from("profiles").update({ active: false }).eq("id", user.id);
+      if (upErr) erros.push(`perfil: ${upErr.message}`);
+      else novo.perfil_ativo_antes = true;
+    }
+  }
+
+  if (appId === "playground") {
+    const { data: colab, error } = await client
+      .from("fa_kiosk_employees")
+      .select("id, active")
+      .eq("auth_user_id", user.id)
+      .maybeSingle();
+    if (error) erros.push(`colaborador: ${error.message}`);
+    else if (colab && colab.active !== false) {
+      const { error: upErr } = await client.from("fa_kiosk_employees").update({ active: false }).eq("id", colab.id);
+      if (upErr) erros.push(`colaborador: ${upErr.message}`);
+      else {
+        novo.colaborador_id = colab.id;
+        novo.colaborador_ativo_antes = true;
+        await client.from("fa_kiosk_audit_log").insert({
+          action: "HUB_DISABLE_EMPLOYEE",
+          severity: "ALERTA",
+          details_json: { employeeId: colab.id, via: "gestao-hub" },
+        });
+      }
+    }
+  }
+
+  if (Object.keys(novo).length) await registrarBloqueio(admin, email, appId, novo);
+
+  // Projeto B: derruba também a sessão aberta. Roda mesmo se o login já estava banido, para que repetir
+  // "desativar" complete o que faltou.
+  let sessoes = "";
+  if (APPS[appId].tipo === "supabase_b" && (jaBanido || novo.ban === true)) {
+    const r = await encerrarSessoes(client, user.id);
+    if ("erro" in r) erros.push(r.erro);
+    else if (r.encerradas > 0) sessoes = `, ${r.encerradas} sessão(ões) aberta(s) encerrada(s)`;
+  }
+  if (erros.length) return { estado: "erro", texto: erros.join("; ") };
+  return Object.keys(novo).length
+    ? { estado: "bloqueado", texto: `acesso bloqueado${sessoes}` }
+    : { estado: "ja_bloqueado", texto: `já estava bloqueado, nada a mudar${sessoes}` };
+}
+
+async function religarSupabase(admin: Admin, appId: AppId, email: string): Promise<ParcialSistema> {
+  const feito = await bloqueioAberto(admin, email, appId);
+  if (!feito) return { estado: "nada_a_restaurar", texto: "o Hub não tinha bloqueado aqui, nada a restaurar" };
+  const client = clienteSupabase(APPS[appId].tipo as "supabase_a" | "supabase_b");
+  if (!client) return { estado: "erro", texto: "sistema sem configuração no servidor" };
+  const user = await acharUsuarioAuth(client, email);
+  const erros: string[] = [];
+
+  if (user && !ehContaDeUnidade(user)) {
+    if (feito.ban === true) {
+      const { error } = await client.auth.admin.updateUserById(user.id, { ban_duration: "none" });
+      if (error) erros.push(`login: ${error.message}`);
+    }
+    if (appId === "clinica" && feito.perfil_ativo_antes === true) {
+      const { error } = await client.from("profiles").update({ active: true }).eq("id", user.id);
+      if (error) erros.push(`perfil: ${error.message}`);
+    }
+    if (appId === "playground" && feito.colaborador_ativo_antes === true && typeof feito.colaborador_id === "string") {
+      const { error } = await client.from("fa_kiosk_employees").update({ active: true }).eq("id", feito.colaborador_id);
+      if (error) erros.push(`colaborador: ${error.message}`);
+      else {
+        await client.from("fa_kiosk_audit_log").insert({
+          action: "HUB_ENABLE_EMPLOYEE",
+          severity: "ALERTA",
+          details_json: { employeeId: feito.colaborador_id, via: "gestao-hub" },
+        });
+      }
+    }
+  }
+  // Com erro, o bloqueio segue aberto: reativar de novo tenta o que faltou.
+  if (erros.length) return { estado: "erro", texto: erros.join("; ") };
+  const { error } = await admin
+    .from("fa_gestao_bloqueios")
+    .update({ desfeito_em: new Date().toISOString() })
+    .eq("email", email)
+    .eq("modulo", appId)
+    .is("desfeito_em", null);
+  if (error) return { estado: "erro", texto: `restaurei o acesso, mas não consegui fechar o registro: ${error.message}` };
+  return { estado: "restaurado", texto: "acesso restaurado" };
+}
+
+// Ordem assinada (HMAC-SHA256) para o Cacau: base64url(payload).base64url(assinatura), 60 s, uso único.
+async function ordemCacau(usuario: string, acao: "desligar" | "religar" | "consultar"): Promise<string | null> {
+  const secret = Deno.env.get("GESTAO_SSO_SECRET_CACAU");
+  if (!secret) return null;
+  const payload = {
+    u: usuario,
+    a: acao,
+    aud: "hub-operacoes-acesso",
+    exp: Math.floor(Date.now() / 1000) + 60,
+    jti: crypto.randomUUID(),
+  };
+  const payloadB64 = base64url(new TextEncoder().encode(JSON.stringify(payload)));
+  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  const sig = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(payloadB64));
+  return `${payloadB64}.${base64url(new Uint8Array(sig))}`;
+}
+
+type RespostaCacau = { mudou: boolean; encontrado: boolean; ativo?: boolean; role?: string };
+async function chamarCacau(usuario: string, acao: "desligar" | "religar" | "consultar"): Promise<RespostaCacau | { erro: string }> {
+  const ticket = await ordemCacau(usuario, acao);
+  if (!ticket) return { erro: "sistema sem configuração no servidor (GESTAO_SSO_SECRET_CACAU)" };
+  const base = (Deno.env.get(APPS.cacau.baseEnv) ?? APPS.cacau.baseDefault).replace(/\/+$/, "");
+  try {
+    const res = await fetch(`${base}/api/auth/hub/acesso`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ticket }),
+      signal: AbortSignal.timeout(8000),
+    });
+    const corpo = await res.json().catch(() => ({}));
+    if (!res.ok) return { erro: String(corpo.error ?? `o Cacau respondeu ${res.status}`) };
+    return {
+      mudou: corpo.mudou === true,
+      encontrado: corpo.encontrado !== false,
+      ativo: typeof corpo.ativo === "boolean" ? corpo.ativo : undefined,
+      role: typeof corpo.role === "string" ? corpo.role : undefined,
+    };
+  } catch (e) {
+    return { erro: `o Cacau não respondeu (${e instanceof Error ? e.message : "falha de rede"})` };
+  }
+}
+
+async function desligarCacau(admin: Admin, email: string, usuario: string): Promise<ParcialSistema> {
+  const r = await chamarCacau(usuario, "desligar");
+  if ("erro" in r) return { estado: "erro", texto: r.erro };
+  if (!r.encontrado) return { estado: "sem_conta", texto: "usuário não existe no Cacau, nada a bloquear" };
+  if (!r.mudou) return { estado: "ja_bloqueado", texto: "já estava bloqueado, nada a mudar" };
+  await registrarBloqueio(admin, email, "cacau", { ativo_antes: true });
+  return { estado: "bloqueado", texto: "acesso bloqueado" };
+}
+
+async function religarCacau(admin: Admin, email: string, usuario: string): Promise<ParcialSistema> {
+  const feito = await bloqueioAberto(admin, email, "cacau");
+  if (!feito) return { estado: "nada_a_restaurar", texto: "o Hub não tinha bloqueado aqui, nada a restaurar" };
+  const r = await chamarCacau(usuario, "religar");
+  if ("erro" in r) return { estado: "erro", texto: r.erro };
+  const { error } = await admin
+    .from("fa_gestao_bloqueios")
+    .update({ desfeito_em: new Date().toISOString() })
+    .eq("email", email)
+    .eq("modulo", "cacau")
+    .is("desfeito_em", null);
+  if (error) return { estado: "erro", texto: `restaurei o acesso, mas não consegui fechar o registro: ${error.message}` };
+  return { estado: "restaurado", texto: "acesso restaurado" };
+}
+
+// Percorre os sistemas onde a pessoa tem identidade. Cada sistema é independente: erro em um
+// (rede, configuração) vira uma linha de resultado e não impede os outros.
+async function aplicarEmSistemas(
+  admin: Admin,
+  req: Request,
+  conta: Conta,
+  acao: "desligar" | "religar",
+  porQuem: string,
+): Promise<ResultadoSistema[]> {
+  const resultados: ResultadoSistema[] = [];
+  // Sem a tabela de registro o Hub bloquearia sem saber desfazer: se ela não existe (migração
+  // 20261026130000 ainda não aplicada), não mexe em sistema nenhum.
+  const { error: semTabela } = await admin.from("fa_gestao_bloqueios").select("id").limit(1);
+  if (semTabela) {
+    console.error("fa_gestao_bloqueios indisponível:", semTabela.message);
+    return [{
+      app: "cacau",
+      rotulo: "Hub",
+      estado: "erro",
+      texto: "nenhum sistema foi alterado: aplique a migração fa_gestao_bloqueios no Supabase e tente de novo",
+    }];
+  }
+  for (const appId of SISTEMAS_BLOQUEAVEIS) {
+    const app = APPS[appId];
+    const identidade = conta[app.campo];
+    if (typeof identidade !== "string" || !identidade) continue;
+    let parcial: ParcialSistema;
+    try {
+      if (app.tipo === "cacau") {
+        parcial = acao === "desligar" ? await desligarCacau(admin, conta.email, identidade) : await religarCacau(admin, conta.email, identidade);
+      } else {
+        parcial = acao === "desligar"
+          ? await desligarSupabase(admin, appId, identidade.toLowerCase())
+          : await religarSupabase(admin, appId, identidade.toLowerCase());
+      }
+    } catch (e) {
+      console.error(`${acao} ${appId}:`, e instanceof Error ? e.message : e);
+      parcial = { estado: "erro", texto: e instanceof Error ? e.message : "falha inesperada" };
+    }
+    resultados.push({ app: appId, rotulo: app.rotulo, ...parcial });
+    await auditar(admin, req, acao === "desligar" ? "sistema_bloqueado" : "sistema_restaurado", {
+      email: conta.email,
+      app: appId,
+      detalhe: `${parcial.estado}: ${parcial.texto} (por ${porQuem})`.slice(0, 200),
+    });
+  }
+  return resultados;
+}
+
+// ---------------------------------------------------------------------
+// Provisionar a pessoa nos sistemas AO SALVAR (conta_salvar / conta_provisionar)
+//
+// Antes, a pessoa só era completada no primeiro clique no quadrado, e qualquer problema (papel já
+// existente, conta desativada, e-mail errado) aparecia para ELA, sem explicação. Agora o Hub cria o login
+// e dá o papel escolhido no ato de salvar e mostra ao dono o resultado de cada sistema.
+//
+// Mesmas regras duras do resto: idempotente, nunca troca papel que a pessoa já tinha no sistema, nunca
+// toca em conta de unidade (*_unit), nunca apaga nada e nunca cria colaborador do Cacau (só confere).
+// ---------------------------------------------------------------------
+
+type ResultadoProvisao = { app: AppId; rotulo: string; estado: "ok" | "erro" | "pulado"; texto: string };
+type ParcialProvisao = { estado: "ok" | "erro" | "pulado"; texto: string; papelAplicado?: string | null };
+
+// Papel escolhido pelo dono (permissoes.papel_nativo) e o que o Hub aplicou da última vez (provisionamento).
+async function papeisDaConta(
+  admin: Admin,
+  email: string,
+  modulo: AppId,
+): Promise<{ escolhido: string | null; aplicado: string | null; escopo: string | null }> {
+  const [{ data: p }, { data: v }] = await Promise.all([
+    admin.from("fa_gestao_permissoes").select("papel_nativo, escopo").eq("email", email).eq("modulo", modulo).maybeSingle(),
+    admin.from("fa_gestao_provisionamento").select("papel_aplicado").eq("email", email).eq("modulo", modulo).maybeSingle(),
+  ]);
+  return {
+    escolhido: (p?.papel_nativo as string | null | undefined) ?? null,
+    aplicado: (v?.papel_aplicado as string | null | undefined) ?? null,
+    escopo: escopoValido(modulo, p?.escopo),
+  };
+}
+
+// `papelAplicado` só entra quando o Hub de fato criou ou mudou algo: um papel que já estava lá não é "do Hub".
+async function registrarProvisao(admin: Admin, email: string, modulo: AppId, estado: string, mensagem: string, papelAplicado: string | null) {
+  const linha: Record<string, unknown> = { email, modulo, estado, mensagem: mensagem.slice(0, 300), atualizado_em: new Date().toISOString() };
+  if (papelAplicado) linha.papel_aplicado = papelAplicado;
+  const { error } = await admin.from("fa_gestao_provisionamento").upsert(linha, { onConflict: "email,modulo" });
+  if (error) console.error("registrar provisão:", error.message);
+}
+
+async function provisionarSupabase(
+  appId: AppId,
+  email: string,
+  conta: Conta,
+  papel: string | null,
+  papelAnterior: string | null,
+  escopo: string | null,
+): Promise<ParcialProvisao> {
+  const client = clienteSupabase(APPS[appId].tipo as "supabase_a" | "supabase_b");
+  if (!client) return { estado: "erro", texto: "sistema sem configuração no servidor" };
+
+  let user = await acharUsuarioAuth(client, email);
+  let criado = false;
+  if (!user) {
+    const { data, error } = await client.auth.admin.createUser({ email, email_confirm: true });
+    if (error || !data?.user) return { estado: "erro", texto: `não consegui criar o login: ${error?.message ?? "sem resposta"}` };
+    user = data.user as unknown as UsuarioBloqueavel;
+    criado = true;
+  }
+  if (ehContaDeUnidade(user)) {
+    return { estado: "pulado", texto: `${email} é conta de unidade (quiosque compartilhado), não de uma pessoa. O Hub não mexe: informe o e-mail individual.` };
+  }
+  if (user.banned_until && Date.parse(user.banned_until) > Date.now()) {
+    return { estado: "erro", texto: "o login está bloqueado (a pessoa foi desligada). Reative a conta primeiro" };
+  }
+  try {
+    const feito = await provisionar(client, appId, user, conta, email, papel, papelAnterior, escopo);
+    const texto = [criado ? "login criado" : "", feito].filter(Boolean).join("; ") || "já estava em dia";
+    return { estado: "ok", texto, papelAplicado: feito ? papel : null };
+  } catch (e) {
+    if (e instanceof RecusaAcesso) return { estado: "erro", texto: e.message };
+    throw e;
+  }
+}
+
+// Cacau: o Hub NÃO cria colaborador (quem cadastra e dá o papel é o owner, no Cacau). Só confere que o
+// usuário informado existe e está ativo, para o erro de digitação aparecer agora e não no primeiro clique.
+async function conferirCacau(usuario: string, nivel: Nivel): Promise<ParcialProvisao> {
+  if (nivel === "ver") {
+    return { estado: "erro", texto: "o Cacau Show ainda não tem acesso só de leitura: use o nível operar ou admin" };
+  }
+  const r = await chamarCacau(usuario, "consultar");
+  if ("erro" in r) return { estado: "erro", texto: r.erro };
+  if (!r.encontrado) {
+    return { estado: "erro", texto: `"${usuario}" não existe no Cacau Show. Cadastre o colaborador lá primeiro (o Hub não cria colaborador do Cacau)` };
+  }
+  if (r.ativo === false) return { estado: "erro", texto: `"${usuario}" está desativado no Cacau Show` };
+  return { estado: "ok", texto: `existe no Cacau Show${r.role ? ` como ${r.role}` : ""}` };
+}
+
+// Percorre os sistemas em que a pessoa tem nível. Um sistema com problema vira uma linha do resultado e não
+// impede os outros. Contas owner não são provisionadas (já existem nos sistemas, cadastradas à mão).
+async function provisionarModulos(
+  admin: Admin,
+  req: Request,
+  conta: Conta,
+  niveis: Niveis,
+  porQuem: string,
+): Promise<ResultadoProvisao[]> {
+  if (conta.papel !== "gerente") return [];
+  const resultados: ResultadoProvisao[] = [];
+  for (const appId of SISTEMAS_BLOQUEAVEIS) {
+    if (niveis[appId] === "nenhum") continue;
+    const app = APPS[appId];
+    const identidade = conta[app.campo];
+    let parcial: ParcialProvisao;
+    if (typeof identidade !== "string" || !identidade) {
+      parcial = { estado: "pulado", texto: `falta informar ${app.campoRotulo.toLowerCase()}` };
+    } else {
+      try {
+        if (app.tipo === "cacau") {
+          parcial = await conferirCacau(identidade, niveis[appId]);
+        } else {
+          const { escolhido, aplicado, escopo } = await papeisDaConta(admin, conta.email, appId);
+          parcial = appId === "rh" && !escopo
+            ? { estado: "erro", texto: "escolha a empresa (Grupo IB ou Porto Terapia) desta pessoa" }
+            : await provisionarSupabase(appId, identidade.toLowerCase(), conta, papelEfetivo(appId, escolhido), aplicado, escopo);
+        }
+      } catch (e) {
+        console.error(`provisionar ${appId}:`, e instanceof Error ? e.message : e);
+        parcial = { estado: "erro", texto: e instanceof Error ? e.message : "falha inesperada" };
+      }
+    }
+    await registrarProvisao(admin, conta.email, appId, parcial.estado, parcial.texto, parcial.papelAplicado ?? null);
+    resultados.push({ app: appId, rotulo: app.rotulo, estado: parcial.estado, texto: parcial.texto });
+    await auditar(admin, req, "sistema_provisionado", {
+      email: conta.email,
+      app: appId,
+      detalhe: `${parcial.estado}: ${parcial.texto} (por ${porQuem})`.slice(0, 200),
+    });
+  }
+  return resultados;
+}
+
 // Derruba o que a pessoa tem aberto: sessão do Hub e sessão do /admin (12 h), para um novo nível valer já.
 async function revogarSessoes(admin: Admin, email: string, painelUsuario: string | null) {
   await admin.from("fa_gestao_sessoes").delete().eq("email", email);
   if (painelUsuario) await admin.from("fa_teste_admin_sessions").delete().eq("admin_email", painelUsuario);
+}
+
+// ---------------------------------------------------------------------
+// Equipe da Clínica (terapeutas, recepção e faturamento): criar, redefinir senha e bloquear
+// (owner, ou gerência com nível admin na Clínica: administração delegada)
+//
+// Esta equipe NÃO tem conta no Hub: entra direto na Clínica, por CPF e senha. O Hub é só o lugar onde o
+// owner cria, redefine e bloqueia, sem abrir a Clínica. A fonte da verdade continua sendo `profiles`
+// da Clínica (nada é copiado para o Hub). Segue o que a própria tela da Clínica já faz:
+//   - criar: login por CPF (e-mail é opcional; sem ele, um sintético que a pessoa nunca vê) e senha
+//     TEMPORÁRIA com troca obrigatória no primeiro acesso (profiles.must_change_password). O Hub não
+//     escolhe nem guarda senha: ela aparece uma única vez para o owner, nunca vai a log nem a auditoria.
+//     Link por e-mail não serve aqui, porque parte da equipe não tem e-mail real.
+//   - redefinir: nova senha temporária + troca obrigatória.
+//   - bloquear / reativar: banimento do login + profiles.active, como no desligamento das gerências.
+// REGRAS DURAS: nunca toca no PIN de assinatura da Clínica (signature_pin_*), nunca exclui ninguém e
+// nunca mexe em conta de gerência do Hub (essas são geridas em "Pessoas e acessos").
+// ---------------------------------------------------------------------
+
+const PAPEIS_EQUIPE = ["terapeuta", "recepcao", "faturamento"];
+const DOMINIO_EMAIL_INTERNO = "staff.facaamigos.local";
+// Sem caracteres ambíguos (0/O, 1/l/I): a senha é lida em voz alta ou digitada à mão. Sempre termina
+// em "@9", o que cumpre a regra da Clínica (maiúscula, caractere especial, mínimo de 6).
+const ALFABETO_SENHA = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+
+function senhaTemporaria(): string {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => ALFABETO_SENHA[b % ALFABETO_SENHA.length]).join("") + "@9";
+}
+
+function cpfValido(d: string): boolean {
+  if (!/^\d{11}$/.test(d) || /^(\d)\1{10}$/.test(d)) return false;
+  for (const t of [9, 10]) {
+    let soma = 0;
+    for (let i = 0; i < t; i++) soma += Number(d[i]) * (t + 1 - i);
+    const dv = ((soma * 10) % 11) % 10;
+    if (dv !== Number(d[t])) return false;
+  }
+  return true;
+}
+
+const mascararCpf = (d: string | null) => (d && d.length === 11 ? `***.${d.slice(3, 6)}.${d.slice(6, 9)}-**` : null);
+
+async function acaoEquipe(
+  admin: Admin,
+  req: Request,
+  body: Record<string, unknown>,
+  action: string,
+  dono: Conta,
+): Promise<Response> {
+  const client = clienteSupabase("supabase_b");
+  if (!client) return jsonResponse(req, { error: "A Clínica não está ligada ao Hub neste servidor." }, 503);
+
+  // Contas de gerência do Hub que também existem na Clínica: geridas em "Pessoas e acessos", não aqui.
+  const { data: contasHub } = await admin.from("fa_gestao_contas").select("clinica_email");
+  const emailsDoHub = new Set((contasHub ?? []).map((c: { clinica_email: string | null }) => (c.clinica_email ?? "").toLowerCase()).filter(Boolean));
+
+  const trilha = async (profileId: string, acao: string, depois: Record<string, unknown>) => {
+    // Rastro na Clínica (como as telas dela): se falhar, a ação já aconteceu e não é desfeita.
+    const { error } = await client.from("audit_log").insert({
+      table_name: "profiles",
+      row_id: profileId,
+      action: acao,
+      actor_id: null,
+      clinic_id: CLINICA_ID,
+      after: { ...depois, via: "gestao-hub", por: dono.email },
+    });
+    if (error) console.error("audit_log da Clínica:", error.message);
+  };
+
+  const alvoDaEquipe = async (id: string) => {
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return { erro: "colaborador inválido" as const };
+    const { data: alvo, error } = await client
+      .from("profiles")
+      .select("id, full_name, role, clinic_id, email")
+      .eq("id", id)
+      .maybeSingle();
+    if (error) return { erro: "não consegui consultar a Clínica agora" as const };
+    if (!alvo || alvo.clinic_id !== CLINICA_ID || !PAPEIS_EQUIPE.includes(alvo.role)) {
+      return { erro: "colaborador não encontrado na equipe da Clínica" as const };
+    }
+    if (emailsDoHub.has(String(alvo.email ?? "").toLowerCase())) {
+      return { erro: "esta pessoa tem conta no Hub: só o owner gerencia (em Pessoas e acessos)" as const };
+    }
+    return { alvo };
+  };
+
+  if (action === "equipe_listar") {
+    const { data, error } = await client
+      .from("profiles")
+      .select("id, full_name, cpf, email, role, active, must_change_password, council_type, is_evaluator, is_at_professional")
+      .eq("clinic_id", CLINICA_ID)
+      .in("role", PAPEIS_EQUIPE)
+      .order("full_name", { ascending: true });
+    if (error) return jsonResponse(req, { error: "não consegui listar a equipe da Clínica" }, 502);
+    return jsonResponse(req, {
+      papeis: [
+        { id: "terapeuta", rotulo: "Terapeuta" },
+        { id: "recepcao", rotulo: "Recepção" },
+        { id: "faturamento", rotulo: "Faturamento" },
+      ],
+      equipe: (data ?? []).map((p: Record<string, any>) => ({
+        id: p.id,
+        nome: p.full_name,
+        cpf: mascararCpf(p.cpf ?? null),
+        email: p.email && !String(p.email).endsWith(`@${DOMINIO_EMAIL_INTERNO}`) ? p.email : null,
+        papel: p.role,
+        ativo: p.active !== false,
+        trocar_senha: p.must_change_password === true,
+        conselho: p.council_type ?? null,
+        avaliador: p.is_evaluator === true,
+        at: p.is_at_professional === true,
+        no_hub: emailsDoHub.has(String(p.email ?? "").toLowerCase()),
+      })),
+    });
+  }
+
+  if (action === "equipe_criar") {
+    const nome = str(body.nome).slice(0, 120);
+    const cpf = str(body.cpf).replace(/\D/g, "");
+    const emailInformado = str(body.email).toLowerCase();
+    const papel = str(body.papel);
+    const conselho = str(body.conselho).slice(0, 40) || null;
+    const nascimento = /^\d{4}-\d{2}-\d{2}$/.test(str(body.nascimento)) ? str(body.nascimento) : null;
+    if (nome.length < 2) return jsonResponse(req, { error: "informe o nome" }, 400);
+    if (!cpfValido(cpf)) return jsonResponse(req, { error: "CPF inválido" }, 400);
+    if (emailInformado && !EMAIL_RE.test(emailInformado)) return jsonResponse(req, { error: "e-mail inválido" }, 400);
+    if (!PAPEIS_EQUIPE.includes(papel)) return jsonResponse(req, { error: "papel inválido" }, 400);
+
+    const { data: mesmoCpf, error: cpfErr } = await client.from("profiles").select("id").eq("cpf", cpf).maybeSingle();
+    if (cpfErr) return jsonResponse(req, { error: "não consegui consultar a Clínica agora" }, 502);
+    if (mesmoCpf) return jsonResponse(req, { error: "já existe alguém com este CPF na Clínica" }, 409);
+
+    const email = emailInformado || `equipe_${cpf}@${DOMINIO_EMAIL_INTERNO}`;
+    const senha = senhaTemporaria();
+    const { data: criado, error: authErr } = await client.auth.admin.createUser({ email, password: senha, email_confirm: true });
+    if (authErr || !criado?.user) {
+      const existe = /already been registered|already registered/i.test(authErr?.message ?? "");
+      return jsonResponse(req, { error: existe ? "já existe um login com este e-mail" : "não consegui criar o login na Clínica" }, existe ? 409 : 502);
+    }
+    const { data: unidade } = await client.from("units").select("id").order("name", { ascending: true }).limit(1).maybeSingle();
+
+    // O gatilho de auth.users já criou um perfil provisório: é upsert, não insert.
+    const { error: perfilErr } = await client.from("profiles").upsert({
+      id: criado.user.id,
+      clinic_id: CLINICA_ID,
+      role: papel,
+      full_name: nome,
+      cpf,
+      email,
+      council_type: conselho,
+      is_evaluator: body.avaliador === true,
+      is_at_professional: body.at === true,
+      birth_date: nascimento,
+      unit_id: unidade?.id ?? null,
+      active: true,
+      must_change_password: true,
+    }, { onConflict: "id" });
+    if (perfilErr) {
+      // Sem perfil a conta não serve para nada: desfaz o login para não deixar lixo no Auth.
+      await client.auth.admin.deleteUser(criado.user.id);
+      const cpfDuplicado = perfilErr.message.includes("profiles_cpf_unique") || /cpf/i.test(perfilErr.message);
+      console.error("equipe_criar (perfil):", perfilErr.message);
+      return jsonResponse(req, { error: cpfDuplicado ? "já existe alguém com este CPF na Clínica" : "não consegui criar o perfil na Clínica" }, cpfDuplicado ? 409 : 502);
+    }
+    await trilha(criado.user.id, "staff_created", { role: papel, must_change_password: true });
+    await auditar(admin, req, "equipe_criada", { email: dono.email, app: "clinica", detalhe: `por ${dono.email}; ${nome}; ${papel}`.slice(0, 200) });
+    return jsonResponse(req, { ok: true, id: criado.user.id, senha_temporaria: senha });
+  }
+
+  if (action === "equipe_resetar_senha") {
+    const r = await alvoDaEquipe(str(body.id));
+    if ("erro" in r) return jsonResponse(req, { error: r.erro }, 409);
+    const senha = senhaTemporaria();
+    const { error: authErr } = await client.auth.admin.updateUserById(r.alvo.id, { password: senha });
+    if (authErr) return jsonResponse(req, { error: "não consegui redefinir a senha na Clínica" }, 502);
+    const { error: flagErr } = await client.from("profiles").update({ must_change_password: true }).eq("id", r.alvo.id);
+    if (flagErr) {
+      // A senha já mudou; sem a flag a pessoa ficaria com a temporária. Avisa em vez de passar batido.
+      return jsonResponse(req, { error: "A senha foi redefinida, mas não consegui exigir a troca no próximo acesso. Redefina de novo." }, 502);
+    }
+    await trilha(r.alvo.id, "staff_password_reset", { must_change_password: true });
+    await auditar(admin, req, "equipe_senha_redefinida", { email: dono.email, app: "clinica", detalhe: `por ${dono.email}; ${r.alvo.full_name}`.slice(0, 200) });
+    return jsonResponse(req, { ok: true, senha_temporaria: senha });
+  }
+
+  if (action === "equipe_ativo") {
+    const ativo = body.ativo === true;
+    const r = await alvoDaEquipe(str(body.id));
+    if ("erro" in r) return jsonResponse(req, { error: r.erro }, 409);
+    const { error: banErr } = await client.auth.admin.updateUserById(r.alvo.id, { ban_duration: ativo ? "none" : BAN_LONGO });
+    if (banErr) return jsonResponse(req, { error: "não consegui alterar o login na Clínica" }, 502);
+    const { error: flagErr } = await client.from("profiles").update({ active: ativo }).eq("id", r.alvo.id);
+    if (flagErr) return jsonResponse(req, { error: "o login foi alterado, mas não consegui atualizar o perfil. Tente de novo." }, 502);
+    if (!ativo) {
+      const enc = await encerrarSessoes(client, r.alvo.id);
+      if ("erro" in enc) return jsonResponse(req, { error: "A pessoa foi bloqueada, mas não consegui encerrar a sessão aberta dela. Bloqueie de novo para tentar outra vez." }, 502);
+    }
+    await trilha(r.alvo.id, ativo ? "staff_enabled" : "staff_disabled", { active: ativo });
+    await auditar(admin, req, ativo ? "equipe_reativada" : "equipe_bloqueada", { email: dono.email, app: "clinica", detalhe: `por ${dono.email}; ${r.alvo.full_name}`.slice(0, 200) });
+    return jsonResponse(req, { ok: true });
+  }
+
+  return jsonResponse(req, { error: "ação inválida" }, 400);
 }
 
 async function acaoOwner(
@@ -1290,20 +2129,53 @@ async function acaoOwner(
   const alvoEmail = str(body.email).toLowerCase();
 
   if (action === "contas_listar") {
-    const [{ data: contas, error }, { data: perms }] = await Promise.all([
+    const [{ data: contas, error }, { data: perms }, { data: provs }] = await Promise.all([
       admin.from("fa_gestao_contas").select(COLUNAS_PUBLICAS).order("created_at", { ascending: true }),
-      admin.from("fa_gestao_permissoes").select("email, modulo, nivel"),
+      admin.from("fa_gestao_permissoes").select("email, modulo, nivel, papel_nativo, escopo"),
+      admin.from("fa_gestao_provisionamento").select("email, modulo, estado, mensagem, atualizado_em"),
     ]);
     if (error) return jsonResponse(req, { error: "falha ao listar" }, 500);
     const porEmail = new Map<string, Record<string, string>>();
+    const papeisPorEmail = new Map<string, Record<string, string>>();
+    const escoposPorEmail = new Map<string, Record<string, string>>();
     for (const p of perms ?? []) {
+      if (p.escopo) {
+        const ee = escoposPorEmail.get(p.email) ?? {};
+        ee[p.modulo] = p.escopo;
+        escoposPorEmail.set(p.email, ee);
+      }
       const m = porEmail.get(p.email) ?? {};
       m[p.modulo] = p.nivel;
       porEmail.set(p.email, m);
+      if (p.papel_nativo) {
+        const pp = papeisPorEmail.get(p.email) ?? {};
+        pp[p.modulo] = p.papel_nativo;
+        papeisPorEmail.set(p.email, pp);
+      }
+    }
+    const provPorEmail = new Map<string, Record<string, { estado: string; mensagem: string | null; atualizado_em: string }>>();
+    for (const v of provs ?? []) {
+      const m = provPorEmail.get(v.email) ?? {};
+      m[v.modulo] = { estado: v.estado, mensagem: v.mensagem, atualizado_em: v.atualizado_em };
+      provPorEmail.set(v.email, m);
     }
     return jsonResponse(req, {
-      contas: (contas ?? []).map((c) => ({ ...c, permissoes: porEmail.get(c.email) ?? {} })),
-      modulos: APP_IDS.map((id) => ({ id, rotulo: APPS[id].rotulo, campo: APPS[id].campo, campo_rotulo: APPS[id].campoRotulo })),
+      contas: (contas ?? []).map((c) => ({
+        ...c,
+        permissoes: porEmail.get(c.email) ?? {},
+        papeis: papeisPorEmail.get(c.email) ?? {},
+        escopos: escoposPorEmail.get(c.email) ?? {},
+        provisionamento: provPorEmail.get(c.email) ?? {},
+      })),
+      modulos: APP_IDS.map((id) => ({
+        id,
+        rotulo: APPS[id].rotulo,
+        campo: APPS[id].campo,
+        campo_rotulo: APPS[id].campoRotulo,
+        papeis: PAPEIS_NATIVOS[id]?.opcoes ?? [],
+        papel_padrao: PAPEIS_NATIVOS[id]?.padrao ?? null,
+        escopos: (ESCOPOS[id] ?? []).map((e) => ({ id: e.id, rotulo: e.rotulo })),
+      })),
       niveis: NIVEIS,
     });
   }
@@ -1432,7 +2304,31 @@ async function acaoOwner(
       }
     }
 
-    // Identidade da pessoa em cada sistema (até o provisionamento automático existir, o owner informa).
+    // Papel nativo escolhido em cada sistema (só valem os do catálogo; o resto cai no padrão do sistema).
+    const recebidosPapeis = (body.papeis && typeof body.papeis === "object" ? body.papeis : {}) as Record<string, unknown>;
+    const papeisEscolhidos: Partial<Record<AppId, string>> = {};
+    for (const id of APP_IDS) {
+      const v = recebidosPapeis[id];
+      if (typeof v === "string" && PAPEIS_NATIVOS[id]?.opcoes.some((o) => o.id === v)) papeisEscolhidos[id] = v;
+    }
+
+    // Empresa (workspace) em cada sistema que tem mais de uma. Gerência com acesso à Gestão de Pessoas
+    // PRECISA ter uma: é isso que impede de dar acesso às duas empresas por engano.
+    const recebidosEscopos = (body.escopos && typeof body.escopos === "object" ? body.escopos : {}) as Record<string, unknown>;
+    const escoposEscolhidos: Partial<Record<AppId, string>> = {};
+    for (const id of APP_IDS) {
+      const e = escopoValido(id, recebidosEscopos[id]);
+      if (e) escoposEscolhidos[id] = e;
+    }
+    if (papel === "gerente") {
+      for (const id of APP_IDS) {
+        if (permissoes[id] && ESCOPOS[id] && !escoposEscolhidos[id]) {
+          return jsonResponse(req, { error: `escolha a empresa (${ESCOPOS[id]!.map((x) => x.rotulo).join(" ou ")}) em ${APPS[id].rotulo}` }, 400);
+        }
+      }
+    }
+
+    // Identidade da pessoa em cada sistema (o owner informa; o Hub cria o login e o papel ao salvar).
     const mapa = (body.mapeamentos && typeof body.mapeamentos === "object" ? body.mapeamentos : {}) as Record<string, unknown>;
     const campos: Record<string, string | null> = {};
     // Campo ausente = mantém o que está gravado; campo enviado vazio = limpa.
@@ -1464,6 +2360,8 @@ async function acaoOwner(
       email: alvoEmail,
       modulo,
       nivel,
+      papel_nativo: papeisEscolhidos[modulo as AppId] ?? null,
+      escopo: escoposEscolhidos[modulo as AppId] ?? null,
       atualizado_por: dono.email,
     }));
     if (linhas.length) {
@@ -1498,10 +2396,38 @@ async function acaoOwner(
         await auditar(admin, req, "convite_enviado", { email: alvoEmail, detalhe: `por ${dono.email}` });
       }
     }
-    return jsonResponse(req, { ok: true, convite_enviado: conviteEnviado });
+
+    // Cria o login e dá o papel escolhido em cada sistema, e devolve o resultado de cada um. A conta já
+    // está salva: um sistema com problema não desfaz nada, e "Reprovisionar" (conta_provisionar) repete.
+    let provisionamento: ResultadoProvisao[] = [];
+    if (papel === "gerente" && body.provisionar !== false) {
+      const { data: salva } = await admin.from("fa_gestao_contas").select("*").eq("email", alvoEmail).maybeSingle();
+      if (salva) {
+        const niveisNovos = {} as Niveis;
+        for (const id of APP_IDS) niveisNovos[id] = permissoes[id] ?? "nenhum";
+        provisionamento = await provisionarModulos(admin, req, salva as Conta, niveisNovos, dono.email);
+      }
+    }
+    return jsonResponse(req, {
+      ok: true,
+      convite_enviado: conviteEnviado,
+      provisionamento,
+      falhas: provisionamento.filter((r) => r.estado === "erro").length,
+    });
   }
 
   if (!atual) return jsonResponse(req, { error: "conta não encontrada" }, 404);
+
+  if (action === "conta_provisionar") {
+    if (!atual.ativo) return jsonResponse(req, { error: "a conta está desativada: reative antes de provisionar" }, 400);
+    const niveis = await carregarNiveis(admin, atual);
+    const provisionamento = await provisionarModulos(admin, req, atual, niveis, dono.email);
+    return jsonResponse(req, {
+      ok: true,
+      provisionamento,
+      falhas: provisionamento.filter((r) => r.estado === "erro").length,
+    });
+  }
 
   if (action === "conta_ativo") {
     const ativo = body.ativo === true;
@@ -1510,7 +2436,10 @@ async function acaoOwner(
     if (error) return jsonResponse(req, { error: "não foi possível atualizar" }, 500);
     if (!ativo) await revogarSessoes(admin, atual.email, atual.painel_usuario);
     await auditar(admin, req, ativo ? "conta_reativada" : "conta_desativada", { email: atual.email, detalhe: `por ${dono.email}` });
-    return jsonResponse(req, { ok: true });
+    // Bloqueia (ou restaura) o acesso da pessoa nos sistemas. Desativar de novo uma conta já
+    // desativada refaz só o que faltou: serve para repetir depois de uma falha.
+    const resultados = await aplicarEmSistemas(admin, req, atual, ativo ? "religar" : "desligar", dono.email);
+    return jsonResponse(req, { ok: true, resultados, falhas: resultados.filter((r) => r.estado === "erro").length });
   }
 
   if (action === "sessoes_revogar") {

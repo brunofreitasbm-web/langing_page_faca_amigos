@@ -1524,6 +1524,13 @@
   </script>
 
   <script src="/assets/fa-footer.js?v=20261023" defer></script>
+  <!-- Fotos novas aprovadas (pasta "Aprovadas" no Drive da fotógrafa → scripts/fotos/sync.mjs) -->
+  <script src="/assets/fa-fotos.js" defer></script>
+  <script>
+    addEventListener('DOMContentLoaded', function () {
+      if (window.FAFotos) FAFotos.galeria(document.querySelector('#fotos .gal-2'), { site: true, unidades: ['circuito'] }, { onde: 'inicio', max: 6 });
+    });
+  </script>
   <script src="/assets/fa-cta.js" defer data-label="Quero ir hoje" data-href="whatsapp" data-event="whatsapp"></script>
 </body>
 

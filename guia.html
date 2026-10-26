@@ -845,16 +845,13 @@
       var CONFIG = {
         checkout: 'https://pay.hotmart.com/M107692257Y', // checkout direto da Hotmart (o go.hotmart.com/M107692257Y cai na vitrine do marketplace)
         parcelas: 'ou 10x de R$ 17,91 no cartão',         // deixe vazio para ocultar
-        metaPixelId: ''                                   // ID do Pixel da Meta (deixe vazio se o pixel já vem pelo GTM)
       };
 
-      // ---- Pixel da Meta (opcional) ----
-      if (CONFIG.metaPixelId) {
-        !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', CONFIG.metaPixelId);
-        fbq('track', 'PageView');
-        fbq('track', 'ViewContent', { content_name: 'O Brincar com Propósito', content_type: 'product', value: 149, currency: 'BRL' });
-      }
+      // ---- Pixel da Meta ----
+      // O pixel (init + PageView) é carregado por assets/fa-track.js em todas as páginas, só com o aceite do banner.
+      // Aqui fica o evento específico desta página; 'fa-consent-all' cobre quem aceita depois de abrir.
+      function viewContentMeta() { if (window.fbq) fbq('track', 'ViewContent', { content_name: 'O Brincar com Propósito', content_type: 'product', value: 149, currency: 'BRL' }); }
+      if (window.fbq) viewContentMeta(); else document.addEventListener('fa-consent-all', viewContentMeta, { once: true });
 
       function push(o) { try { (window.dataLayer = window.dataLayer || []).push(o); } catch (e) { } }
 
