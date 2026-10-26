@@ -253,6 +253,10 @@
       border-color: var(--teal);
     }
     .portal-card.search-hidden { display: none !important; }
+    .portal-card-mini { padding: 0; border-width: 1.5px; }
+    .portal-card-mini::before, .portal-card-mini::after { display: none; }
+    .portal-card-mini .tile-subaction { border: none; box-shadow: none; border-radius: var(--r-card); }
+    .portal-card-mini .tile-subaction:hover { box-shadow: 0 14px 32px rgba(46, 207, 181, 0.18); }
 
     .portal-header { position: relative; z-index: 1; margin-bottom: 22px; }
     .portal-badge-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
@@ -886,47 +890,15 @@
             <h2 class="section-title">Portal do Site FaçaAmigos</h2>
           </div>
           
-          <div class="portal-card" id="cardPortalSite">
-            <div class="portal-header">
-              <div class="portal-badge-row">
-                <span class="badge-system">🌐 Painel Integrado do Site</span>
-                <span class="badge-dest">institutofacaamigos.com.br/admin</span>
+          <div class="portal-card portal-card-mini" id="cardPortalSite">
+            <button type="button" class="tile tile-subaction" id="btnAbrirPortalSite">
+              <span class="icon" aria-hidden="true">🌐</span>
+              <div class="sub-info">
+                <span class="name">Portal do Site FaçaAmigos</span>
+                <span class="desc">Leads, eventos, cupons Wi-Fi e avaliações — uso raro, central do site público</span>
               </div>
-              <h3 class="portal-title">Painel Administrativo do Site</h3>
-              <p class="portal-desc">
-                Central unificada do site público: funil de leads do teste comportamental, gestão de eventos e inscrições, cupons Wi-Fi e avaliações.
-              </p>
-              <div class="portal-modules-pill">
-                <span>Recursos integrados:</span>
-                <span class="pill-item">🧭 Mapeamento & Leads</span>
-                <span class="pill-item">🎟️ Eventos & Ingressos</span>
-                <span class="pill-item">📶 Cupons Wi-Fi</span>
-                <span class="pill-item">⭐ Avaliações NPS</span>
-              </div>
-            </div>
-
-            <div class="portal-actions">
-              <div class="portal-actions-label">Acesse diretamente a aba desejada:</div>
-              <div class="portal-actions-grid">
-                <button type="button" class="tile tile-subaction" data-app="painel">
-                  <span class="icon" aria-hidden="true">🧭</span>
-                  <div class="sub-info">
-                    <span class="name">Mapeamento Comportamental</span>
-                    <span class="desc">Leads do Teste, respostas, relatórios e textos de persona</span>
-                  </div>
-                  <span class="sub-arrow">Abrir Leads ↗</span>
-                </button>
-
-                <button type="button" class="tile tile-subaction" data-app="eventos">
-                  <span class="icon" aria-hidden="true">🎟️</span>
-                  <div class="sub-info">
-                    <span class="name">Eventos & Ingressos</span>
-                    <span class="desc">Criação de eventos, ingressos, lista de inscritos e check-in</span>
-                  </div>
-                  <span class="sub-arrow">Abrir Eventos ↗</span>
-                </button>
-              </div>
-            </div>
+              <span class="sub-arrow">Abrir painel ↗</span>
+            </button>
           </div>
         </section>
 
@@ -1114,6 +1086,54 @@
         </section>
       </div>
     </main>
+  </div>
+
+  <!-- ================= MODAL PORTAL DO SITE ================= -->
+  <div class="modal-backdrop" id="modalPortalSite" hidden role="dialog" aria-modal="true" aria-labelledby="modalPortalSiteTitulo">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <div class="portal-badge-row" style="margin-bottom: 6px;">
+            <span class="badge-system">🌐 Painel Integrado do Site</span>
+            <span class="badge-dest">institutofacaamigos.com.br/admin</span>
+          </div>
+          <h2 class="modal-title" id="modalPortalSiteTitulo">Painel Administrativo do Site</h2>
+          <p class="modal-desc">Funil de leads do teste comportamental, gestão de eventos e inscrições, cupons Wi-Fi e avaliações.</p>
+        </div>
+        <button type="button" class="modal-close" id="btnFecharModalPortalSite" aria-label="Fechar modal">&times;</button>
+      </div>
+
+      <div class="portal-modules-pill">
+        <span>Recursos integrados:</span>
+        <span class="pill-item">🧭 Mapeamento & Leads</span>
+        <span class="pill-item">🎟️ Eventos & Ingressos</span>
+        <span class="pill-item">📶 Cupons Wi-Fi</span>
+        <span class="pill-item">⭐ Avaliações NPS</span>
+      </div>
+
+      <div class="portal-actions">
+        <div class="portal-actions-label">Acesse diretamente a aba desejada:</div>
+        <div class="portal-actions-grid">
+          <button type="button" class="tile tile-subaction" data-app="painel">
+            <span class="icon" aria-hidden="true">🧭</span>
+            <div class="sub-info">
+              <span class="name">Mapeamento Comportamental</span>
+              <span class="desc">Leads do Teste, respostas, relatórios e textos de persona</span>
+            </div>
+            <span class="sub-arrow">Abrir Leads ↗</span>
+          </button>
+
+          <button type="button" class="tile tile-subaction" data-app="eventos">
+            <span class="icon" aria-hidden="true">🎟️</span>
+            <div class="sub-info">
+              <span class="name">Eventos & Ingressos</span>
+              <span class="desc">Criação de eventos, ingressos, lista de inscritos e check-in</span>
+            </div>
+            <span class="sub-arrow">Abrir Eventos ↗</span>
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ================= MODAL CRIAR / ENVIAR LINK DE USUÁRIO ================= -->
@@ -1547,6 +1567,26 @@
           showMsg(loginNotice, 'Senha trocada! Entre com a senha nova.');
         });
       });
+
+      // ---------- modal Portal do Site ----------
+      var btnAbrirPortalSite = document.getElementById('btnAbrirPortalSite');
+      var modalPortalSite = document.getElementById('modalPortalSite');
+      var btnFecharModalPortalSite = document.getElementById('btnFecharModalPortalSite');
+      if (btnAbrirPortalSite && modalPortalSite) {
+        btnAbrirPortalSite.addEventListener('click', function () {
+          modalPortalSite.hidden = false;
+        });
+      }
+      if (btnFecharModalPortalSite && modalPortalSite) {
+        btnFecharModalPortalSite.addEventListener('click', function () {
+          modalPortalSite.hidden = true;
+        });
+      }
+      if (modalPortalSite) {
+        modalPortalSite.addEventListener('click', function (e) {
+          if (e.target === modalPortalSite) modalPortalSite.hidden = true;
+        });
+      }
 
       // ---------- quadrados ----------
       function abrindoHtml(nome) {
