@@ -422,6 +422,8 @@
     .matriz-row .mod { font-weight: 800; }
     .matriz-row .form-control { padding: 9px 12px; font-size: 0.92rem; }
     .matriz-row .auto { color: var(--gray); font-size: 0.82rem; font-weight: 700; }
+    .matriz-sub { grid-column: 1 / -1; display: flex; gap: 10px; align-items: center; font-size: 0.85rem; font-weight: 800; }
+    .matriz-sub .form-control { max-width: 240px; }
     .prov-erro { display: block; margin-top: 4px; color: #7A5B00; font-size: 0.8rem; font-weight: 700; }
     .acesso-box { background: var(--cream); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
     .acesso-estado { color: var(--ink-soft); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; }
@@ -1306,12 +1308,18 @@
             modulos.forEach(function (m) {
               var v = c.provisionamento[m.id];
               if (!v || !c.permissoes || !c.permissoes[m.id]) return;
-              var papelTxt = '';
+              var partes = [];
               if (m.papeis && m.papeis.length) {
                 var pid = (c.papeis && c.papeis[m.id]) || m.papel_padrao;
                 var achado = m.papeis.filter(function (o) { return o.id === pid; })[0];
-                papelTxt = achado ? ' (' + achado.rotulo + ')' : '';
+                if (achado) partes.push(achado.rotulo);
               }
+              if (m.escopos && m.escopos.length) {
+                var eid = c.escopos && c.escopos[m.id];
+                var emp = m.escopos.filter(function (o) { return o.id === eid; })[0];
+                partes.push(emp ? emp.rotulo : 'sem empresa');
+              }
+              var papelTxt = partes.length ? ' (' + partes.join(' · ') + ')' : '';
               var chip = el('span', 'chip ' + (v.estado === 'ok' ? 'ok' : 'warn'), m.rotulo + papelTxt + (v.estado === 'ok' ? ' ✓' : ' ⚠'));
               if (v.mensagem) chip.title = v.mensagem;
               meta.appendChild(chip);
@@ -1445,12 +1453,34 @@
           }
           linha.appendChild(ident);
 
+          // Empresa (Gestão de Pessoas): cada gerência pertence a UMA. Sem escolher, o servidor recusa salvar.
+          var linhaEmpresa = null;
+          if (m.escopos && m.escopos.length) {
+            linhaEmpresa = el('div', 'matriz-sub');
+            linhaEmpresa.appendChild(el('span', null, 'Empresa em ' + m.rotulo + ':'));
+            var selEmp = el('select', 'form-control');
+            selEmp.setAttribute('data-escopo', m.id);
+            selEmp.setAttribute('aria-label', 'Empresa em ' + m.rotulo);
+            var vazio = el('option', null, 'Escolha a empresa…');
+            vazio.value = '';
+            selEmp.appendChild(vazio);
+            m.escopos.forEach(function (e) {
+              var op = el('option', null, e.rotulo);
+              op.value = e.id;
+              selEmp.appendChild(op);
+            });
+            selEmp.value = (conta && conta.escopos && conta.escopos[m.id]) || '';
+            linhaEmpresa.appendChild(selEmp);
+          }
+
           function sincroniza() {
             ident.hidden = sel.value === 'nenhum';
             if (selPapel) selPapel.hidden = sel.value === 'nenhum';
+            if (linhaEmpresa) linhaEmpresa.hidden = sel.value === 'nenhum' || pfPapel.value === 'owner';
           }
           sel.addEventListener('change', sincroniza);
           sincroniza();
+          if (linhaEmpresa) linha.appendChild(linhaEmpresa);
           pfMatriz.appendChild(linha);
         });
       }
@@ -1478,11 +1508,13 @@
       });
       pfPapel.addEventListener('change', function () {
         // Mantém o que já foi digitado ao trocar o papel.
-        var snapshot = { permissoes: {}, papeis: {} };
+        var snapshot = { permissoes: {}, papeis: {}, escopos: {} };
         Array.prototype.forEach.call(pfMatriz.querySelectorAll('.matriz-row'), function (linha) {
           snapshot.permissoes[linha.getAttribute('data-modulo')] = linha.querySelector('select').value;
           var sp = linha.querySelector('select[data-papel]');
           if (sp) snapshot.papeis[linha.getAttribute('data-modulo')] = sp.value;
+          var se = linha.querySelector('select[data-escopo]');
+          if (se) snapshot.escopos[linha.getAttribute('data-modulo')] = se.value;
           var inp = linha.querySelector('input[data-campo]');
           if (inp) snapshot[inp.getAttribute('data-campo')] = inp.value;
         });
@@ -1572,12 +1604,15 @@
         if (!nome || !email) { showMsg(pessoaFormError, 'Informe o nome e o e-mail de acesso.'); return; }
         var permissoes = {};
         var papeis = {};
+        var escopos = {};
         var mapeamentos = {};
         Array.prototype.forEach.call(pfMatriz.querySelectorAll('.matriz-row'), function (linha) {
           var n = linha.querySelector('select').value;
           if (n !== 'nenhum') permissoes[linha.getAttribute('data-modulo')] = n;
           var sp = linha.querySelector('select[data-papel]');
           if (sp && n !== 'nenhum') papeis[sp.getAttribute('data-papel')] = sp.value;
+          var se = linha.querySelector('select[data-escopo]');
+          if (se && n !== 'nenhum') escopos[se.getAttribute('data-escopo')] = se.value;
           var inp = linha.querySelector('input[data-campo]');
           if (inp && !inp.hidden) mapeamentos[inp.getAttribute('data-campo')] = inp.value.trim();
         });
@@ -1592,6 +1627,7 @@
           papel: pfPapel.value,
           permissoes: permissoes,
           papeis: papeis,
+          escopos: escopos,
           mapeamentos: mapeamentos,
           convidar: document.getElementById('pf-convidar').checked
         }).then(function (r) {

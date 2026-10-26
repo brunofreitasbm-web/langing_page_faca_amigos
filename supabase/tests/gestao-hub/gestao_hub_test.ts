@@ -10,6 +10,8 @@ Deno.env.set("CLINICA_SUPABASE_URL", "http://b");
 Deno.env.set("CLINICA_SUPABASE_SERVICE_ROLE_KEY", "kb");
 Deno.env.set("GESTAO_SSO_SECRET_CACAU", "segredo-de-teste");
 Deno.env.set("GESTAO_URL_CACAU", "http://cacau");
+Deno.env.set("GESTAO_URL_RH", "https://rh.grupoib.test");
+Deno.env.delete("GESTAO_URL_RH_PORTO_TERAPIA");
 
 // ---- Cacau simulado: responde a /api/auth/hub/acesso conforme o estado de `cacau` ----
 type ColabCacau = { ativo: boolean; role: string };
@@ -65,10 +67,10 @@ function contaBase(over: Record<string, unknown>) {
 A.tabela("fa_gestao_contas").push(contaBase({ email: "bruno@t.com", email_codigo: "bruno@t.com", nome: "Bruno", papel: "owner", auth_modo: "clinica" }));
 A.tabela("fa_gestao_sessoes").push({ token_hash: await sha(TOKEN), email: "bruno@t.com", expires_at: new Date(Date.now() + 3600_000).toISOString() });
 
-async function chamar(action: string, corpo: Record<string, unknown> = {}) {
+async function chamar(action: string, corpo: Record<string, unknown> = {}, token = TOKEN) {
   const res = await handler(new Request("http://hub", {
     method: "POST",
-    headers: { authorization: `Bearer ${TOKEN}`, "content-type": "application/json" },
+    headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
     body: JSON.stringify({ action, ...corpo }),
   }));
   return { status: res.status, corpo: await res.json() as any };
@@ -82,6 +84,7 @@ const ANA = {
   novo: true, email: "ana@t.com", nome: "Ana", email_codigo: "ana@t.com", papel: "gerente", convidar: false,
   permissoes: { clinica: "operar", rh: "operar", playground: "operar", financeiro: "ver", cacau: "operar" },
   papeis: { clinica: "recepcao", playground: "OPERADOR" },
+  escopos: { rh: "grupoib" },
   mapeamentos: {
     clinica_email: "ana.clinica@t.com", rh_email: "ana.rh@t.com", playground_email: "ana.pg@t.com",
     financeiro_email: "ana.fin@t.com", cacau_usuario: "Ana",
@@ -143,7 +146,7 @@ Deno.test("conta de unidade (quiosque) nunca é aberta nem alterada", async () =
   B.usuarios.push(quiosque);
   const r = await chamar("conta_salvar", {
     novo: true, email: "caio@t.com", nome: "Caio", email_codigo: "caio@t.com", papel: "gerente", convidar: false,
-    permissoes: { rh: "operar" }, mapeamentos: { rh_email: "quiosque@t.com" },
+    permissoes: { rh: "operar" }, escopos: { rh: "grupoib" }, mapeamentos: { rh_email: "quiosque@t.com" },
   });
   assert.equal(resultado(r, "rh").estado, "pulado");
   assert.deepEqual(usuario(B, "quiosque@t.com").app_metadata, { role: "intern_unit" });
@@ -180,6 +183,78 @@ Deno.test("a lista devolve o papel escolhido, o estado de cada sistema e as opç
   const clinica = r.corpo.modulos.find((m: any) => m.id === "clinica");
   assert.deepEqual(clinica.papeis.map((o: any) => o.id), ["supervisor", "recepcao", "faturamento"]);
   assert.equal(clinica.papel_padrao, "supervisor");
+});
+
+// =====================================================================
+// Gestão de Pessoas: empresa (workspace) por pessoa
+// =====================================================================
+
+Deno.test("a gerência recebe só a empresa escolhida, nunca 'all'", async () => {
+  assert.deepEqual(usuario(B, "ana.rh@t.com").app_metadata.workspace_scope, ["grupoib"]);
+  assert.equal(usuario(B, "ana.rh@t.com").app_metadata.role, "supervisor");
+});
+
+Deno.test("gerência com Gestão de Pessoas sem empresa escolhida não é salva", async () => {
+  const antes = A.tabela("fa_gestao_contas").length;
+  const r = await chamar("conta_salvar", {
+    novo: true, email: "gil@t.com", nome: "Gil", email_codigo: "gil@t.com", papel: "gerente", convidar: false,
+    permissoes: { rh: "operar" }, mapeamentos: { rh_email: "gil.rh@t.com" },
+  });
+  assert.equal(r.status, 400);
+  assert.match(r.corpo.error, /escolha a empresa/);
+  assert.equal(A.tabela("fa_gestao_contas").length, antes);
+  assert.equal(B.usuarios.some((u) => u.email === "gil.rh@t.com"), false);
+});
+
+Deno.test("o Hub muda a empresa que ele mesmo deu, mas não o escopo de quem já existia", async () => {
+  const r = await chamar("conta_salvar", { ...ANA, novo: false, papeis: { clinica: "faturamento", playground: "GERENTE" }, escopos: { rh: "porto-terapia" } });
+  assert.equal(r.corpo.falhas, 0, JSON.stringify(r.corpo.provisionamento));
+  assert.deepEqual(usuario(B, "ana.rh@t.com").app_metadata.workspace_scope, ["porto-terapia"]);
+
+  // Supervisor que já existia na Gestão de Pessoas com acesso às duas empresas (não foi o Hub): fica como está.
+  const u = { id: crypto.randomUUID(), email: "hugo.rh@t.com", app_metadata: { role: "supervisor", workspace_scope: ["all"] }, user_metadata: {}, created_at: "2026-01-01T00:00:00Z", last_sign_in_at: "2026-02-01T00:00:00Z", banned_until: null };
+  B.usuarios.push(u);
+  const h = await chamar("conta_salvar", {
+    novo: true, email: "hugo@t.com", nome: "Hugo", email_codigo: "hugo@t.com", papel: "gerente", convidar: false,
+    permissoes: { rh: "operar" }, escopos: { rh: "grupoib" }, mapeamentos: { rh_email: "hugo.rh@t.com" },
+  });
+  const rh = resultado(h, "rh");
+  assert.equal(rh.estado, "erro");
+  assert.match(rh.texto, /já tem acesso a "all"/);
+  assert.deepEqual(usuario(B, "hugo.rh@t.com").app_metadata.workspace_scope, ["all"]);
+
+  // volta ao estado do restante dos testes
+  await chamar("conta_salvar", { ...ANA, novo: false, papeis: { clinica: "faturamento", playground: "GERENTE" }, escopos: { rh: "grupoib" } });
+  assert.deepEqual(usuario(B, "ana.rh@t.com").app_metadata.workspace_scope, ["grupoib"]);
+});
+
+Deno.test("ao abrir, a gerência vai ao site da própria empresa; sem endereço configurado, o Hub recusa", async () => {
+  const tokenAna = "b".repeat(64);
+  A.tabela("fa_gestao_sessoes").push({ token_hash: await sha(tokenAna), email: "ana@t.com", expires_at: new Date(Date.now() + 3600_000).toISOString() });
+
+  const grupo = await chamar("launch", { app: "rh" }, tokenAna);
+  assert.equal(grupo.status, 200, JSON.stringify(grupo.corpo));
+  assert.match(grupo.corpo.url, /^https:\/\/rh\.grupoib\.test\/sso\?token_hash=/);
+
+  await chamar("conta_salvar", { ...ANA, novo: false, papeis: { clinica: "faturamento", playground: "GERENTE" }, escopos: { rh: "porto-terapia" } });
+  const semUrl = await chamar("launch", { app: "rh" }, tokenAna);
+  assert.equal(semUrl.status, 409);
+  assert.match(semUrl.corpo.error, /endereço do site da sua empresa/);
+
+  Deno.env.set("GESTAO_URL_RH_PORTO_TERAPIA", "https://rh.porto.test");
+  try {
+    const porto = await chamar("launch", { app: "rh" }, tokenAna);
+    assert.match(porto.corpo.url, /^https:\/\/rh\.porto\.test\/sso\?token_hash=/);
+  } finally {
+    Deno.env.delete("GESTAO_URL_RH_PORTO_TERAPIA");
+    await chamar("conta_salvar", { ...ANA, novo: false, papeis: { clinica: "faturamento", playground: "GERENTE" }, escopos: { rh: "grupoib" } });
+  }
+});
+
+Deno.test("a lista devolve a empresa escolhida e as empresas disponíveis", async () => {
+  const r = await chamar("contas_listar");
+  assert.equal(r.corpo.contas.find((c: any) => c.email === "ana@t.com").escopos.rh, "grupoib");
+  assert.deepEqual(r.corpo.modulos.find((m: any) => m.id === "rh").escopos.map((e: any) => e.id), ["grupoib", "porto-terapia"]);
 });
 
 // =====================================================================
