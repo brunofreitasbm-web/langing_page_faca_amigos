@@ -1281,6 +1281,20 @@ async function acharUsuarioAuth(client: SupabaseClient, email: string): Promise<
   return null;
 }
 
+// Encerra as sessões que a pessoa já tinha abertas (projeto B: Clínica e Gestão de Pessoas). O banimento
+// só impede novas entradas e a renovação do token; sem isto, quem estava logado seguia até o app pedir
+// um token novo. A função do banco só age em quem já está banido e nunca em conta de unidade, e só
+// apaga sessão e refresh token (nada de usuário, PIN ou dado). O token de acesso já emitido ainda vale
+// até expirar (1 h), pois a API de dados confere só a assinatura dele.
+async function encerrarSessoes(client: SupabaseClient, userId: string): Promise<{ encerradas: number } | { erro: string }> {
+  const { data, error } = await client.rpc("hub_encerrar_sessoes", { p_user_id: userId });
+  if (error) {
+    console.error("hub_encerrar_sessoes:", error.message);
+    return { erro: `não consegui encerrar as sessões abertas: ${error.message}` };
+  }
+  return { encerradas: typeof data === "number" ? data : 0 };
+}
+
 async function bloqueioAberto(admin: Admin, email: string, modulo: AppId): Promise<Record<string, unknown> | null> {
   const { data, error } = await admin
     .from("fa_gestao_bloqueios")
@@ -1354,10 +1368,19 @@ async function desligarSupabase(admin: Admin, appId: AppId, email: string): Prom
   }
 
   if (Object.keys(novo).length) await registrarBloqueio(admin, email, appId, novo);
+
+  // Projeto B: derruba também a sessão aberta. Roda mesmo se o login já estava banido, para que repetir
+  // "desativar" complete o que faltou.
+  let sessoes = "";
+  if (APPS[appId].tipo === "supabase_b" && (jaBanido || novo.ban === true)) {
+    const r = await encerrarSessoes(client, user.id);
+    if ("erro" in r) erros.push(r.erro);
+    else if (r.encerradas > 0) sessoes = `, ${r.encerradas} sessão(ões) aberta(s) encerrada(s)`;
+  }
   if (erros.length) return { estado: "erro", texto: erros.join("; ") };
   return Object.keys(novo).length
-    ? { estado: "bloqueado", texto: "acesso bloqueado" }
-    : { estado: "ja_bloqueado", texto: "já estava bloqueado, nada a mudar" };
+    ? { estado: "bloqueado", texto: `acesso bloqueado${sessoes}` }
+    : { estado: "ja_bloqueado", texto: `já estava bloqueado, nada a mudar${sessoes}` };
 }
 
 async function religarSupabase(admin: Admin, appId: AppId, email: string): Promise<ParcialSistema> {
@@ -1848,6 +1871,10 @@ async function acaoEquipe(
     if (banErr) return jsonResponse(req, { error: "não consegui alterar o login na Clínica" }, 502);
     const { error: flagErr } = await client.from("profiles").update({ active: ativo }).eq("id", r.alvo.id);
     if (flagErr) return jsonResponse(req, { error: "o login foi alterado, mas não consegui atualizar o perfil. Tente de novo." }, 502);
+    if (!ativo) {
+      const enc = await encerrarSessoes(client, r.alvo.id);
+      if ("erro" in enc) return jsonResponse(req, { error: "A pessoa foi bloqueada, mas não consegui encerrar a sessão aberta dela. Bloqueie de novo para tentar outra vez." }, 502);
+    }
     await trilha(r.alvo.id, ativo ? "staff_enabled" : "staff_disabled", { active: ativo });
     await auditar(admin, req, ativo ? "equipe_reativada" : "equipe_bloqueada", { email: dono.email, app: "clinica", detalhe: `por ${dono.email}; ${r.alvo.full_name}`.slice(0, 200) });
     return jsonResponse(req, { ok: true });
