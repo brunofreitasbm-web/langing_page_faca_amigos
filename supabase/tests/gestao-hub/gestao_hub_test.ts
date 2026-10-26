@@ -544,4 +544,56 @@ Deno.test("sem a tabela de registro nenhum sistema é alterado", async () => {
   }
 });
 
+// =====================================================================
+// Sessão imediata: desativar também derruba a sessão que já estava aberta (projeto B)
+// =====================================================================
+
+Deno.test("desativar encerra as sessões abertas na Clínica e na Gestão de Pessoas, e só lá", async () => {
+  const ids = ["ana.clinica@t.com", "ana.rh@t.com"].map((e) => usuario(B, e).id);
+  for (const id of ids) B.sessoes[id] = 2;
+  const idPg = usuario(A, "ana.pg@t.com").id;
+  A.sessoes[idPg] = 4;
+  A.chamadas.length = 0;
+
+  const r = await chamar("conta_ativo", { email: "ana@t.com", ativo: false });
+  assert.equal(r.corpo.falhas, 0, JSON.stringify(r.corpo.resultados));
+  for (const id of ids) assert.equal(B.sessoes[id], 0);
+  assert.match(r.corpo.resultados.find((x: any) => x.app === "rh").texto, /2 sessão\(ões\) aberta\(s\) encerrada\(s\)/);
+  assert.equal(A.sessoes[idPg], 4, "o projeto A não é tocado por esta correção");
+  assert.ok(!A.chamadas.includes("rpc:hub_encerrar_sessoes"));
+
+  // Repetir "desativar" (login já banido) encerra sessões que tenham voltado a existir.
+  B.sessoes[ids[0]] = 1;
+  await chamar("conta_ativo", { email: "ana@t.com", ativo: false });
+  assert.equal(B.sessoes[ids[0]], 0);
+  await chamar("conta_ativo", { email: "ana@t.com", ativo: true });
+});
+
+Deno.test("desativar nunca encerra a sessão de conta de unidade", async () => {
+  const quiosque = usuario(B, "quiosque@t.com");
+  B.sessoes[quiosque.id] = 3;
+  await chamar("conta_ativo", { email: "caio@t.com", ativo: false });
+  assert.equal(B.sessoes[quiosque.id], 3);
+  assert.equal(banido(quiosque), false);
+  await chamar("conta_ativo", { email: "caio@t.com", ativo: true });
+});
+
+Deno.test("sem a função do banco o login fica bloqueado, o erro aparece e repetir completa", async () => {
+  const id = usuario(B, "ana.rh@t.com").id;
+  B.sessoes[id] = 2;
+  B.operacoesComErro.add("rpc:hub_encerrar_sessoes");
+  const r = await chamar("conta_ativo", { email: "ana@t.com", ativo: false });
+  assert.equal(banido(usuario(B, "ana.rh@t.com")), true);
+  const rh = r.corpo.resultados.find((x: any) => x.app === "rh");
+  assert.equal(rh.estado, "erro");
+  assert.match(rh.texto, /encerrar as sessões/);
+  assert.equal(B.sessoes[id], 2);
+
+  B.operacoesComErro.delete("rpc:hub_encerrar_sessoes");
+  const de_novo = await chamar("conta_ativo", { email: "ana@t.com", ativo: false });
+  assert.equal(de_novo.corpo.falhas, 0, JSON.stringify(de_novo.corpo.resultados));
+  assert.equal(B.sessoes[id], 0);
+  await chamar("conta_ativo", { email: "ana@t.com", ativo: true });
+});
+
 void projetos;

@@ -22,6 +22,8 @@ export class Projeto {
   /** Imita o gatilho da Clínica: todo login novo ganha um perfil 'terapeuta'. */
   gatilhoPerfil = false;
   chamadas: string[] = [];
+  /** Sessões abertas por id de usuário (imita auth.sessions). */
+  sessoes: Record<string, number> = {};
   /** Tabelas que respondem com erro (ex.: migração ainda não aplicada). */
   tabelasComErro = new Set<string>();
   /** Operações pontuais que falham, no formato "upsert:profiles". */
@@ -177,5 +179,16 @@ export function createClient(url: string, _key: string, _opts?: unknown) {
   return {
     from: (nome: string) => new Consulta(p, nome),
     auth: { admin: adminAuth(p) },
+    // Imita public.hub_encerrar_sessoes (projeto B): só age em quem já está banido e nunca em conta de unidade.
+    async rpc(nome: string, args: { p_user_id: string }) {
+      p.chamadas.push(`rpc:${nome}`);
+      if (p.operacoesComErro.has(`rpc:${nome}`)) return { data: null, error: { message: "função indisponível" } };
+      const u = p.usuarios.find((x) => x.id === args.p_user_id);
+      if (!u || !u.banned_until || Date.parse(u.banned_until) <= Date.now()) return { data: null, error: { message: "usuário não está bloqueado" } };
+      if (String(u.app_metadata?.role ?? "").endsWith("_unit")) return { data: null, error: { message: "conta de unidade não é alterada pelo Hub" } };
+      const n = p.sessoes[u.id] ?? 0;
+      p.sessoes[u.id] = 0;
+      return { data: n, error: null };
+    },
   };
 }
