@@ -367,7 +367,7 @@ Deno.test("bloquear e reativar: login banido e perfil inativo, depois devolvidos
   assert.ok(!B.chamadas.includes("delete:profiles"));
 });
 
-Deno.test("não mexe em conta do Hub, em família nem em quem não é da equipe; só owner usa", async () => {
+Deno.test("não mexe em conta do Hub, em família nem em quem não é da equipe; gerência sem nível admin na Clínica não usa", async () => {
   const anaPerfil = B.tabela("profiles").find((l) => l.email === "ana.clinica@t.com")!;
   const noHub = await chamar("equipe_resetar_senha", { id: anaPerfil.id });
   assert.equal(noHub.status, 409);
@@ -382,6 +382,80 @@ Deno.test("não mexe em conta do Hub, em família nem em quem não é da equipe;
   for (const acao of ["equipe_listar", "equipe_criar", "equipe_resetar_senha", "equipe_ativo"]) {
     assert.equal((await chamar(acao, { id: paulaId }, tokenGerente)).status, 403, acao);
   }
+});
+
+// =====================================================================
+// Administração delegada: gerência com nível admin na Clínica gerencia a equipe
+// =====================================================================
+
+const DAVI = {
+  novo: true, email: "davi@t.com", nome: "Davi", email_codigo: "davi@t.com", papel: "gerente", convidar: false,
+  permissoes: { clinica: "admin" }, papeis: { clinica: "supervisor" }, mapeamentos: { clinica_email: "davi.clinica@t.com" },
+};
+const TOKEN_DAVI = "d".repeat(64);
+let marinaId = "";
+
+Deno.test("administrador da Clínica (gerência com nível admin) usa a equipe: listar, criar, redefinir, bloquear", async () => {
+  const salvo = await chamar("conta_salvar", DAVI);
+  assert.equal(salvo.corpo.falhas, 0, JSON.stringify(salvo.corpo.provisionamento));
+  A.tabela("fa_gestao_sessoes").push({ token_hash: await sha(TOKEN_DAVI), email: "davi@t.com", expires_at: new Date(Date.now() + 3600_000).toISOString() });
+
+  assert.equal((await chamar("me", {}, TOKEN_DAVI)).corpo.pode_gerir_equipe, true);
+  assert.equal((await chamar("equipe_listar", {}, TOKEN_DAVI)).status, 200);
+
+  const criada = await chamar("equipe_criar", { nome: "Marina Alves", cpf: "123.456.789-09", papel: "terapeuta" }, TOKEN_DAVI);
+  assert.equal(criada.status, 200, JSON.stringify(criada.corpo));
+  marinaId = criada.corpo.id;
+  assert.equal((await chamar("equipe_resetar_senha", { id: marinaId }, TOKEN_DAVI)).status, 200);
+  assert.equal((await chamar("equipe_ativo", { id: marinaId, ativo: false }, TOKEN_DAVI)).status, 200);
+  assert.equal(B.tabela("profiles").find((l) => l.id === marinaId)?.active, false);
+  assert.equal((await chamar("equipe_ativo", { id: marinaId, ativo: true }, TOKEN_DAVI)).status, 200);
+
+  // A trilha mostra quem fez: o administrador, não o owner.
+  assert.ok(A.tabela("fa_gestao_auditoria").some((l) => l.evento === "equipe_criada" && l.email === "davi@t.com"));
+  assert.ok(B.tabela("audit_log").some((l) => l.action === "staff_created" && l.after?.por === "davi@t.com"));
+});
+
+Deno.test("delegar não dá poder acima do da equipe: nada de supervisor/gestor, de contas do Hub nem de si mesmo", async () => {
+  for (const papel of ["supervisor", "gestor", "owner"]) {
+    assert.equal((await chamar("equipe_criar", { nome: "Fulano Teste", cpf: "111.444.777-35", papel }, TOKEN_DAVI)).status, 400, papel);
+  }
+  const doDavi = B.tabela("profiles").find((l) => l.email === "davi.clinica@t.com")!;
+  assert.equal((await chamar("equipe_ativo", { id: doDavi.id, ativo: false }, TOKEN_DAVI)).status, 409);
+  assert.equal((await chamar("equipe_resetar_senha", { id: doDavi.id }, TOKEN_DAVI)).status, 409);
+  assert.equal(doDavi.active !== false, true);
+
+  const anaPerfil = B.tabela("profiles").find((l) => l.email === "ana.clinica@t.com")!;
+  assert.equal((await chamar("equipe_ativo", { id: anaPerfil.id, ativo: false }, TOKEN_DAVI)).status, 409);
+});
+
+Deno.test("o administrador da Clínica NÃO administra contas do Hub nem o que é de outros sistemas", async () => {
+  for (const acao of ["contas_listar", "conta_salvar", "conta_provisionar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar"]) {
+    const r = await chamar(acao, { email: "ana@t.com", ativo: false, novo: true, nome: "X", papel: "owner" }, TOKEN_DAVI);
+    assert.equal(r.status, 403, acao);
+  }
+  // Nenhuma conta do Hub mudou.
+  assert.equal(A.tabela("fa_gestao_contas").find((c) => c.email === "ana@t.com")?.ativo, true);
+  assert.equal(A.tabela("fa_gestao_contas").filter((c) => c.papel === "owner").length, 2); // bruno + fabi
+});
+
+Deno.test("nível operar ou ver na Clínica não delega; tirar o nível admin tira o acesso", async () => {
+  assert.equal((await chamar("me", {}, "c".repeat(64))).corpo.pode_gerir_equipe, false); // Ana: operar
+  assert.equal((await chamar("equipe_listar", {}, "c".repeat(64))).status, 403);
+
+  await chamar("conta_salvar", { ...DAVI, novo: false, permissoes: { clinica: "ver" } });
+  assert.equal((await chamar("equipe_listar", {}, TOKEN_DAVI)).status, 403);
+  assert.equal((await chamar("me", {}, TOKEN_DAVI)).corpo.pode_gerir_equipe, false);
+  assert.ok(A.tabela("fa_gestao_auditoria").some((l) => l.evento === "acao_equipe_negada" && l.email === "davi@t.com"));
+
+  await chamar("conta_salvar", { ...DAVI, novo: false, permissoes: { clinica: "admin" } });
+  assert.equal((await chamar("equipe_listar", {}, TOKEN_DAVI)).status, 200);
+});
+
+Deno.test("administrador desativado perde o acesso à equipe na hora", async () => {
+  await chamar("conta_ativo", { email: "davi@t.com", ativo: false });
+  assert.equal((await chamar("equipe_listar", {}, TOKEN_DAVI)).status, 401);
+  await chamar("conta_ativo", { email: "davi@t.com", ativo: true });
 });
 
 // =====================================================================

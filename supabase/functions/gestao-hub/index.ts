@@ -1000,6 +1000,7 @@ Deno.serve(async (req) => {
       papel: conta.papel,
       apps: appsDisponiveis(conta, niveis),
       niveis,
+      pode_gerir_equipe: conta.papel === "owner" || niveis.clinica === "admin",
     });
   }
 
@@ -1120,6 +1121,8 @@ Deno.serve(async (req) => {
       papel: conta.papel,
       apps: appsDisponiveis(conta, niveis),
       niveis,
+      // Mostra a "Equipe da Clínica": owner ou administrador da Clínica (administração delegada).
+      pode_gerir_equipe: conta.papel === "owner" || niveis.clinica === "admin",
     });
   }
 
@@ -1192,15 +1195,28 @@ Deno.serve(async (req) => {
   }
 
   // --- gestão de pessoas e acessos: só owner ---
-  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_provisionar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar", "equipe_listar", "equipe_criar", "equipe_resetar_senha", "equipe_ativo"];
+  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_provisionar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar"];
   if (ACOES_OWNER.includes(action)) {
     if (conta.papel !== "owner") {
       await auditar(admin, req, "acao_owner_negada", { email: conta.email, detalhe: action });
       return jsonResponse(req, { error: "apenas owner" }, 403);
     }
-    return action.startsWith("equipe_")
-      ? await acaoEquipe(admin, req, body, action, conta)
-      : await acaoOwner(admin, req, body, action, conta);
+    return await acaoOwner(admin, req, body, action, conta);
+  }
+
+  // --- equipe da Clínica: owner OU administrador da Clínica (administração delegada) ---
+  // Quem é "administrador" é decidido aqui, no servidor, pelo nível do Hub: gerência com nível admin no
+  // módulo Clínica. Delegar NÃO dá poder sobre contas do Hub (criar, dar nível, desativar gerências
+  // continua só do owner) nem sobre papéis acima do da equipe: só terapeuta, recepção e faturamento, e
+  // nunca quem tem conta no Hub (inclusive o próprio administrador).
+  const ACOES_EQUIPE = ["equipe_listar", "equipe_criar", "equipe_resetar_senha", "equipe_ativo"];
+  if (ACOES_EQUIPE.includes(action)) {
+    const niveis = await carregarNiveis(admin, conta);
+    if (conta.papel !== "owner" && niveis.clinica !== "admin") {
+      await auditar(admin, req, "acao_equipe_negada", { email: conta.email, detalhe: action });
+      return jsonResponse(req, { error: "apenas o owner ou quem administra a Clínica" }, 403);
+    }
+    return await acaoEquipe(admin, req, body, action, conta);
   }
 
   return jsonResponse(req, { error: "ação inválida" }, 400);
@@ -1640,7 +1656,8 @@ async function revogarSessoes(admin: Admin, email: string, painelUsuario: string
 }
 
 // ---------------------------------------------------------------------
-// Equipe da Clínica (terapeutas, recepção e faturamento): criar, redefinir senha e bloquear (só owner)
+// Equipe da Clínica (terapeutas, recepção e faturamento): criar, redefinir senha e bloquear
+// (owner, ou gerência com nível admin na Clínica: administração delegada)
 //
 // Esta equipe NÃO tem conta no Hub: entra direto na Clínica, por CPF e senha. O Hub é só o lugar onde o
 // owner cria, redefine e bloqueia, sem abrir a Clínica. A fonte da verdade continua sendo `profiles`
@@ -1719,7 +1736,7 @@ async function acaoEquipe(
       return { erro: "colaborador não encontrado na equipe da Clínica" as const };
     }
     if (emailsDoHub.has(String(alvo.email ?? "").toLowerCase())) {
-      return { erro: "esta pessoa tem conta no Hub: gerencie em Pessoas e acessos" as const };
+      return { erro: "esta pessoa tem conta no Hub: só o owner gerencia (em Pessoas e acessos)" as const };
     }
     return { alvo };
   };
