@@ -811,7 +811,6 @@
           <button type="button" class="btn btn-novo-link" id="btnAbrirCriarLink" title="Criar link para novo supervisor ou colaborador">
             <span aria-hidden="true">🔗</span> Enviar Link de Usuário
           </button>
-          <button type="button" class="btn logout" id="equipeHubBtn" hidden>Equipe da Clínica</button>
           <button type="button" class="btn logout" id="pessoasBtn" hidden>Pessoas e acessos</button>
           <a href="https://ivjvpdzsfjdpyabbzzuj.supabase.co/storage/v1/object/public/kiosk-updates/kiosk/FacaAmigos-Setup-atual.exe"
              download
@@ -945,7 +944,6 @@
             <p>Quem entra no Hub, em quais sistemas e com qual nível.</p>
           </div>
           <div class="form-actions">
-            <button type="button" class="btn btn-ghost btn-sm" id="equipeBtn">Equipe da Clínica</button>
             <button type="button" class="btn btn-pink btn-sm" id="novaPessoaBtn">Nova pessoa</button>
             <button type="button" class="btn-link" id="voltarHubBtn">Voltar aos sistemas</button>
           </div>
@@ -1351,8 +1349,7 @@
         equipeMain.hidden = true;
         meuPapel = papel || 'gerente';
         pessoasBtn.hidden = meuPapel !== 'owner';
-        // Owner ou administrador da Clínica (o servidor decide e recusa quem não for).
-        equipeHubBtn.hidden = !podeEquipe;
+        if (equipeHubBtn) equipeHubBtn.hidden = true;
         if (balcaoDlBtn) balcaoDlBtn.hidden = meuPapel !== 'owner';
         if (btnAbrirCriarLink) btnAbrirCriarLink.hidden = meuPapel !== 'owner';
         helloTitle.textContent = nome ? 'Olá, ' + nome.split(' ')[0] + '!' : 'Olá!';
@@ -2214,8 +2211,9 @@
         carregarEquipe();
         window.scrollTo(0, 0);
       }
-      equipeHubBtn.addEventListener('click', abrirEquipe);
-      document.getElementById('equipeBtn').addEventListener('click', abrirEquipe);
+      if (equipeHubBtn) equipeHubBtn.addEventListener('click', abrirEquipe);
+      var elEquipeBtn = document.getElementById('equipeBtn');
+      if (elEquipeBtn) elEquipeBtn.addEventListener('click', abrirEquipe);
       document.getElementById('voltarEquipeBtn').addEventListener('click', voltarHub);
       document.getElementById('equipeBusca').addEventListener('input', renderEquipe);
       document.getElementById('equipeNova').addEventListener('click', function () {
