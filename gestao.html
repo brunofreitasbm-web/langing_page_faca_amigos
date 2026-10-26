@@ -416,12 +416,13 @@
     .matriz { display: grid; gap: 10px; margin: 6px 0 18px; }
     .matriz-row {
       display: grid; gap: 10px; align-items: center; padding: 10px 12px; border-radius: 14px;
-      background: var(--cream); grid-template-columns: minmax(140px, 1fr) 150px minmax(160px, 1.4fr);
+      background: var(--cream); grid-template-columns: minmax(120px, 1fr) 140px 150px minmax(150px, 1.3fr);
     }
     @media (max-width: 640px) { .matriz-row { grid-template-columns: 1fr; } }
     .matriz-row .mod { font-weight: 800; }
     .matriz-row .form-control { padding: 9px 12px; font-size: 0.92rem; }
     .matriz-row .auto { color: var(--gray); font-size: 0.82rem; font-weight: 700; }
+    .prov-erro { display: block; margin-top: 4px; color: #7A5B00; font-size: 0.8rem; font-weight: 700; }
     .acesso-box { background: var(--cream); border-radius: 14px; padding: 14px 16px; margin-bottom: 16px; }
     .acesso-estado { color: var(--ink-soft); font-weight: 700; font-size: 0.9rem; margin-bottom: 10px; }
     .check { display: flex; align-items: center; gap: 8px; font-weight: 700; margin: 4px 0 16px; }
@@ -1236,6 +1237,18 @@
         });
       }
 
+      // Resultado do provisionamento (ao salvar ou ao reprovisionar): uma linha por sistema.
+      function mostrarProvisao(data, base) {
+        var res = data.provisionamento || [];
+        if (!res.length) { showMsg(pessoasNotice, base); return; }
+        var linhas = res.map(function (x) { return x.rotulo + ': ' + x.texto; });
+        if (data.falhas) {
+          showMsg(pessoasError, base + ' Mas ' + data.falhas + (data.falhas === 1 ? ' sistema precisa' : ' sistemas precisam') + ' de atenção — ' + linhas.join(' · ') + '. Corrija e use "Reprovisionar".');
+        } else {
+          showMsg(pessoasNotice, base + ' ' + linhas.join(' · ') + '.');
+        }
+      }
+
       // Desativar/reativar: o servidor devolve o que aconteceu em cada sistema (Clínica, Cacau...).
       function alterarAtivo(c, ativo) {
         acaoPessoas('conta_ativo', { email: c.email, ativo: ativo }, null).then(function (r) {
@@ -1288,6 +1301,24 @@
           }
           who.appendChild(meta);
 
+          // Estado do último provisionamento em cada sistema (✓ ok; ⚠ com o motivo logo abaixo).
+          if (c.papel !== 'owner' && c.provisionamento) {
+            modulos.forEach(function (m) {
+              var v = c.provisionamento[m.id];
+              if (!v || !c.permissoes || !c.permissoes[m.id]) return;
+              var papelTxt = '';
+              if (m.papeis && m.papeis.length) {
+                var pid = (c.papeis && c.papeis[m.id]) || m.papel_padrao;
+                var achado = m.papeis.filter(function (o) { return o.id === pid; })[0];
+                papelTxt = achado ? ' (' + achado.rotulo + ')' : '';
+              }
+              var chip = el('span', 'chip ' + (v.estado === 'ok' ? 'ok' : 'warn'), m.rotulo + papelTxt + (v.estado === 'ok' ? ' ✓' : ' ⚠'));
+              if (v.mensagem) chip.title = v.mensagem;
+              meta.appendChild(chip);
+              if (v.estado !== 'ok' && v.mensagem) who.appendChild(el('span', 'prov-erro', m.rotulo + ': ' + v.mensagem));
+            });
+          }
+
           var acts = el('div', 'acts');
           var bEd = el('button', 'btn btn-ghost btn-sm', 'Editar');
           bEd.type = 'button';
@@ -1300,6 +1331,19 @@
               acaoPessoas('convidar', { email: c.email }, 'Convite enviado para ' + c.email_codigo + '.').then(carregarPessoas);
             });
             acts.appendChild(bConv);
+          }
+          if (c.ativo && c.papel !== 'owner') {
+            var bProv = el('button', 'btn btn-ghost btn-sm', 'Reprovisionar');
+            bProv.type = 'button';
+            bProv.title = 'Cria o login e dá o papel escolhido em cada sistema, só onde faltar.';
+            bProv.addEventListener('click', function () {
+              acaoPessoas('conta_provisionar', { email: c.email }, null).then(function (r) {
+                if (r && r.ok) mostrarProvisao(r.data, 'Provisionamento refeito.');
+                carregarPessoas();
+                carregarAuditoria();
+              });
+            });
+            acts.appendChild(bProv);
           }
           if (c.ativo) {
             var bRev = el('button', 'btn btn-ghost btn-sm', 'Encerrar sessões');
@@ -1368,6 +1412,25 @@
           sel.disabled = ehOwner;
           linha.appendChild(sel);
 
+          // Papel NATIVO no sistema (o que a pessoa realmente tem lá dentro). Sistemas sem papel a escolher
+          // (Simulador, Cacau, painel) deixam a coluna vazia.
+          var selPapel = null;
+          if (m.papeis && m.papeis.length) {
+            selPapel = el('select', 'form-control');
+            selPapel.setAttribute('data-papel', m.id);
+            selPapel.setAttribute('aria-label', 'Papel em ' + m.rotulo);
+            m.papeis.forEach(function (o) {
+              var op = el('option', null, o.rotulo);
+              op.value = o.id;
+              selPapel.appendChild(op);
+            });
+            selPapel.value = (conta && conta.papeis && conta.papeis[m.id]) || m.papel_padrao || m.papeis[0].id;
+            selPapel.disabled = m.papeis.length === 1;
+            linha.appendChild(selPapel);
+          } else {
+            linha.appendChild(el('span', 'auto', ''));
+          }
+
           var ident;
           if (m.campo === 'painel_usuario') {
             ident = el('span', 'auto', 'usa o e-mail de acesso');
@@ -1382,7 +1445,10 @@
           }
           linha.appendChild(ident);
 
-          function sincroniza() { ident.hidden = sel.value === 'nenhum'; }
+          function sincroniza() {
+            ident.hidden = sel.value === 'nenhum';
+            if (selPapel) selPapel.hidden = sel.value === 'nenhum';
+          }
           sel.addEventListener('change', sincroniza);
           sincroniza();
           pfMatriz.appendChild(linha);
@@ -1412,9 +1478,11 @@
       });
       pfPapel.addEventListener('change', function () {
         // Mantém o que já foi digitado ao trocar o papel.
-        var snapshot = { permissoes: {} };
+        var snapshot = { permissoes: {}, papeis: {} };
         Array.prototype.forEach.call(pfMatriz.querySelectorAll('.matriz-row'), function (linha) {
           snapshot.permissoes[linha.getAttribute('data-modulo')] = linha.querySelector('select').value;
+          var sp = linha.querySelector('select[data-papel]');
+          if (sp) snapshot.papeis[linha.getAttribute('data-modulo')] = sp.value;
           var inp = linha.querySelector('input[data-campo]');
           if (inp) snapshot[inp.getAttribute('data-campo')] = inp.value;
         });
@@ -1503,10 +1571,13 @@
         var emailCodigo = document.getElementById('pf-email-codigo').value.trim().toLowerCase();
         if (!nome || !email) { showMsg(pessoaFormError, 'Informe o nome e o e-mail de acesso.'); return; }
         var permissoes = {};
+        var papeis = {};
         var mapeamentos = {};
         Array.prototype.forEach.call(pfMatriz.querySelectorAll('.matriz-row'), function (linha) {
           var n = linha.querySelector('select').value;
           if (n !== 'nenhum') permissoes[linha.getAttribute('data-modulo')] = n;
+          var sp = linha.querySelector('select[data-papel]');
+          if (sp && n !== 'nenhum') papeis[sp.getAttribute('data-papel')] = sp.value;
           var inp = linha.querySelector('input[data-campo]');
           if (inp && !inp.hidden) mapeamentos[inp.getAttribute('data-campo')] = inp.value.trim();
         });
@@ -1520,6 +1591,7 @@
           email_codigo: emailCodigo,
           papel: pfPapel.value,
           permissoes: permissoes,
+          papeis: papeis,
           mapeamentos: mapeamentos,
           convidar: document.getElementById('pf-convidar').checked
         }).then(function (r) {
@@ -1529,7 +1601,7 @@
           if (r.data.convite_enviado === true) msg = 'Salvo. Convite enviado para ' + (emailCodigo || email) + '.';
           else if (r.data.convite_enviado === false) msg = 'Salvo, mas o e-mail do convite não saiu. Use "Enviar convite" na lista.';
           fecharFormPessoa();
-          showMsg(pessoasNotice, msg);
+          mostrarProvisao(r.data, msg);
           carregarPessoas();
           carregarAuditoria();
         });
