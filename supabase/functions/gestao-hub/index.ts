@@ -292,12 +292,31 @@ const PAPEL_RH = "supervisor"; // app_metadata.role (Gestão de Pessoas)
 const PAPEL_PLAYGROUND = "GERENTE"; // fa_kiosk_employees.role (Playground)
 const CLINICA_ID = "c0000000-0000-0000-0000-000000000001";
 
-type UsuarioAuth = { id: string; app_metadata?: Record<string, unknown> | null };
+type UsuarioAuth = {
+  id: string;
+  app_metadata?: Record<string, unknown> | null;
+  user_metadata?: Record<string, unknown> | null;
+  last_sign_in_at?: string | null;
+};
+
+// Recusa com motivo legível: chega ao dono no clique do quadrado (409), em vez de um "não foi possível
+// abrir o sistema agora" que não diz o que fazer.
+class RecusaAcesso extends Error {}
+
+// Contas de unidade/quiosque (intern_unit, professional_unit, employee_unit na Gestão de Pessoas) são
+// LOGINS COMPARTILHADOS do tablet da loja, não de uma pessoa: o estagiário só toca no próprio nome na
+// tela. O Hub nunca abre, provisiona, rebaixa nem desativa uma conta dessas. Só supervisores (pessoas)
+// entram por aqui.
+function ehContaDeUnidade(user: UsuarioAuth): boolean {
+  const papel = (user.app_metadata?.role ?? user.user_metadata?.role) as unknown;
+  return typeof papel === "string" && papel.endsWith("_unit");
+}
 
 // O magic link cria o usuário vazio se ele não existir, e cada sistema exige mais que isso para
 // abrir (RH: papel no claim; Playground: linha de colaborador; Clínica: perfil com o papel certo).
 // Aqui a pessoa é completada ANTES de o ticket sair, sempre de forma idempotente e sem rebaixar nem
-// sobrescrever o que já existe. Devolve uma descrição do que foi feito, "" se nada, null se recusou.
+// sobrescrever o que já existe. Devolve uma descrição do que foi feito ("" se nada); se recusar ou falhar,
+// lança RecusaAcesso com o motivo.
 async function provisionar(
   client: SupabaseClient,
   appId: AppId,
@@ -313,14 +332,16 @@ async function provisionar(
     if (atual.role === PAPEL_RH) return "";
     if (atual.role) {
       console.error(`provisionar rh: ${email} já tem papel '${String(atual.role)}', não sobrescrevo`);
-      return null;
+      throw new RecusaAcesso(
+        `${email} já tem o papel "${String(atual.role)}" na Gestão de Pessoas e o Hub não troca papel existente. Use o e-mail de supervisor da pessoa ou ajuste o papel direto naquele sistema.`,
+      );
     }
     const { error } = await client.auth.admin.updateUserById(user.id, {
       app_metadata: { ...atual, role: PAPEL_RH, workspace_scope: ["all"] },
     });
     if (error) {
       console.error("provisionar rh:", error.message);
-      return null;
+      throw new RecusaAcesso("A Gestão de Pessoas recusou criar o acesso agora. Tente de novo em instantes.");
     }
     return `rh=${PAPEL_RH}`;
   }
@@ -329,7 +350,7 @@ async function provisionar(
     const { data: perfil, error } = await client.from("profiles").select("id, role, active").eq("id", user.id).maybeSingle();
     if (error) {
       console.error("provisionar clinica (lê perfil):", error.message);
-      return null;
+      throw new RecusaAcesso("Não consegui consultar o perfil na Clínica agora. Tente de novo em instantes.");
     }
     if (!perfil) {
       const { error: insErr } = await client.from("profiles").insert({
@@ -342,20 +363,30 @@ async function provisionar(
       });
       if (insErr) {
         console.error("provisionar clinica (cria perfil):", insErr.message);
-        return null;
+        throw new RecusaAcesso("A Clínica recusou criar o perfil agora. Tente de novo em instantes.");
       }
       return `clinica=${PAPEL_CLINICA}(novo)`;
     }
+    const desativadoNaClinica = () =>
+      new RecusaAcesso(`${email} está desativado na Clínica. Reative lá primeiro; o Hub respeita essa decisão.`);
     if (perfil.role === "gestor" || perfil.role === PAPEL_CLINICA) {
-      if (perfil.active === false) return null; // perfil desativado na Clínica: respeita
+      if (perfil.active === false) throw desativadoNaClinica();
       return "";
     }
-    if (perfil.active === false) return null;
-    // O trigger de auth.users cria todo usuário novo como 'terapeuta'. Sobe só dali; nunca de gestor.
+    if (perfil.active === false) throw desativadoNaClinica();
+    // O trigger de auth.users cria todo usuário novo como 'terapeuta'. Só esse usuário recém-criado (que
+    // nunca entrou) sobe para supervisor. Quem já é terapeuta de verdade, recepção, faturamento etc. fica
+    // como está: antes qualquer um desses virava supervisor ao abrir o quadrado, ignorando o nível do Hub.
+    const recemCriado = perfil.role === "terapeuta" && !user.last_sign_in_at;
+    if (!recemCriado) {
+      throw new RecusaAcesso(
+        `${email} já é "${String(perfil.role)}" na Clínica e o Hub não muda esse papel. Para dar acesso de gestão, ajuste o papel direto na Clínica ou use outro e-mail.`,
+      );
+    }
     const { error: upErr } = await client.from("profiles").update({ role: PAPEL_CLINICA }).eq("id", user.id);
     if (upErr) {
       console.error("provisionar clinica (atualiza perfil):", upErr.message);
-      return null;
+      throw new RecusaAcesso("A Clínica recusou atualizar o perfil agora. Tente de novo em instantes.");
     }
     return `clinica=${PAPEL_CLINICA}(era ${perfil.role})`;
   }
@@ -368,9 +399,15 @@ async function provisionar(
       .maybeSingle();
     if (error) {
       console.error("provisionar playground (lê colaborador):", error.message);
-      return null;
+      throw new RecusaAcesso("Não consegui consultar o colaborador no Playground agora. Tente de novo em instantes.");
     }
-    if (colab) return colab.active === false ? null : ""; // já existe: papel e vínculo não são tocados
+    if (colab) {
+      // já existe: papel e vínculo não são tocados
+      if (colab.active === false) {
+        throw new RecusaAcesso(`${email} está desativado no Playground. Reative lá primeiro; o Hub respeita essa decisão.`);
+      }
+      return "";
+    }
     const { data: novo, error: insErr } = await client
       .from("fa_kiosk_employees")
       .insert({ auth_user_id: user.id, full_name: conta.nome, role: PAPEL_PLAYGROUND, email, active: true })
@@ -378,7 +415,7 @@ async function provisionar(
       .single();
     if (insErr || !novo) {
       console.error("provisionar playground (cria colaborador):", insErr?.message);
-      return null;
+      throw new RecusaAcesso("O Playground recusou criar o colaborador agora. Tente de novo em instantes.");
     }
     await client.from("fa_kiosk_audit_log").insert({
       action: "HUB_PROVISION_EMPLOYEE",
@@ -397,21 +434,30 @@ async function ticketSupabase(
   email: string,
   appId: AppId,
   conta: Conta,
-): Promise<{ ticket: string; provisionado: string } | null> {
+): Promise<{ ticket: string; provisionado: string } | { erro: string }> {
   const url = tipo === "supabase_a" ? Deno.env.get("SUPABASE_URL") : Deno.env.get("CLINICA_SUPABASE_URL");
   const key = tipo === "supabase_a"
     ? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
     : Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
-  if (!url || !key) return null;
+  if (!url || !key) return { erro: "Este sistema ainda não está ligado ao Hub (falta configuração no servidor)." };
   const client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
   const { data, error } = await client.auth.admin.generateLink({ type: "magiclink", email });
   if (error || !data?.properties?.hashed_token || !data.user) {
     console.error(`generateLink (${tipo}) falhou:`, error?.message);
-    return null;
+    return { erro: "O sistema não gerou a entrada agora. Confira o e-mail cadastrado para ele e tente de novo." };
   }
-  const provisionado = await provisionar(client, appId, data.user, conta, email);
-  if (provisionado === null) return null;
-  return { ticket: data.properties.hashed_token, provisionado };
+  if (ehContaDeUnidade(data.user)) {
+    return {
+      erro: `${email} é uma conta de unidade (quiosque compartilhado), não de uma pessoa. O Hub não abre nem altera essas contas: informe o e-mail individual do supervisor.`,
+    };
+  }
+  try {
+    const provisionado = await provisionar(client, appId, data.user, conta, email);
+    return { ticket: data.properties.hashed_token, provisionado };
+  } catch (e) {
+    if (e instanceof RecusaAcesso) return { erro: e.message };
+    throw e;
+  }
 }
 
 // ---------------------------------------------------------------------
@@ -1008,12 +1054,21 @@ Deno.serve(async (req) => {
 
     let provisionado = "";
     let ticket: string | null;
-    if (app.tipo === "cacau") ticket = await ticketCacau(identidade, niveis[appId]);
-    else if (app.tipo === "painel") ticket = await ticketPainel(admin, conta.email, niveis);
+    if (app.tipo === "cacau") {
+      // O Cacau Show não tem acesso só de leitura: avisar aqui, em vez de abrir a aba para a pessoa ouvir "acesso negado".
+      if (conta.papel !== "owner" && niveis[appId] === "ver") {
+        return jsonResponse(req, { error: "O Cacau Show ainda não tem acesso só de leitura. Peça ao owner para mudar seu nível para operar." }, 403);
+      }
+      ticket = await ticketCacau(identidade, niveis[appId]);
+    } else if (app.tipo === "painel") ticket = await ticketPainel(admin, conta.email, niveis);
     else {
       const r = await ticketSupabase(app.tipo, identidade, appId, conta);
-      ticket = r?.ticket ?? null;
-      provisionado = r?.provisionado ?? "";
+      if ("erro" in r) {
+        await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: `recusado: ${r.erro}`.slice(0, 200) });
+        return jsonResponse(req, { error: r.erro }, 409);
+      }
+      ticket = r.ticket;
+      provisionado = r.provisionado;
     }
     if (provisionado) await auditar(admin, req, "acesso_provisionado", { email: conta.email, app: appId, detalhe: provisionado });
     if (!ticket) {
