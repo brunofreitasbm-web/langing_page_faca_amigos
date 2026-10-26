@@ -1192,13 +1192,15 @@ Deno.serve(async (req) => {
   }
 
   // --- gestão de pessoas e acessos: só owner ---
-  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_provisionar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar"];
+  const ACOES_OWNER = ["contas_listar", "conta_salvar", "conta_provisionar", "conta_ativo", "convidar", "conta_acesso", "sessoes_revogar", "auditoria_listar", "equipe_listar", "equipe_criar", "equipe_resetar_senha", "equipe_ativo"];
   if (ACOES_OWNER.includes(action)) {
     if (conta.papel !== "owner") {
       await auditar(admin, req, "acao_owner_negada", { email: conta.email, detalhe: action });
       return jsonResponse(req, { error: "apenas owner" }, 403);
     }
-    return await acaoOwner(admin, req, body, action, conta);
+    return action.startsWith("equipe_")
+      ? await acaoEquipe(admin, req, body, action, conta)
+      : await acaoOwner(admin, req, body, action, conta);
   }
 
   return jsonResponse(req, { error: "ação inválida" }, 400);
@@ -1635,6 +1637,206 @@ async function provisionarModulos(
 async function revogarSessoes(admin: Admin, email: string, painelUsuario: string | null) {
   await admin.from("fa_gestao_sessoes").delete().eq("email", email);
   if (painelUsuario) await admin.from("fa_teste_admin_sessions").delete().eq("admin_email", painelUsuario);
+}
+
+// ---------------------------------------------------------------------
+// Equipe da Clínica (terapeutas, recepção e faturamento): criar, redefinir senha e bloquear (só owner)
+//
+// Esta equipe NÃO tem conta no Hub: entra direto na Clínica, por CPF e senha. O Hub é só o lugar onde o
+// owner cria, redefine e bloqueia, sem abrir a Clínica. A fonte da verdade continua sendo `profiles`
+// da Clínica (nada é copiado para o Hub). Segue o que a própria tela da Clínica já faz:
+//   - criar: login por CPF (e-mail é opcional; sem ele, um sintético que a pessoa nunca vê) e senha
+//     TEMPORÁRIA com troca obrigatória no primeiro acesso (profiles.must_change_password). O Hub não
+//     escolhe nem guarda senha: ela aparece uma única vez para o owner, nunca vai a log nem a auditoria.
+//     Link por e-mail não serve aqui, porque parte da equipe não tem e-mail real.
+//   - redefinir: nova senha temporária + troca obrigatória.
+//   - bloquear / reativar: banimento do login + profiles.active, como no desligamento das gerências.
+// REGRAS DURAS: nunca toca no PIN de assinatura da Clínica (signature_pin_*), nunca exclui ninguém e
+// nunca mexe em conta de gerência do Hub (essas são geridas em "Pessoas e acessos").
+// ---------------------------------------------------------------------
+
+const PAPEIS_EQUIPE = ["terapeuta", "recepcao", "faturamento"];
+const DOMINIO_EMAIL_INTERNO = "staff.facaamigos.local";
+// Sem caracteres ambíguos (0/O, 1/l/I): a senha é lida em voz alta ou digitada à mão. Sempre termina
+// em "@9", o que cumpre a regra da Clínica (maiúscula, caractere especial, mínimo de 6).
+const ALFABETO_SENHA = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+
+function senhaTemporaria(): string {
+  const bytes = new Uint8Array(12);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => ALFABETO_SENHA[b % ALFABETO_SENHA.length]).join("") + "@9";
+}
+
+function cpfValido(d: string): boolean {
+  if (!/^\d{11}$/.test(d) || /^(\d)\1{10}$/.test(d)) return false;
+  for (const t of [9, 10]) {
+    let soma = 0;
+    for (let i = 0; i < t; i++) soma += Number(d[i]) * (t + 1 - i);
+    const dv = ((soma * 10) % 11) % 10;
+    if (dv !== Number(d[t])) return false;
+  }
+  return true;
+}
+
+const mascararCpf = (d: string | null) => (d && d.length === 11 ? `***.${d.slice(3, 6)}.${d.slice(6, 9)}-**` : null);
+
+async function acaoEquipe(
+  admin: Admin,
+  req: Request,
+  body: Record<string, unknown>,
+  action: string,
+  dono: Conta,
+): Promise<Response> {
+  const client = clienteSupabase("supabase_b");
+  if (!client) return jsonResponse(req, { error: "A Clínica não está ligada ao Hub neste servidor." }, 503);
+
+  // Contas de gerência do Hub que também existem na Clínica: geridas em "Pessoas e acessos", não aqui.
+  const { data: contasHub } = await admin.from("fa_gestao_contas").select("clinica_email");
+  const emailsDoHub = new Set((contasHub ?? []).map((c: { clinica_email: string | null }) => (c.clinica_email ?? "").toLowerCase()).filter(Boolean));
+
+  const trilha = async (profileId: string, acao: string, depois: Record<string, unknown>) => {
+    // Rastro na Clínica (como as telas dela): se falhar, a ação já aconteceu e não é desfeita.
+    const { error } = await client.from("audit_log").insert({
+      table_name: "profiles",
+      row_id: profileId,
+      action: acao,
+      actor_id: null,
+      clinic_id: CLINICA_ID,
+      after: { ...depois, via: "gestao-hub", por: dono.email },
+    });
+    if (error) console.error("audit_log da Clínica:", error.message);
+  };
+
+  const alvoDaEquipe = async (id: string) => {
+    if (!/^[0-9a-f-]{36}$/i.test(id)) return { erro: "colaborador inválido" as const };
+    const { data: alvo, error } = await client
+      .from("profiles")
+      .select("id, full_name, role, clinic_id, email")
+      .eq("id", id)
+      .maybeSingle();
+    if (error) return { erro: "não consegui consultar a Clínica agora" as const };
+    if (!alvo || alvo.clinic_id !== CLINICA_ID || !PAPEIS_EQUIPE.includes(alvo.role)) {
+      return { erro: "colaborador não encontrado na equipe da Clínica" as const };
+    }
+    if (emailsDoHub.has(String(alvo.email ?? "").toLowerCase())) {
+      return { erro: "esta pessoa tem conta no Hub: gerencie em Pessoas e acessos" as const };
+    }
+    return { alvo };
+  };
+
+  if (action === "equipe_listar") {
+    const { data, error } = await client
+      .from("profiles")
+      .select("id, full_name, cpf, email, role, active, must_change_password, council_type, is_evaluator, is_at_professional")
+      .eq("clinic_id", CLINICA_ID)
+      .in("role", PAPEIS_EQUIPE)
+      .order("full_name", { ascending: true });
+    if (error) return jsonResponse(req, { error: "não consegui listar a equipe da Clínica" }, 502);
+    return jsonResponse(req, {
+      papeis: [
+        { id: "terapeuta", rotulo: "Terapeuta" },
+        { id: "recepcao", rotulo: "Recepção" },
+        { id: "faturamento", rotulo: "Faturamento" },
+      ],
+      equipe: (data ?? []).map((p: Record<string, any>) => ({
+        id: p.id,
+        nome: p.full_name,
+        cpf: mascararCpf(p.cpf ?? null),
+        email: p.email && !String(p.email).endsWith(`@${DOMINIO_EMAIL_INTERNO}`) ? p.email : null,
+        papel: p.role,
+        ativo: p.active !== false,
+        trocar_senha: p.must_change_password === true,
+        conselho: p.council_type ?? null,
+        avaliador: p.is_evaluator === true,
+        at: p.is_at_professional === true,
+        no_hub: emailsDoHub.has(String(p.email ?? "").toLowerCase()),
+      })),
+    });
+  }
+
+  if (action === "equipe_criar") {
+    const nome = str(body.nome).slice(0, 120);
+    const cpf = str(body.cpf).replace(/\D/g, "");
+    const emailInformado = str(body.email).toLowerCase();
+    const papel = str(body.papel);
+    const conselho = str(body.conselho).slice(0, 40) || null;
+    const nascimento = /^\d{4}-\d{2}-\d{2}$/.test(str(body.nascimento)) ? str(body.nascimento) : null;
+    if (nome.length < 2) return jsonResponse(req, { error: "informe o nome" }, 400);
+    if (!cpfValido(cpf)) return jsonResponse(req, { error: "CPF inválido" }, 400);
+    if (emailInformado && !EMAIL_RE.test(emailInformado)) return jsonResponse(req, { error: "e-mail inválido" }, 400);
+    if (!PAPEIS_EQUIPE.includes(papel)) return jsonResponse(req, { error: "papel inválido" }, 400);
+
+    const { data: mesmoCpf, error: cpfErr } = await client.from("profiles").select("id").eq("cpf", cpf).maybeSingle();
+    if (cpfErr) return jsonResponse(req, { error: "não consegui consultar a Clínica agora" }, 502);
+    if (mesmoCpf) return jsonResponse(req, { error: "já existe alguém com este CPF na Clínica" }, 409);
+
+    const email = emailInformado || `equipe_${cpf}@${DOMINIO_EMAIL_INTERNO}`;
+    const senha = senhaTemporaria();
+    const { data: criado, error: authErr } = await client.auth.admin.createUser({ email, password: senha, email_confirm: true });
+    if (authErr || !criado?.user) {
+      const existe = /already been registered|already registered/i.test(authErr?.message ?? "");
+      return jsonResponse(req, { error: existe ? "já existe um login com este e-mail" : "não consegui criar o login na Clínica" }, existe ? 409 : 502);
+    }
+    const { data: unidade } = await client.from("units").select("id").order("name", { ascending: true }).limit(1).maybeSingle();
+
+    // O gatilho de auth.users já criou um perfil provisório: é upsert, não insert.
+    const { error: perfilErr } = await client.from("profiles").upsert({
+      id: criado.user.id,
+      clinic_id: CLINICA_ID,
+      role: papel,
+      full_name: nome,
+      cpf,
+      email,
+      council_type: conselho,
+      is_evaluator: body.avaliador === true,
+      is_at_professional: body.at === true,
+      birth_date: nascimento,
+      unit_id: unidade?.id ?? null,
+      active: true,
+      must_change_password: true,
+    }, { onConflict: "id" });
+    if (perfilErr) {
+      // Sem perfil a conta não serve para nada: desfaz o login para não deixar lixo no Auth.
+      await client.auth.admin.deleteUser(criado.user.id);
+      const cpfDuplicado = perfilErr.message.includes("profiles_cpf_unique") || /cpf/i.test(perfilErr.message);
+      console.error("equipe_criar (perfil):", perfilErr.message);
+      return jsonResponse(req, { error: cpfDuplicado ? "já existe alguém com este CPF na Clínica" : "não consegui criar o perfil na Clínica" }, cpfDuplicado ? 409 : 502);
+    }
+    await trilha(criado.user.id, "staff_created", { role: papel, must_change_password: true });
+    await auditar(admin, req, "equipe_criada", { email: dono.email, app: "clinica", detalhe: `por ${dono.email}; ${nome}; ${papel}`.slice(0, 200) });
+    return jsonResponse(req, { ok: true, id: criado.user.id, senha_temporaria: senha });
+  }
+
+  if (action === "equipe_resetar_senha") {
+    const r = await alvoDaEquipe(str(body.id));
+    if ("erro" in r) return jsonResponse(req, { error: r.erro }, 409);
+    const senha = senhaTemporaria();
+    const { error: authErr } = await client.auth.admin.updateUserById(r.alvo.id, { password: senha });
+    if (authErr) return jsonResponse(req, { error: "não consegui redefinir a senha na Clínica" }, 502);
+    const { error: flagErr } = await client.from("profiles").update({ must_change_password: true }).eq("id", r.alvo.id);
+    if (flagErr) {
+      // A senha já mudou; sem a flag a pessoa ficaria com a temporária. Avisa em vez de passar batido.
+      return jsonResponse(req, { error: "A senha foi redefinida, mas não consegui exigir a troca no próximo acesso. Redefina de novo." }, 502);
+    }
+    await trilha(r.alvo.id, "staff_password_reset", { must_change_password: true });
+    await auditar(admin, req, "equipe_senha_redefinida", { email: dono.email, app: "clinica", detalhe: `por ${dono.email}; ${r.alvo.full_name}`.slice(0, 200) });
+    return jsonResponse(req, { ok: true, senha_temporaria: senha });
+  }
+
+  if (action === "equipe_ativo") {
+    const ativo = body.ativo === true;
+    const r = await alvoDaEquipe(str(body.id));
+    if ("erro" in r) return jsonResponse(req, { error: r.erro }, 409);
+    const { error: banErr } = await client.auth.admin.updateUserById(r.alvo.id, { ban_duration: ativo ? "none" : BAN_LONGO });
+    if (banErr) return jsonResponse(req, { error: "não consegui alterar o login na Clínica" }, 502);
+    const { error: flagErr } = await client.from("profiles").update({ active: ativo }).eq("id", r.alvo.id);
+    if (flagErr) return jsonResponse(req, { error: "o login foi alterado, mas não consegui atualizar o perfil. Tente de novo." }, 502);
+    await trilha(r.alvo.id, ativo ? "staff_enabled" : "staff_disabled", { active: ativo });
+    await auditar(admin, req, ativo ? "equipe_reativada" : "equipe_bloqueada", { email: dono.email, app: "clinica", detalhe: `por ${dono.email}; ${r.alvo.full_name}`.slice(0, 200) });
+    return jsonResponse(req, { ok: true });
+  }
+
+  return jsonResponse(req, { error: "ação inválida" }, 400);
 }
 
 async function acaoOwner(

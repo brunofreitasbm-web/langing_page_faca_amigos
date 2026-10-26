@@ -12,6 +12,8 @@ export type UsuarioFake = {
   created_at: string;
   last_sign_in_at: string | null;
   banned_until: string | null;
+  /** Só para os testes conferirem que uma senha foi definida; nunca é lida pela função. */
+  password?: string;
 };
 
 export class Projeto {
@@ -22,6 +24,8 @@ export class Projeto {
   chamadas: string[] = [];
   /** Tabelas que respondem com erro (ex.: migração ainda não aplicada). */
   tabelasComErro = new Set<string>();
+  /** Operações pontuais que falham, no formato "upsert:profiles". */
+  operacoesComErro = new Set<string>();
   tabela(nome: string): Linha[] {
     return (this.tabelas[nome] ??= []);
   }
@@ -81,6 +85,7 @@ class Consulta implements PromiseLike<{ data: any; error: { message: string } | 
 
   private executar(): { data: any; error: { message: string } | null } {
     this.p.chamadas.push(`${this.op}:${this.nome}`);
+    if (this.p.operacoesComErro.has(`${this.op}:${this.nome}`)) return { data: null, error: { message: `falha simulada em ${this.op}:${this.nome}` } };
     if (this.p.tabelasComErro.has(this.nome)) return { data: null, error: { message: `relation "${this.nome}" does not exist` } };
     const t = this.p.tabela(this.nome);
     const casa = (l: Linha) => this.filtros.every((f) => f(l));
@@ -127,18 +132,23 @@ function adminAuth(p: Projeto) {
       const por = opts?.perPage ?? 50;
       return { data: { users: p.usuarios.slice((pagina - 1) * por, pagina * por).map((u) => ({ ...u })) }, error: null };
     },
-    async createUser(attrs: { email: string }) {
+    async createUser(attrs: { email: string; password?: string }) {
       p.chamadas.push("auth.createUser");
       if (p.usuarios.some((u) => u.email === attrs.email)) return { data: { user: null }, error: { message: "já existe" } };
       const u: UsuarioFake = {
         id: crypto.randomUUID(), email: attrs.email, app_metadata: {}, user_metadata: {},
-        created_at: new Date().toISOString(), last_sign_in_at: null, banned_until: null,
+        created_at: new Date().toISOString(), last_sign_in_at: null, banned_until: null, password: attrs.password,
       };
       p.usuarios.push(u);
-      if (p.gatilhoPerfil) p.tabela("profiles").push({ id: u.id, email: u.email, role: "terapeuta", active: true });
+      if (p.gatilhoPerfil) p.tabela("profiles").push({ id: u.id, clinic_id: "c0000000-0000-0000-0000-000000000001", email: u.email, role: "terapeuta", active: true });
       return { data: { user: { ...u } }, error: null };
     },
-    async updateUserById(id: string, attrs: { ban_duration?: string; app_metadata?: Record<string, unknown> }) {
+    async deleteUser(id: string) {
+      p.chamadas.push("auth.deleteUser");
+      p.usuarios = p.usuarios.filter((u) => u.id !== id);
+      return { data: null, error: null };
+    },
+    async updateUserById(id: string, attrs: { ban_duration?: string; app_metadata?: Record<string, unknown>; password?: string }) {
       p.chamadas.push("auth.updateUserById");
       const u = achar(id);
       if (!u) return { data: { user: null }, error: { message: "não achei" } };
@@ -146,6 +156,7 @@ function adminAuth(p: Projeto) {
         u.banned_until = attrs.ban_duration === "none" ? null : new Date(Date.now() + 100 * 365 * 24 * 3600 * 1000).toISOString();
       }
       if (attrs.app_metadata) u.app_metadata = { ...attrs.app_metadata };
+      if (attrs.password) u.password = attrs.password;
       return { data: { user: { ...u } }, error: null };
     },
     async generateLink(attrs: { email: string }) {

@@ -258,6 +258,133 @@ Deno.test("a lista devolve a empresa escolhida e as empresas disponíveis", asyn
 });
 
 // =====================================================================
+// Equipe da Clínica: criar, redefinir senha e bloquear (terapeutas, recepção, faturamento)
+// =====================================================================
+
+const EQUIPE = {
+  nome: "Paula Souza", cpf: "529.982.247-25", papel: "terapeuta", conselho: "CRP 10/12345",
+  avaliador: true, at: false, nascimento: "1990-05-17",
+};
+let paulaId = "";
+
+Deno.test("owner cria uma terapeuta: login por CPF, senha temporária com troca obrigatória", async () => {
+  B.tabela("units").push({ id: "unidade-1", name: "Unidade Centro" });
+  const r = await chamar("equipe_criar", EQUIPE);
+  assert.equal(r.status, 200, JSON.stringify(r.corpo));
+  paulaId = r.corpo.id;
+  assert.match(r.corpo.senha_temporaria, /^[A-Za-z0-9]{12}@9$/);
+
+  const u = usuario(B, "equipe_52998224725@staff.facaamigos.local");
+  assert.ok(u, "login por CPF (e-mail sintético) criado");
+  assert.equal(u.password, r.corpo.senha_temporaria);
+  const p = perfil("equipe_52998224725@staff.facaamigos.local");
+  assert.equal(p?.role, "terapeuta");
+  assert.equal(p?.cpf, "52998224725");
+  assert.equal(p?.must_change_password, true);
+  assert.equal(p?.active, true);
+  assert.equal(p?.council_type, "CRP 10/12345");
+  assert.equal(p?.is_evaluator, true);
+  assert.equal(p?.unit_id, "unidade-1");
+  assert.equal(p?.clinic_id, "c0000000-0000-0000-0000-000000000001");
+});
+
+Deno.test("a senha temporária não aparece em nenhum log nem auditoria", async () => {
+  const r = await chamar("equipe_criar", { ...EQUIPE, nome: "Rita Lima", cpf: "11144477735", email: "rita@t.com", papel: "recepcao" });
+  assert.equal(r.status, 200, JSON.stringify(r.corpo));
+  assert.ok(usuario(B, "rita@t.com"), "com e-mail informado, usa o e-mail");
+  const tudo = JSON.stringify([A.tabela("fa_gestao_auditoria"), B.tabela("audit_log")]);
+  assert.equal(tudo.includes(r.corpo.senha_temporaria), false);
+  assert.ok(B.tabela("audit_log").some((l) => l.action === "staff_created" && l.after?.via === "gestao-hub"));
+  assert.ok(A.tabela("fa_gestao_auditoria").some((l) => l.evento === "equipe_criada"));
+});
+
+Deno.test("criar recusa CPF inválido ou repetido, e-mail e papel inválidos", async () => {
+  assert.equal((await chamar("equipe_criar", { ...EQUIPE, cpf: "123.456.789-00" })).status, 400);
+  assert.equal((await chamar("equipe_criar", { ...EQUIPE, cpf: "111.111.111-11" })).status, 400);
+  assert.equal((await chamar("equipe_criar", { ...EQUIPE, cpf: "123.456.789-09", email: "sem-arroba" })).status, 400);
+  assert.equal((await chamar("equipe_criar", { ...EQUIPE, cpf: "123.456.789-09", papel: "gestor" })).status, 400);
+  const repetido = await chamar("equipe_criar", { ...EQUIPE, nome: "Outra Paula" });
+  assert.equal(repetido.status, 409);
+  assert.match(repetido.corpo.error, /já existe alguém com este CPF/);
+});
+
+Deno.test("se o perfil falha, o login criado é desfeito (sem lixo no Auth)", async () => {
+  const antes = B.usuarios.length;
+  B.operacoesComErro.add("upsert:profiles");
+  try {
+    const r = await chamar("equipe_criar", { ...EQUIPE, nome: "Caco Reis", cpf: "123.456.789-09" });
+    assert.equal(r.status, 502);
+  } finally {
+    B.operacoesComErro.delete("upsert:profiles");
+  }
+  assert.equal(B.usuarios.length, antes);
+});
+
+Deno.test("a lista mostra só a equipe, com CPF mascarado, e marca quem tem conta no Hub", async () => {
+  B.tabela("profiles").push({ id: crypto.randomUUID(), clinic_id: "c0000000-0000-0000-0000-000000000001", role: "responsavel", full_name: "Família X", email: "familia@t.com", active: true });
+  B.tabela("profiles").push({ id: crypto.randomUUID(), clinic_id: "outra-clinica", role: "terapeuta", full_name: "De Fora", email: "fora@t.com", active: true });
+  const r = await chamar("equipe_listar");
+  assert.equal(r.status, 200, JSON.stringify(r.corpo));
+  const nomes = r.corpo.equipe.map((e: any) => e.nome);
+  assert.ok(nomes.includes("Paula Souza") && nomes.includes("Rita Lima"));
+  assert.ok(!nomes.includes("Família X") && !nomes.includes("De Fora"));
+  const paula = r.corpo.equipe.find((e: any) => e.nome === "Paula Souza");
+  assert.equal(paula.cpf, "***.982.247-**");
+  assert.equal(paula.email, null); // e-mail sintético não é mostrado
+  assert.equal(paula.trocar_senha, true);
+  assert.equal(JSON.stringify(r.corpo).includes("52998224725"), false); // CPF completo nunca sai
+  const ana = r.corpo.equipe.find((e: any) => e.email === "ana.clinica@t.com");
+  assert.equal(ana?.no_hub, true);
+});
+
+Deno.test("redefinir senha: nova temporária, troca obrigatória, e o PIN de assinatura não é tocado", async () => {
+  const p = B.tabela("profiles").find((l) => l.id === paulaId)!;
+  p.signature_pin_hash = "HASH-DO-PIN-DE-ASSINATURA";
+  p.signature_pin_failed_attempts = 2;
+  p.must_change_password = false;
+  const senhaAntes = usuario(B, "equipe_52998224725@staff.facaamigos.local").password;
+
+  const r = await chamar("equipe_resetar_senha", { id: paulaId });
+  assert.equal(r.status, 200, JSON.stringify(r.corpo));
+  assert.notEqual(r.corpo.senha_temporaria, senhaAntes);
+  assert.equal(usuario(B, "equipe_52998224725@staff.facaamigos.local").password, r.corpo.senha_temporaria);
+  assert.equal(p.must_change_password, true);
+  assert.equal(p.signature_pin_hash, "HASH-DO-PIN-DE-ASSINATURA");
+  assert.equal(p.signature_pin_failed_attempts, 2);
+  assert.equal(JSON.stringify([A.tabela("fa_gestao_auditoria"), B.tabela("audit_log")]).includes(r.corpo.senha_temporaria), false);
+});
+
+Deno.test("bloquear e reativar: login banido e perfil inativo, depois devolvidos; nada é excluído", async () => {
+  const r = await chamar("equipe_ativo", { id: paulaId, ativo: false });
+  assert.equal(r.status, 200, JSON.stringify(r.corpo));
+  assert.equal(banido(usuario(B, "equipe_52998224725@staff.facaamigos.local")), true);
+  assert.equal(B.tabela("profiles").find((l) => l.id === paulaId)?.active, false);
+
+  const volta = await chamar("equipe_ativo", { id: paulaId, ativo: true });
+  assert.equal(volta.status, 200);
+  assert.equal(banido(usuario(B, "equipe_52998224725@staff.facaamigos.local")), false);
+  assert.equal(B.tabela("profiles").find((l) => l.id === paulaId)?.active, true);
+  assert.ok(!B.chamadas.includes("delete:profiles"));
+});
+
+Deno.test("não mexe em conta do Hub, em família nem em quem não é da equipe; só owner usa", async () => {
+  const anaPerfil = B.tabela("profiles").find((l) => l.email === "ana.clinica@t.com")!;
+  const noHub = await chamar("equipe_resetar_senha", { id: anaPerfil.id });
+  assert.equal(noHub.status, 409);
+  assert.match(noHub.corpo.error, /tem conta no Hub/);
+
+  const familia = B.tabela("profiles").find((l) => l.role === "responsavel")!;
+  assert.equal((await chamar("equipe_ativo", { id: familia.id, ativo: false })).status, 409);
+  assert.equal((await chamar("equipe_resetar_senha", { id: "nao-e-uuid" })).status, 409);
+
+  const tokenGerente = "c".repeat(64);
+  A.tabela("fa_gestao_sessoes").push({ token_hash: await sha(tokenGerente), email: "ana@t.com", expires_at: new Date(Date.now() + 3600_000).toISOString() });
+  for (const acao of ["equipe_listar", "equipe_criar", "equipe_resetar_senha", "equipe_ativo"]) {
+    assert.equal((await chamar(acao, { id: paulaId }, tokenGerente)).status, 403, acao);
+  }
+});
+
+// =====================================================================
 // Fase 2: desligar e religar
 // =====================================================================
 
