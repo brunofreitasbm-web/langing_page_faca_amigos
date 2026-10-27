@@ -16,6 +16,7 @@ create table if not exists public.fa_gestao_convites (
   sistema text not null,
   funcao text not null,
   permissao text not null default 'operar',
+  destinatario_nome text,
   destinatario_email text,
   criado_por text references public.fa_gestao_contas (email) on delete set null,
   usado_em timestamptz,

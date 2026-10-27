@@ -131,7 +131,7 @@ type Conta = {
   created_at: string;
 };
 
-type AppId = "playground" | "clinica" | "financeiro" | "rh" | "cacau" | "painel" | "eventos";
+type AppId = "playground" | "clinica" | "financeiro" | "rh" | "cacau" | "painel" | "eventos" | "porto";
 
 // Nível da pessoa num módulo. `nenhum` = sem linha em fa_gestao_permissoes.
 type Nivel = "nenhum" | "ver" | "operar" | "admin";
@@ -181,6 +181,15 @@ const APPS: Record<AppId, {
     tipo: "supabase_b",
     baseEnv: "GESTAO_URL_RH",
     baseDefault: "https://rh.institutofacaamigos.com.br",
+    entrada: (b, t) => `${b}/sso?token_hash=${encodeURIComponent(t)}`,
+  },
+  porto: {
+    rotulo: "Porto Terapia",
+    campo: "rh_email",
+    campoRotulo: "E-mail na Porto Terapia",
+    tipo: "supabase_b",
+    baseEnv: "GESTAO_URL_RH_PORTO_TERAPIA",
+    baseDefault: "https://porto-terapia-gestao.vercel.app",
     entrada: (b, t) => `${b}/sso?token_hash=${encodeURIComponent(t)}`,
   },
   cacau: {
@@ -1220,6 +1229,7 @@ Deno.serve(async (req) => {
 
     const appId = convite.sistema as AppId;
     const sistemaInfo = APPS[appId];
+    const sistemaUrl = (Deno.env.get(sistemaInfo?.baseEnv) ?? sistemaInfo?.baseDefault ?? "").replace(/\/+$/, "");
 
     return jsonResponse(req, {
       ok: true,
@@ -1228,10 +1238,12 @@ Deno.serve(async (req) => {
         unidade: convite.unidade,
         sistema: convite.sistema,
         sistema_nome: sistemaInfo?.rotulo || convite.sistema,
+        sistema_url: sistemaUrl,
         funcao: convite.funcao,
         permissao: convite.permissao,
-        destinatario_email: convite.destinatario_email
-      }
+        destinatario_nome: convite.destinatario_nome || null,
+        destinatario_email: convite.destinatario_email,
+      },
     });
   }
 
@@ -2198,6 +2210,7 @@ async function acaoOwner(
     const sistema = str(body.sistema) as AppId;
     const funcao = str(body.funcao) || "Supervisor";
     const permissao = (str(body.permissao) || "operar") as Nivel;
+    const destinatarioNome = str(body.destinatario_nome);
     const destinatarioEmail = str(body.destinatario_email).toLowerCase();
 
     if (!sistema || !APPS[sistema]) {
@@ -2213,6 +2226,7 @@ async function acaoOwner(
       sistema,
       funcao,
       permissao,
+      destinatario_nome: destinatarioNome || null,
       destinatario_email: destinatarioEmail || null,
       criado_por: dono.email,
       expires_at: expiresAt,
@@ -2222,12 +2236,13 @@ async function acaoOwner(
     }
 
     const link = `${HUB_URL}/#cadastro?token=${token}`;
+    const sistemaNome = APPS[sistema]?.rotulo || sistema;
+    const sistemaBase = (Deno.env.get(APPS[sistema]?.baseEnv) ?? APPS[sistema]?.baseDefault ?? "").replace(/\/+$/, "");
 
     let emailEnviado = false;
     if (destinatarioEmail && EMAIL_RE.test(destinatarioEmail)) {
-      const sistemaNome = APPS[sistema]?.rotulo || sistema;
       const html = moldeEmail(`
-        <p style="margin:0 0 12px;font-size:15px;">Olá!</p>
+        <p style="margin:0 0 12px;font-size:15px;">Olá${destinatarioNome ? `, ${escapeHtml(destinatarioNome)}` : ""}!</p>
         <p style="margin:0 0 16px;font-size:14px;color:#4C6B62;">
           ${escapeHtml(dono.nome)} enviou um convite para você ingressar no sistema da <strong>${escapeHtml(unidade)}</strong> como <strong>${escapeHtml(funcao)}</strong>.
         </p>
@@ -2244,12 +2259,12 @@ async function acaoOwner(
         </p>
         <p style="margin:0;font-size:12px;color:#8B9A94;">Ou copie o link: ${link}</p>
       `);
-      emailEnviado = await enviarEmail(destinatarioEmail, "Novo Colaborador", `Convite de acesso: ${sistemaNome} — Faça Amigos`, html);
+      emailEnviado = await enviarEmail(destinatarioEmail, destinatarioNome || "Novo Colaborador", `Convite de acesso: ${sistemaNome} — Faça Amigos`, html);
     }
 
     await auditar(admin, req, "convite_link_gerado", {
       email: dono.email,
-      detalhe: `unidade=${unidade}; sistema=${sistema}; funcao=${funcao}; perm=${permissao}; dest=${destinatarioEmail || "link"}`.slice(0, 300),
+      detalhe: `unidade=${unidade}; sistema=${sistema}; funcao=${funcao}; perm=${permissao}; nome=${destinatarioNome || "-"}; dest=${destinatarioEmail || "link"}`.slice(0, 300),
     });
 
     return jsonResponse(req, {
@@ -2260,9 +2275,11 @@ async function acaoOwner(
       convite: {
         unidade,
         sistema,
-        sistema_nome: APPS[sistema]?.rotulo,
+        sistema_nome: sistemaNome,
+        sistema_url: sistemaBase,
         funcao,
         permissao,
+        destinatario_nome: destinatarioNome || null,
         destinatario_email: destinatarioEmail || null,
       },
     });

@@ -728,7 +728,7 @@
       <div id="cadError" class="form-error" role="alert"></div>
 
       <div id="cadDadosConvite" class="badge-info-convite" hidden>
-        <div class="badge-item-row">
+        <div class="badge-item-row" id="cadBadgeUnidadeRow">
           <span>Unidade:</span>
           <span id="cadBadgeUnidade">—</span>
         </div>
@@ -1140,7 +1140,7 @@
       <div class="modal-header">
         <div>
           <h2 class="modal-title" id="modalCriarLinkTitulo">Criar Link de Usuário</h2>
-          <p class="modal-desc">Configure a unidade, função e sistema para gerar o link de cadastro.</p>
+          <p class="modal-desc">Configure o sistema e nível de acesso para gerar o link de cadastro.</p>
         </div>
         <button type="button" class="modal-close" id="btnFecharModalLink" aria-label="Fechar modal">&times;</button>
       </div>
@@ -1150,21 +1150,15 @@
 
       <form id="formGerarLinkConvite" novalidate>
         <div class="form-group">
-          <label for="selUnidade" class="form-label">Unidade de Negócio</label>
-          <select id="selUnidade" class="form-control" required>
-            <option value="Instituto Faça Amigos (Corporativo)">Instituto Faça Amigos (Corporativo / Matriz)</option>
-            <option value="Centro de Terapia Comportamental (Clínica)">Centro de Terapia Comportamental (Clínica)</option>
-            <option value="Playground da Criança — Shopping Boulevard">Playground da Criança — Shopping Boulevard</option>
-            <option value="Playground da Criança — Shopping Bosque Grão-Pará">Playground da Criança — Shopping Bosque Grão-Pará</option>
-            <option value="Cacau Show (Lojas)">Cacau Show (Lojas)</option>
-            <option value="Portal do Site & Eventos">Portal do Site & Eventos</option>
-          </select>
+          <label for="txtDestinatarioNome" class="form-label">Nome da Pessoa (pelo menos o primeiro nome)</label>
+          <input type="text" id="txtDestinatarioNome" class="form-control" placeholder="Ex.: Mariana (opcional se não souber)">
         </div>
 
         <div class="form-group">
           <label for="selSistema" class="form-label">Sistema a Acessar</label>
           <select id="selSistema" class="form-control" required>
             <option value="clinica">🩺 Clínica (sistema.institutofacaamigos.com.br)</option>
+            <option value="porto">🌿 Porto Terapia (porto-terapia-gestao.vercel.app)</option>
             <option value="playground">🎠 Playground (app.institutofacaamigos.com.br)</option>
             <option value="cacau">🍫 Cacau Show (hub-operacoes)</option>
             <option value="painel">🌐 Painel do Site / Mapeamento (institutofacaamigos.com.br/admin)</option>
@@ -1207,6 +1201,13 @@
 
       <div id="boxLinkGerado" class="resultado-link-box" hidden>
         <div class="link-title"><span>🔗</span> Link Gerado com Sucesso:</div>
+
+        <div style="background:var(--white);border:1.5px solid rgba(46,207,181,0.35);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:0.86rem;line-height:1.5;">
+          <div><strong>Sistema:</strong> <span id="resSistemaNome">—</span></div>
+          <div><strong>Link Direto do Sistema:</strong> <a href="#" id="resSistemaLink" target="_blank" rel="noopener" style="color:var(--pink);font-weight:700;word-break:break-all;"></a></div>
+        </div>
+
+        <label class="form-label" style="font-size:0.82rem;font-weight:800;margin-bottom:4px;">Link de Auto-Cadastro para Enviar à Pessoa:</label>
         <input type="text" id="inputLinkPronto" class="resultado-link-input" readonly>
         <div class="resultado-acts">
           <button type="button" class="btn-copiar" id="btnCopiarLinkGerado">
@@ -2314,7 +2315,7 @@
       if (formGerarLinkConvite) {
         formGerarLinkConvite.addEventListener('submit', function (ev) {
           ev.preventDefault();
-          var unidade = document.getElementById('selUnidade').value;
+          var destNome = (document.getElementById('txtDestinatarioNome') && document.getElementById('txtDestinatarioNome').value.trim()) || '';
           var sistema = document.getElementById('selSistema').value;
           var funcao = document.getElementById('selFuncao').value;
           var permissao = document.getElementById('selPermissao').value;
@@ -2326,7 +2327,7 @@
           showMsg(modalLinkError, '');
 
           api('convite_link_gerar', {
-            unidade: unidade,
+            destinatario_nome: destNome,
             sistema: sistema,
             funcao: funcao,
             permissao: permissao,
@@ -2343,7 +2344,19 @@
             boxLinkGerado.hidden = false;
 
             var sistemaNome = (r.data.convite && r.data.convite.sistema_nome) || sistema;
-            var txtWhats = 'Olá! Segue o seu link para criar usuário no sistema ' + sistemaNome + ' (' + unidade + ') como ' + funcao + ':\n\n' + r.data.link + '\n\nBasta clicar no link para completar o seu cadastro.';
+            var sistemaUrl = (r.data.convite && r.data.convite.sistema_url) || '';
+
+            if (document.getElementById('resSistemaNome')) {
+              document.getElementById('resSistemaNome').textContent = sistemaNome;
+            }
+            if (document.getElementById('resSistemaLink')) {
+              var aLink = document.getElementById('resSistemaLink');
+              aLink.href = sistemaUrl || '#';
+              aLink.textContent = sistemaUrl || '—';
+            }
+
+            var saudacao = destNome ? ('Olá, ' + destNome + '!') : 'Olá!';
+            var txtWhats = saudacao + '\n\nVocê recebeu acesso ao sistema ' + sistemaNome + ' (' + sistemaUrl + '):\n\n👉 Complete seu cadastro por aqui:\n' + r.data.link + '\n\nBasta clicar no link acima para criar sua senha e começar!';
             btnWhatsLinkGerado.href = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(txtWhats);
 
             if (r.data.email_enviado) {
@@ -2413,12 +2426,23 @@
           }
 
           var c = r.data.convite;
-          document.getElementById('cadBadgeUnidade').textContent = c.unidade || 'Faça Amigos';
+          var elUnidadeRow = document.getElementById('cadBadgeUnidadeRow');
+          if (elUnidadeRow) {
+            if (c.unidade) {
+              elUnidadeRow.hidden = false;
+              document.getElementById('cadBadgeUnidade').textContent = c.unidade;
+            } else {
+              elUnidadeRow.hidden = true;
+            }
+          }
           document.getElementById('cadBadgeFuncao').textContent = c.funcao || 'Colaborador';
           document.getElementById('cadBadgeSistema').textContent = c.sistema_nome || c.sistema;
           document.getElementById('cadBadgePermissao').textContent = c.permissao === 'admin' ? 'Administrador' : (c.permissao === 'ver' ? 'Visualizador' : 'Operador');
 
-          if (c.destinatario_email) {
+          if (c.destinatario_nome && document.getElementById('cad-nome')) {
+            document.getElementById('cad-nome').value = c.destinatario_nome;
+          }
+          if (c.destinatario_email && document.getElementById('cad-email')) {
             document.getElementById('cad-email').value = c.destinatario_email;
           }
 
