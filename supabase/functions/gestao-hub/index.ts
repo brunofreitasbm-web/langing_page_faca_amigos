@@ -241,9 +241,16 @@ async function carregarNiveis(admin: Admin, conta: Conta): Promise<Niveis> {
 }
 
 // Quadrado habilitado = tem nível no módulo E a identidade da pessoa naquele sistema está preenchida.
+// Para conta owner: todos os sistemas são habilitados por padrão.
 function appsDisponiveis(conta: Conta, niveis: Niveis): Record<AppId, boolean> {
   const out = {} as Record<AppId, boolean>;
-  for (const id of APP_IDS) out[id] = niveis[id] !== "nenhum" && !!conta[APPS[id].campo];
+  for (const id of APP_IDS) {
+    if (conta.papel === "owner") {
+      out[id] = true;
+    } else {
+      out[id] = niveis[id] !== "nenhum" && !!conta[APPS[id].campo];
+    }
+  }
   return out;
 }
 
@@ -399,11 +406,57 @@ async function provisionar(
   escopo: string | null,
 ): Promise<string> {
   if (conta.papel !== "gerente") {
-    if (conta.papel === "owner" && appId === "clinica") {
-      const { data: perfil } = await client.from("profiles").select("id, role").eq("id", user.id).maybeSingle();
-      if (perfil && perfil.role !== "gestor") {
-        await client.from("profiles").update({ role: "gestor" }).eq("id", user.id);
-        return "clinica=gestor(owner)";
+    if (conta.papel === "owner") {
+      if (appId === "clinica") {
+        const { data: perfil } = await client.from("profiles").select("id, role, active").eq("id", user.id).maybeSingle();
+        if (!perfil) {
+          await client.from("profiles").insert({
+            id: user.id,
+            clinic_id: CLINICA_ID,
+            role: "gestor",
+            full_name: conta.nome,
+            email,
+            active: true,
+          });
+          return "clinica=gestor(owner_novo)";
+        } else if (perfil.role !== "gestor" || perfil.active === false) {
+          await client.from("profiles").update({ role: "gestor", active: true }).eq("id", user.id);
+          return "clinica=gestor(owner)";
+        }
+      }
+
+      if (appId === "playground") {
+        const { data: colab } = await client
+          .from("fa_kiosk_employees")
+          .select("id, active, role")
+          .eq("auth_user_id", user.id)
+          .maybeSingle();
+        if (!colab) {
+          await client.from("fa_kiosk_employees").insert({
+            auth_user_id: user.id,
+            full_name: conta.nome,
+            role: "ADMIN",
+            email,
+            active: true,
+          });
+          return "playground=ADMIN(owner_novo)";
+        } else if (colab.role !== "ADMIN" || colab.active === false) {
+          await client.from("fa_kiosk_employees").update({ role: "ADMIN", active: true }).eq("id", colab.id);
+          return "playground=ADMIN(owner)";
+        }
+      }
+
+      if (appId === "rh" || appId === "porto") {
+        const atual = (user.app_metadata ?? {}) as Record<string, unknown>;
+        const escopoAtual = Array.isArray(atual.workspace_scope) ? (atual.workspace_scope as unknown[]) : [];
+        const roleAtual = String(atual.role ?? "");
+        const roleDesejado = roleAtual === "gestor" || roleAtual === "admin" || roleAtual === "supervisor" ? roleAtual : "admin";
+        if (!escopoAtual.includes("all") || roleAtual !== roleDesejado) {
+          await client.auth.admin.updateUserById(user.id, {
+            app_metadata: { ...atual, role: roleDesejado, workspace_scope: ["all"] },
+          });
+          return `${appId}=${roleDesejado}(all_owner)`;
+        }
       }
     }
     return "";
@@ -553,7 +606,19 @@ async function ticketSupabase(
     : Deno.env.get("CLINICA_SUPABASE_SERVICE_ROLE_KEY");
   if (!url || !key) return { erro: "Este sistema ainda não está ligado ao Hub (falta configuração no servidor)." };
   const client = createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
-  const { data, error } = await client.auth.admin.generateLink({ type: "magiclink", email });
+  let resLink = await client.auth.admin.generateLink({ type: "magiclink", email });
+  if (resLink.error || !resLink.data?.properties?.hashed_token || !resLink.data?.user) {
+    const { error: createErr } = await client.auth.admin.createUser({
+      email,
+      email_confirm: true,
+      user_metadata: { name: conta.nome },
+    });
+    if (!createErr) {
+      resLink = await client.auth.admin.generateLink({ type: "magiclink", email });
+    }
+  }
+  const data = resLink.data;
+  const error = resLink.error;
   if (error || !data?.properties?.hashed_token || !data.user) {
     console.error(`generateLink (${tipo}) falhou:`, error?.message);
     return { erro: "O sistema não gerou a entrada agora. Confira o e-mail cadastrado para ele e tente de novo." };
@@ -1382,7 +1447,14 @@ Deno.serve(async (req) => {
       return jsonResponse(req, { error: "você não tem acesso a este sistema" }, 403);
     }
 
-    const identidade = conta[app.campo];
+    let identidade = conta[app.campo];
+    if ((typeof identidade !== "string" || !identidade) && conta.papel === "owner") {
+      if (app.tipo === "cacau") {
+        identidade = conta.cacau_usuario || (conta.nome ? conta.nome.toLowerCase().split(" ")[0] : conta.email.split("@")[0]);
+      } else {
+        identidade = (conta.login_email || conta.email).toLowerCase();
+      }
+    }
     if (typeof identidade !== "string" || !identidade) {
       return jsonResponse(req, { error: "você ainda não tem acesso configurado a este sistema" }, 403);
     }
