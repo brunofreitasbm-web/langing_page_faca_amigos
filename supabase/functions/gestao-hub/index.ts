@@ -2304,7 +2304,8 @@ async function acaoOwner(
       expires_at: expiresAt,
     });
     if (insErr) {
-      console.warn("fa_gestao_convites insert warning:", insErr.message);
+      console.error("fa_gestao_convites insert error:", insErr.message);
+      return jsonResponse(req, { error: "não foi possível gravar o convite no banco" }, 500);
     }
 
     const link = `${HUB_URL}/#cadastro?token=${token}`;
