@@ -127,6 +127,21 @@ Deno.test("trocar o papel escolhido troca o que o Hub tinha dado", async () => {
   assert.equal(A.tabela("fa_kiosk_employees").find((l) => l.email === "ana.pg@t.com")?.role, "GERENTE");
 });
 
+Deno.test("colaborador do Playground com o mesmo e-mail (login do convite) fica registrado como duplicado", async () => {
+  const antigo = { id: crypto.randomUUID(), auth_user_id: crypto.randomUUID(), email: "Dani.PG@t.com", role: "GERENTE", active: true, full_name: "Dani" };
+  A.tabela("fa_kiosk_employees").push(antigo);
+  const r = await chamar("conta_salvar", {
+    novo: true, email: "dani@t.com", nome: "Dani", email_codigo: "dani@t.com", papel: "gerente", convidar: false,
+    permissoes: { playground: "operar" }, papeis: { playground: "GERENTE" }, mapeamentos: { playground_email: "dani.pg@t.com" },
+  });
+  assert.equal(resultado(r, "playground").estado, "ok", JSON.stringify(r.corpo.provisionamento));
+  const linhas = A.tabela("fa_kiosk_employees").filter((l) => String(l.email).toLowerCase() === "dani.pg@t.com");
+  assert.equal(linhas.length, 2);
+  const novo = linhas.find((l) => l.id !== antigo.id)!;
+  const log = A.tabela("fa_kiosk_audit_log").find((l) => l.action === "HUB_PROVISION_EMPLOYEE" && l.details_json.employeeId === novo.id);
+  assert.deepEqual(log?.details_json.duplicaEmailDe, [antigo.id]);
+});
+
 Deno.test("papel que a pessoa já tinha no sistema não é trocado, e o motivo aparece", async () => {
   const u = { id: crypto.randomUUID(), email: "bia.clinica@t.com", app_metadata: {}, user_metadata: {}, created_at: "2026-01-01T00:00:00Z", last_sign_in_at: "2026-02-01T00:00:00Z", banned_until: null };
   B.usuarios.push(u);

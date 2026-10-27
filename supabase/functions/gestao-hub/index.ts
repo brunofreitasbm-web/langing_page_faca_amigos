@@ -570,6 +570,15 @@ async function provisionar(
       });
       return `playground=${papelAlvo}(era ${colab.role})`;
     }
+    // Quem entrou no Playground por convite tem login sintético (@kiosk.internal), então a busca por
+    // auth_user_id não o acha e o Hub cria uma segunda linha com o mesmo e-mail. Não dá para reaproveitar a
+    // linha antiga daqui (o app do Playground liga o colaborador ao login), mas o duplicado fica registrado
+    // para ninguém desativar "a sobra" sem saber qual delas o Hub usa.
+    const { data: mesmoEmail } = await client
+      .from("fa_kiosk_employees")
+      .select("id")
+      .ilike("email", email)
+      .neq("auth_user_id", user.id);
     const { data: novo, error: insErr } = await client
       .from("fa_kiosk_employees")
       .insert({ auth_user_id: user.id, full_name: conta.nome, role: papelAlvo, email, active: true })
@@ -582,7 +591,12 @@ async function provisionar(
     await client.from("fa_kiosk_audit_log").insert({
       action: "HUB_PROVISION_EMPLOYEE",
       severity: "ALERTA",
-      details_json: { employeeId: novo.id, role: papelAlvo, via: "gestao-hub" },
+      details_json: {
+        employeeId: novo.id,
+        role: papelAlvo,
+        via: "gestao-hub",
+        ...(mesmoEmail?.length ? { duplicaEmailDe: mesmoEmail.map((c) => c.id), aviso: "esta é a linha usada pelo Hub; não desative" } : {}),
+      },
     });
     return `playground=${papelAlvo}(novo)`;
   }
@@ -1474,8 +1488,12 @@ Deno.serve(async (req) => {
       // Gestão de Pessoas: cada gerência abre o site da SUA empresa. Sem empresa escolhida, ou com o site
       // da empresa sem endereço configurado, recusa em vez de levar a pessoa ao site da outra empresa.
       if (appId === "rh" && conta.papel === "gerente") {
-        if (!escopo) return jsonResponse(req, { error: "Sua empresa na Gestão de Pessoas ainda não foi escolhida. Peça ao owner para escolher Grupo IB ou Porto Terapia." }, 409);
+        if (!escopo) {
+          await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: "recusado: empresa não escolhida" });
+          return jsonResponse(req, { error: "Sua empresa na Gestão de Pessoas ainda não foi escolhida. Peça ao owner para escolher Grupo IB ou Porto Terapia." }, 409);
+        }
         if (!baseDoEscopo(appId, escopo)) {
+          await auditar(admin, req, "launch", { email: conta.email, app: appId, detalhe: `recusado: site da empresa '${escopo}' sem endereço` });
           return jsonResponse(req, { error: "O endereço do site da sua empresa na Gestão de Pessoas ainda não foi configurado. Avise o owner." }, 409);
         }
       }
