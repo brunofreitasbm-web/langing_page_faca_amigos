@@ -68,6 +68,9 @@ class Consulta implements PromiseLike<{ data: any; error: { message: string } | 
   }
   delete() { this.op = "delete"; return this; }
   eq(c: string, v: unknown) { this.filtros.push((l) => l[c] === v); return this; }
+  // Como no Postgres, `neq` não casa linha com a coluna nula.
+  neq(c: string, v: unknown) { this.filtros.push((l) => l[c] != null && l[c] !== v); return this; }
+  ilike(c: string, v: string) { this.filtros.push((l) => String(l[c] ?? "").toLowerCase() === v.toLowerCase()); return this; }
   is(c: string, v: unknown) { this.filtros.push((l) => (v === null ? l[c] == null : l[c] === v)); return this; }
   gte(c: string, v: unknown) { this.filtros.push((l) => String(l[c] ?? "") >= String(v)); return this; }
   in(c: string, vs: unknown[]) { this.filtros.push((l) => vs.includes(l[c])); return this; }
