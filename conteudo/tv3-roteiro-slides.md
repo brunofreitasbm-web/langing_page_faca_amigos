@@ -47,7 +47,7 @@ Família A · 20 s · QR: portal, layout tutorial, unidade arcoA pos 1
   - Subtexto: Quando você entrar, a agenda, os documentos e os recados da coordenação ficam no seu celular. São três passos.
   - Título do QR: Aponte a câmera aqui
   - Texto do QR: Leia o código com a câmera e toque em Entrar no portal.
-  - Dica sob o QR: Na tela de entrada, toque em Família
+  - Dica sob o QR: ou digite institutofacaamigos.com.br/familia
   - Passo 1: **Aponte e toque em Família** · Leia o QR, toque em Entrar e depois na aba Família.
   - Passo 2: **Digite o celular cadastrado** · É o número que você informou à recepção.
   - Passo 3: **Digite o código do SMS** · 6 números, valem 5 minutos. CPF só no primeiro acesso.
@@ -544,7 +544,7 @@ Família C · 15 s · sem QR, layout padrao, dias 1,2,3,4
 ### `d_fds`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Convite concreto para o fim de semana, com o horário mais calmo; reduz o receio da primeira visita.
-- **Imagem:** `img/playground-mediadora-tapete.webp` (alternativas: `img/hero-piscina-bolinhas.webp`, `img/playground-piscina-casinha.webp`)
+- **Imagem:** `img/playground-fachada-recepcao.webp` (alternativas: `img/playground-salao-amarelinha.webp`, `img/playground-mediadora-tapete.webp`, `img/inclusao-cantinho-leitura.webp`)
 - **Texto na tela:**
   - Kicker: 🌤️ Fim de semana no Playground
   - Headline: Primeira visita? Vá no <em>Horário Inclusivo</em>.
@@ -557,7 +557,7 @@ Família D · 15 s · sem QR, layout padrao
 ### `d_parque`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Informação logística sem adjetivo: onde e quando. Remove o passo de agendamento.
-- **Imagem:** `img/playground-fachada-recepcao.webp` (alternativas: `img/playground-piscina-casinha.webp`, `img/galeria-oficinas.webp`)
+- **Imagem:** `img/playground-fachada-recepcao.webp` (alternativas: `img/playground-piscina-casinha.webp`, `img/playground-salao-amarelinha.webp`, `img/galeria-oficinas.webp`)
 - **Texto na tela:**
   - Kicker: 📍 Playground no Parque Shopping
   - Headline: Playground no Parque Shopping, <em>no térreo</em>.
@@ -581,7 +581,7 @@ Família D · 15 s · sem QR, layout padrao, só com fotoGraoPara
 ### `d_prova`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Prova por especificidade, com fonte dita na própria frase. Vale só para o Playground, nunca para a clínica.
-- **Imagem:** `img/hero-piscina-bolinhas.webp` (alternativas: `img/playground-piscina-casinha.webp`)
+- **Imagem:** `img/playground-piscina-casinha.webp` (alternativas: `img/playground-salao-amarelinha.webp`, `img/playground-fachada-recepcao.webp`, `img/equipe-recepcao.webp`)
 - **Texto na tela:**
   - Kicker: 📊 Números do Playground
   - Headline: +1.100 famílias e <em>7.500 visitas</em> no Playground.
@@ -594,7 +594,7 @@ Família D · 15 s · sem QR, layout padrao
 ### `d_beneficio`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Identidade (pertencimento) em vez de desconto. O detalhe do benefício vem de CONFIG.beneficioFamilia.
-- **Imagem:** `img/playground-mediadora-tapete.webp` (alternativas: `img/galeria-oficinas.webp`)
+- **Imagem:** `img/inclusao-cantinho-leitura.webp` (alternativas: `img/galeria-oficinas.webp`, `img/playground-oficina-camiseta.webp`, `img/playground-mediadora-tapete.webp`)
 - **Texto na tela:**
   - Kicker: 💛 Família FaçaAmigos
   - Headline: Você faz parte da <em>Família FaçaAmigos</em>.
@@ -606,7 +606,7 @@ Família D · 15 s · sem QR, layout padrao
 ### `d_quando_ir`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Ajuda o pai a escolher o horário mais tranquilo (alívio) e a planejar o tempo real de visita.
-- **Imagem:** `img/playground-piscina-casinha.webp` (alternativas: `img/hero-piscina-bolinhas.webp`)
+- **Imagem:** `img/playground-salao-amarelinha.webp` (alternativas: `img/playground-mediadora-tapete.webp`, `img/playground-oficina-camiseta.webp`, `img/playground-piscina-casinha.webp`)
 - **Texto na tela:**
   - Kicker: 🗓️ Para planejar o sábado
   - Headline: Prefira a <em>manhã</em> ou o começo da tarde.
@@ -618,7 +618,7 @@ Família D · 15 s · sem QR, layout padrao
 ### `d_circuito`
 Família D · 15 s · sem QR, layout padrao
 - **Intenção:** Preço e opções de tempo, ditos como fato. Localização pelo quiosque, sem referência a lojas.
-- **Imagem:** `img/circuito-quiosque.webp` (alternativas: `img/circuito-frota-alinhada.webp`, `img/circuito-jeep-menino.webp`)
+- **Imagem:** `img/circuito-carrinhos.webp` (alternativas: `img/circuito-frota-quiosque.webp`, `img/circuito-jeep-menino.webp`, `img/circuito-frota-alinhada.webp`)
 - **Texto na tela:**
   - Kicker: 🚗 Circuito no Parque Shopping
   - Headline: Circuito: R$ 48 por <em>20 ou 30 minutos</em>.
@@ -635,10 +635,10 @@ Família D · 15 s · sem QR, layout padrao
 ### `e_indicar`
 Família E · 15 s · QR: teste, layout padrao
 - **Intenção:** Transforma o pai em canal de indicação; reciprocidade (ele já recebeu valor). Pressuposição: há alguém na sua roda.
-- **Imagem:** `img/isabella-3.webp` (alternativas: `img/clinica-atividade-pedagogica.webp`)
+- **Imagem:** `img/clinica-atividade-pedagogica.webp` (alternativas: `img/clinica-recursos-terapeuticos.webp`, `img/clinica-painel-sensorial.webp`)
 - **Texto na tela:**
   - Kicker: 💌 Para quem você lembrou
-  - Headline: Uma mãe que ainda não sabe <em>por onde começar</em>?
+  - Headline: Conhece alguém que precisa de <em>um primeiro passo</em>?
   - Subtexto: Pode ser mãe, pai ou avó. Envie o Mapeamento Comportamental: 25 perguntas, cerca de 5 minutos, gratuito.
   - Selo: Mapeamento
   - Título da ação: Indique o Mapeamento
@@ -658,7 +658,7 @@ Família E · 15 s · QR: teste, layout padrao
 ### `e_oque_e` **[ISABELLA]**
 Família E · 15 s · QR: teste, layout padrao
 - **Intenção:** Autoridade por transparência: o que é, quanto leva, o que mede e o que não faz. Prova de limite honesto.
-- **Imagem:** `img/isabella-3.webp` (alternativas: `img/clinica-atividade-pedagogica.webp`)
+- **Imagem:** `img/clinica-recursos-terapeuticos.webp` (alternativas: `img/clinica-painel-sensorial.webp`, `img/clinica-atividade-pedagogica.webp`)
 - **Texto na tela:**
   - Kicker: 🧭 Mapeamento Comportamental
   - Headline: 25 perguntas em cerca de <em>5 minutos</em>.
@@ -750,5 +750,5 @@ Regex sobre `tv3-slides.json`: `promessa|confian[çc]a|oferta|garantid|cura\b|es
 
 - Resultado: **vazio**
 - Famílias: A=12, B=9, C=8, D=7, E=2, R=4 (total 42)
-- Limites de tamanho (headline 58, subtext 165, kicker 34, actionTitle 34, actionDesc 105, qrTitle 30, qrDesc 88, qrHint 38, highlightText 88, passo título 28 e desc 62, comparativo cabeçalho 28 e item 44, quote 88): **nenhum campo acima do limite**. Medido sobre o texto visível, com os tokens expandidos ("Boa noite", "segunda-feira", rede de 20 caracteres e o texto atual de `CONFIG.beneficioFamilia`); os headlines também cabem com as tags `<em>` contadas.
+- Limites de tamanho (headline 58, subtext 165, kicker 34, actionTitle 34, actionDesc 105, qrTitle 30, qrDesc 88, qrHint 48, highlightText 88, passo título 28 e desc 62, comparativo cabeçalho 28 e item 44, quote 88): **nenhum campo acima do limite**. Medido sobre o texto visível, com os tokens expandidos ("Boa noite", "segunda-feira", rede de 20 caracteres e o texto atual de `CONFIG.beneficioFamilia`); os headlines também cabem com as tags `<em>` contadas.
 - Sem exclamação, sem travessão longo, sem "não é X, é Y", sem lista de negações; as únicas negações são "sem exigir explicação" (fonte literal) e "não precisa agendar" (fato real, dito uma vez).

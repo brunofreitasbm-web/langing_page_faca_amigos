@@ -40,7 +40,7 @@
     "subtext": "Quando você entrar, a agenda, os documentos e os recados da coordenação ficam no seu celular. São três passos.",
     "qrTitle": "Aponte a câmera aqui",
     "qrDesc": "Leia o código com a câmera e toque em Entrar no portal.",
-    "qrHint": "Na tela de entrada, toque em Família",
+    "qrHint": "ou digite institutofacaamigos.com.br/familia",
     "steps": [
       {
         "num": "1",
@@ -708,11 +708,12 @@
     "layout": "padrao",
     "qr": null,
     "isabella": false,
-    "image": "img/playground-mediadora-tapete.webp",
+    "image": "img/playground-fachada-recepcao.webp",
     "images": [
+      "img/playground-fachada-recepcao.webp",
+      "img/playground-salao-amarelinha.webp",
       "img/playground-mediadora-tapete.webp",
-      "img/hero-piscina-bolinhas.webp",
-      "img/playground-piscina-casinha.webp"
+      "img/inclusao-cantinho-leitura.webp"
     ],
     "kicker": "🌤️ Fim de semana no Playground",
     "kickerClass": "yellow",
@@ -730,6 +731,7 @@
     "images": [
       "img/playground-fachada-recepcao.webp",
       "img/playground-piscina-casinha.webp",
+      "img/playground-salao-amarelinha.webp",
       "img/galeria-oficinas.webp"
     ],
     "kicker": "📍 Playground no Parque Shopping",
@@ -758,10 +760,12 @@
     "layout": "padrao",
     "qr": null,
     "isabella": false,
-    "image": "img/hero-piscina-bolinhas.webp",
+    "image": "img/playground-piscina-casinha.webp",
     "images": [
-      "img/hero-piscina-bolinhas.webp",
-      "img/playground-piscina-casinha.webp"
+      "img/playground-piscina-casinha.webp",
+      "img/playground-salao-amarelinha.webp",
+      "img/playground-fachada-recepcao.webp",
+      "img/equipe-recepcao.webp"
     ],
     "kicker": "📊 Números do Playground",
     "kickerClass": "yellow",
@@ -775,10 +779,12 @@
     "layout": "padrao",
     "qr": null,
     "isabella": false,
-    "image": "img/playground-mediadora-tapete.webp",
+    "image": "img/inclusao-cantinho-leitura.webp",
     "images": [
-      "img/playground-mediadora-tapete.webp",
-      "img/galeria-oficinas.webp"
+      "img/inclusao-cantinho-leitura.webp",
+      "img/galeria-oficinas.webp",
+      "img/playground-oficina-camiseta.webp",
+      "img/playground-mediadora-tapete.webp"
     ],
     "kicker": "💛 Família FaçaAmigos",
     "kickerClass": "yellow",
@@ -792,10 +798,12 @@
     "layout": "padrao",
     "qr": null,
     "isabella": false,
-    "image": "img/playground-piscina-casinha.webp",
+    "image": "img/playground-salao-amarelinha.webp",
     "images": [
-      "img/playground-piscina-casinha.webp",
-      "img/hero-piscina-bolinhas.webp"
+      "img/playground-salao-amarelinha.webp",
+      "img/playground-mediadora-tapete.webp",
+      "img/playground-oficina-camiseta.webp",
+      "img/playground-piscina-casinha.webp"
     ],
     "kicker": "🗓️ Para planejar o sábado",
     "kickerClass": "yellow",
@@ -809,11 +817,12 @@
     "layout": "padrao",
     "qr": null,
     "isabella": false,
-    "image": "img/circuito-quiosque.webp",
+    "image": "img/circuito-carrinhos.webp",
     "images": [
-      "img/circuito-quiosque.webp",
-      "img/circuito-frota-alinhada.webp",
-      "img/circuito-jeep-menino.webp"
+      "img/circuito-carrinhos.webp",
+      "img/circuito-frota-quiosque.webp",
+      "img/circuito-jeep-menino.webp",
+      "img/circuito-frota-alinhada.webp"
     ],
     "kicker": "🚗 Circuito no Parque Shopping",
     "kickerClass": "yellow",
@@ -827,14 +836,15 @@
     "layout": "padrao",
     "qr": "teste",
     "isabella": false,
-    "image": "img/isabella-3.webp",
+    "image": "img/clinica-atividade-pedagogica.webp",
     "images": [
-      "img/isabella-3.webp",
-      "img/clinica-atividade-pedagogica.webp"
+      "img/clinica-atividade-pedagogica.webp",
+      "img/clinica-recursos-terapeuticos.webp",
+      "img/clinica-painel-sensorial.webp"
     ],
     "kicker": "💌 Para quem você lembrou",
     "kickerClass": "teal",
-    "headline": "Uma mãe que ainda não sabe <em>por onde começar</em>?",
+    "headline": "Conhece alguém que precisa de <em>um primeiro passo</em>?",
     "subtext": "Pode ser mãe, pai ou avó. Envie o Mapeamento Comportamental: 25 perguntas, cerca de 5 minutos, gratuito.",
     "badge": "Mapeamento",
     "actionTitle": "Indique o Mapeamento",
@@ -852,9 +862,10 @@
     "layout": "padrao",
     "qr": "teste",
     "isabella": true,
-    "image": "img/isabella-3.webp",
+    "image": "img/clinica-recursos-terapeuticos.webp",
     "images": [
-      "img/isabella-3.webp",
+      "img/clinica-recursos-terapeuticos.webp",
+      "img/clinica-painel-sensorial.webp",
       "img/clinica-atividade-pedagogica.webp"
     ],
     "kicker": "🧭 Mapeamento Comportamental",

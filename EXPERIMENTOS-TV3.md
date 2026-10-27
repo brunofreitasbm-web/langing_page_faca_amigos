@@ -28,7 +28,7 @@ Objetivo: saber se uma mudança na TV faz mais famílias entrarem no Portal, em 
 
 ## Ideias de testes, em ordem sugerida
 
-1. Cartão de mesa com o QR (presente ou ausente), a mudança de maior efeito esperado.
+1. Cartão de mesa com o QR (presente ou ausente), a mudança de maior efeito esperado: a 3 a 5 m o QR da TV não é lido do assento.
 2. Peso da família A: dobrar `a_lembrete` (`weight: 3`) contra o padrão.
 3. Tutorial `a_tut` aos 20 s contra 30 s.
 4. Com o benefício da Família da Clínica definido, medir o uso no caixa do Playground.
