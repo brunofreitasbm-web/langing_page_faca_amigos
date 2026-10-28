@@ -18,17 +18,27 @@
     header { background: var(--petrol); padding: 18px 16px; }
     header img { width: 170px; height: auto; display: block; margin: 0 auto; }
     main { max-width: 520px; margin: 0 auto; padding: 40px 16px 64px; text-align: center; }
-    .card { background: #fff; border-radius: 24px; padding: 28px 22px; box-shadow: 0 1px 2px rgba(6, 82, 100, .10), 0 4px 14px rgba(6, 82, 100, .10); }
+    .card { background: #fff; border-radius: 24px; padding: 28px 22px; text-align: left; box-shadow: 0 1px 2px rgba(6, 82, 100, .10), 0 4px 14px rgba(6, 82, 100, .10); }
     h1 { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 1.6rem; line-height: 1.2; margin: 0 0 12px; }
     p { margin: 0 0 16px; }
     button { min-height: 56px; padding: 14px 30px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: 800 1.15rem 'Nunito', sans-serif; cursor: pointer; box-shadow: 0 2px 4px rgba(214, 31, 74, .25), 0 8px 20px rgba(214, 31, 74, .30); }
-    button[disabled] { opacity: .6; cursor: default; }
+    button[disabled] { cursor: progress; }
+    button[disabled]::before { content: ''; display: inline-block; width: .9em; height: .9em; margin-right: .5em; vertical-align: -.1em; border: 2px solid rgba(255,255,255,.45); border-top-color: #fff; border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { button[disabled]::before { animation: none; } }
+    .actions { display: flex; flex-direction: column; align-items: stretch; gap: 6px; margin-top: 8px; }
+    @media (min-width: 480px) { .actions { flex-direction: row; align-items: center; gap: 20px; } }
+    .actions button, .actions .btn { flex: 0 0 auto; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 56px; padding: 14px 30px; border-radius: 999px; background: var(--pink); color: #fff; font: 800 1.15rem 'Nunito', sans-serif; text-decoration: none; box-shadow: 0 2px 4px rgba(214, 31, 74, .25), 0 8px 20px rgba(214, 31, 74, .30); }
+    .link { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; }
     a { color: var(--petrol); font-weight: 800; }
     .dots { display: inline-flex; gap: 8px; margin-bottom: 16px; }
     .dots i { width: 12px; height: 12px; border-radius: 50%; display: block; }
     .dots i:nth-child(1) { background: var(--yellow); } .dots i:nth-child(2) { background: var(--teal); } .dots i:nth-child(3) { background: var(--pink); }
     [hidden] { display: none !important; }
-    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+    :focus-visible { outline: 3px solid var(--petrol); outline-offset: 3px; }
+    header :focus-visible, footer :focus-visible { outline-color: var(--yellow); }
+    .btn:focus-visible, button:focus-visible { outline-color: var(--petrol); }
   </style>
 <link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
 </head>
@@ -36,12 +46,16 @@
 <body>
   <header><a href="/" aria-label="FaçaAmigos: ir para o início"><span class="fa-logo-card fa-logo-card--center"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></span></a></header>
   <main>
-    <div class="card">
+    <div class="card" aria-live="polite">
       <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
       <div id="ask" hidden>
         <h1>Quer parar de receber nossos e-mails?</h1>
-        <p>Você deixa de receber os conteúdos, novidades e ofertas sobre o guia O Brincar com Propósito. O resultado do mapeamento que você já pediu não é afetado.</p>
-        <button id="go" type="button">Sim, descadastrar</button>
+        <p id="ask-p1">Você deixa de receber os conteúdos, novidades e ofertas sobre o guia O Brincar com Propósito.</p>
+        <p id="ask-p2">O resultado do mapeamento que você já pediu não é afetado.</p>
+        <div class="actions">
+          <button id="go" type="button">Sim, descadastrar</button>
+          <a class="link" id="keep" href="/guia">Manter minha inscrição</a>
+        </div>
       </div>
       <div id="done" hidden>
         <h1>Pronto, você foi descadastrado(a)</h1>
@@ -51,6 +65,7 @@
       <div id="bad" hidden>
         <h1>Este link não é válido</h1>
         <p>Ele pode ter sido copiado incompleto. Fale com a gente em <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a> e resolvemos para você.</p>
+        <div class="actions"><a class="btn" href="/">Voltar para o site</a></div>
       </div>
     </div>
   </main>
@@ -62,7 +77,9 @@
       var eventos = /^[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}$/.test(e);
       if (!eventos && (!/^[0-9a-f-]{36}$/i.test(u) || !/^[0-9a-f]{20,}$/i.test(s))) { bad.hidden = false; return; }
       if (eventos) {
-        ask.querySelector('p').textContent = 'Você deixa de receber os avisos de próximos encontros e conteúdos do Instituto. Os e-mails do encontro em que você já está inscrito(a) (voucher e lembretes) continuam chegando.';
+        document.getElementById('ask-p1').textContent = 'Você deixa de receber os avisos de próximos encontros e conteúdos do Instituto.';
+        document.getElementById('ask-p2').textContent = 'Os e-mails do encontro em que você já está inscrito(a) (voucher e lembretes) continuam chegando.';
+        document.getElementById('keep').href = '/eventos';
         done.querySelector('p').textContent = 'Você não vai mais receber esses e-mails. Se mudar de ideia, é só marcar a opção de novidades na próxima inscrição.';
       }
       ask.hidden = false;

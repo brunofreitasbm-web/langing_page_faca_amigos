@@ -55,7 +55,6 @@
     .top p { font-size: 17px; font-weight: 600; opacity: 0.95; max-width: 34ch; }
 
     .main-btn { margin-top: 22px; }
-    .hint { margin: 10px 0 0; text-align: center; font-size: 15px; font-weight: 700; color: var(--ink-soft); }
     h2.first { margin-top: 26px; }
     .steps { list-style: none; margin: 0 0 22px; display: grid; gap: 12px; }
     .steps li {
@@ -81,6 +80,9 @@
       -webkit-tap-highlight-color: transparent;
     }
     .btn:active { background: var(--pink-dark); transform: scale(0.98); }
+    .btn:focus-visible, .help a:focus-visible { outline: 3px solid var(--petrol-deep); outline-offset: 3px; }
+    .top .brand:focus-visible { outline: 3px solid var(--yellow); }
+    @media (prefers-reduced-motion: reduce) { .btn:active { transform: none; } }
 
     .help {
       margin: 18px 0 8px; background: var(--petrol-soft); border-radius: 18px;
@@ -92,7 +94,14 @@
     .list { list-style: none; display: grid; gap: 10px; margin-bottom: 36px; }
     .list li { display: flex; gap: 10px; font-size: 16px; font-weight: 700; }
     .list li::before { content: "✓"; color: var(--teal-dark); font-weight: 900; }
-    footer { padding: 0 0 36px; font-size: 13.5px; font-weight: 600; color: var(--ink-soft); }
+    footer.wrap { padding-bottom: 36px; font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+      @media (min-width: 900px) {
+      body { font-size: 17px; }
+      .top p, .steps strong { font-size: 19px; }
+      .steps span, .help, footer { font-size: 17px; }
+      .list li { font-size: 18px; }
+      .main-btn { width: auto; min-width: 320px; max-width: 360px; margin-left: auto; margin-right: auto; }
+    }
   </style>
 </head>
 
@@ -111,7 +120,6 @@
 
   <main class="wrap">
     <a class="btn main-btn" id="entrar" data-cta="portal_entrar" href="https://sistema.institutofacaamigos.com.br/login?utm_source=tv3&amp;utm_medium=indoor&amp;utm_campaign=portal_familia" rel="noopener">Entrar no portal</a>
-    <p class="hint">Na tela seguinte, toque na aba <b>Família</b>.</p>
     <h2 class="first">Como entrar</h2>
     <ol class="steps">
       <li>

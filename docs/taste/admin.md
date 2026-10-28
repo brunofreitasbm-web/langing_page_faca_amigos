@@ -64,20 +64,20 @@ Fonte: extract.js em 1440x900 (só o login renderiza sem sessão) e leitura do C
 - Selo teal e resultado 'ok' do check-in: texto #0F6E5F, porque #137A6A sobre o fundo teal translúcido chegava a 4.40:1 sobre creme
 - Ficam como estão: estrelas de avaliação #F5A800 (2.0:1) no JS, que são glifos decorativos ao lado da nota em texto; emoji de lixeira em #9ca3af
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Bordas dos campos quase invisíveis**
+1. **Bordas dos campos quase invisíveis** [aplicada: .form-control com borda rgba(26,63,53,0.6)]
    - Evidência: borda de rgba(26,63,53,0.12) sobre branco = #E4E8E7, 1.24:1; o limite de 3:1 para bordas de campo pede alfa em torno de 0.6
    - Correção proposta: Trocar para rgba(26,63,53,0.6) ou #6F8780 nos .form-control
-2. **Foco do campo em verde-água claro**
+2. **Foco do campo em verde-água claro** [aplicada: borda de foco #137A6A, halo mantido]
    - Evidência: borda de foco #2ECFB5 sobre branco = 1.96:1; só o halo de 4px rgba(46,207,181,0.18) ajuda
    - Correção proposta: Usar #137A6A (5.22:1) na borda de foco e manter o halo
-3. **Texto de tabela e rótulos abaixo de 12px**
+3. **Texto de tabela e rótulos abaixo de 12px** [aplicada: piso 0.8rem (12.8px) em th, rótulos, KPI, selos, ajuda]
    - Evidência: th 11.52px, rótulo do KPI 11.2px, caixa alta com espaçamento; vários entre 0.7 e 0.78rem
    - Correção proposta: Piso de 12.8px (0.8rem) para cabeçalho de tabela e rótulos
-4. **Abas fora da tela sem indicação**
+4. **Abas fora da tela sem indicação** [aplicada: máscara em gradiente na borda, scroll-snap e aba clicada centralizada (JS mínimo); abas com 44px de altura]
    - Evidência: '.tab-bar { max-width: 100%; overflow-x: auto }' com botões nowrap; em 390px as abas finais ficam escondidas sem sombra nem seta
    - Correção proposta: Adicionar gradiente de borda ou scroll-snap com a aba ativa centralizada
-5. **Estrelas em #F5A800**
+5. **Estrelas em #F5A800** [aplicada: #B97D00 nas duas estrelas do JS]
    - Evidência: 2.0:1 sobre branco (gráfico precisa de 3:1); a nota em texto está ao lado
    - Correção proposta: Usar #B97D00 (3.5:1) ou contorno escuro nas estrelas

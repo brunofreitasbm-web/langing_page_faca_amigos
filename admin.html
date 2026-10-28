@@ -159,7 +159,7 @@
     .form-control {
       width: 100%;
       padding: 13px 16px;
-      border: 2.5px solid rgba(26, 63, 53, 0.12);
+      border: 2.5px solid rgba(26, 63, 53, 0.6);
       border-radius: 14px;
       font-family: 'Nunito', sans-serif;
       font-weight: 700;
@@ -172,7 +172,7 @@
 
     .form-control:focus {
       outline: none;
-      border-color: var(--teal);
+      border-color: #137A6A;
       box-shadow: 0 0 0 4px rgba(46, 207, 181, 0.18);
     }
 
@@ -290,7 +290,7 @@
       border-radius: 9999px;
       padding: 5px 13px;
       font-weight: 800;
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       white-space: nowrap;
     }
 
@@ -322,7 +322,7 @@
     }
 
     .leads-table th {
-      font-size: 0.72rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--ink-soft);
@@ -364,7 +364,7 @@
     }
 
     .lead-card .label {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: var(--gray);
@@ -448,7 +448,7 @@
     }
 
     .detail-grid .field .label {
-      font-size: 0.7rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
       color: var(--gray);
@@ -508,7 +508,7 @@
     }
 
     .insight-meta {
-      font-size: 0.78rem;
+      font-size: 0.8rem;
       color: var(--ink-soft);
       font-weight: 700;
       margin-bottom: 10px;
@@ -545,7 +545,7 @@
     .wifi-bars { display: flex; align-items: flex-end; gap: 4px; height: 64px; margin: 4px 0 18px; }
     .wifi-bars .bar { flex: 1; min-width: 6px; background: var(--teal); border-radius: 4px 4px 0 0; position: relative; min-height: 2px; }
     .wifi-bars .bar[data-n="0"] { background: rgba(26,63,53,0.12); }
-    .wifi-bars-legend { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--ink-soft); margin-top: -14px; margin-bottom: 14px; }
+    .wifi-bars-legend { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--ink-soft); margin-top: -14px; margin-bottom: 14px; }
 
     .tab-bar {
       display: flex;
@@ -602,7 +602,7 @@
       border-radius: 9999px;
       padding: 3px 11px;
       font-weight: 800;
-      font-size: 0.76rem;
+      font-size: 0.8rem;
       word-break: break-word;
     }
 
@@ -618,7 +618,16 @@
     .leads-table .code { font-weight: 800; letter-spacing: 0.02em; word-break: break-all; }
 
     .tab-bar { max-width: 100%; overflow-x: auto; }
-    .tab-btn { white-space: nowrap; }
+    .tab-btn { white-space: nowrap; min-height: 44px; scroll-snap-align: center; }
+    .tab-bar { scroll-snap-type: x proximity; scrollbar-width: thin;
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 28px), transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0, #000 14px, #000 calc(100% - 28px), transparent 100%); }
+    @media (min-width: 1100px) { .tab-bar { -webkit-mask-image: none; mask-image: none; } }
+    .btn { min-height: 44px; }
+    .tab-btn:focus-visible { outline: 3px solid var(--dark); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+    }
 
     /* ---------- Eventos ---------- */
     .ev-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
@@ -636,13 +645,13 @@
     .ev-panel-head .actions { display: flex; gap: 8px; flex-wrap: wrap; }
     .ev-kpis { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin-bottom: 16px; }
     .ev-kpi { background: var(--white); border-radius: 16px; box-shadow: var(--shadow-sm); padding: 12px 14px; }
-    .ev-kpi .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gray); font-weight: 800; }
+    .ev-kpi .label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--gray); font-weight: 800; }
     .ev-kpi .value { font-size: 1.4rem; font-weight: 900; line-height: 1.2; }
     .ev-kpi.warn .value { color: var(--pink-dark); }
     .ev-form-grid { display: grid; gap: 12px 16px; grid-template-columns: 1fr 1fr; }
     .ev-form-grid .wide { grid-column: 1 / -1; }
     @media (max-width: 640px) { .ev-form-grid { grid-template-columns: 1fr; } }
-    .ev-help { font-size: 0.78rem; color: var(--ink-soft); font-weight: 600; margin-top: 4px; }
+    .ev-help { font-size: 0.8rem; color: var(--ink-soft); font-weight: 600; margin-top: 4px; }
     .modal.modal-wide { max-width: 860px; }
     .ev-tipos-table td, .ev-tipos-table th { padding: 10px 12px; }
     .ev-inline-actions { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -715,7 +724,7 @@
         <button type="button" class="tab-btn owner-only" id="tabConfigBtn">Textos do resultado</button>
         <button type="button" class="tab-btn" id="tabWifiBtn">Cupons Wi-Fi</button>
         <button type="button" class="tab-btn" id="tabEventosBtn">Eventos</button>
-        <button type="button" class="tab-btn owner-only" id="tabReviewsBtn">Avaliações NPS <span class="badge badge-pink" id="reviewsPendingBadge" style="display:none;margin-left:4px;font-size:0.7rem;padding:2px 7px;">0</span></button>
+        <button type="button" class="tab-btn owner-only" id="tabReviewsBtn">Avaliações NPS <span class="badge badge-pink" id="reviewsPendingBadge" style="display:none;margin-left:4px;font-size:0.8rem;padding:2px 7px;">0</span></button>
       </div>
 
       <div id="leadsView">
@@ -2332,7 +2341,7 @@
 
           rowsHtml += '<tr>' +
             '<td><div class="guardian-name">' + escapeHtml(r.author_name) + '</div><div class="guardian-meta">' + escapeHtml(visitLabel) + '</div></td>' +
-            '<td><div style="color:#F5A800;letter-spacing:2px;font-size:0.95rem;">' + stars + '</div><div class="guardian-meta" style="font-weight:800;">' + escapeHtml(npsTxt) + '</div></td>' +
+            '<td><div style="color:#B97D00;letter-spacing:2px;font-size:0.95rem;">' + stars + '</div><div class="guardian-meta" style="font-weight:800;">' + escapeHtml(npsTxt) + '</div></td>' +
             '<td><div style="max-width:380px;font-style:italic;font-size:0.92rem;line-height:1.45;">“' + escapeHtml(r.comment) + '”</div></td>' +
             '<td>' + originBadge + '</td>' +
             '<td>' + escapeHtml(dateTxt) + '</td>' +
@@ -2342,7 +2351,7 @@
 
           cardsHtml += '<div class="lead-card">' +
             '<div class="row"><div><div class="child-name">' + escapeHtml(r.author_name) + '</div><div class="guardian-meta">' + escapeHtml(visitLabel) + '</div></div>' + statusBadge + '</div>' +
-            '<div style="color:#F5A800;letter-spacing:2px;font-size:1.1rem;margin:4px 0;">' + stars + ' <span class="guardian-meta" style="font-size:0.8rem;vertical-align:middle;font-weight:800;">(' + escapeHtml(npsTxt) + ')</span></div>' +
+            '<div style="color:#B97D00;letter-spacing:2px;font-size:1.1rem;margin:4px 0;">' + stars + ' <span class="guardian-meta" style="font-size:0.8rem;vertical-align:middle;font-weight:800;">(' + escapeHtml(npsTxt) + ')</span></div>' +
             '<div style="font-style:italic;margin:6px 0 10px;line-height:1.5;">“' + escapeHtml(r.comment) + '”</div>' +
             '<div class="row"><div class="guardian-meta">' + originBadge + ' · ' + escapeHtml(dateTxt) + '</div>' + (r.featured ? '<span class="badge badge-pink">Destaque</span>' : '') + '</div>' +
             '<div class="actions" style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">' + toggleBtn + featBtn + delBtn + '</div>' +
@@ -3126,6 +3135,16 @@
     })();
   </script>
 
+<script>
+  (function () {
+    var bar = document.querySelector('.tab-bar');
+    if (!bar) return;
+    bar.addEventListener('click', function (e) {
+      var b = e.target.closest && e.target.closest('.tab-btn');
+      if (b && b.scrollIntoView) b.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+    });
+  })();
+</script>
 </body>
 
 </html>
