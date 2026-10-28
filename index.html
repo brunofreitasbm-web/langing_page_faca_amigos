@@ -408,16 +408,24 @@
   <style>
     :root {
       --r-card: 24px;
-      --pink: #F0196B;
+      /* Rosa e teal-escuro calibrados para texto branco >= 4.5:1 (WCAG AA). Rosa = ação principal; verde = só WhatsApp. */
+      --pink: #E01560;
       --pink-dark: #C81158;
       --teal: #2ECFB5;
-      --teal-dark: #1FA893;
+      --teal-dark: #137A6A;
       --yellow: #FFE234;
       --dark: #1A3F35;
       --ink-soft: #4C6B62;
       --cream: #FFF9F1;
       --white: #FFFFFF;
       --wa: #25D366;
+      --wa-ink: #053B1C;
+      /* Escala de texto: 5 passos (antes eram ~12 valores entre 0.7 e 1.15rem) */
+      --fs-xs: 0.8rem;
+      --fs-sm: 0.9rem;
+      --fs-md: 1rem;
+      --fs-lg: 1.15rem;
+      --fs-xl: 1.3rem;
       --ring: conic-gradient(from 200deg, #8B5CF6, #F0196B, #FF7A00, #FFE234, #8B5CF6);
       --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
       --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
@@ -452,12 +460,12 @@
     .sec-title { font-size: clamp(1.9rem, 4vw, 2.7rem); margin-bottom: 14px; }
     .sec-title-sm { font-size: clamp(1.6rem, 3.3vw, 2.2rem); }
     .sec-title-xs { font-size: clamp(1.4rem, 3vw, 1.9rem); }
-    .sec-sub { color: var(--ink-soft); font-size: 1.1rem; font-weight: 600; max-width: 46rem; margin: 0 auto 44px; }
+    .sec-sub { color: var(--ink-soft); font-size: var(--fs-lg); font-weight: 600; max-width: 46rem; margin: 0 auto 44px; }
     .center { text-align: center; }
     .momentos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
     .momentos-grid figure { margin: 0; position: relative; aspect-ratio: 4/5; border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-sm); }
     .momentos-grid img { width: 100%; height: 100%; object-fit: cover; }
-    .momentos-grid figcaption { position: absolute; left: 12px; bottom: 12px; background: rgba(26, 63, 53, 0.82); color: #fff; font-size: 0.82rem; font-weight: 800; padding: 6px 14px; border-radius: 9999px; }
+    .momentos-grid figcaption { position: absolute; left: 12px; bottom: 12px; background: rgba(26, 63, 53, 0.82); color: #fff; font-size: var(--fs-xs); font-weight: 800; padding: 6px 14px; border-radius: 9999px; }
     @media (max-width: 760px) { .momentos-grid { grid-template-columns: 1fr 1fr; gap: 10px; } }
 
     .hl { position: relative; white-space: nowrap; }
@@ -469,7 +477,7 @@
     /* Botões — sempre pill */
     .btn {
       display: inline-flex; align-items: center; justify-content: center; gap: 10px;
-      font-family: 'Nunito', 'Nunito Fallback', sans-serif; font-weight: 800; font-size: 1.05rem; padding: 15px 30px;
+      font-family: 'Nunito', 'Nunito Fallback', sans-serif; font-weight: 800; font-size: var(--fs-md); padding: 15px 30px;
       border-radius: 9999px; border: none; cursor: pointer; min-height: 48px;
       transition: transform var(--t-fast), box-shadow var(--t-fast), filter var(--t-fast);
     }
@@ -480,14 +488,15 @@
 
     .btn-pink { background: var(--pink); color: #fff; box-shadow: var(--shadow-pink); }
     .btn-teal { background: var(--teal-dark); color: #fff; box-shadow: 0 10px 26px rgba(31, 168, 147, 0.32); }
-    .btn-wa { background: var(--wa); color: #fff; box-shadow: 0 10px 26px rgba(37, 211, 102, 0.35); }
+    .btn-wa { background: var(--wa); color: var(--wa-ink); box-shadow: 0 10px 26px rgba(37, 211, 102, 0.35); }
     .btn-ghost { background: var(--white); color: var(--dark); border: 2.5px solid var(--dark); }
     .btn-ghost:hover { background: var(--yellow); border-color: var(--dark); }
-    .btn-sm { padding: 10px 22px; font-size: 0.95rem; min-height: 44px; }
+    .btn-dark { background: var(--dark); color: #fff; box-shadow: 0 10px 26px rgba(26, 63, 53, 0.22); }
+    .btn-sm { padding: 10px 22px; font-size: var(--fs-md); min-height: 44px; }
 
     /* Topbar */
     .topbar {
-      background: var(--dark); color: #fff; text-align: center; font-size: 0.92rem; font-weight: 700;
+      background: var(--dark); color: #fff; text-align: center; font-size: var(--fs-sm); font-weight: 700;
       padding: 9px 14px; display: flex; justify-content: center; align-items: center; gap: 4px 12px; flex-wrap: wrap;
     }
     .topbar b { color: var(--yellow); }
@@ -501,11 +510,11 @@
     .tb-jobs { color: var(--yellow); text-decoration: underline; text-underline-offset: 3px; }
     @media (max-width: 760px) {
       /* Uma linha só no celular: o status fica, o "Estamos contratando" sai (está no rodapé). */
-      .topbar { font-size: 0.8rem; padding: 8px 12px; flex-wrap: nowrap; }
+      .topbar { font-size: var(--fs-xs); padding: 8px 12px; flex-wrap: nowrap; }
       .tb-sep, .tb-jobs { display: none; }
     }
     @media (max-width: 480px) {
-      .topbar { font-size: 0.78rem; padding: 8px 10px; }
+      .topbar { font-size: var(--fs-xs); padding: 8px 10px; }
       .tb-long { display: none; }
       .tb-short { display: inline; }
     }
@@ -519,7 +528,7 @@
     .navbar .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
     .nav-units { display: flex; gap: 6px; align-items: center; }
     .nav-units a {
-      font-weight: 800; font-size: 0.95rem; padding: 9px 16px; border-radius: 9999px; min-height: 44px;
+      font-weight: 800; font-size: var(--fs-md); padding: 9px 16px; border-radius: 9999px; min-height: 44px;
       display: inline-flex; align-items: center; justify-content: center;
       transition: background var(--t-fast), color var(--t-fast);
     }
@@ -531,13 +540,13 @@
       .navbar { padding: 6px 0 2px; }
       .navbar .wrap { padding: 0 10px; row-gap: 0; }
       .nav-units { order: 3; flex: 1 0 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; }
-      .nav-units a { white-space: nowrap; font-size: 0.84rem; padding: 0 2px; }
+      .nav-units a { white-space: nowrap; font-size: var(--fs-sm); padding: 0 2px; }
       .nav-actions .btn-wa { padding: 8px 16px; }
       .hl { white-space: normal; } /* o destaque do título passava da tela em 390px */
     }
 
-    /* Hero — âncora de marca, sem escolher um lado */
-    .hero { padding: 64px 0 40px; position: relative; overflow: hidden; text-align: center; }
+    /* Hero — o Playground é a conversão nº 1 da home: foto do espaço + 1 ação principal (rosa), 1 secundária, Clínica como link */
+    .hero { padding: 56px 0 40px; position: relative; overflow: hidden; }
     .hero::before {
       content: ''; position: absolute; top: -120px; right: -120px; width: 340px; height: 340px;
       border-radius: 50%; background: var(--yellow); opacity: 0.45;
@@ -546,32 +555,43 @@
       content: ''; position: absolute; bottom: -90px; left: -90px; width: 240px; height: 240px;
       border-radius: 50%; background: var(--teal); opacity: 0.16;
     }
-    .hero .wrap { position: relative; z-index: 1; max-width: 760px; }
+    .hero .wrap { position: relative; z-index: 1; }
+    .hero-grid { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; }
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px; background: var(--white); border-radius: 9999px;
-      padding: 8px 18px; font-size: 0.8rem; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 8px 18px; font-size: var(--fs-xs); font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase;
       color: var(--teal-dark); box-shadow: var(--shadow-sm); margin-bottom: 22px;
     }
     .eyebrow::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--ring); }
     .hero h1 { font-size: clamp(2.1rem, 4.4vw, 3.2rem); margin-bottom: 18px; }
-    .hero .sub { font-size: 1.15rem; color: var(--ink-soft); font-weight: 700; max-width: 38rem; margin: 0 auto; }
-    .hero .wrap { max-width: 940px; }
-    .hero h1 { max-width: 760px; margin-left: auto; margin-right: auto; }
-    .hero .eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: 0.88rem; }
-    /* Triagem: três caminhos com o mesmo peso (a home é um hub, nenhum produto domina) */
-    .triage { display: grid; gap: 14px; grid-template-columns: repeat(3, 1fr); margin: 30px auto 0; }
-    .triage .btn { flex-direction: column; gap: 2px; padding: 12px 18px; line-height: 1.2; text-align: center; }
-    .triage .btn small { font-size: 0.78rem; font-weight: 700; opacity: 0.9; }
-    @media (max-width: 760px) {
-      .hero { padding: 24px 0 30px; }
-      .hero .eyebrow { margin-bottom: 14px; padding: 6px 14px; font-size: 0.8rem; }
-      .hero h1 { font-size: clamp(1.7rem, 7.4vw, 2.1rem); margin-bottom: 10px; }
-      .hero .sub { font-size: 1rem; }
-      .triage { grid-template-columns: 1fr; gap: 10px; margin-top: 18px; }
-      .triage .btn { width: 100%; min-height: 56px; padding: 9px 18px; }
+    .hero .sub { font-size: var(--fs-lg); color: var(--ink-soft); font-weight: 600; max-width: 34rem; }
+    .hero .eyebrow { text-transform: none; letter-spacing: 0.02em; font-size: var(--fs-sm); }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+    .hero-ctas .btn { flex-direction: column; gap: 2px; padding: 12px 28px; line-height: 1.2; text-align: center; }
+    .hero-ctas .btn small { font-size: var(--fs-xs); font-weight: 700; }
+    .hero-link {
+      display: inline-flex; align-items: center; min-height: 44px; margin-top: 10px; font-weight: 700; color: var(--ink-soft);
+      text-decoration: underline; text-underline-offset: 3px;
     }
-
-
+    .hero-link:hover { color: var(--dark); }
+    .hero-photo {
+      margin: 0; border-radius: 32px; overflow: hidden; aspect-ratio: 4/5; border: 6px solid var(--white);
+      box-shadow: var(--shadow-lg); transform: rotate(1.5deg);
+    }
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; }
+    /* Números logo abaixo do hero: prova social antes de pedir o clique */
+    .proof-band { padding: 4px 0 30px; }
+    .proof-band .stats-line { margin-top: 0; }
+    @media (max-width: 860px) {
+      .hero { padding: 24px 0 30px; text-align: center; }
+      .hero-grid { grid-template-columns: 1fr; gap: 26px; }
+      .hero .eyebrow { margin-bottom: 14px; padding: 6px 14px; font-size: var(--fs-xs); }
+      .hero h1 { font-size: clamp(1.7rem, 7.4vw, 2.1rem); margin-bottom: 10px; }
+      .hero .sub { font-size: var(--fs-md); margin: 0 auto; }
+      .hero-ctas { flex-direction: column; gap: 10px; margin-top: 18px; }
+      .hero-ctas .btn { width: 100%; min-height: 56px; padding: 9px 18px; }
+      .hero-photo { aspect-ratio: 16/11; transform: none; max-width: 520px; margin: 0 auto; }
+    }
 
     /* Prova social (avaliações) — Carrossel Deslizante */
     .rv-slider-wrap { position: relative; margin: 18px 0 10px; width: 100%; }
@@ -609,9 +629,9 @@
       flex-direction: column;
     }
     .rv:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
-    .rv-stars { color: #F5B301; letter-spacing: 2px; font-size: 1.05rem; margin-bottom: 8px; }
-    .rv blockquote { margin: 0 0 10px; font-weight: 700; color: var(--ink); flex: 1; }
-    .rv figcaption { font-size: 0.85rem; font-weight: 800; color: var(--ink-soft); }
+    .rv-stars { color: #F5B301; letter-spacing: 2px; font-size: var(--fs-md); margin-bottom: 8px; }
+    .rv blockquote { margin: 0 0 10px; font-weight: 600; color: var(--ink); flex: 1; }
+    .rv figcaption { font-size: var(--fs-sm); font-weight: 800; color: var(--ink-soft); }
     .rv-nav-btn {
       position: absolute; top: calc(50% - 22px); width: 44px; height: 44px; border-radius: 50%;
       background: var(--white); border: 2px solid rgba(26,63,53,0.1); box-shadow: var(--shadow-lg);
@@ -621,13 +641,13 @@
     .rv-nav-btn:hover { background: var(--teal); color: #fff; border-color: var(--teal); transform: scale(1.1); }
     .rv-nav-btn.rv-prev { left: -20px; }
     .rv-nav-btn.rv-next { right: -20px; }
-    .rv-scroll-hint { display: flex; justify-content: center; font-size: 0.82rem; font-weight: 800; color: var(--ink-soft); margin-top: 6px; }
+    .rv-scroll-hint { display: flex; justify-content: center; font-size: var(--fs-xs); font-weight: 800; color: var(--ink-soft); margin-top: 6px; }
     @media (max-width: 860px) { .rv-nav-btn { display: none; } }
-    .rv-note { text-align: center; font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px; }
+    .rv-note { text-align: center; font-size: var(--fs-sm); font-weight: 600; color: var(--ink-soft); margin-top: 14px; }
     .reviews-hub { margin-top: 44px; }
     /* Números numa linha só (antes: chips + seção "em números") */
-    .stats-line { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 6px 26px; margin-top: 22px; font-weight: 800; color: var(--ink-soft); text-align: center; }
-    .stats-line strong { font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; color: var(--pink); font-size: 1.35rem; margin-right: 4px; }
+    .stats-line { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; gap: 6px 30px; margin-top: 22px; font-weight: 700; color: var(--ink-soft); text-align: center; }
+    .stats-line strong { font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; color: var(--pink); font-size: 1.8rem; margin-right: 6px; }
 
     /* Bloco Clínica — registro sóbrio */
     .clinica-block { background: var(--white); border-radius: 48px; margin: 40px 0; padding: 60px 0; }
@@ -642,7 +662,7 @@
     .clinica-badges { display: flex; flex-wrap: wrap; gap: 10px; margin: 20px 0 26px; }
     .badge {
       display: inline-flex; align-items: center; gap: 8px; border: 2.5px solid var(--teal); border-radius: 9999px;
-      padding: 9px 18px; font-weight: 800; font-size: 0.9rem; background: var(--cream);
+      padding: 9px 18px; font-weight: 800; font-size: var(--fs-sm); background: var(--cream);
     }
     .badge svg { width: 16px; height: 16px; color: var(--teal-dark); flex-shrink: 0; }
 
@@ -665,8 +685,8 @@
       display: inline-flex; flex-direction: column; align-items: flex-start; background: var(--cream);
       border-radius: 18px; padding: 8px 16px; font-weight: 800;
     }
-    .price-chip small { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
-    .price-chip span { font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif; font-size: 1.1rem; color: var(--pink); }
+    .price-chip small { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); }
+    .price-chip span { font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif; font-size: var(--fs-lg); color: var(--pink); }
 
     /* Depoimentos cruzados */
     .testi-block { background: var(--white); padding: 60px 0; }
@@ -674,7 +694,7 @@
     @media (min-width: 760px) { .testi-grid { grid-template-columns: repeat(3, 1fr); } }
     .testi-card { background: var(--cream); border-radius: 24px; padding: 24px; }
     .testi-card p { font-weight: 700; margin-bottom: 12px; }
-    .testi-card .who { color: var(--ink-soft); font-size: 0.88rem; font-weight: 800; }
+    .testi-card .who { color: var(--ink-soft); font-size: var(--fs-sm); font-weight: 800; }
 
     /* Localização */
     .local-block { padding: 60px 0; text-align: center; }
@@ -682,11 +702,11 @@
     .unit-card { background: var(--white); border-radius: 24px; padding: 22px 22px 20px; box-shadow: var(--shadow-sm); border-top: 5px solid var(--teal); }
     .unit-card.u-pink { border-top-color: var(--pink); }
     .unit-card.u-yellow { border-top-color: var(--yellow); }
-    .unit-card .u-pin { font-size: 1.3rem; line-height: 1; }
-    .unit-card .u-name { display: block; font-weight: 800; color: var(--dark); margin: 8px 0 2px; font-size: 1.02rem; }
-    .unit-card .u-role { display: block; font-weight: 700; color: var(--teal-dark); font-size: 0.85rem; margin-bottom: 10px; }
-    .unit-card .u-addr { margin: 0 0 8px; font-weight: 600; color: var(--dark-soft, var(--dark)); font-size: 0.93rem; line-height: 1.5; }
-    .unit-card .u-hours { margin: 0; font-weight: 800; font-size: 0.88rem; color: var(--teal-dark); }
+    .unit-card .u-pin { font-size: var(--fs-xl); line-height: 1; }
+    .unit-card .u-name { display: block; font-weight: 800; color: var(--dark); margin: 8px 0 2px; font-size: var(--fs-md); }
+    .unit-card .u-role { display: block; font-weight: 700; color: var(--teal-dark); font-size: var(--fs-sm); margin-bottom: 10px; }
+    .unit-card .u-addr { margin: 0 0 8px; font-weight: 600; color: var(--dark-soft, var(--dark)); font-size: var(--fs-sm); line-height: 1.5; }
+    .unit-card .u-hours { margin: 0; font-weight: 800; font-size: var(--fs-sm); color: var(--teal-dark); }
     @media (max-width: 860px) { .unit-grid { grid-template-columns: 1fr; } }
     .local-actions { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
     .geo-facts { margin-top: 40px; text-align: left; }
@@ -698,11 +718,11 @@
     .para-pais { padding-top: 30px; }
     .pp-block { margin-top: 56px; }
     .pp-links { margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-    .teste-text { color: var(--ink-soft); font-weight: 600; font-size: 1.05rem; margin-bottom: 24px; max-width: 34rem; }
-    .teste-fine { font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px; }
+    .teste-text { color: var(--ink-soft); font-weight: 600; font-size: var(--fs-md); margin-bottom: 24px; max-width: 34rem; }
+    .teste-fine { font-size: var(--fs-xs); font-weight: 600; color: var(--ink-soft); margin-top: 14px; }
     .guide-card { display: flex; flex-direction: column; gap: 4px; color: var(--dark); }
     .guide-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
-    .guide-go { margin-top: auto; padding-top: 8px; font-weight: 800; color: var(--pink); font-size: 0.92rem; }
+    .guide-go { margin-top: auto; padding-top: 8px; font-weight: 800; color: var(--pink); font-size: var(--fs-sm); }
 
     /* Celular: ações viram botões de largura cheia (toque fácil) */
     @media (max-width: 560px) {
@@ -713,12 +733,12 @@
 
     footer {
       background: var(--dark); color: rgba(255, 255, 255, 0.9); padding: 52px 22px 100px;
-      text-align: center; font-size: 0.92rem; font-weight: 600;
+      text-align: center; font-size: var(--fs-sm); font-weight: 600;
     }
     footer .logo { color: #fff; justify-content: center; margin-bottom: 14px; }
     footer p { margin: 4px 0; }
     footer a { text-decoration: underline; text-underline-offset: 3px; }
-    footer .legal { margin-top: 18px; font-size: 0.85rem; opacity: 0.85; }
+    footer .legal { margin-top: 18px; font-size: var(--fs-sm); opacity: 0.85; }
 
     .wa-float {
       position: fixed; right: 22px; bottom: 22px; z-index: 100; width: 62px; height: 62px;
@@ -746,70 +766,6 @@
       .btn, .lazer-photo img { transition: none; }
     }
 
-    /* Jornada da família — 4 paradas (brincar, observar, entender, cuidar). Linha e nós animam uma vez ao entrar na tela;
-       sem JS ou com movimento reduzido, tudo aparece já desenhado. */
-    .jornada { padding: 40px 0 14px; }
-    .jornada-head { text-align: center; max-width: 40rem; margin: 0 auto 26px; }
-    .jornada-head p { color: var(--ink-soft); font-weight: 700; }
-    .j-track { height: 70px; position: relative; }
-    .j-track svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-    .j-path-bg { fill: none; stroke: rgba(26, 63, 53, 0.12); stroke-width: 3; }
-    .j-path-draw { fill: none; stroke: url(#j-grad); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
-    .j-stops { list-style: none; margin: -63px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
-    .j-stop { display: grid; gap: 12px; align-content: start; min-width: 0; }
-    .j-node {
-      width: 56px; height: 56px; border-radius: 50%; display: grid; place-items: center; justify-self: center;
-      background: var(--white); border: 3px solid var(--c); color: var(--c); box-shadow: var(--shadow-sm); position: relative; z-index: 1;
-    }
-    .j-node svg { width: 26px; height: 26px; }
-    .j-card { background: var(--white); border-radius: 20px; padding: 18px; border: 1px solid rgba(26, 63, 53, 0.08); box-shadow: var(--shadow-sm); display: grid; gap: 8px; align-content: start; min-width: 0; }
-    .j-tag { font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c); }
-    .j-card h3 { font-size: 1.15rem; line-height: 1.25; margin: 0; }
-    .j-points { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; font-size: 0.92rem; font-weight: 700; }
-    .j-points li { min-width: 0; }
-    .j-proof { color: var(--ink-soft); padding-left: 22px; position: relative; }
-    .j-proof::before {
-      content: ''; position: absolute; left: 0; top: 0.3em; width: 14px; height: 14px; border-radius: 50%;
-      background: var(--c) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath d='M3.6 7.2l2.1 2.1 4.1-4.4' fill='none' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 14px no-repeat;
-    }
-    .j-deal { color: var(--dark); font-weight: 800; }
-    .j-cta {
-      display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 18px; margin-top: 4px;
-      border-radius: 9999px; background: var(--c); color: #fff; font-weight: 900; font-size: 0.92rem; justify-self: start; text-align: center;
-    }
-    .j-cta:focus-visible { outline: 3px solid var(--dark); outline-offset: 2px; }
-    .j-1 { --c: var(--pink-dark); }
-    .j-2 { --c: #7C4DDB; }
-    .j-3 { --c: #8A6A00; }
-    .j-4 { --c: var(--teal-dark); }
-    .j-note { text-align: center; margin: 22px auto 0; font-weight: 800; color: var(--ink-soft); max-width: 36rem; }
-    .j-note strong { color: var(--dark); }
-
-    .jornada.anim:not(.play) .j-path-draw { stroke-dashoffset: 1; }
-    .jornada.anim:not(.play) .j-node { opacity: 0; transform: scale(0.7); }
-    .jornada.anim.play .j-path-draw { animation: j-draw 2s cubic-bezier(0.6, 0, 0.3, 1) both; }
-    .jornada.anim.play .j-node { animation: j-pop 0.5s cubic-bezier(0.34, 1.5, 0.64, 1) both; animation-delay: calc(var(--i) * 0.45s + 0.15s); }
-    @keyframes j-draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
-    @keyframes j-pop { from { opacity: 0; transform: scale(0.7); } to { opacity: 1; transform: scale(1); } }
-    @keyframes j-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
-
-    @media (max-width: 1020px) and (min-width: 761px) {
-      .j-stops { grid-template-columns: repeat(2, 1fr); margin-top: 0; row-gap: 22px; }
-      .j-track { display: none; }
-    }
-    @media (max-width: 760px) {
-      .j-track { display: none; }
-      .j-stops { grid-template-columns: 1fr; margin-top: 0; gap: 14px; position: relative; }
-      .j-stops::before {
-        content: ''; position: absolute; left: 26px; top: 28px; bottom: 28px; width: 4px; border-radius: 4px;
-        background: linear-gradient(var(--pink), #8B5CF6, #C99A00, var(--teal-dark)); transform-origin: top;
-      }
-      .j-stop { grid-template-columns: 56px 1fr; gap: 12px; align-items: start; }
-      .j-node { justify-self: start; }
-      .jornada.anim:not(.play) .j-stops::before { transform: scaleY(0); }
-      .jornada.anim.play .j-stops::before { animation: j-grow 2s cubic-bezier(0.6, 0, 0.3, 1) both; }
-    }
-
     /* Teste de Comportamento (Instituto) */
     .teste-banner {
       background: var(--white);
@@ -833,7 +789,7 @@
       text-align: center;
       font-weight: 800;
       color: var(--ink-soft);
-      font-size: 0.85rem;
+      font-size: var(--fs-sm);
     }
 
     .teste-photo {
@@ -876,43 +832,27 @@
     /* E-books do Instituto FaçaAmigos ("O Brincar com Propósito" e "O Código do Desenvolvimento Infantil") — petróleo da marca da Clínica */
     .ebooks-head { text-align: center; max-width: 46rem; margin: 0 auto 28px; }
     .ebooks-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
+    /* Cards brancos: a cor de cada livro fica contida no painel da capa, para não competir com o Playground (conversão nº 1) */
     .guia-banner {
-      background: #065264;
-      color: #fff;
+      background: var(--white);
+      color: var(--dark);
       border-radius: var(--r-card);
-      box-shadow: var(--shadow-lg);
-      padding: 36px 34px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(26, 63, 53, 0.08);
+      padding: 24px 28px 30px;
       display: flex;
       flex-direction: column;
-      position: relative;
-      overflow: hidden;
     }
-
-    .guia-banner::before, .guia-banner::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
-    .guia-banner::before { width: 220px; height: 220px; right: -90px; bottom: -100px; background: #07C5C8; }
-    .guia-banner::after { width: 110px; height: 110px; left: -46px; top: -46px; background: #FDC51D; }
-    /* Card do "Código": amarelo-sol (mesma paleta da página /codigo) para não se confundir com o petróleo do "Brincar" */
-    .guia-banner.alt { background: #FDC51D; color: #065264; }
-    .guia-banner.alt::before { background: #FB3D6A; }
-    .guia-banner.alt::after { background: #07C5C8; }
-    .guia-banner.alt .eyebrow { background: #065264; color: #fff; }
-    .guia-banner.alt h4, .guia-banner.alt .guia-list li, .guia-banner.alt .guia-price { color: #065264; }
-    .guia-banner.alt p.guia-text { color: #065264; }
-    .guia-banner.alt .guia-list li::before { background: #065264; color: #fff; }
-    .guia-banner.alt .btn-pink { background: #065264; color: #fff; box-shadow: 0 10px 26px rgba(6, 82, 100, 0.32); }
-    .guia-banner.alt .guia-cover img { box-shadow: 10px 14px 30px rgba(6, 82, 100, 0.35); }
-    .guia-banner > * { position: relative; z-index: 1; }
-
-    .guia-banner .eyebrow { background: #FDC51D; color: #065264; align-self: flex-start; }
-    .guia-banner h4 { color: #fff; font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 10px; }
-    .guia-banner p.guia-text { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 1.02rem; margin: 0 0 18px; }
+    .guia-banner .eyebrow { background: var(--cream); align-self: flex-start; box-shadow: none; }
+    .guia-banner h4 { color: var(--dark); font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; font-size: clamp(1.5rem, 2.6vw, 1.9rem); line-height: 1.15; margin: 0 0 10px; }
+    .guia-banner p.guia-text { color: var(--ink-soft); font-weight: 600; font-size: var(--fs-md); margin: 0 0 18px; }
     .guia-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: auto; }
     .guia-list { list-style: none; margin: 0 0 16px; padding: 0; display: grid; gap: 8px; }
-    .guia-list li { position: relative; padding-left: 30px; font-weight: 700; font-size: 0.98rem; color: #fff; }
-    .guia-list li::before { content: '\2713'; position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; background: #07C5C8; color: #065264; font-size: 0.8rem; font-weight: 900; display: flex; align-items: center; justify-content: center; }
-    .guia-price { margin-bottom: 18px; color: rgba(255, 255, 255, 0.92); font-weight: 700; font-size: 0.95rem; }
-    .guia-price strong { font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; font-size: 2rem; line-height: 1; color: #fff; margin-right: 6px; }
-    .guia-sample { color: #fff; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; padding: 10px 6px; }
+    .guia-list li { position: relative; padding-left: 30px; font-weight: 600; font-size: var(--fs-md); color: var(--dark); }
+    .guia-list li::before { content: '\2713'; position: absolute; left: 0; top: 1px; width: 22px; height: 22px; border-radius: 50%; background: var(--teal-dark); color: #fff; font-size: var(--fs-xs); font-weight: 900; display: flex; align-items: center; justify-content: center; }
+    .guia-price { margin-bottom: 18px; color: var(--ink-soft); font-weight: 700; font-size: var(--fs-sm); }
+    .guia-price strong { font-family: 'Fredoka One', 'Fredoka One Fallback', 'Nunito', sans-serif; font-weight: 400; font-size: 2rem; line-height: 1; color: var(--dark); margin-right: 6px; }
+    .guia-sample { color: var(--dark); font-weight: 800; text-decoration: underline; text-underline-offset: 4px; padding: 10px 6px; }
     .guia-sample:hover { text-decoration-thickness: 3px; }
     /* Eventos (teaser) */
     .eventos-strip { background: var(--white); border-radius: var(--r-card); box-shadow: var(--shadow-sm); padding: 28px; }
@@ -921,20 +861,20 @@
     @media (min-width: 760px) { .eventos-cards { grid-template-columns: repeat(3, 1fr); } }
     .ev-mini { display: flex; flex-direction: column; gap: 6px; background: var(--cream); border-radius: 18px; padding: 16px 18px; text-decoration: none; color: var(--dark); border: 2px solid transparent; transition: border-color var(--t-fast), transform var(--t-fast); }
     .ev-mini:hover { border-color: var(--teal); transform: translateY(-2px); }
-    .ev-mini .tag { display: inline-flex; gap: 6px; align-items: center; border-radius: 9999px; padding: 3px 10px; font-size: 0.74rem; font-weight: 800; background: rgba(46, 207, 181, 0.18); color: var(--teal-dark); width: fit-content; }
+    .ev-mini .tag { display: inline-flex; gap: 6px; align-items: center; border-radius: 9999px; padding: 3px 10px; font-size: var(--fs-xs); font-weight: 800; background: rgba(46, 207, 181, 0.18); color: var(--teal-dark); width: fit-content; }
     .ev-mini .tag.pink { background: rgba(240, 25, 107, 0.12); color: var(--pink-dark); }
     .ev-mini .tag.gray { background: var(--gray-bg); color: var(--ink-soft); }
-    .ev-mini h3 { font-family: 'Nunito', 'Nunito Fallback', sans-serif; font-weight: 800; font-size: 1.05rem; line-height: 1.3; margin: 2px 0; }
-    .ev-mini .when { font-size: 0.86rem; font-weight: 800; color: var(--ink-soft); }
-    .ev-mini .go { margin-top: auto; font-weight: 800; color: var(--pink); font-size: 0.9rem; }
-    .guia-note { font-size: 0.82rem; font-weight: 700; opacity: 0.8; text-align: center; max-width: 46rem; margin: 22px auto 0; }
-    .guia-cover { display: flex; justify-content: center; margin-bottom: 22px; }
+    .ev-mini h3 { font-family: 'Nunito', 'Nunito Fallback', sans-serif; font-weight: 800; font-size: var(--fs-md); line-height: 1.3; margin: 2px 0; }
+    .ev-mini .when { font-size: var(--fs-sm); font-weight: 800; color: var(--ink-soft); }
+    .ev-mini .go { margin-top: auto; font-weight: 800; color: var(--pink); font-size: var(--fs-sm); }
+    .guia-note { font-size: var(--fs-xs); font-weight: 700; opacity: 0.8; text-align: center; max-width: 46rem; margin: 22px auto 0; }
+    .guia-cover { display: flex; justify-content: center; margin: 0 -14px 22px; padding: 26px 0; border-radius: 18px; background: #065264; }
+    .guia-banner.alt .guia-cover { background: #FDC51D; }
     .guia-cover img { width: 150px; height: auto; border-radius: 4px 10px 10px 4px; box-shadow: 10px 14px 30px rgba(0, 0, 0, 0.35); transform: rotate(-3deg); }
 
     @media (max-width: 960px) {
       .ebooks-grid { grid-template-columns: 1fr; }
-      .guia-banner { padding: 32px 24px 70px; }
-      .guia-banner::before { width: 150px; height: 150px; right: -50px; bottom: -84px; }
+      .guia-banner { padding: 20px 20px 26px; }
       .guia-actions { margin-top: 4px; }
     }
 
@@ -947,17 +887,17 @@
     .geo-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
     .geo-icon { font-size: 2rem; margin-bottom: 10px; }
     .geo-val { font-family: 'Fredoka One', 'Fredoka One Fallback', sans-serif; font-size: 1.45rem; color: var(--pink); line-height: 1.2; margin-bottom: 4px; }
-    .geo-lbl { font-weight: 800; color: var(--dark); font-size: 0.95rem; margin-bottom: 6px; }
-    .geo-desc { font-size: 0.86rem; color: var(--ink-soft); font-weight: 600; line-height: 1.45; }
+    .geo-lbl { font-weight: 800; color: var(--dark); font-size: var(--fs-md); margin-bottom: 6px; }
+    .geo-desc { font-size: var(--fs-sm); color: var(--ink-soft); font-weight: 600; line-height: 1.45; }
 
     /* GEO FAQ Details Styling */
     .geo-faq-list { display: grid; gap: 12px; max-width: 52rem; margin: 0 auto; }
     .geo-faq-item { background: var(--white); border-radius: 18px; padding: 18px 22px; box-shadow: var(--shadow-sm); border: 1px solid rgba(26,63,53,0.06); }
-    .geo-faq-item summary { font-weight: 800; font-size: 1.05rem; color: var(--dark); cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
+    .geo-faq-item summary { font-weight: 800; font-size: var(--fs-md); color: var(--dark); cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; }
     .geo-faq-item summary::-webkit-details-marker { display: none; }
-    .geo-faq-item summary::after { content: '+'; font-size: 1.3rem; font-weight: 900; color: var(--pink); }
+    .geo-faq-item summary::after { content: '+'; font-size: var(--fs-xl); font-weight: 900; color: var(--pink); }
     .geo-faq-item[open] summary::after { content: '−'; }
-    .geo-faq-ans { margin-top: 12px; font-weight: 600; font-size: 0.95rem; color: var(--ink-soft); line-height: 1.55; border-top: 1px solid rgba(26,63,53,0.06); padding-top: 12px; }
+    .geo-faq-ans { margin-top: 12px; font-weight: 600; font-size: var(--fs-md); color: var(--ink-soft); line-height: 1.55; border-top: 1px solid rgba(26,63,53,0.06); padding-top: 12px; }
       .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: #1A3F35; padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 1000; }
     .skip:focus { top: 8px; }
     picture { display: contents; }
@@ -1030,103 +970,34 @@
   </nav>
   <main id="conteudo">
 
-  <!-- HERO — âncora de marca + triagem: cada mãe/pai escolhe o próprio caminho -->
+  <!-- HERO — Playground é a conversão nº 1: foto do espaço, uma ação principal (rosa), uma secundária e a Clínica como link -->
   <header class="hero">
-    <div class="wrap fx on">
-      <span class="eyebrow">Belém · Parque Shopping &amp; Grão-Pará</span>
-      <h1>Um lugar onde seu filho é acolhido <span class="hl">e você pode respirar</span>.</h1>
-      <p class="sub">Brincadeira sem hora marcada, orientação para pais e uma clínica chegando. Por onde você quer começar?</p>
-      <div class="triage" role="group" aria-label="O que você procura hoje">
-        <a class="btn btn-pink" href="https://institutofacaamigos.com.br/playground" data-cta="hero_triagem" data-destino="playground">
-          Levar para brincar<small>Playground e Circuito · sem agendar</small></a>
-        <a class="btn btn-teal" href="/teste" data-cta="hero_triagem" data-destino="mapeamento">
-          Tenho uma preocupação<small>Mapeamento grátis · 5 minutos</small></a>
-        <a class="btn btn-ghost" href="#clinica" data-cta="hero_triagem" data-destino="clinica">
-          Clínica / lista de espera<small>Em breve</small></a>
+    <div class="wrap hero-grid">
+      <div class="hero-copy fx on">
+        <span class="eyebrow">Belém · Parque Shopping &amp; Grão-Pará</span>
+        <h1>Um lugar onde seu filho é acolhido <span class="hl">e você pode respirar</span>.</h1>
+        <p class="sub">Playground inclusivo sem hora marcada, com mediadores que sabem lidar com cada criança. E orientação para pais quando bater a dúvida.</p>
+        <div class="hero-ctas" role="group" aria-label="O que você procura hoje">
+          <a class="btn btn-pink" href="https://institutofacaamigos.com.br/playground" data-cta="hero_triagem" data-destino="playground">
+            Levar para brincar<small>Playground e Circuito · sem agendar</small></a>
+          <a class="btn btn-ghost" href="/teste" data-cta="hero_triagem" data-destino="mapeamento">
+            Tenho uma preocupação<small>Mapeamento grátis · 5 minutos</small></a>
+        </div>
+        <a class="hero-link" href="#clinica" data-cta="hero_triagem" data-destino="clinica">Clínica de terapia comportamental: lista de espera aberta →</a>
       </div>
+      <figure class="hero-photo">
+        <picture><source srcset="img/playground-mediadora-tapete-900.webp" type="image/webp"><img src="img/playground-mediadora-tapete-900.jpg" width="900" height="1200"
+          alt="Mediadora do FaçaAmigos brincando com um menino no tapete do playground" loading="eager" fetchpriority="high" decoding="async"></picture>
+      </figure>
     </div>
   </header>
 
-  <!-- JORNADA DA FAMÍLIA — explica por que brincar, observar, entender e cuidar estão sob a mesma marca.
-       Cada parada: título, uma prova e a oferta (sem rotular os três no visual). A linha anima uma vez (JS adiciona .anim/.play); sem JS fica desenhada. -->
-  <section class="jornada" id="jornada" aria-labelledby="jornada-h">
+  <!-- NÚMEROS — prova social logo abaixo do hero -->
+  <div class="proof-band">
     <div class="wrap">
-      <div class="jornada-head">
-        <span class="eyebrow">Um cuidado, quatro momentos</span>
-        <h2 class="sec-title sec-title-sm" id="jornada-h">Cada família segue o seu caminho, no tempo da criança</h2>
-        <p>Brincar, observar, entender e cuidar, tudo FaçaAmigos, em Belém. Você escolhe por onde começar.</p>
-      </div>
-
-      <div class="jornada-fluxo" id="jornada-fluxo">
-        <div class="j-track" aria-hidden="true">
-          <svg viewBox="0 0 1000 70" preserveAspectRatio="none" focusable="false">
-            <defs>
-              <linearGradient id="j-grad" x1="0" x2="1" y1="0" y2="0">
-                <stop offset="0" stop-color="#F0196B" /><stop offset="0.38" stop-color="#8B5CF6" />
-                <stop offset="0.66" stop-color="#E0AE00" /><stop offset="1" stop-color="#1FA893" />
-              </linearGradient>
-            </defs>
-            <path class="j-path-bg"
-              d="M0 35 C 60 8, 90 8, 125 35 S 250 62, 375 35 S 500 8, 625 35 S 750 62, 875 35 S 960 8, 1000 35" />
-            <path class="j-path-draw" pathLength="1"
-              d="M0 35 C 60 8, 90 8, 125 35 S 250 62, 375 35 S 500 8, 625 35 S 750 62, 875 35 S 960 8, 1000 35" />
-          </svg>
-        </div>
-
-        <ol class="j-stops">
-          <li class="j-stop j-1" style="--i: 0">
-            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="15" r="3" /><circle cx="16" cy="9" r="3" /><circle cx="16" cy="18" r="2.4" /><circle cx="8" cy="6.5" r="2" /></svg></span>
-            <div class="j-card">
-              <span class="j-tag">Brincar · Playground e Circuito</span>
-              <h3>Ele brinca seguro, você descansa por perto.</h3>
-              <ul class="j-points">
-                <li class="j-proof">Avaliações reais no Google e mediadores que sabem lidar com cada criança</li>
-                <li class="j-deal">A partir de R$ 60 · sem hora marcada · 2 shoppings</li>
-              </ul>
-              <a class="j-cta" href="https://institutofacaamigos.com.br/playground" data-cta="jornada" data-destino="playground">Levar para brincar</a>
-            </div>
-          </li>
-          <li class="j-stop j-2" style="--i: 1">
-            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg></span>
-            <div class="j-card">
-              <span class="j-tag">Observar · Olhar FaçaAmigos</span>
-              <h3>Você sai sabendo como foi a tarde dele.</h3>
-              <ul class="j-points">
-                <li class="j-proof">Mediadores treinados em acolhimento neurodivergente acompanham a brincadeira</li>
-                <li class="j-deal">Resumo da brincadeira no WhatsApp, cortesia no plano de 1 hora</li>
-              </ul>
-              <a class="j-cta" href="https://institutofacaamigos.com.br/playground#olhar" data-cta="jornada" data-destino="olhar">Ver o Olhar</a>
-            </div>
-          </li>
-          <li class="j-stop j-3" style="--i: 2">
-            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4" /><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3z" /></svg></span>
-            <div class="j-card">
-              <span class="j-tag">Entender · Mapeamento e guias</span>
-              <h3>Pare de se perguntar se é normal.</h3>
-              <ul class="j-points">
-                <li class="j-proof">Criado por psicóloga. Sem rótulo, e não substitui avaliação profissional</li>
-                <li class="j-deal">Grátis, em 5 minutos · guias e e-books para ler em casa</li>
-              </ul>
-              <a class="j-cta" href="/teste" data-cta="jornada" data-destino="mapeamento">Fazer o mapeamento</a>
-            </div>
-          </li>
-          <li class="j-stop j-4" style="--i: 3">
-            <span class="j-node" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-4.4-9.3-9A5.2 5.2 0 0 1 12 6.6 5.2 5.2 0 0 1 21.3 12C19 16.6 12 21 12 21z" /></svg></span>
-            <div class="j-card">
-              <span class="j-tag">Cuidar · Clínica (em breve)</span>
-              <h3>Um plano que faz sentido pra sua família.</h3>
-              <ul class="j-points">
-                <li class="j-proof">Equipe multidisciplinar e terapia comportamental, com ciência e afeto</li>
-                <li class="j-deal">Convênios IASEP e PROASA · lista de espera aberta</li>
-              </ul>
-              <a class="j-cta" href="#clinica" data-cta="jornada" data-destino="clinica">Entrar na lista</a>
-            </div>
-          </li>
-        </ol>
-      </div>
-      <p class="j-note"><strong>Não existe ordem certa nem etapa obrigatória.</strong> Muita família só vem brincar, e está tudo certo.</p>
+      <p class="stats-line"><span><strong>+8 anos</strong> de atuação</span><span><strong>+1.100</strong> famílias já brincaram com a gente</span><span>Equipe que sabe lidar com crise, birra e primeira visita</span></p>
     </div>
-  </section>
+  </div>
 
   <!-- PLAYGROUND + CIRCUITO — um bloco só, com as avaliações do Google (todas sobre o Playground) -->
   <section class="lazer-block" id="playground">
@@ -1158,7 +1029,7 @@
             <h3>Circuito de Carrinhos</h3>
             <p>Carros, jeep, moto e pelúcias elétricas numa pista segura, no Parque Shopping. Ele dirige com autonomia e você acompanha a dois passos.</p>
             <div class="lazer-actions">
-              <a href="https://institutofacaamigos.com.br/circuito" class="btn btn-pink btn-sm">Andar de carrinho</a>
+              <a href="https://institutofacaamigos.com.br/circuito" class="btn btn-ghost btn-sm">Andar de carrinho</a>
             </div>
           </div>
         </div>
@@ -1213,7 +1084,6 @@
         <div class="rv-scroll-hint">
           <span>← Deslize para ver mais avaliações →</span>
         </div>
-        <p class="stats-line"><span><strong>+8 anos</strong> de atuação</span><span><strong>+1.100</strong> famílias já brincaram com a gente</span><span>Equipe que sabe lidar com crise, birra e primeira visita</span></p>
         <p class="rv-note">Avaliações reais de famílias sobre o FaçaAmigos Playground, no Parque Shopping Belém. A palavra que mais aparece: tranquilidade.</p>
       </div>
     </div>
@@ -1300,7 +1170,7 @@
             </ul>
             <div class="guia-price"><strong>R$ 149</strong> <span>ou 10x de R$ 17,91 · acesso imediato · 7 dias de garantia</span></div>
             <div class="guia-actions">
-              <a data-fa-link="banner_hub" href="/guia" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'quero_o_guia'})">Quero o guia</a>
+              <a data-fa-link="banner_hub" href="/guia" class="btn btn-dark" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'quero_o_guia'})">Quero o guia</a>
               <a href="downloads/o-brincar-com-proposito-capitulo-1.pdf" download class="guia-sample" onclick="window.dataLayer&&dataLayer.push({event:'hub_guia_click',cta:'capitulo_gratis'})">Ler o capítulo 1 de graça</a>
             </div>
           </article>
@@ -1319,7 +1189,7 @@
             </ul>
             <div class="guia-price"><span>Valor e formas de pagamento no checkout seguro · acesso imediato · 7 dias de garantia</span></div>
             <div class="guia-actions">
-              <a data-fa-link="banner_hub" href="/codigo" class="btn btn-pink" onclick="window.dataLayer&&dataLayer.push({event:'hub_codigo_click',cta:'quero_o_ebook'})">Quero o e-book</a>
+              <a data-fa-link="banner_hub" href="/codigo" class="btn btn-dark" onclick="window.dataLayer&&dataLayer.push({event:'hub_codigo_click',cta:'quero_o_ebook'})">Quero o e-book</a>
             </div>
           </article>
         </div>
@@ -1337,7 +1207,7 @@
         <div>
           <span class="eyebrow" style="background: var(--teal-dark); color: #fff;">Em breve</span>
           <h2 class="sec-title">FaçaAmigos — Centro de Terapia Comportamental</h2>
-          <p style="color: var(--teal-dark); font-weight: 800; font-size: 1.05rem; margin-bottom: 10px;">
+          <p style="color: var(--teal-dark); font-weight: 800; font-size: var(--fs-md); margin-bottom: 10px;">
             📍 Rua Boaventura da Silva, 1573 · Bairro Umarizal, Belém - PA
           </p>
           <p class="sec-sub" style="margin: 0 0 8px;">Se você sente que algo está diferente e ninguém te explica direito, aqui você vai ser ouvida. Equipe multidisciplinar, terapia comportamental e um plano que faz sentido pra sua família, com ciência, acolhimento e afeto. <strong>Vamos atender pelos convênios IASEP e PROASA. Entre na lista de espera e avisamos você assim que abrirmos.</strong></p>
@@ -1590,19 +1460,6 @@
     })();
   </script>
   <script>
-    // Jornada: a linha e os nós animam uma vez ao entrar na tela. Sem JS ou com movimento reduzido, ficam já desenhados.
-    (function () {
-      var j = document.getElementById('jornada');
-      var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (!j || reduced || !('IntersectionObserver' in window)) return;
-      j.classList.add('anim');
-      var io = new IntersectionObserver(function (entries) {
-        if (entries[0].isIntersecting) { j.classList.add('play'); io.disconnect(); }
-      }, { threshold: 0.2 });
-      io.observe(j);
-    })();
-  </script>
-  <script>
     // Botões de triagem do hero (e qualquer [data-cta] da home): cta_click com cta_location, no mesmo formato do fa-cta.js.
     (function () {
       document.querySelectorAll('a[data-cta]').forEach(function (a) {
@@ -1651,7 +1508,7 @@
             var quando = dt.toLocaleDateString('pt-BR', { timeZone: 'America/Belem', weekday: 'short', day: '2-digit', month: 'short' }).replace('.', '') + ' · ' + dt.toLocaleTimeString('pt-BR', { timeZone: 'America/Belem', hour: '2-digit', minute: '2-digit' });
             return '<a data-fa-link="secao_hub" class="ev-mini" href="/eventos/' + encodeURIComponent(ev.slug) + '">' + tag(ev) +
               '<h3>' + esc(ev.titulo) + '</h3><div class="when">' + esc(quando) + ' · ' + esc(ev.publico === 'profissionais' ? 'Profissionais' : 'Famílias') + '</div>' +
-              (ev.promessa ? '<p style="font-size:0.9rem;color:var(--ink-soft);">' + esc(ev.promessa) + '</p>' : '') +
+              (ev.promessa ? '<p style="font-size:var(--fs-sm);color:var(--ink-soft);">' + esc(ev.promessa) + '</p>' : '') +
               '<span class="go">' + (ev.inscricoes_encerradas ? 'Ver detalhes' : 'Garantir vaga →') + '</span></a>';
           }).join('');
           document.getElementById('eventos').hidden = false;
