@@ -1,0 +1,205 @@
+{
+  "source": "http://localhost:8765/musica.html (institutofacaamigos.com.br/musica)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        16,
+        20,
+        24,
+        32
+      ],
+      "base_unit": 2,
+      "note": "Valores medidos: 8px (51 usos), 2px (40), 6px (7), 12px (4), 16px (3), 22px (3), 20px (3), 24px (3), 32px (2). Dominam 2 e 8px; card com padding 32px 28px."
+    },
+    "typography": {
+      "families": [
+        "Nunito",
+        "Fredoka",
+        "Fredoka One"
+      ],
+      "scale": [
+        {
+          "role": "título da faixa (h1)",
+          "size": "32px",
+          "weight": "700",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botão play",
+          "size": "35.2px",
+          "weight": "400",
+          "family": "sistema (emoji)"
+        },
+        {
+          "role": "botão Próxima",
+          "size": "18.4px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2 fila",
+          "size": "19.2px",
+          "weight": "700",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "corpo",
+          "size": "15.2px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "itens da fila",
+          "size": "14.08px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "rodapé/legendas",
+          "size": "13px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "tags (SALÃO)",
+          "size": "11.52px",
+          "weight": "700",
+          "family": "Fredoka"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "page-bg",
+        "value": "#0D201A"
+      },
+      {
+        "role": "card-bg (36,5% da área)",
+        "value": "rgba(26,63,53,0.92) = #1A3F35"
+      },
+      {
+        "role": "linhas da fila (33,6%)",
+        "value": "rgba(255,255,255,0.03)"
+      },
+      {
+        "role": "text-primary",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "text-secondary",
+        "value": "#C0D6CF"
+      },
+      {
+        "role": "yellow (títulos, tags, 23 textos)",
+        "value": "#FFE234"
+      },
+      {
+        "role": "teal (anel, chips, progresso)",
+        "value": "#2ECFB5"
+      },
+      {
+        "role": "teal em texto sobre card (era #2ECFB5 4,09:1; agora #5FE3CC 5,09:1)",
+        "value": "#5FE3CC"
+      },
+      {
+        "role": "pink (play; era #F0196B, agora 4,72:1 com branco)",
+        "value": "#E01560"
+      },
+      {
+        "role": "texto de tag Suno sobre fundo escuro (era pink, agora 6,31:1)",
+        "value": "#FF6B9A"
+      },
+      {
+        "role": "footer-text (4,71:1 sobre #0D201A)",
+        "value": "#6C8E84"
+      }
+    ],
+    "radius": [
+      "4px (20 tags)",
+      "10px (20 linhas da fila)",
+      "14px",
+      "24px (fila)",
+      "32px (card do player)",
+      "50% (artwork, play)",
+      "999px (pills, Próxima)"
+    ],
+    "shadows": [
+      "0 24px 60px rgba(0,0,0,0.5) (card do player)",
+      "0 0 35px rgba(46,207,181,0.35) (artwork ativa, brilho teal)",
+      "0 8px 24px rgba(240,25,107,0.45) (play, brilho rosa)",
+      "0 0 10px #2ECFB5 (ponto de status)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "artwork do mascote",
+        "ratio": "1:1 (180x180, círculo)"
+      },
+      {
+        "usage": "logo símbolo",
+        "ratio": "1.11:1 (44px)"
+      },
+      {
+        "usage": "tucano",
+        "ratio": "0.79:1 (228x288)"
+      }
+    ],
+    "grid": {
+      "max_width": "660px",
+      "columns": 1,
+      "gutter": "16px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Tema escuro com dois acentos de brilho",
+      "trigger": "Quando a página roda numa tela de salão e no celular de quem controla a música",
+      "decision": "Fundo #0D201A com brilho teal (0 0 35px rgba(46,207,181,0.35)) na artwork e brilho rosa (0 8px 24px rgba(240,25,107,0.45)) no play, em vez de fundo claro como o resto do site",
+      "reason": "Em ambiente com luz baixa o tema escuro não ofusca, e o brilho cola o olhar no que toca agora",
+      "evidence": [
+        "page-bg #0D201A, card rgba(26,63,53,0.92)",
+        "sombra do card 0 24px 60px rgba(0,0,0,0.5)",
+        "play 76x76px #E01560, artwork 180x180px"
+      ]
+    },
+    {
+      "name": "Um player central no lugar de uma biblioteca",
+      "trigger": "Quando há 23 faixas e a pessoa só precisa ouvir e pular",
+      "decision": "Um card único de 660px com 3 controles (anterior, play 76px, Próxima) e a fila abaixo em rolagem interna, em vez de grade de capas com busca",
+      "reason": "Operador do salão não escolhe disco: toca e segue; menos controles, menos erro com as mãos ocupadas",
+      "evidence": [
+        "card 660x661px",
+        "3 botões: 46px, 76px e Próxima 24px de padding",
+        "fila 298px com overflow interno",
+        "1 coluna, sem grid"
+      ]
+    },
+    {
+      "name": "Amarelo como cor de rótulo, rosa só no play",
+      "trigger": "Quando status, categoria e título competem por destaque sobre fundo escuro",
+      "decision": "#FFE234 em 23 textos de rótulo (títulos, pills, tags) e rosa reservado ao botão de play, em vez de rosa em tudo que é ação",
+      "reason": "O amarelo lê bem em 13,06:1 sobre #0D201A e deixa o rosa como o único sinal de tocar",
+      "evidence": [
+        "#FFE234: 23 textos",
+        "rosa: 1 botão + gradiente do botão de início",
+        "amarelo sobre #0D201A = 13,06:1"
+      ]
+    },
+    {
+      "name": "Restrição: sem imagem de fundo, sem capas por faixa",
+      "trigger": "Quando uma rádio poderia mostrar capa de álbum e ondas animadas",
+      "decision": "Mascote circular único (180px) e fundo de 3 gradientes radiais a 8-22% de opacidade, em vez de arte por faixa",
+      "reason": "Salão não tem conteúdo visual por música: o mascote dá rosto sem exigir arte nova",
+      "evidence": [
+        "2 imagens na página (logo 44px, mascote 125px)",
+        "gradientes radiais rgba(240,25,107,0.18), rgba(46,207,181,0.22), rgba(255,226,52,0.08)",
+        "focusVisible: false, reducedMotion: false"
+      ]
+    }
+  ]
+}

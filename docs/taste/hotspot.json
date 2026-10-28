@@ -1,0 +1,216 @@
+{
+  "source": "http://localhost:8765/hotspot/alogin.html + /hotspot/login.html (conjunto hotspot: alogin, login, error, logout, status, rlogin)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        3,
+        4,
+        6,
+        9,
+        10,
+        11,
+        13,
+        14,
+        16,
+        18,
+        20,
+        26,
+        30,
+        40
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Nunito",
+        "Fredoka One"
+      ],
+      "scale": [
+        {
+          "role": "h1-alogin",
+          "size": "31.2px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h1-login",
+          "size": "22px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h1-logout",
+          "size": "20px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2-status",
+          "size": "19px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botao",
+          "size": "15px-17px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "input",
+          "size": "16px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "corpo",
+          "size": "14px-14.5px",
+          "weight": "400-700",
+          "family": "Nunito"
+        },
+        {
+          "role": "label",
+          "size": "13.5px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "miudo",
+          "size": "10.5px-12.5px",
+          "weight": "700-900",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "surface",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "text-primary",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "text-secondary",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "accent-action",
+        "value": "#E01560"
+      },
+      {
+        "role": "accent-offer-text",
+        "value": "#C81158"
+      },
+      {
+        "role": "teal",
+        "value": "#2ECFB5"
+      },
+      {
+        "role": "teal-text",
+        "value": "#137A6A"
+      },
+      {
+        "role": "error",
+        "value": "#D32F2F"
+      },
+      {
+        "role": "stars",
+        "value": "#9A6400"
+      },
+      {
+        "role": "unit-card-fallback",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "price-struck",
+        "value": "#766B5E"
+      }
+    ],
+    "radius": [
+      "999px",
+      "50%",
+      "24px",
+      "22px",
+      "14px"
+    ],
+    "shadows": [
+      "0 18px 40px rgba(26,63,53,0.14)",
+      "0 4px 10px rgba(26,63,53,0.08)",
+      "0 10px 26px rgba(240,25,107,0.32)",
+      "0 6px 16px rgba(46,207,181,0.35)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo",
+        "ratio": "1.11:1"
+      },
+      {
+        "usage": "hero-alogin",
+        "ratio": "3:4 natural, cover em 390x844"
+      },
+      {
+        "usage": "unidade-alogin",
+        "ratio": "4:3"
+      }
+    ],
+    "grid": {
+      "max_width": "420px",
+      "columns": 1,
+      "gutter": "18px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Cartão branco único sobre fundo creme, sem fotos no formulário",
+      "trigger": "Login é a única tela obrigatória, em celular com rede limitada",
+      "decision": "Card branco de 24px sobre #FFF9F1 sem foto nem segunda coluna, em vez de repetir o hero fotográfico",
+      "reason": "Antes do login a rede está fechada; foto pesada atrasa quem só quer o Wi-Fi",
+      "evidence": [
+        "login.html: 1 imagem (logo 44px), 0 fotos",
+        "card #FFFFFF em 73.4% da área",
+        "alogin carrega 4 fotos (hero 390x844 e 3 de 350x263)"
+      ]
+    },
+    {
+      "name": "Um rosa para a ação e um para o texto de oferta",
+      "trigger": "Botão, link de consentimento, destaque de oferta e erro na mesma tela",
+      "decision": "#E01560 em botão, link e wordmark; #C81158 nas frases de oferta; #D32F2F só para erro, em vez de um só tom",
+      "reason": "O visitante separa o que é clicável do que é aviso, e o erro não se confunde com a oferta",
+      "evidence": [
+        "botão rosa em 3.4% da área de login",
+        "#C81158 sobre branco = 5.71:1",
+        "#D32F2F = 4.98:1",
+        "#E01560 = 4.72:1"
+      ]
+    },
+    {
+      "name": "Formulário curto de coluna única com campos de 50px",
+      "trigger": "Cadastro com um polegar antes de a criança entrar",
+      "decision": "Três campos empilhados de 306x50px com fonte de 16px e botão de 306x52px, em vez de duas colunas ou etapas",
+      "reason": "16px evita zoom do iOS, 50px dá área de toque folgada e a coluna reta mantém a leitura",
+      "evidence": [
+        "input 306x50, 16px, raio 14px",
+        "label 13.5px/800",
+        "botão 306x52 Fredoka 17px",
+        "checkbox 20x20"
+      ]
+    },
+    {
+      "name": "Mesmo kit em seis telas, com densidade proporcional ao peso da tela",
+      "trigger": "O roteador serve login, alogin, status, logout, error e rlogin",
+      "decision": "Mesmo logo, wordmark, card 24px e botão pílula; telas de serviço curtas (card 354px) e tela de venda longa (alogin), em vez de um layout por tela",
+      "reason": "O visitante vê a mesma marca em cada estado do Wi-Fi e não reaprende onde tocar",
+      "evidence": [
+        ".wrap 420px e card padding 26px 20px em error, logout e status",
+        "alogin com 2615px de altura (3.1 telas) contra 844px",
+        "wordmark Fredoka 18px em todas"
+      ]
+    }
+  ]
+}

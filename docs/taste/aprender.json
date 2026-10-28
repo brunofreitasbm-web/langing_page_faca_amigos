@@ -1,0 +1,167 @@
+{
+  "source": "http://localhost:8765/aprender.html (aprender.html, versão original antes das correções de contraste)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        6,
+        8,
+        10,
+        14,
+        16,
+        18,
+        22,
+        40,
+        84
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "46.4px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2",
+          "size": "21.6px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h3 (título do card)",
+          "size": "16.8px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "body/lede",
+          "size": "17.92px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "texto de card",
+          "size": "14.72px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "tag/eyebrow",
+          "size": "12.16px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background-hero e faixa final (47.6% da área)",
+        "value": "#065264"
+      },
+      {
+        "role": "background-corpo",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "texto-primario",
+        "value": "#065264"
+      },
+      {
+        "role": "background-card-mapeamento",
+        "value": "#FFF3D2"
+      },
+      {
+        "role": "accent-cta-e-tag (original)",
+        "value": "#FB3D6A"
+      },
+      {
+        "role": "accent-cta-e-tag (corrigido)",
+        "value": "#D61F4A"
+      },
+      {
+        "role": "background-whatsapp",
+        "value": "#25D366"
+      }
+    ],
+    "radius": [
+      "999px",
+      "22px",
+      "20px",
+      "14px",
+      "28px",
+      "16px"
+    ],
+    "shadows": [
+      "0 1px 2px rgba(6,82,100,.10), 0 4px 14px rgba(6,82,100,.10)",
+      "0 2px 4px rgba(251,61,106,.25), 0 8px 20px rgba(251,61,106,.30) (botão rosa; corrigido para rgba(214,31,74,...))"
+    ],
+    "image_ratios": [
+      {
+        "usage": "foto do guia-card",
+        "ratio": "259:145 (1.79:1)"
+      },
+      {
+        "usage": "capa de e-book",
+        "ratio": "72:102 (0.71:1)"
+      }
+    ],
+    "grid": {
+      "max_width": "1120px (container) / 1088px útil",
+      "columns": 4,
+      "gutter": "18px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Mesmo cartão para guia e produto, diferenciado só pelo conteúdo",
+      "trigger": "Quando a página precisa listar 9 guias gratuitos e 2 e-books pagos sem que os pagos pareçam anúncio",
+      "decision": "Escolheram um único molde de card (fundo branco, raio 20-22px, sombra petróleo em 2 camadas) para guias e e-books, em vez de dar ao e-book uma moldura de venda com cor ou selo",
+      "reason": "A mãe que chega por uma dúvida não deve sentir que o conteúdo útil foi trocado por propaganda; o preço aparece como uma linha de 14.4px em rosa, não como banner",
+      "evidence": [
+        "a.guide-card 259x359 raio 22px e a.ebook-card 342x249 raio 20px com a mesma sombra",
+        "11 elementos usam a sombra rgba(6,82,100,.10)",
+        "preço do e-book: 14.4px/800 em #FB3D6A, sem fundo"
+      ]
+    },
+    {
+      "name": "Fundo petróleo só nas pontas, branco no meio",
+      "trigger": "Quando a página tem uma tese (hero) e um pedido (mapeamento grátis) separados por muito conteúdo informativo",
+      "decision": "Usaram #065264 apenas no hero (265px) e na faixa final, deixando o miolo de 1065px de cards sobre branco, em vez de alternar faixas coloridas a cada bloco",
+      "reason": "O olho lê a página como começo, lista e pedido; o contraste forte marca onde a decisão acontece",
+      "evidence": [
+        "#065264 cobre 47.6% da área mas só em 2 faixas",
+        "hero y=65 a 330 (265px), grade de guias y=869 a 1934 sobre #FFFFFF",
+        "1 única faixa de tom suave (#F4FAFB) antes do final"
+      ]
+    },
+    {
+      "name": "Fotos reais nos guias, sem ilustração decorativa",
+      "trigger": "Quando um guia sobre comportamento infantil precisa de uma capa",
+      "decision": "Usaram fotos do próprio espaço, de profissionais e capas de e-book (145px de altura no card) em vez de ícones ou ilustrações genéricas",
+      "reason": "Pais de Belém reconhecem o lugar e a profissional; a foto é prova de que o guia vem de gente real",
+      "evidence": [
+        "8 de 9 capas de guia são fotos reais, 1 é capa de e-book",
+        "imagem 259x145 ocupa 40% da altura de 359px do card",
+        "nenhum SVG decorativo nos cards"
+      ]
+    },
+    {
+      "name": "Restrição: um acento só, rosa, em tag, preço e botão",
+      "trigger": "Quando a identidade da marca tem 4 cores vivas (rosa, turquesa, amarelo, petróleo)",
+      "decision": "Usaram o rosa como único acento de texto e de botão, deixando turquesa e amarelo para círculos decorativos e foco, em vez de colorir cada categoria de guia com uma cor",
+      "reason": "9 categorias em 9 cores pediriam à mãe que aprendesse um código; um rosa só diz 'isto é para clicar ou ler primeiro'",
+      "evidence": [
+        "textColors: #FB3D6A em 12 elementos contra #065264 em 40",
+        "12 tags de categoria (12.16px/800 maiúsculas) todas no mesmo rosa",
+        "turquesa só em círculo com opacity .18 e amarelo em círculo com opacity .16 no hero"
+      ]
+    }
+  ]
+}
