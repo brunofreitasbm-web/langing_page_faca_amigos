@@ -569,7 +569,7 @@ Família D · 15 s · sem QR, layout padrao
 ### `d_graopara`
 Família D · 15 s · sem QR, layout padrao, só com fotoGraoPara
 - **Intenção:** Informação logística da segunda unidade. Slide só entra quando a foto real existir.
-- **Imagem:** `img/FOTO-GRAO-PARA.webp`
+- **Imagem:** `img/playground-grao-para.webp`
 - **Texto na tela:**
   - Kicker: 📍 Playground no Grão-Pará
   - Headline: No Grão-Pará, <em>1º piso</em>, em frente à Renner.
