@@ -37,7 +37,7 @@
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"></noscript>
   <style>
-    :root { --petrol: #065264; --ice: #F4FAFB; --pink: #FB3D6A; --yellow: #FDC51D; --teal: #07C5C8; --yellow-20: #FFF3D2; }
+    :root { --petrol: #065264; --ice: #F4FAFB; --pink: #D61F4A; --yellow: #FDC51D; --teal: #07C5C8; --yellow-20: #FFF3D2; }
     * { box-sizing: border-box; }
     body { margin: 0; font-family: 'Nunito', system-ui, sans-serif; color: var(--petrol); background: var(--ice); line-height: 1.7; font-size: 1.0625rem; }
     header { background: var(--petrol); }
@@ -46,15 +46,25 @@
     main { max-width: 780px; margin: 0 auto; padding: 40px 16px 72px; }
     h1, h2 { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; line-height: 1.15; }
     h1 { font-size: clamp(1.8rem, 6vw, 2.4rem); margin: 0 0 8px; }
-    h2 { font-size: 1.3rem; margin: 34px 0 10px; }
+    h2 { font-size: 1.5rem; margin: 40px 0 10px; scroll-margin-top: 16px; }
+    main > *, main > .card { max-width: 68ch; }
     p, li { margin: 0 0 12px; }
     ul { margin: 0 0 12px 22px; padding: 0; }
-    .updated { font-weight: 700; opacity: .8; font-size: .92rem; margin-bottom: 26px; }
+    .updated { font-weight: 700; font-size: .92rem; margin-bottom: 22px; }
+    .toc { margin: 0 0 8px; padding: 0; list-style: none; display: grid; gap: 0 24px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { .toc { grid-template-columns: 1fr 1fr; } }
+    .toc li { margin: 0; }
+    .toc a { display: flex; align-items: center; min-height: 44px; font-weight: 700; }
+    .toc-title { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 1rem; margin: 24px 0 4px; }
     .card { background: #fff; border-radius: 24px; padding: 20px 24px; box-shadow: 0 1px 2px rgba(6, 82, 100, .10), 0 4px 14px rgba(6, 82, 100, .10); margin: 18px 0; }
     .card.warn { background: var(--yellow-20); box-shadow: none; }
     a { color: var(--petrol); font-weight: 800; }
-    .back { display: inline-flex; align-items: center; min-height: 52px; margin-top: 30px; padding: 12px 28px; background: var(--pink); color: #fff; border-radius: 999px; text-decoration: none; font-weight: 800; font-size: 1.15rem; box-shadow: 0 2px 4px rgba(251, 61, 106, .25), 0 8px 20px rgba(251, 61, 106, .30); }
-    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 6px; }
+    .exit { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; margin-top: 30px; }
+    .exit a:not(.back) { display: inline-flex; align-items: center; min-height: 44px; }
+    .back { display: inline-flex; align-items: center; min-height: 52px; padding: 12px 28px; background: var(--pink); color: #fff; border-radius: 999px; text-decoration: none; font-weight: 800; font-size: 1.15rem; box-shadow: 0 2px 4px rgba(214, 31, 74, .25), 0 8px 20px rgba(214, 31, 74, .30); }
+    :focus-visible { outline: 3px solid var(--petrol); outline-offset: 3px; border-radius: 6px; }
+    header :focus-visible, footer :focus-visible { outline-color: var(--yellow); }
+    .skip:focus-visible { outline-color: var(--petrol); }
       .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: #1A3F35; padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 1000; }
     .skip:focus { top: 8px; }
     picture { display: contents; }
@@ -71,18 +81,33 @@
   <header><div><a href="/" aria-label="FaçaAmigos: ir para o início"><span class="fa-logo-card"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></span></a></div></header>
   <main id="conteudo">
     <h1>Termos de Uso e de Compra</h1>
-    <p class="updated">E-books “O Brincar com Propósito” e “O Código do Desenvolvimento Infantil” · Última atualização: 20 de setembro de 2026</p>
+    <p class="updated">Última atualização: 20 de setembro de 2026</p>
 
     <p>Estes termos explicam como funciona a compra e o uso dos e-books <strong>O Brincar com Propósito — Guia Prático e Afetivo de Análise do Comportamento para Mães, Pais e Cuidadores</strong>, oferecido em <a href="/guia">institutofacaamigos.com.br/guia</a>, e <strong>O Código do Desenvolvimento Infantil — Um Guia de Coração para Mães, Pais e Famílias Entenderem a Análise do Comportamento</strong>, oferecido em <a href="/codigo">institutofacaamigos.com.br/codigo</a>. Ao comprar, você concorda com eles.</p>
+
+    <nav aria-labelledby="toc-t">
+      <p class="toc-title" id="toc-t">Nesta página</p>
+      <ol class="toc">
+        <li><a href="#quem-vende">1. Quem vende e quem publica</a></li>
+        <li><a href="#o-que-recebe">2. O que você recebe</a></li>
+        <li><a href="#pagamento">3. Pagamento e entrega</a></li>
+        <li><a href="#garantia">4. Garantia e reembolso</a></li>
+        <li><a href="#licenca">5. Licença de uso</a></li>
+        <li><a href="#resultados">6. Resultados</a></li>
+        <li><a href="#privacidade">7. Privacidade</a></li>
+        <li><a href="#contato">8. Contato</a></li>
+        <li><a href="#alteracoes">9. Alterações e foro</a></li>
+      </ol>
+    </nav>
 
     <div class="card warn">
       <p style="margin:0"><strong>Material educativo.</strong> Os e-books não são diagnóstico, tratamento nem aconselhamento clínico individual, e não substitui a avaliação e o acompanhamento de profissionais de saúde. Em caso de dúvida sobre a saúde ou o desenvolvimento da criança, procure um profissional. Em situação de urgência, procure atendimento médico.</p>
     </div>
 
-    <h2>1. Quem vende e quem publica</h2>
+    <h2 id="quem-vende">1. Quem vende e quem publica</h2>
     <p>Os e-books são de autoria de <strong>Isabella Gonçalves Freitas</strong>, psicóloga (CRP 10/4727), e são vendidos por ela por meio da plataforma <strong>Hotmart</strong>. Estas páginas são publicadas pelo <strong>Instituto Faça Amigos Ltda</strong> (CNPJ 22.161.197/0001-83), Rua Boaventura da Silva, 1573, Umarizal, Belém/PA, CEP 66060-147.</p>
 
-    <h2>2. O que você recebe</h2>
+    <h2 id="o-que-recebe">2. O que você recebe</h2>
     <p><strong>O Brincar com Propósito:</strong></p>
     <ul>
       <li>E-book em PDF, com 97 páginas em formato A5;</li>
@@ -95,31 +120,33 @@
     </ul>
     <p>É um produto digital, sem envio físico.</p>
 
-    <h2>3. Pagamento e entrega</h2>
+    <h2 id="pagamento">3. Pagamento e entrega</h2>
     <p>O pagamento é processado pela Hotmart, com os meios de pagamento e as condições de parcelamento exibidos no checkout. O acesso é liberado após a confirmação do pagamento, no e-mail informado na compra. Se não encontrar a mensagem, verifique a caixa de spam ou fale conosco.</p>
 
-    <h2>4. Garantia e reembolso</h2>
+    <h2 id="garantia">4. Garantia e reembolso</h2>
     <p>Você tem <strong>7 dias corridos, a partir da compra</strong>, para pedir o reembolso integral, sem precisar justificar, conforme o direito de arrependimento previsto no art. 49 do Código de Defesa do Consumidor. O pedido é feito pela Hotmart, na área de compras da plataforma, ou por e-mail para <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a>. O estorno segue os prazos do meio de pagamento usado.</p>
 
-    <h2>5. Licença de uso</h2>
+    <h2 id="licenca">5. Licença de uso</h2>
     <p>Ao comprar, você recebe uma licença pessoal, não exclusiva e intransferível, para uso próprio e da sua família. Você pode ler em qualquer dispositivo e imprimir o material para uso familiar.</p>
     <p>Não é permitido revender, redistribuir, compartilhar publicamente, publicar em redes ou plataformas, copiar trechos para uso comercial nem modificar o conteúdo sem autorização por escrito. O conteúdo é protegido pela Lei de Direitos Autorais (Lei nº 9.610/1998).</p>
 
-    <h2>6. Resultados</h2>
+    <h2 id="resultados">6. Resultados</h2>
     <p>Cada criança e cada família são únicas. Os e-books oferecem orientações e exercícios baseados na Análise do Comportamento, mas não garante resultados, prazos de mudança ou efeitos específicos.</p>
 
-    <h2>7. Privacidade</h2>
+    <h2 id="privacidade">7. Privacidade</h2>
     <p>O tratamento dos seus dados pessoais segue a nossa <a href="/politica-privacidade">Política de Privacidade</a>. Os dados de pagamento são tratados diretamente pela Hotmart, segundo a política dela.</p>
 
-    <h2>8. Contato</h2>
+    <h2 id="contato">8. Contato</h2>
     <p>Dúvidas, pedidos de reembolso ou suporte: <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a> ou Instagram <a href="https://www.instagram.com/facaamigos.belem/" target="_blank" rel="noopener">@facaamigos.belem</a>.</p>
 
-    <h2>9. Alterações e foro</h2>
+    <h2 id="alteracoes">9. Alterações e foro</h2>
     <p>Podemos atualizar estes termos. A versão vigente estará sempre nesta página, com a data no topo; compras já feitas seguem os termos da data da compra. Fica eleito o foro da comarca de Belém/PA, sem prejuízo do foro do domicílio do consumidor previsto em lei.</p>
 
-    <a class="back" href="/guia">← Voltar para o guia</a>
-    <a class="back" href="/codigo" style="margin-left:10px">← Voltar para o Código</a>
-    <a class="back" href="/eventos" style="margin-left:10px">Eventos →</a>
+    <div class="exit">
+      <a class="back" href="/guia">← Voltar para o guia</a>
+      <a href="/codigo">← Voltar para o Código</a>
+      <a href="/eventos">Eventos →</a>
+    </div>
   </main>
   <footer data-fa-footer="legal">
     <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="lazy" decoding="async"></span>

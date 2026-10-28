@@ -358,18 +358,22 @@
     bar.setAttribute('aria-label', 'Preferências de cookies');
     bar.innerHTML =
       '<style>' +
-      '#fa-consent{position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:640px;margin:0 auto;' +
-      'background:#065264;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 8px 28px rgba(0,0,0,.28);' +
-      'font:400 14px/1.5 Nunito,"Nunito Fallback",system-ui,sans-serif}' +
-      '#fa-consent p{margin:0 0 12px}#fa-consent a{color:#FDC51D;text-decoration:underline}' +
-      '#fa-consent .fa-c-row{display:flex;gap:10px;flex-wrap:wrap}' +
-      '#fa-consent button{flex:1 1 150px;min-height:44px;border-radius:999px;border:2px solid #fff;cursor:pointer;' +
-      'font:700 14px Nunito,"Nunito Fallback",system-ui,sans-serif;padding:10px 16px}' +
+      // Faixa compacta: no desktop texto e botões numa linha só (antes era um card de ~150px sobre os CTAs da página)
+      '#fa-consent{position:fixed;left:12px;right:12px;bottom:12px;z-index:2147483000;max-width:980px;margin:0 auto;' +
+      'background:#065264;color:#fff;border-radius:14px;padding:10px 12px 10px 18px;box-shadow:0 8px 28px rgba(0,0,0,.28);' +
+      'font:400 13px/1.45 Nunito,"Nunito Fallback",system-ui,sans-serif;display:flex;align-items:center;gap:16px}' +
+      '#fa-consent p{margin:0;flex:1 1 auto}#fa-consent a{color:#FDC51D;text-decoration:underline}' +
+      '#fa-consent .fa-c-row{display:flex;gap:8px;flex:0 0 auto}' +
+      '#fa-consent button{min-height:44px;border-radius:999px;border:2px solid #fff;cursor:pointer;white-space:nowrap;' +
+      'font:700 14px Nunito,"Nunito Fallback",system-ui,sans-serif;padding:8px 18px}' +
+      '@media (max-width:760px){#fa-consent{flex-direction:column;align-items:stretch;gap:10px;padding:12px 14px;left:8px;right:8px;bottom:8px}' +
+      '#fa-consent button{flex:1 1 0}#fa-consent .fa-c-more{display:none}#fa-consent{font-size:12.5px;line-height:1.4}}' +
+      'html.fa-consent-open body{padding-bottom:var(--fa-consent-h,0px)}' +
       '#fa-consent .fa-c-ok{background:#FDC51D;border-color:#FDC51D;color:#065264}' +
       '#fa-consent .fa-c-no{background:transparent;color:#fff}' +
       '</style>' +
       '<p>Usamos cookies para entender como o site é usado e melhorar a experiência, e medir a origem das ' +
-      'visitas para o Google e a Meta. Nenhum campo digitado (nome, e-mail, telefone) é gravado. ' +
+      'visitas para o Google e a Meta.<span class="fa-c-more"> Nenhum campo digitado (nome, e-mail, telefone) é gravado.</span> ' +
       '<a href="/politica-privacidade">Saiba mais</a>.</p>' +
       '<div class="fa-c-row"><button type="button" class="fa-c-ok">Aceitar</button>' +
       '<button type="button" class="fa-c-no">Só o essencial</button></div>';
@@ -377,6 +381,7 @@
     bar.querySelector('.fa-c-no').addEventListener('click', function () { setConsent('essential'); });
     document.body.appendChild(bar);
     document.documentElement.classList.add('fa-consent-open');
+    document.documentElement.style.setProperty('--fa-consent-h', (bar.offsetHeight + 16) + 'px');
   }
   window.faConsentOpen = function () { buildBanner(); };
 

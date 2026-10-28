@@ -1,0 +1,157 @@
+{
+  "source": "http://localhost:8765/glossario.html (versão original antes das correções de contraste)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        16,
+        18,
+        22,
+        30,
+        32
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "43.2px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "letra de grupo (A, B, C)",
+          "size": "25.6px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "termo (dt)",
+          "size": "17.92px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "definição (dd)",
+          "size": "15.68px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "âncora #",
+          "size": "12.8px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background-corpo (70.6% da área)",
+        "value": "#F4FAFB"
+      },
+      {
+        "role": "background-hero e rodapé",
+        "value": "#065264"
+      },
+      {
+        "role": "texto-primario",
+        "value": "#065264"
+      },
+      {
+        "role": "accent-link-e-letra (original)",
+        "value": "#FB3D6A"
+      },
+      {
+        "role": "accent-link-e-letra (corrigido)",
+        "value": "#D61F4A"
+      },
+      {
+        "role": "turquesa em texto (original, 41 elementos)",
+        "value": "#07C5C8"
+      },
+      {
+        "role": "turquesa em texto (corrigido)",
+        "value": "#067476"
+      }
+    ],
+    "radius": [
+      "20px",
+      "50%",
+      "999px",
+      "14px",
+      "24px",
+      "16px"
+    ],
+    "shadows": [
+      "0 1px 2px rgba(6,82,100,.10), 0 4px 14px rgba(6,82,100,.10)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "página sem imagens de conteúdo",
+        "ratio": "n/a"
+      }
+    ],
+    "grid": {
+      "max_width": "868px (coluna de termos)",
+      "columns": 1,
+      "gutter": "12px entre cards"
+    }
+  },
+  "taste": [
+    {
+      "name": "Uma coluna de cards cheios, sem imagem e sem accordion",
+      "trigger": "Quando 41 termos técnicos precisam ser consultados por pais com pressa e sem repertório",
+      "decision": "Mostraram a definição inteira aberta em cada card (4-5 linhas) em vez de esconder em accordion ou tooltip",
+      "reason": "Quem busca 'o que é CIPTEA' quer a resposta sem clicar; o accordion adiciona um toque por termo e esconde o link para o guia",
+      "evidence": [
+        "41 elementos .term de 868px de largura, 154-179px de altura, todos abertos",
+        "0 elementos <details>",
+        "definição 15.68px com max-width 620px no corpo da página"
+      ]
+    },
+    {
+      "name": "Fórmula fixa em cada definição: o que é, 'Aparece quando', 'Muda pra você'",
+      "trigger": "Quando um termo clínico precisa virar algo que muda a decisão do pai ou da mãe",
+      "decision": "Cada verbete segue o mesmo roteiro de 3 frases e termina com link para o guia relacionado, em vez de definição de dicionário",
+      "reason": "O pai quer saber se aquilo se aplica ao filho dele; o roteiro repetido ensina a ler o verbete em 5 segundos",
+      "evidence": [
+        "22 links de guia em `.term dd a` (rosa, sublinhado, 800)",
+        "dd 15.68px/400 com 3 frases por verbete",
+        "41 verbetes em 16 letras"
+      ]
+    },
+    {
+      "name": "Navegação por letra e busca fixas no topo em vez de índice lateral",
+      "trigger": "Quando a lista passa de 9600px no desktop e 14800px no mobile",
+      "decision": "Barra fixa (sticky) com campo de busca e 16 letras, em vez de índice lateral ou paginação",
+      "reason": "A lista é curta o bastante para rolar, mas longa o bastante para o pai se perder; a barra fica sob o dedo",
+      "evidence": [
+        "`.finder` sticky top:64px, 133px de altura no desktop, 173px no mobile",
+        "16 botões de letra 34x34px, `a.off` com opacity .32 para letras sem termo",
+        "campo de busca 52px de altura, raio 999px"
+      ]
+    },
+    {
+      "name": "Restrição: nenhum rosto, foto ou ícone; só texto, uma cor de acento e sombra baixa",
+      "trigger": "Quando a página é uma ferramenta de consulta, não de persuasão",
+      "decision": "Zero imagens de conteúdo, cards sem borda, hierarquia feita só por Fredoka no termo e rosa na letra, em vez de ilustrar cada verbete",
+      "reason": "A ilustração pediria ao leitor interpretar mais uma coisa num momento em que ele quer só uma definição",
+      "evidence": [
+        "0 imagens entre hero e rodapé",
+        "1 sombra em 42 cards: rgba(6,82,100,.10) 0 1px 2px + 0 4px 14px",
+        "fundo #F4FAFB (70.6% da área) com cards #F4FAFB: o card se separa só pela sombra"
+      ]
+    }
+  ]
+}

@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root { --petrol: #065264; --ice: #F4FAFB; --pink: #FB3D6A; --yellow: #FDC51D; --teal: #07C5C8; --teal-10: #E2F8F8; --yellow-20: #FFF3D2; --pink-10: #FFECF0; }
+    :root { --petrol: #065264; --ice: #F4FAFB; --pink: #D61F4A; --yellow: #FDC51D; --teal: #07C5C8; --teal-10: #E2F8F8; --yellow-20: #FFF3D2; --pink-10: #FFECF0; }
     * { box-sizing: border-box; }
     body { margin: 0; min-height: 100vh; font-family: 'Nunito', system-ui, sans-serif; color: var(--petrol); background: var(--ice); line-height: 1.6; font-size: 1.0625rem; }
     header { background: var(--petrol); padding: 18px 16px; }
@@ -25,16 +25,16 @@
     h1 { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 1.5rem; line-height: 1.2; margin: 0 0 6px; }
     h2 { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 600; font-size: 1.2rem; margin: 0 0 8px; }
     p { margin: 0 0 12px; }
-    .status { display: inline-flex; border-radius: 999px; padding: 6px 14px; font-weight: 800; font-size: .82rem; background: var(--teal-10); margin-bottom: 14px; }
+    .status { display: inline-flex; border-radius: 999px; padding: 7px 16px; font-weight: 800; font-size: .9rem; background: var(--teal-10); margin-bottom: 18px; }
     .status.warn { background: var(--yellow-20); }
     .status.bad { background: var(--pink-10); color: #B0143F; }
     .meta { text-align: left; background: var(--ice); border-radius: 16px; padding: 14px 16px; margin: 14px 0; font-size: .95rem; font-weight: 700; display: grid; gap: 6px; }
     .qr { display: grid; place-items: center; margin: 18px auto 8px; width: 232px; height: 232px; background: #fff; border-radius: 16px; border: 2px dashed var(--teal); padding: 10px; }
     .qr img, .qr canvas { display: block; }
     .codigo { font-family: 'Courier New', monospace; font-size: 1.6rem; font-weight: 900; letter-spacing: .06em; margin: 6px 0 4px; }
-    .hint { font-size: .84rem; opacity: .8; }
-    .btn { display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 24px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: 800 1.02rem 'Nunito', sans-serif; cursor: pointer; text-decoration: none; box-shadow: 0 2px 4px rgba(251, 61, 106, .25), 0 8px 20px rgba(251, 61, 106, .30); width: 100%; }
-    .btn.wa { background: #25D366; box-shadow: 0 8px 20px rgba(37, 211, 102, .3); }
+    .hint { font-size: .95rem; font-weight: 700; }
+    .btn { display: flex; align-items: center; justify-content: center; min-height: 52px; padding: 12px 24px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: 800 1.02rem 'Nunito', sans-serif; cursor: pointer; text-decoration: none; box-shadow: 0 2px 4px rgba(214, 31, 74, .25), 0 8px 20px rgba(214, 31, 74, .30); width: 100%; }
+    .btn.wa { background: #25D366; color: #053B1C; box-shadow: 0 8px 20px rgba(37, 211, 102, .3); }
     .btn.ghost { background: #fff; color: var(--petrol); border: 2px solid var(--petrol); box-shadow: none; }
     .btn.danger { background: #fff; color: #B0143F; border: 2px solid #B0143F; box-shadow: none; }
     .btn[disabled] { opacity: .6; cursor: default; }
@@ -46,7 +46,12 @@
     .err.active { display: block; }
     a { color: var(--petrol); font-weight: 800; }
     [hidden] { display: none !important; }
-    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+    :focus-visible { outline: 3px solid var(--petrol); outline-offset: 3px; }
+    header :focus-visible { outline-color: var(--yellow); }
+    #i-cancelar { margin-top: 18px; }
+    .spin { width: 28px; height: 28px; margin: 0 auto 12px; border-radius: 50%; border: 3px solid var(--teal-10); border-top-color: var(--teal); animation: giro .9s linear infinite; }
+    @keyframes giro { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .spin { animation: none; border-top-color: var(--petrol); } }
     .modal { position: fixed; inset: 0; background: rgba(6,82,100,.6); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50; }
     .modal.active { display: flex; }
     .modal .box { background: #fff; border-radius: 24px; padding: 24px 22px; max-width: 420px; width: 100%; text-align: center; }
@@ -58,11 +63,11 @@
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NPDJ58XR" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <header><a href="/eventos"><span class="fa-logo-card fa-logo-card--center"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></span></a></header>
   <main id="conteudo">
-    <div class="card" id="loading"><h1>Abrindo seu ingresso…</h1></div>
+    <div class="card" id="loading" role="status"><div class="spin" aria-hidden="true"></div><h1>Abrindo seu ingresso…</h1></div>
 
     <div class="card" id="bad" hidden>
       <h1>Este link não é válido</h1>
-      <p>Ele pode ter sido copiado incompleto ou expirado. Abra o e-mail da inscrição e clique de novo, ou fale com a gente em <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a>.</p>
+      <p>Ele pode ter sido copiado incompleto ou expirado. Abra o e-mail da inscrição e clique de novo, ou escreva para <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a>.</p>
       <div class="acoes"><a class="btn ghost" href="/eventos">Ver a agenda</a></div>
     </div>
 

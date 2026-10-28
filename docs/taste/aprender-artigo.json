@@ -1,0 +1,172 @@
+{
+  "source": "http://localhost:8765/aprender/birra-ou-crise.html (template dos 9 artigos de /aprender/, versão original)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        22,
+        26,
+        30,
+        38,
+        44
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "40px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2",
+          "size": "24.8px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h3 (próximo passo)",
+          "size": "20px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "corpo",
+          "size": "17px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "breadcrumb/byline",
+          "size": "13.76px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "eyebrow e rótulo",
+          "size": "12.8px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background-corpo",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "texto-primario e rodapé",
+        "value": "#065264"
+      },
+      {
+        "role": "background-caixa Na prática",
+        "value": "#FFF3D2"
+      },
+      {
+        "role": "background-caixa Você não está sozinha",
+        "value": "#E2F8F8"
+      },
+      {
+        "role": "accent (original)",
+        "value": "#FB3D6A"
+      },
+      {
+        "role": "accent (corrigido)",
+        "value": "#D61F4A"
+      },
+      {
+        "role": "background-whatsapp / texto corrigido",
+        "value": "#25D366 / #053B1C"
+      }
+    ],
+    "radius": [
+      "999px",
+      "22px",
+      "20px",
+      "16px",
+      "14px",
+      "50%"
+    ],
+    "shadows": [
+      "0 2px 4px rgba(251,61,106,.25), 0 8px 20px rgba(251,61,106,.30) (botão rosa; corrigido para rgba(214,31,74,...))",
+      "0 8px 28px rgba(0,0,0,.28) (cookie)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "avatar da autora",
+        "ratio": "1:1 (44px)"
+      },
+      {
+        "usage": "imagem de capa do artigo",
+        "ratio": "n/a (nenhuma)"
+      }
+    ],
+    "grid": {
+      "max_width": "740px (.art-wrap) / 708px útil",
+      "columns": 1,
+      "gutter": "16px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Coluna única de 708px, sem barra lateral, sem imagem no corpo",
+      "trigger": "Quando o artigo é lido no celular por pai ou mãe no meio do dia, em 2 a 3 minutos",
+      "decision": "Uma coluna de 708px com corpo de 17px e line-height 28px, sem sumário, sem lateral e sem foto, em vez de layout de blog com índice e imagens",
+      "reason": "Quem lê em pé, com a criança por perto, precisa de uma coluna que não pede para decidir nada antes do texto",
+      "evidence": [
+        "article 708px de largura, parágrafos de 17px/28.05px",
+        "0 imagens no corpo além do avatar de 44px",
+        "322 a 576 palavras por artigo nos 9 arquivos"
+      ]
+    },
+    {
+      "name": "Duas caixas de cor suave para separar 'o que fazer' do resto",
+      "trigger": "Quando o artigo precisa dar uma ação concreta no meio de explicação",
+      "decision": "Caixa amarela suave (#FFF3D2, 'Na prática') e caixa turquesa suave (#E2F8F8, 'Você não está sozinha') em vez de callouts com borda e ícone",
+      "reason": "A ação prática tem de ser achada de relance por quem lê pulando; o fundo colorido faz isso sem ícone",
+      "evidence": [
+        ".box-practice #FFF3D2 raio 20px padding 20px 22px",
+        "`.sozinha` #E2F8F8 raio 22px",
+        "petróleo sobre #FFF3D2 7.92:1 e sobre #E2F8F8 7.93:1"
+      ]
+    },
+    {
+      "name": "Rosa só para o que o leitor pode fazer: eyebrow, marcador de lista, link e botão",
+      "trigger": "Quando o texto longo tem links e listas e a página tem um único pedido final",
+      "decision": "Rosa em eyebrow, `li::marker`, links e botão, e petróleo em todo o resto, em vez de usar turquesa para links e rosa só para o botão",
+      "reason": "Um leitor de texto longo percorre a página à procura do próximo clique; se o rosa aparece só onde há ação, ele o acha sem ler",
+      "evidence": [
+        "a { color: var(--pink); font-weight:800; underline } e botão com o mesmo rosa",
+        "4 textos em rosa contra 38 em petróleo (extract.js)",
+        "rosa original #FB3D6A dá 3.51:1 sobre branco; o corrigido #D61F4A dá 5.06:1"
+      ]
+    },
+    {
+      "name": "Restrição: nenhuma imagem de abertura, nenhuma tabela, nenhum accordion",
+      "trigger": "Quando os guias têm foto nos cards de /aprender e o artigo poderia herdá-la como capa",
+      "decision": "Abrir direto em h1 + byline + texto, em vez de imagem de capa, para o texto chegar na primeira dobra",
+      "reason": "Em 390px uma capa de 16:9 empurraria o primeiro parágrafo para fora da tela; a pergunta do leitor é respondida logo",
+      "evidence": [
+        "h1 começa em y=166 e o 1o parágrafo em y=376 no desktop",
+        "artigo inteiro com 2064px de altura (de 3299px de página)",
+        "0 elementos img/table/details dentro de `<article>` além do avatar"
+      ]
+    }
+  ]
+}

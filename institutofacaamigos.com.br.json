@@ -1,0 +1,77 @@
+{
+  "source": "https://institutofacaamigos.com.br/",
+  "captured": "2026-10-28, produção antes do redesenho da home; 1440x900 + 390x844; páginas /, /playground, /aprender",
+  "tokens": {
+    "spacing": {
+      "scale": [4, 8, 10, 12, 14, 18, 22, 24, 40, 76],
+      "base_unit": null,
+      "note": "sem grade estrita: os valores mais frequentes são 10px (86x), 8px (73x), 12px (42x), 18px (41x) e 22px (38x); seções a 40-76px"
+    },
+    "typography": {
+      "families": ["Fredoka One", "Nunito"],
+      "scale": [
+        { "role": "h1", "size": "51.2px", "weight": "400", "family": "Fredoka One" },
+        { "role": "h2", "size": "35.2px", "weight": "400", "family": "Fredoka One" },
+        { "role": "card-title", "size": "24px", "weight": "400", "family": "Fredoka One" },
+        { "role": "lead", "size": "18.4px", "weight": "700", "family": "Nunito" },
+        { "role": "body", "size": "16px", "weight": "600", "family": "Nunito" },
+        { "role": "button", "size": "16.8px", "weight": "800", "family": "Nunito" },
+        { "role": "eyebrow", "size": "12.8px", "weight": "900", "family": "Nunito" }
+      ]
+    },
+    "colors": [
+      { "role": "background", "value": "#FFF9F1" },
+      { "role": "surface", "value": "#FFFFFF" },
+      { "role": "text-primary", "value": "#1A3F35" },
+      { "role": "text-secondary", "value": "#4C6B62" },
+      { "role": "accent-primary-cta", "value": "#F0196B" },
+      { "role": "accent-secondary", "value": "#1FA893" },
+      { "role": "highlight", "value": "#FFE234" },
+      { "role": "whatsapp", "value": "#25D366" },
+      { "role": "footer-ebook", "value": "#065264" }
+    ],
+    "radius": ["9999px", "32px", "24px", "20px", "18px", "14px"],
+    "shadows": [
+      "0 4px 10px rgba(26,63,53,0.08)",
+      "0 18px 40px rgba(26,63,53,0.14)",
+      "0 10px 26px rgba(240,25,107,0.32)"
+    ],
+    "image_ratios": [
+      { "usage": "product card photo", "ratio": "16:10" },
+      { "usage": "source photos", "ratio": "3:4" },
+      { "usage": "clinic photo", "ratio": "4:3.4" },
+      { "usage": "founder avatar", "ratio": "1:1 circle" }
+    ],
+    "grid": { "max_width": "1140px", "columns": 2, "gutter": "20-24px" }
+  },
+  "taste": [
+    {
+      "name": "Neutros tingidos de verde, nunca cinza",
+      "trigger": "Ao escolher texto, fundo e sombra para uma marca infantil que também vende terapia",
+      "decision": "Escolheu texto #1A3F35, secundário #4C6B62, fundo creme #FFF9F1 e sombras rgba(26,63,53,x), em vez de cinzas puros e sombra preta",
+      "reason": "Mãe que chega preocupada lê o creme com verde-musgo como casa ou berçário, e não como consultório; o tom quente baixa a guarda antes de qualquer texto",
+      "evidence": ["#1A3F35 em 73 nós de texto", "#4C6B62 em 43", "43 sombras rgba(26,63,53,0.08) 0 4px 10px", "nenhuma sombra rgba(0,0,0) fora da capa do e-book"]
+    },
+    {
+      "name": "Nenhum canto vivo",
+      "trigger": "Ao definir a geometria de botões, chips e cards",
+      "decision": "Escolheu pílula 9999px em todo botão e chip, e 18-32px nos cards, em vez de cantos de 4-8px",
+      "reason": "Num espaço para criança, o canto arredondado repete visualmente a promessa de segurança física; a interface parece macia como o tapete",
+      "evidence": ["9999px em 38 elementos", "999px em 6", "cards em 20px (17x), 18px (10x) e 24px (6x)", "lazer-card 32px", "zero raio abaixo de 14px"]
+    },
+    {
+      "name": "Voz infantil só no título",
+      "trigger": "Ao equilibrar o tom lúdico com texto longo para pais",
+      "decision": "Escolheu Fredoka One (peso único 400) só em h1-h4 e Nunito em 398 nós de texto, em vez de uma família lúdica no corpo ou uma neutra no título",
+      "reason": "O título fala com a criança que existe na marca; o corpo fala com o adulto que precisa ler preço, horário e laudo sem esforço",
+      "evidence": ["Fredoka One em 25 nós, todos títulos", "h1 51.2px / h2 35.2px, peso 400", "Nunito em 398 nós", "corpo com line-height 1.6"]
+    },
+    {
+      "name": "Foto real em vez de ilustração",
+      "trigger": "Ao decorar um site de playground, onde mascote e ilustração cartunesca são o padrão do setor",
+      "decision": "Escolheu fotos do próprio espaço (3:4, sem tratamento) e só duas formas abstratas chapadas, em vez de mascote, ilustração ou banco de imagem",
+      "reason": "Pais de crianças atípicas precisam ver o lugar exato antes de ir; ilustração esconde justamente o que eles querem conferir",
+      "evidence": ["círculo amarelo 340px a 0.45 e teal 240px a 0.16 como única decoração", "grifo #FFE234 sob as palavras-chave do H1", "imagens playground-piscina-casinha e circuito-lamborghini-menino em 1440x1920 / 1086x1448", "nenhum SVG ilustrativo fora de ícones"]
+    }
+  ]
+}

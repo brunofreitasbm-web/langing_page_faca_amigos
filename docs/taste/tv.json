@@ -1,0 +1,194 @@
+{
+  "source": "http://localhost:8765/tv.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        3,
+        4,
+        6,
+        8,
+        10,
+        14,
+        16
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "titulo-noite",
+          "size": "80.64px",
+          "weight": "700",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "relogio",
+          "size": "51.84px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "citacao-equipe",
+          "size": "54.72px",
+          "weight": "700",
+          "family": "Fredoka"
+        },
+        {
+          "role": "subtexto-equipe",
+          "size": "28.08px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "selo-equipe",
+          "size": "23.04px",
+          "weight": "700",
+          "family": "Fredoka"
+        },
+        {
+          "role": "subtitulo-marca",
+          "size": "16.56px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "data-relogio",
+          "size": "17.28px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "hud-operador",
+          "size": "14.4px",
+          "weight": "400",
+          "family": "Fredoka"
+        },
+        {
+          "role": "botao-suno",
+          "size": "12px",
+          "weight": "700",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "fundo-dia",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "fundo-noite",
+        "value": "#15322A"
+      },
+      {
+        "role": "texto-principal",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "texto-secundario",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "destaque-rosa",
+        "value": "#F0196B",
+        "depois_da_correcao": "#E01560"
+      },
+      {
+        "role": "destaque-verde-agua",
+        "value": "#2ECFB5"
+      },
+      {
+        "role": "verde-escuro-texto",
+        "value": "#1FA893",
+        "depois_da_correcao": "#137A6A"
+      },
+      {
+        "role": "amarelo-rotulo",
+        "value": "#FFE234"
+      }
+    ],
+    "radius": [
+      "999px",
+      "36px",
+      "24px",
+      "8px",
+      "6px",
+      "2px",
+      "50%"
+    ],
+    "shadows": [
+      "0 4px 16px rgba(26,63,53,0.08)",
+      "0 30px 80px rgba(0,0,0,0.4)",
+      "0 0 60px rgba(46,207,181,0.2)",
+      "0 0 10px #2ECFB5"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo",
+        "ratio": "1.11:1"
+      },
+      {
+        "usage": "foto-equipe",
+        "ratio": "~0.73:1"
+      }
+    ],
+    "grid": {
+      "max_width": "94vw",
+      "columns": 2,
+      "gutter": "3vw"
+    }
+  },
+  "taste": [
+    {
+      "name": "Escala em vw para qualquer TV",
+      "trigger": "A TV do salão pode ser 720p, 1080p ou 4K e ninguém vai ajustar zoom no navegador",
+      "decision": "Todo texto grande usa clamp(mín, vw, máx) em vez de px fixo",
+      "reason": "A equipe só abre a URL e a tela se ajusta sozinha; texto em px fixo ficaria pequeno na 4K e estouraria na 720p",
+      "evidence": [
+        "citação 3.8vw = 54.72px a 1440 (clamp 1.9rem a 8.6rem)",
+        "subtexto 1.95vw = 28.08px, razão 1.95:1 com a citação",
+        "título noturno 80.64px",
+        "exceção: HUD 14.4px e botões Suno 12px em rem/px fixos"
+      ]
+    },
+    {
+      "name": "Rosa só na palavra que importa",
+      "trigger": "Cada slide da equipe tem uma frase longa e precisa de um ponto de apoio para o olhar a metros",
+      "decision": "Pintar de rosa apenas 1 ou 2 palavras da frase (span.highlight, em) em vez de colorir o bloco ou usar fundo rosa",
+      "reason": "Quem passa de relance lê a palavra rosa e entende o assunto; se tudo fosse rosa, nada se destacaria",
+      "evidence": [
+        "área rosa medida: 1.2% da tela noturna (#F0196B)",
+        "texto principal #1A3F35 sobre #FFF9F1 = 11.11:1 contra rosa 3.97:1 (4.52:1 depois da correção)",
+        "cenas infantis sem foto de fundo: figurinhas sobre degradê claro"
+      ]
+    },
+    {
+      "name": "Três climas por horário",
+      "trigger": "O salão funciona das 10h às 22h e depois fica em stand-by, com públicos diferentes (equipe, crianças, ninguém)",
+      "decision": "Três modos com aparência própria (creme das 10h às 16h, verde claro com figurinhas das 16h às 22h, escuro à noite) em vez de um tema só",
+      "reason": "À noite uma tela clara acordaria o ambiente; de dia o creme combina com a parede e com a luz do salão",
+      "evidence": [
+        "fundo noturno radial #15322A para #0A1B16 contra #FFF9F1 do dia",
+        "transição de tela 1.2s cubic-bezier(0.4,0,0.2,1) só em opacity",
+        "exceção: o cabeçalho continua creme rgba(255,249,241,0.95) à noite"
+      ]
+    },
+    {
+      "name": "Cápsula como forma única",
+      "trigger": "Selos, status, música, HUD e botões precisam parecer amigáveis para crianças e pais ansiosos",
+      "decision": "Tudo que é rótulo ou botão usa border-radius 999px em vez de retângulos com cantos de 6 a 8px",
+      "reason": "Cantos totalmente arredondados não têm quina e combinam com as figurinhas e o logo curvo",
+      "evidence": [
+        "999px em 15 de 22 declarações de raio",
+        "painéis grandes usam 36px (--r-xl) e 24px (--r-lg)",
+        "sombras raras: 4 valores no total, a maioria rgba(26,63,53,0.08)"
+      ]
+    }
+  ]
+}

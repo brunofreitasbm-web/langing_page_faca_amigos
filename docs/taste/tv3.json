@@ -1,0 +1,190 @@
+{
+  "source": "http://localhost:8765/tv3.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        3,
+        6,
+        8,
+        10,
+        14,
+        16,
+        18,
+        28,
+        32,
+        36,
+        44
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "headline",
+          "size": "64px",
+          "weight": "700",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "relogio",
+          "size": "34px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "subtexto",
+          "size": "30px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "titulo-cartao",
+          "size": "28px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "marca",
+          "size": "26px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "descricao-cartao",
+          "size": "19px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "rodape-telefone",
+          "size": "15px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "subtitulo-marca",
+          "size": "14px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "lista-comparativo",
+          "size": "13.5px",
+          "weight": "700",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "cabecalho",
+        "value": "#065264"
+      },
+      {
+        "role": "fundo-palco",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "petroleo-profundo",
+        "value": "#032D37"
+      },
+      {
+        "role": "destaque-rosa",
+        "value": "#F0196B",
+        "depois_da_correcao": "#E01560"
+      },
+      {
+        "role": "verde-agua",
+        "value": "#2ECFB5",
+        "depois_da_correcao": "#4FE0C8 no subtítulo do cabeçalho"
+      },
+      {
+        "role": "amarelo-headline",
+        "value": "#FFE234"
+      },
+      {
+        "role": "indicador-ao-vivo",
+        "value": "#25D366"
+      }
+    ],
+    "radius": [
+      "999px",
+      "36px",
+      "8px",
+      "6px",
+      "50%"
+    ],
+    "shadows": [
+      "0 4px 20px rgba(0,0,0,0.15)",
+      "0 24px 60px rgba(3,45,55,0.22)",
+      "0 4px 15px rgba(0,0,0,0.2)",
+      "0 0 10px #25D366"
+    ],
+    "image_ratios": [
+      {
+        "usage": "foto-herói (origem)",
+        "ratio": "0.75:1"
+      },
+      {
+        "usage": "foto-herói (recorte visível)",
+        "ratio": "~2.16:1"
+      }
+    ],
+    "grid": {
+      "max_width": "1920px",
+      "columns": 1,
+      "gutter": "44px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Petróleo para a clínica, rosa só no selo",
+      "trigger": "A sala de espera da clínica precisa soar mais calma e institucional que o playground vizinho",
+      "decision": "Cabeçalho em petróleo #065264 e fundo #032D37, com rosa limitado ao selo 'Clínica' e ao kicker, em vez de repetir o creme e o rosa do playground",
+      "reason": "Pais em consulta querem sobriedade; o rosa pequeno mantém o parentesco com a marca",
+      "evidence": [
+        "cabeçalho #065264 (4.6% da área) com branco 8.75:1",
+        "rosa #F0196B sobre 13px: 4.15:1, agora #E01560 4.72:1",
+        "área de rosa na captura inicial: 0%"
+      ]
+    },
+    {
+      "name": "Texto direto sobre foto de tela cheia",
+      "trigger": "Cada um dos 36 slides precisa de foto real de sala/terapia e uma mensagem curta",
+      "decision": "Foto ocupando o card inteiro com texto sobreposto sobre degradê, em vez de foto de um lado e texto em coluna",
+      "reason": "A foto é a prova de que o espaço é acolhedor; a mensagem entra sem tirar área da imagem",
+      "evidence": [
+        "headline 64px branco com text-shadow 0 4px 18px rgba(0,0,0,0.5)",
+        "subtexto 30px/42px, largura máxima 76%",
+        "foto 1440x1920 (0.75:1) mostrada num card de ~1374x636 (~2.16:1): cerca de 35% da altura aparece"
+      ]
+    },
+    {
+      "name": "Sem texto em movimento contínuo",
+      "trigger": "Uma sala de espera com pais e crianças com sensibilidade sensorial",
+      "decision": "Só troca de slide com fade (0.8s) e uma barra de progresso de 6px, em vez de ticker rolando ou vídeos",
+      "reason": "Movimento constante no canto do olho cansa quem já está ansioso",
+      "evidence": [
+        "transições: opacity/transform 0.8s cubic-bezier(0.2,0.8,0.2,1) e transform 12s ease-out na foto",
+        "barra de progresso 6px com width 0.1s linear",
+        "pulseLive 2s só no ponto verde de 10px"
+      ]
+    },
+    {
+      "name": "Palco 1920x1080 escalado",
+      "trigger": "A TV da clínica mostra a página em qualquer resolução",
+      "decision": "Canvas fixo de 1920x1080 reduzido por transform em vez de layout fluido",
+      "reason": "A composição (96px de cabeçalho, 64px de rodapé) não se desmonta em telas diferentes",
+      "evidence": [
+        "grid-template-rows 96px 1fr 64px",
+        "faixa #0F2520 nas laterais em telas que não são 16:9",
+        "14px e 13px reais na TV 1080p, sem ampliação"
+      ]
+    }
+  ]
+}

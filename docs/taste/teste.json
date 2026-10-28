@@ -1,0 +1,170 @@
+{
+  "source": "/teste.html (teste.html)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        22,
+        40,
+        56,
+        96
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Nunito",
+        "Fredoka One"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "41.6px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "body",
+          "size": "17.28px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "button",
+          "size": "16.8px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "microcopy",
+          "size": "14.72px",
+          "weight": "600",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "surface",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "text-primary",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "text-secondary",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "accent-action",
+        "value": "#E01560"
+      },
+      {
+        "role": "accent-border",
+        "value": "#2ECFB5"
+      },
+      {
+        "role": "accent-text",
+        "value": "#137A6A"
+      },
+      {
+        "role": "whatsapp",
+        "value": "#25D366"
+      },
+      {
+        "role": "whatsapp-text",
+        "value": "#053B1C"
+      },
+      {
+        "role": "footer",
+        "value": "#065264"
+      }
+    ],
+    "radius": [
+      "9999px",
+      "999px",
+      "24px",
+      "14px",
+      "50%"
+    ],
+    "shadows": [
+      "0 4px 10px rgba(26,63,53,0.08)",
+      "0 18px 40px rgba(26,63,53,0.14)",
+      "0 10px 26px rgba(224,21,96,0.32)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "foto da fundadora",
+        "ratio": "1:1"
+      },
+      {
+        "usage": "logo",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "max_width": "592px (cartão do funil)",
+      "columns": 1,
+      "gutter": "34px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Uma pergunta, uma ação por tela",
+      "trigger": "Quando o objetivo é fazer pais ansiosos começarem um quiz de 25 perguntas",
+      "decision": "Escolheram um único cartão de ~592px com um h1 e um botão rosa full-width, em vez de uma landing longa com seções de prova e navegação",
+      "reason": "Quem chega com a dúvida 'será que é normal?' está fragilizado e desiste diante de muitas escolhas; um só passo claro reduz a hesitação",
+      "evidence": [
+        "cartão 592px com borda 3px #2ECFB5 sobre fundo #FFF9F1",
+        "1 h1 (41.6px) + 1 botão (padding 15px 30px, 9999px)",
+        "topo só com logo e pílula WhatsApp"
+      ]
+    },
+    {
+      "name": "Voz acolhedora na tipografia",
+      "trigger": "Quando o tema é comportamento infantil e a marca precisa soar como alguém que acolhe, não como laudo",
+      "decision": "Chegaram ao h1 arredondado Fredoka One 41.6px sobre corpo Nunito 600 de 17.28px, em vez de uma sans neutra única",
+      "reason": "Letras redondas e pesadas suavizam a pergunta difícil; o corpo a 600 mantém leitura confortável em tela de celular",
+      "evidence": [
+        "h1 Fredoka One 400, tracking 0.416px, lh 46.6px",
+        "corpo Nunito 17.28px/600 com max-width 512px",
+        "apenas 2 famílias (119 vs 2 elementos)"
+      ]
+    },
+    {
+      "name": "Sombra e neutros tintados no verde-escuro",
+      "trigger": "Quando o cartão branco precisa se destacar do creme sem parecer flutuar em cinza",
+      "decision": "Tingiram sombras e texto com #1A3F35 (rgba(26,63,53,.08/.14)) em vez de preto/cinza puro",
+      "reason": "O verde-escuro herda a cor da marca e mantém o conjunto quente, em vez de uma sombra cinza fria sobre fundo creme",
+      "evidence": [
+        "sombras de camada única rgba(26,63,53,.08) 0 4px 10px e .14 0 18px 40px",
+        "texto #1A3F35 e #4C6B62; fundo #FFF9F1",
+        "sombra do botão rosa rgba(224,21,96,.32), tintada na cor do botão"
+      ]
+    },
+    {
+      "name": "Restrição: sem seções de persuasão antes do quiz",
+      "trigger": "Quando poderiam acrescentar depoimentos, FAQ e lista de benefícios acima do botão",
+      "decision": "Mantiveram só três chips (5 minutos, 25 perguntas, 100% gratuito) e a assinatura da psicóloga, em vez de blocos de prova social",
+      "reason": "O funil mede cliques em 'Começar agora'; cada bloco extra é um ponto de saída antes do primeiro passo",
+      "evidence": [
+        "3 chips de 14.4px/800 como única prova",
+        "rosa #E01560 ocupa 1.1% da área: usado só no botão",
+        "sem imagens além da foto 148x148 e do logo"
+      ]
+    }
+  ]
+}

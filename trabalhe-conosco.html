@@ -39,7 +39,7 @@
   <style>
     :root {
       --r-card: 24px;
-      --pink: #F0196B; --pink-dark: #C81158; --teal: #2ECFB5; --teal-dark: #1FA893; --yellow: #FFE234;
+      --pink: #E01560; --pink-dark: #C81158; --teal: #2ECFB5; --teal-dark: #137A6A; --yellow: #FFE234;
       --dark: #1A3F35; --ink-soft: #4C6B62; --cream: #FFF9F1; --white: #FFFFFF;
       --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
       --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
@@ -64,7 +64,7 @@
     .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 8px 14px; min-height: 64px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
     .topbar img { width: 150px; height: auto; }
     .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
-    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; min-height: 40px; display: inline-flex; align-items: center; }
+    .tnav a { font-weight: 800; font-size: .9375rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; min-height: 44px; display: inline-flex; align-items: center; }
     .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
 
     /* Botões */
@@ -76,33 +76,38 @@
     .btn-pink { background: var(--pink); color: #fff; box-shadow: var(--shadow-pink); }
 
     /* Hero / pitch */
-    .hero { background: linear-gradient(135deg, var(--dark) 0%, #265548 100%); color: #fff; position: relative; overflow: hidden; padding: 48px 0 56px; text-align: center; }
+    .hero { background: linear-gradient(135deg, var(--dark) 0%, #265548 100%); color: #fff; position: relative; overflow: hidden; padding: 48px 0 52px; text-align: center; }
     .hero .circ { position: absolute; border-radius: 50%; pointer-events: none; }
-    .eyebrow { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.15); color: var(--yellow); font-weight: 800; font-size: .85rem; margin-bottom: 16px; }
+    .eyebrow { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.15); color: var(--yellow); font-weight: 800; font-size: .875rem; margin-bottom: 16px; }
     .hero h1 { font-size: clamp(1.9rem, 6.4vw, 2.8rem); margin-bottom: 14px; }
-    .hero p.lead { font-size: 1.05rem; font-weight: 600; opacity: 0.92; max-width: 42rem; margin: 0 auto 26px; line-height: 1.6; }
-    .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 28px; }
-    .chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); font-weight: 700; font-size: .92rem; text-align: left; }
+    .hero p.lead { font-size: 1.0625rem; font-weight: 600; opacity: 0.92; max-width: 42rem; margin: 0 auto 26px; line-height: 1.6; }
+    .chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: 0; }
+    .chip { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); font-weight: 700; font-size: .9375rem; text-align: left; }
     .chip svg { width: 18px; height: 18px; flex-shrink: 0; }
 
     /* Formulário */
     .form-sec { padding: 40px 0 72px; }
     .form-card { background: var(--white); border-radius: var(--r-card); padding: 28px 20px; max-width: 560px; margin: -36px auto 0; position: relative; z-index: 2; box-shadow: var(--shadow-lg); }
     .form-card h2 { font-size: clamp(1.4rem, 5vw, 1.8rem); margin-bottom: 6px; }
-    .form-card > p { color: var(--ink-soft); font-weight: 600; font-size: 0.96rem; margin-bottom: 20px; }
+    .form-card > p { color: var(--ink-soft); font-weight: 600; font-size: 1rem; margin-bottom: 20px; }
+    .form-card .next { display: flex; gap: 10px; align-items: flex-start; background: #FFF9F1; border-radius: 14px; padding: 12px 14px; margin: -6px 0 20px; font-size: .9375rem; font-weight: 700; color: var(--dark); }
+    .form-card .next::before { content: "\2709"; flex: none; }
     .form-group { margin-bottom: 14px; }
     .form-control { width: 100%; min-height: 50px; padding: 13px 16px; border: 2.5px solid rgba(26, 63, 53, 0.12); border-radius: 14px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem; color: var(--dark); background: #ffffff; }
-    .form-control:focus { outline: none; border-color: var(--teal); box-shadow: 0 0 0 4px rgba(46, 207, 181, 0.18); }
+    .form-control:focus { outline: 3px solid var(--teal-dark); outline-offset: 2px; border-color: var(--teal-dark); box-shadow: 0 0 0 4px rgba(46, 207, 181, 0.18); }
     .form-control optgroup { font-weight: 800; color: var(--teal-dark); background: #f4f8f7; font-style: normal; }
     .form-control option { font-weight: 600; color: var(--dark); background: #ffffff; }
-    input[type=file].form-control { padding: 11px 12px; font-size: .92rem; }
-    .form-label { display: block; font-size: 0.88rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
+    input[type=file].form-control { padding: 8px 12px; font-size: .9375rem; color: var(--ink-soft); }
+    input[type=file].form-control::file-selector-button { margin-right: 12px; min-height: 36px; padding: 6px 16px; border: 0; border-radius: 999px; background: var(--dark); color: #fff; font-family: inherit; font-weight: 800; font-size: .9375rem; cursor: pointer; }
+    input[type=file].form-control::file-selector-button:hover { background: #265548; }
+    .form-hint { display: block; margin-top: 6px; font-size: .875rem; font-weight: 600; color: var(--ink-soft); }
+    .form-label { display: block; font-size: 1rem; font-weight: 800; color: var(--dark); margin-bottom: 6px; }
     .form-label .opt { font-weight: 600; color: var(--ink-soft); }
-    .form-error { display: none; background: #ffeeee; color: #cc0000; padding: 10px 14px; border-radius: 10px; font-size: 0.88rem; font-weight: 700; margin-bottom: 14px; }
-    .consent { font-size: 0.8rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 14px; }
+    .form-error { display: none; background: #ffeeee; color: #cc0000; padding: 10px 14px; border-radius: 10px; font-size: 1rem; font-weight: 700; margin-bottom: 14px; }
+    .consent { font-size: .875rem; font-weight: 700; color: var(--ink-soft); margin-bottom: 14px; }
     .consent a { color: var(--teal-dark); }
     .steps { max-width: 560px; margin: 28px auto 0; display: grid; gap: 10px; }
-    .steps li { list-style: none; background: #fff; border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow-sm); font-weight: 700; font-size: .95rem; display: flex; gap: 12px; align-items: flex-start; }
+    .steps li { list-style: none; background: #fff; border-radius: 16px; padding: 14px 16px; box-shadow: var(--shadow-sm); font-weight: 700; font-size: 1rem; display: flex; gap: 12px; align-items: flex-start; }
     .steps b.n { flex: 0 0 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: var(--yellow); font-family: 'Fredoka One', sans-serif; font-weight: 400; }
     .steps li:nth-child(2) b.n { background: var(--teal); }
     .steps li:nth-child(3) b.n { background: var(--pink); color: #fff; }
@@ -110,13 +115,13 @@
     footer { background: var(--dark); color: rgba(255, 255, 255, 0.75); padding: 52px 22px 60px; text-align: center; font-size: 0.92rem; font-weight: 600; }
     footer p { margin: 4px 0; }
     footer a { text-decoration: underline; text-underline-offset: 3px; }
-    footer .legal { margin-top: 18px; font-size: 0.8rem; opacity: 0.6; }
+    footer .legal { margin-top: 18px; font-size: .875rem; opacity: 0.85; }
 
     @media (min-width: 720px) {
-      .hero { padding: 64px 0 88px; }
+      .hero { padding: 64px 0 76px; }
       .form-card { padding: 36px; margin-top: -56px; }
     }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } .btn:hover, .btn:active { transform: none; } }
   </style>
 
   <script type="application/ld+json">
@@ -172,8 +177,8 @@
         <p class="lead">Com a inauguração da nossa Clínica e a expansão dos nossos espaços, estamos em busca de profissionais da Saúde, Educação e Operação apaixonados por transformar vidas com afeto e ciência.</p>
         <div class="chips">
           <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--yellow);" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Psicologia ABA, TO, Fono &amp; Fisioterapia</span>
-          <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--teal);" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Recepção, Mediadores &amp; Operacional</span>
-          <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--pink);" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Vagas CLT, PJ e Estágio</span>
+          <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--yellow);" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Recepção, Mediadores &amp; Operacional</span>
+          <span class="chip"><svg fill="currentColor" viewBox="0 0 20 20" style="color: var(--yellow);" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg> Vagas CLT, PJ e Estágio</span>
         </div>
       </div>
     </header>
@@ -183,6 +188,7 @@
         <div class="form-card" id="candidatura">
           <h2 id="jobFormTitle">Envie sua candidatura</h2>
           <p>Preencha seus dados e envie seu currículo em PDF. Nosso time de RH vai analisar sua candidatura.</p>
+          <p class="next">Logo depois do envio, você recebe no e-mail o teste de perfil comportamental. Responda em até 7 dias.</p>
           <form id="job-form">
             <div class="form-group">
               <label for="job-nome" class="form-label">Nome completo</label>
@@ -272,7 +278,8 @@
             </div>
             <div class="form-group">
               <label for="job-curriculo" class="form-label">Currículo (PDF, até 5MB)</label>
-              <input type="file" id="job-curriculo" class="form-control" accept="application/pdf" required>
+              <input type="file" id="job-curriculo" class="form-control" accept="application/pdf" required aria-describedby="job-cv-hint">
+              <span class="form-hint" id="job-cv-hint">Apenas arquivo PDF, até 5MB.</span>
             </div>
             <p class="consent">Ao enviar, você concorda com o uso dos seus dados para o processo seletivo, conforme a <a href="/politica-privacidade" target="_blank">Política de Privacidade</a>.</p>
             <div id="job-form-error" class="form-error" role="alert"></div>

@@ -34,10 +34,10 @@
 
   <style>
     :root {
-      --pink: #F0196B;
+      --pink: #E01560;
       --pink-dark: #C81158;
       --teal: #2ECFB5;
-      --teal-dark: #1FA893;
+      --teal-dark: #137A6A;
       --yellow: #FFE234;
       --dark: #1A3F35;
       --ink-soft: #4C6B62;
@@ -71,7 +71,7 @@
     .btn:active { transform: scale(0.96); }
     .btn-pink { background: var(--pink); color: var(--white); box-shadow: var(--shadow-pink); width: 100%; }
     .btn-pink:active { background: var(--pink-dark); }
-    .btn-outline { background: var(--white); color: var(--dark); border: 2px solid #E7E1D5; padding: 12px 20px; font-size: 14.5px; }
+    .btn-outline { background: var(--white); color: var(--dark); border: 2px solid #E7E1D5; padding: 12px 20px; font-size: 14px; min-height: 44px; }
 
     /* ── Hero ───────────────────────────────────────────────────────── */
     .hero {
@@ -98,7 +98,7 @@
     .hero .content { position: relative; padding: 0 var(--gutter) 30px; max-width: var(--max); margin: 0 auto; width: 100%; }
     .pill {
       display: inline-flex; align-items: center; gap: 7px;
-      background: var(--teal); color: var(--dark); font-weight: 900; font-size: 13px;
+      background: var(--teal); color: var(--dark); font-weight: 900; font-size: 14px;
       letter-spacing: 0.04em; text-transform: uppercase; padding: 7px 14px 7px 10px; border-radius: 999px;
       margin-bottom: 16px; box-shadow: 0 6px 16px rgba(46,207,181,0.35);
     }
@@ -107,12 +107,12 @@
     .hero .sub { font-size: 16px; font-weight: 700; opacity: 0.92; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
     .hero .sub .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--yellow); display: inline-block; }
     .hero .btn-pink { animation: nudge 0.9s cubic-bezier(0.34, 1.4, 0.64, 1) 0.9s 1 both; }
-    .proof { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 13.5px; font-weight: 800; opacity: 0.95; }
+    .proof { display: flex; align-items: center; gap: 10px; margin-top: 16px; font-size: 14px; font-weight: 800; opacity: 0.95; }
     .avatars { display: flex; }
     .avatars span {
       width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--dark);
       display: flex; align-items: center; justify-content: center;
-      font-size: 11px; font-weight: 900; color: var(--dark); margin-left: -8px;
+      font-size: 12px; font-weight: 900; color: var(--dark); margin-left: -8px;
     }
     .avatars span:first-child { margin-left: 0; }
     .stars { color: var(--yellow); letter-spacing: 1px; font-size: 14px; }
@@ -126,7 +126,7 @@
       transform: translateY(110%); transition: transform 0.28s ease;
     }
     .sticky.show { transform: translateY(0); }
-    .sticky .btn-pink { max-width: var(--max); margin: 0 auto; display: flex; padding: 15px 22px; font-size: 16.5px; }
+    .sticky .btn-pink { max-width: var(--max); margin: 0 auto; display: flex; padding: 15px 22px; font-size: 16px; }
 
     /* ── Seções ─────────────────────────────────────────────────────── */
     section { padding: 34px 0 6px; }
@@ -150,8 +150,8 @@
     .ticket::before { left: -9px; } .ticket::after { right: -9px; }
     .ticket .mail-ic { width: 46px; height: 46px; border-radius: 50%; background: var(--teal-dark); color: var(--white); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .ticket .mail-ic svg { width: 26px; height: 26px; }
-    .ticket b { display: block; font-size: 15.5px; font-weight: 900; }
-    .ticket small { font-size: 13px; color: var(--ink-soft); font-weight: 700; }
+    .ticket b { display: block; font-size: 16px; font-weight: 900; }
+    .ticket small { font-size: 14px; color: var(--ink-soft); font-weight: 700; }
     .ticket small strong { color: var(--pink-dark); }
 
     /* Tiles de benefício */
@@ -167,10 +167,10 @@
       padding: 18px 18px 16px; min-height: 150px; display: flex; flex-direction: column; justify-content: space-between;
     }
     .tile .big { font-family: 'Fredoka One', sans-serif; font-size: 40px; line-height: 1; color: var(--dark); display: flex; align-items: baseline; gap: 10px; }
-    .tile .big s { font-size: 20px; color: #B3A99C; text-decoration-color: var(--pink); text-decoration-thickness: 3px; }
+    .tile .big s { font-size: 20px; color: #766B5E; text-decoration-color: var(--pink); text-decoration-thickness: 3px; }
     .tile .big .unit { font-size: 22px; }
     .tile .label { font-size: 14px; font-weight: 800; color: var(--ink-soft); margin-top: 10px; }
-    .tile .badge { align-self: flex-start; font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; }
+    .tile .badge { align-self: flex-start; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; padding: 4px 10px; border-radius: 999px; margin-bottom: 12px; }
     .badge-teal { background: rgba(46,207,181,0.16); color: var(--teal-dark); }
     .badge-yellow { background: rgba(255,226,52,0.5); color: var(--dark); }
     .badge-pink { background: rgba(240,25,107,0.1); color: var(--pink-dark); }
@@ -184,32 +184,24 @@
     .stamp.on svg { width: 60%; height: 60%; }
     .tile .clock { display: flex; align-items: center; gap: 8px; }
     .tile .clock svg { width: 34px; height: 34px; color: var(--teal-dark); }
-    .rule {
-      display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px;
-      font-size: 13px; font-weight: 800; color: var(--ink-soft); margin-top: 2px;
-    }
-    .rule span { background: var(--white); padding: 6px 12px; border-radius: 999px; box-shadow: var(--shadow-sm); }
-    .rule .x { background: none; box-shadow: none; padding: 0; color: var(--pink); }
 
-    /* Lugares */
-    .places { display: grid; gap: 14px; }
+    /* Lugares: cartão horizontal com foto, endereço e rota */
+    .places { display: grid; gap: 12px; }
     .place {
-      position: relative; border-radius: 24px; overflow: hidden; aspect-ratio: 4 / 3;
-      background: var(--teal); color: var(--white); box-shadow: var(--shadow-lg); display: block;
+      position: relative; display: grid; grid-template-columns: 104px 1fr; min-height: 124px;
+      border-radius: 24px; overflow: hidden; background: var(--white); color: var(--dark); box-shadow: var(--shadow-sm);
     }
-    .place img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-    .place .veil { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(26,63,53,0.05) 0%, rgba(26,63,53,0.25) 35%, rgba(26,63,53,0.9) 100%); }
-    .place .txt { position: absolute; left: 18px; right: 18px; bottom: 16px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-    .place h3 { font-family: 'Fredoka One', sans-serif; font-weight: 400; font-size: 22px; line-height: 1.1; margin-bottom: 4px; }
-    .place p { font-size: 13.5px; font-weight: 700; opacity: 0.92; }
-    .place .tag { display: inline-block; font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; background: var(--yellow); color: var(--dark); padding: 3px 8px; border-radius: 999px; margin-bottom: 6px; }
-    .place .meta { font-size: 12px; opacity: 0.85; margin-top: 3px; }
-    .place .go { flex-shrink: 0; display: inline-flex; align-items: center; gap: 5px; background: var(--white); color: var(--dark); font-family: 'Fredoka One', sans-serif; font-size: 14px; padding: 9px 13px; border-radius: 999px; box-shadow: var(--shadow-sm); }
-    .place .go svg { width: 18px; height: 18px; }
-    .routes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
-    .routes .btn { flex: 1 1 auto; font-size: 13.5px; padding: 11px 14px; }
-    .where { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 800; color: var(--ink-soft); margin: 14px 0 0; }
-    .where svg { width: 18px; height: 18px; color: var(--pink); }
+    .place img { width: 100%; height: 100%; object-fit: cover; grid-row: 1 / span 2; background: var(--dark); }
+    .place .body { padding: 12px 14px 4px; display: block; min-width: 0; }
+    .place .body::after { content: ''; position: absolute; inset: 0; }
+    .place .body:focus-visible::after { outline: 3px solid var(--dark); outline-offset: -3px; border-radius: 24px; }
+    .place h3 { font-family: 'Fredoka One', sans-serif; font-weight: 400; font-size: 20px; line-height: 1.15; margin-bottom: 4px; }
+    .place p { font-size: 14px; font-weight: 700; color: var(--ink-soft); line-height: 1.3; }
+    .place .tag { display: inline-block; font-size: 12px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.05em; background: var(--yellow); color: var(--dark); padding: 3px 8px; border-radius: 999px; margin-bottom: 6px; }
+    .place .meta { color: var(--dark); margin-top: 2px; }
+    .place .rota { position: relative; z-index: 1; align-self: end; justify-self: start; margin: 0 14px 10px; min-height: 44px; padding: 10px 16px; }
+    .where { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; color: var(--ink-soft); margin: 14px 0 0; }
+    .where svg { width: 18px; height: 18px; flex: none; color: var(--pink-dark); }
 
     /* Chips (e-books) */
     .chips { display: grid; gap: 10px; }
@@ -220,20 +212,26 @@
     .chip:active { transform: scale(0.98); }
     .chip .ic { width: 40px; height: 40px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .chip .ic svg { width: 22px; height: 22px; }
-    .chip b { display: block; font-size: 14.5px; font-weight: 900; line-height: 1.2; }
-    .chip small { font-size: 12px; color: var(--ink-soft); font-weight: 700; }
+    .chip b { display: block; font-size: 16px; font-weight: 900; line-height: 1.2; }
+    .chip small { font-size: 14px; color: var(--ink-soft); font-weight: 700; }
     .chip .arrow { margin-left: auto; color: #B3A99C; }
     .chip .arrow svg { width: 20px; height: 20px; }
 
-    footer { text-align: center; padding: 40px var(--gutter) 110px; color: var(--ink-soft); font-size: 12.5px; font-weight: 600; }
+    footer { text-align: center; padding: 40px var(--gutter) 110px; color: var(--ink-soft); font-size: 14px; font-weight: 600; }
     footer .links { margin-top: 8px; display: flex; justify-content: center; gap: 16px; }
-    footer .links a { text-decoration: underline; }
+    footer .links a { text-decoration: underline; display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
+    footer a[data-fa-cookies] { opacity: 1 !important; }
+
+    a:focus-visible, .btn:focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; }
+    .hero a:focus-visible, .hero .btn:focus-visible { outline-color: var(--white); }
+    .sticky .btn:focus-visible { outline-color: var(--dark); }
 
     @keyframes stampIn { from { transform: scale(1.8) rotate(-12deg); opacity: 0; } to { transform: scale(1) rotate(0); opacity: 1; } }
     @keyframes nudge { 0% { transform: translateY(0); } 40% { transform: translateY(-6px) scale(1.02); } 100% { transform: translateY(0); } }
     @media (prefers-reduced-motion: reduce) {
       .stamp.on, .hero .btn-pink { animation: none; }
-      .sticky { transition: none; }
+      .sticky, .btn, .chip { transition: none; }
+      html { scroll-behavior: auto; }
     }
 
     @media (min-width: 640px) {
@@ -242,10 +240,6 @@
       .hero .btn-pink { width: auto; min-width: 320px; }
       .tiles { display: grid; grid-template-columns: repeat(2, 1fr); overflow: visible; margin: 0; padding: 4px 0 14px; }
       .tile { flex: none; }
-      .places { grid-template-columns: 1fr 1fr; }
-      .place:last-child { grid-column: 1 / -1; aspect-ratio: 16 / 7; }
-      .place h3 { font-size: 19px; }
-      .place p { font-size: 12.5px; }
       .chips { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -273,14 +267,14 @@
       <h1>Enquanto você espera, entenda seu filho</h1>
       <p class="sub"><span>5 minutos</span><span class="dot"></span><span>25 perguntas</span><span class="dot"></span><span>resultado na hora</span></p>
       <a class="btn btn-pink" id="ctaTeste" href="#">
-        Quero entender meu filho
+        Fazer o mapeamento · 5 min
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
       </a>
       <div class="proof">
         <div class="avatars">
           <span style="background:#FFE234">M</span>
           <span style="background:#2ECFB5">A</span>
-          <span style="background:#FF7A00">J</span>
+          <span style="background:#FF7A00;color:#0E2A22">J</span>
         </div>
         <span><span class="stars">★★★★★</span> 1.100 famílias já brincam com a gente</span>
       </div>
@@ -309,7 +303,7 @@
         </div>
         <div>
           <b>Seu cupom está no seu e-mail</b>
-          <small>código ESPERA · vale por <strong>15 dias</strong> · 1 por cliente a cada 30 dias</small>
+          <small>código ESPERA · 1 cupom = 1 visita, no Playground <strong>ou</strong> no Circuito · vale por <strong>15 dias</strong> · 1 por cliente a cada 30 dias</small>
         </div>
       </div>
 
@@ -332,10 +326,6 @@
           </div>
         </div>
       </div>
-
-      <div class="rule">
-        <span>1 cupom</span><span class="x">=</span><span>1 visita</span><span class="x">·</span><span>Playground <em style="color:var(--pink);font-style:normal">ou</em> Circuito</span>
-      </div>
     </section>
 
     <!-- ── 3. Lugares ──────────────────────────────────────────────── -->
@@ -348,55 +338,41 @@
       </div>
 
       <div class="places">
-        <a class="place" id="ctaPlaygroundParque" href="#" target="_blank" rel="noopener">
+        <article class="place">
           <img src="img/playground-fachada-recepcao.webp" width="1920" height="1160" alt="Fachada e recepção do FaçaAmigos Playground no Parque Shopping Belém" loading="lazy" decoding="async">
-          <div class="veil"></div>
-          <div class="txt">
-            <div>
-              <span class="tag">Playground</span>
-              <h3>Parque Shopping Belém</h3>
-              <p>Rod. Augusto Montenegro, 4300 · Térreo</p>
-              <p class="meta">Todos os dias, 10h às 22h</p>
-            </div>
-            <span class="go">Ver <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
-        <a class="place" id="ctaPlaygroundGrao" href="#" target="_blank" rel="noopener">
+          <a class="body" id="ctaPlaygroundParque" href="#" target="_blank" rel="noopener">
+            <span class="tag">Playground</span>
+            <h3>Parque Shopping Belém</h3>
+            <p>Rod. Augusto Montenegro, 4300 · Térreo</p>
+            <p class="meta">Todos os dias, 10h às 22h</p>
+          </a>
+        <a class="btn btn-outline rota" id="rotaParque" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank" rel="noopener">Rota</a>
+        </article>
+        <article class="place">
           <img src="img/hero-piscina-bolinhas.webp" width="784" height="803" alt="Piscina de bolinhas do FaçaAmigos Playground" loading="lazy" decoding="async">
-          <div class="veil"></div>
-          <div class="txt">
-            <div>
-              <span class="tag">Playground</span>
-              <h3>Shopping Bosque Grão-Pará</h3>
-              <p>Av. Centenário, 1052 · 1º piso, em frente à Renner</p>
-              <p class="meta">Seg a sáb, 10h às 22h · Dom até 21h</p>
-            </div>
-            <span class="go">Ver <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
-        <a class="place" id="ctaCircuito" href="#" target="_blank" rel="noopener">
+          <a class="body" id="ctaPlaygroundGrao" href="#" target="_blank" rel="noopener">
+            <span class="tag">Playground</span>
+            <h3>Shopping Bosque Grão-Pará</h3>
+            <p>Av. Centenário, 1052 · 1º piso, em frente à Renner</p>
+            <p class="meta">Seg a sáb, 10h às 22h · Dom até 21h</p>
+          </a>
+        <a class="btn btn-outline rota" id="rotaGrao" href="https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving" target="_blank" rel="noopener">Rota</a>
+        </article>
+        <article class="place">
           <img src="img/circuito-lamborghini-menino.webp" width="1086" height="1448" alt="Menino dirigindo carrinho elétrico no FaçaAmigos Circuito" loading="lazy" decoding="async">
-          <div class="veil"></div>
-          <div class="txt">
-            <div>
-              <span class="tag">Circuito</span>
-              <h3>Parque Shopping Belém</h3>
-              <p>Ele no volante, você logo ali · R$ 48 o passeio</p>
-              <p class="meta">Todos os dias, 10h às 22h</p>
-            </div>
-            <span class="go">Ver <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
+          <a class="body" id="ctaCircuito" href="#" target="_blank" rel="noopener">
+            <span class="tag">Circuito</span>
+            <h3>Parque Shopping Belém</h3>
+            <p>Ele no volante, você logo ali · R$ 48 o passeio</p>
+            <p class="meta">Todos os dias, 10h às 22h</p>
+          </a>
+        </article>
       </div>
 
       <p class="where">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s7-6.2 7-12a7 7 0 10-14 0c0 5.8 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg>
         Sem agendamento: é só chegar. Pra todas as crianças, com ou sem laudo.
       </p>
-      <div class="routes">
-        <a class="btn btn-outline" id="rotaParque" href="https://maps.google.com/?q=Parque+Shopping+Bel%C3%A9m" target="_blank" rel="noopener">Rota · Parque Shopping</a>
-        <a class="btn btn-outline" id="rotaGrao" href="https://www.google.com/maps/dir/?api=1&amp;destination=Shopping+Bosque+Gr%C3%A3o-Par%C3%A1%2C+Av.+Centen%C3%A1rio%2C+1052%2C+Bel%C3%A9m+PA&amp;travelmode=driving" target="_blank" rel="noopener">Rota · Grão-Pará</a>
-      </div>
     </section>
 
     <!-- ── 4. Pra levar pra casa ───────────────────────────────────── -->

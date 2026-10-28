@@ -1,0 +1,203 @@
+{
+  "source": "https://institutofacaamigos.com.br/clinica.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        24,
+        26,
+        64,
+        84
+      ],
+      "base_unit": 8
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "51.2px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2",
+          "size": "41.6px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h3",
+          "size": "20.8px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "lead/body",
+          "size": "18.4px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "card body",
+          "size": "15.36px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "label (dt, eyebrow)",
+          "size": "11.84px",
+          "weight": "900",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background-card",
+        "value": "#FFFFFF",
+        "area_pct": 66.2
+      },
+      {
+        "role": "background-alt",
+        "value": "#FFF9F1",
+        "area_pct": 11.1
+      },
+      {
+        "role": "background-dark (mural, hero)",
+        "value": "#065264",
+        "area_pct": 13.2
+      },
+      {
+        "role": "background-soft",
+        "value": "#E3F8F4",
+        "area_pct": 3.3
+      },
+      {
+        "role": "text-primary",
+        "value": "#1A3F35",
+        "ratio_on_cream": 11.11
+      },
+      {
+        "role": "text-secondary",
+        "value": "#4C6B62",
+        "ratio_on_white": 5.85
+      },
+      {
+        "role": "accent-cta (depois do ajuste AA)",
+        "value": "#E01560",
+        "ratio_on_white": 4.72,
+        "original": "#F0196B (4.15)"
+      },
+      {
+        "role": "accent-whatsapp",
+        "value": "#25D366",
+        "text": "#053B1C",
+        "ratio": 6.42,
+        "original_text": "#FFFFFF (1.98)"
+      },
+      {
+        "role": "highlight",
+        "value": "#FFE234",
+        "ratio_on_petrol": 6.75
+      },
+      {
+        "role": "link/label teal (depois)",
+        "value": "#137A6A",
+        "ratio_on_white": 5.22,
+        "original": "#1FA893"
+      }
+    ],
+    "radius": [
+      "9999px (botões)",
+      "999px (chips)",
+      "24px (cards)",
+      "18px",
+      "20px",
+      "14px",
+      "50% (ícones)",
+      "40px (bloco mural)"
+    ],
+    "shadows": [
+      "0 4px 10px rgba(26,63,53,.08) (38 usos)",
+      "0 10px 26px rgba(240,25,107,.32) (CTA)",
+      "0 10px 26px rgba(37,211,102,.35) (WhatsApp)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "fotos do ambiente (natural)",
+        "ratio": "3:4"
+      },
+      {
+        "usage": "fotos do ambiente (renderizada 349x260)",
+        "ratio": "~4:3"
+      },
+      {
+        "usage": "logo",
+        "ratio": "5.81:1"
+      }
+    ],
+    "grid": {
+      "max_width": "1120px (aprox.)",
+      "columns": 3,
+      "gutter": "16px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Acento quase invisível em área, forte em função",
+      "trigger": "Quando a página precisava de uma única ação (entrar na lista de espera) em 6 seções de conteúdo.",
+      "decision": "Reservar o rosa só para o CTA principal e os números do mural, em vez de usar a cor de marca em faixas ou títulos.",
+      "reason": "Quem chega com dúvida sobre o filho precisa achar o botão sem procurar; se tudo fosse colorido, o botão não se destacaria.",
+      "evidence": [
+        "rosa #F0196B (hoje #E01560) em 0,3% da área",
+        "WhatsApp #25D366 em 0,3%",
+        "amarelo #FFE234 em 0,4%",
+        "branco 66,2% e creme 11,1% da superfície"
+      ]
+    },
+    {
+      "name": "Sombra única, tingida de verde",
+      "trigger": "Quando 38 elementos (cards, chips, passos) precisavam sair do fundo creme/branco.",
+      "decision": "Uma só sombra rgba(26,63,53,.08) 0 4px 10px, na cor do texto, em vez de preto neutro ou bordas.",
+      "reason": "A elevação mínima separa blocos sem criar a sensação de painel de software numa página sobre acolhimento.",
+      "evidence": [
+        "0 4px 10px rgba(26,63,53,.08) x38",
+        "apenas CTA e WhatsApp têm sombra colorida (0 10px 26px)",
+        "cards 24px de raio sem borda"
+      ]
+    },
+    {
+      "name": "Fonte display arredondada contra corpo em peso alto",
+      "trigger": "Quando o texto precisava soar acolhedor para pais e ainda ser legível em blocos longos.",
+      "decision": "Fredoka One só em h1-h3 (51,2 / 41,6 / 20,8px, peso 400) e Nunito 600 a 900 no resto, em vez de uma família única.",
+      "reason": "O traço redondo dá o tom infantil nos títulos; o Nunito em 600 mantém parágrafos de 15 a 18px legíveis.",
+      "evidence": [
+        "2 famílias apenas",
+        "body 18,4px/29,44px peso 600",
+        "pesos 600 (78), 400 (65), 800 (39), 900 (36), 700 (30)"
+      ]
+    },
+    {
+      "name": "Ritmo alternado com um único bloco escuro",
+      "trigger": "Quando 10 seções empilhadas (4576px só no bloco de serviços/ambiente) arriscavam virar uma parede branca.",
+      "decision": "Padding vertical de 84px (64px no mobile), alternando branco e creme, e uma só faixa petróleo #065264 de raio 40px (mural).",
+      "reason": "A alternância marca onde um assunto termina; o bloco escuro único sinaliza que o portal é outra coisa, não mais um serviço.",
+      "evidence": [
+        "padding 84px desktop / 64px mobile",
+        "petróleo 13,2% da área",
+        "mural 1375px desktop e 2736px mobile",
+        "gap entre seções 30px nas bordas do mural"
+      ]
+    }
+  ]
+}

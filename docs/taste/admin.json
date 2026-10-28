@@ -1,0 +1,178 @@
+{
+  "source": "http://localhost:8765/admin.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        6,
+        8,
+        13,
+        14,
+        22,
+        24,
+        26,
+        40,
+        60
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Nunito",
+        "Fredoka One"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "24px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botao",
+          "size": "16px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "descricao",
+          "size": "14.72px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "rotulo",
+          "size": "13.6px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "rodape-login",
+          "size": "13.12px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "cabecalho-tabela",
+          "size": "11.52px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "rotulo-kpi",
+          "size": "11.2px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "fundo",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "cartao",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "texto",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "texto-secundario",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "acao",
+        "value": "#F0196B",
+        "depois_da_correcao": "#E01560"
+      },
+      {
+        "role": "link",
+        "value": "#1FA893",
+        "depois_da_correcao": "#137A6A"
+      },
+      {
+        "role": "cinza-de-rotulo",
+        "value": "#8B9A94",
+        "depois_da_correcao": "#5A6B64"
+      },
+      {
+        "role": "azul",
+        "value": "#2D7FF9"
+      },
+      {
+        "role": "cinza-fundo",
+        "value": "#EDF1EF"
+      }
+    ],
+    "radius": [
+      "24px",
+      "14px",
+      "9999px"
+    ],
+    "shadows": [
+      "0 18px 40px rgba(26,63,53,0.14)",
+      "0 10px 26px rgba(240,25,107,0.28)",
+      "0 4px 10px rgba(26,63,53,0.08)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo",
+        "ratio": "1.11:1"
+      }
+    ],
+    "grid": {
+      "max_width": "1240px",
+      "columns": 1,
+      "gutter": "22px"
+    }
+  },
+  "taste": [
+    {
+      "name": "A linguagem do site público num painel interno",
+      "trigger": "Um painel de leads e eventos poderia ter a aparência neutra de qualquer admin",
+      "decision": "Manter título em Fredoka One, botões em pílula e fundo creme em vez de uma interface cinza de tabela",
+      "reason": "A equipe vê o mesmo mundo da marca ao entrar, e o painel não parece sistema de terceiros",
+      "evidence": [
+        "botão 9999px, cartão de login com raio 24px",
+        "h1 24px Fredoka One sobre #FFF9F1",
+        "tabela e abas ficam em Nunito 12 a 14px"
+      ]
+    },
+    {
+      "name": "Um único acento por tela de login",
+      "trigger": "A tela de login tem logo, dois campos, um botão e dois links",
+      "decision": "Só o botão 'Entrar' leva cor forte (rosa, 5.6% da área), sem faixa colorida, ilustração ou fundo em degradê, ao contrário do hub de gestão",
+      "reason": "Em tela de acesso, o olhar tem de ir do campo ao botão sem desvio",
+      "evidence": [
+        "botão #F0196B em 5.6% da área (agora #E01560, 4.72:1 com branco)",
+        "card branco #FFFFFF em 94.4% da área medida sobre #FFF9F1",
+        "única sombra colorida: 0 10px 26px rgba(240,25,107,0.28)"
+      ]
+    },
+    {
+      "name": "Etiqueta translúcida com texto da mesma família",
+      "trigger": "Leads, resultados e estados precisam de selos de status em tabelas brancas e cinzas",
+      "decision": "Fundo translúcido da cor (alfa 0.13 a 0.35) com texto na versão escura da mesma cor, em vez de selos sólidos",
+      "reason": "A tabela continua legível mesmo com 20 selos na tela",
+      "evidence": [
+        ".badge-teal rgba(46,207,181,0.18) com #137A6A",
+        ".badge-pink rgba(240,25,107,0.13) com #C81158",
+        ".badge-blue rgba(45,127,249,0.15) com #1E63C9",
+        ".badge-yellow rgba(255,226,52,0.35) com #7A6A00"
+      ]
+    },
+    {
+      "name": "Mola no toque, contorno no teclado",
+      "trigger": "Botões e abas são clicados dezenas de vezes por dia",
+      "decision": "Transição com overshoot cubic-bezier(0.34,1.4,0.64,1) de 0.2s e contorno de 3px com offset de 3px no foco, em vez de troca seca de cor",
+      "reason": "O retorno rápido confirma o clique sem pedir atenção",
+      "evidence": [
+        "--t-fast: 0.2s cubic-bezier(0.34,1.4,0.64,1)",
+        ".btn:focus-visible outline 3px solid var(--teal) offset 3px",
+        "focusVisible verdadeiro na extração"
+      ]
+    }
+  ]
+}

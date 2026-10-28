@@ -434,10 +434,10 @@
 
   <style>
     :root {
-      --pink: #F0196B;
+      --pink: #E01560;
       --pink-dark: #C81158;
       --teal: #2ECFB5;
-      --teal-dark: #1FA893;
+      --teal-dark: #137A6A;
       --yellow: #FFE234;
       --dark: #1A3F35;
       --ink-soft: #4C6B62;
@@ -445,6 +445,11 @@
       --white: #FFFFFF;
       --wa: #25D366;
       --wa-dark: #1DA851;
+      --wa-ink: #053B1C;
+      --fs-xs: 0.875rem;
+      --fs-sm: 0.9375rem;
+      --fs-md: 1rem;
+      --fs-lg: 1.0625rem;
       --ring: conic-gradient(from 200deg, #8B5CF6, #F0196B, #FF7A00, #FFE234, #8B5CF6);
       --shadow-sm: 0 4px 10px rgba(26, 63, 53, 0.08);
       --shadow-lg: 0 18px 40px rgba(26, 63, 53, 0.14);
@@ -581,7 +586,7 @@
 
     .btn-wa {
       background: var(--wa);
-      color: #fff;
+      color: #053B1C;
       box-shadow: 0 10px 26px rgba(37, 211, 102, 0.35);
     }
 
@@ -697,9 +702,9 @@
       background: var(--white);
       border-radius: 9999px;
       padding: 8px 18px;
-      font-size: 0.8rem;
+      font-size: 0.875rem;
       font-weight: 900;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--teal-dark);
       box-shadow: var(--shadow-sm);
@@ -747,9 +752,9 @@
     }
 
     .price-chip small {
-      font-size: 0.72rem;
+      font-size: 0.875rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       color: var(--ink-soft);
     }
 
@@ -856,8 +861,8 @@
       display: block;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      font-size: 0.875rem;
       color: var(--ink-soft);
       margin-bottom: 8px;
     }
@@ -1005,7 +1010,7 @@
       left: 12px;
       background: rgba(26, 63, 53, 0.82);
       color: #fff;
-      font-size: 0.82rem;
+      font-size: 0.875rem;
       font-weight: 800;
       padding: 6px 14px;
       border-radius: 9999px;
@@ -1201,12 +1206,11 @@
 
     .review .who small {
       color: var(--ink-soft);
-      font-weight: 700;
-      font-size: 0.78rem;
+            font-weight: 700;
+      font-size: 0.875rem;
     }
-
     .stars {
-      color: #F5A800;
+      color: #B87800;
       letter-spacing: 3px;
       font-size: 1rem;
     }
@@ -1214,7 +1218,7 @@
     .review p {
       color: var(--ink-soft);
       font-weight: 600;
-      font-size: 0.96rem;
+      font-size: 1.0625rem;
       font-style: italic;
     }
 
@@ -1256,7 +1260,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      font-size: 0.85rem;
+      font-size: 0.875rem;
       font-weight: 800;
       color: var(--ink-soft);
       margin-top: 6px;
@@ -1298,10 +1302,10 @@
       left: 50%;
       transform: translateX(-50%);
       background: var(--teal);
-      color: #fff;
+      color: #1A3F35;
       font-weight: 900;
-      font-size: 0.78rem;
-      letter-spacing: 0.06em;
+      font-size: 0.875rem;
+      letter-spacing: 0.04em;
       text-transform: uppercase;
       padding: 7px 18px;
       border-radius: 9999px;
@@ -1311,8 +1315,8 @@
     .price-card .label {
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      font-size: 0.875rem;
       color: var(--ink-soft);
       margin-bottom: 8px;
     }
@@ -1385,11 +1389,10 @@
 
     .ptable td .note {
       display: block;
-      font-size: 0.78rem;
+            font-size: 0.875rem;
       color: var(--ink-soft);
       font-weight: 600;
     }
-
     .ptable .best td {
       background: rgba(255, 226, 52, 0.16);
     }
@@ -1398,7 +1401,7 @@
       display: inline-block;
       background: rgba(46, 207, 181, 0.14);
       color: var(--teal-dark);
-      font-size: 0.72rem;
+      font-size: 0.875rem;
       font-weight: 900;
       padding: 3px 10px;
       border-radius: 9999px;
@@ -1641,7 +1644,7 @@
       font-size: 1.12rem;
       max-width: 36rem;
       margin: 0 auto 32px;
-      color: rgba(255, 255, 255, 0.92);
+      color: #fff;
     }
 
     .final .row {
@@ -1689,7 +1692,7 @@
     footer .legal {
       margin-top: 22px;
       font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(255, 255, 255, 0.8);
     }
 
     /* Teste de Comportamento (Instituto) */
@@ -1715,9 +1718,8 @@
       text-align: center;
       font-weight: 800;
       color: var(--ink-soft);
-      font-size: 0.85rem;
+      font-size: 0.875rem;
     }
-
     .teste-photo {
       width: 148px;
       aspect-ratio: 1;
@@ -1784,9 +1786,9 @@
       background: var(--yellow);
       color: var(--dark);
       font-weight: 900;
-      font-size: 0.72rem;
+      font-size: 0.875rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       padding: 8px 16px;
       border-radius: 9999px;
     }
@@ -1949,8 +1951,54 @@
     .rel-math .row.win { color: var(--dark); border-top: 2px dashed var(--teal); margin-top: 6px; padding-top: 14px; font-weight: 900; }
     .rel-math .row.win .v { color: var(--pink); font-size: 34px; line-height: 1; }
     .rel-math .row .v { font-size: 22px; font-weight: 900; white-space: nowrap; }
-    .rel-legal { margin-top: 14px; font-size: 13px; color: var(--ink-soft); }
+    .rel-legal { margin-top: 14px; font-size: 14px; color: var(--ink-soft); }
     @media (max-width: 760px) { .rel-grid { grid-template-columns: 1fr; } }
+
+    /* Revisão de design: um primário por tela, texto >= 14px, alvos >= 44px, foco e movimento reduzido */
+    .topbar span { white-space: normal; }
+    .nav-wa { min-height: 44px; }
+    .logo { min-height: 44px; }
+    .price-chip { flex-direction: row; align-items: baseline; gap: 8px; padding: 10px 16px; }
+    .price-chip small { text-transform: none; letter-spacing: 0; font-size: 0.875rem; }
+    .price-chip span { font-size: 1.4rem; line-height: 1; }
+    .nav-wa svg { color: #128C4A; }
+    .nav-actions .btn-ghost { min-height: 44px; }
+    .hero-proof a, .partner p a, .es-links a { display: inline-block; padding: 12px 2px; }
+    .partner p a { text-decoration: underline; text-underline-offset: 3px; font-weight: 800; color: var(--dark); }
+    .ptable .extra td { background: rgba(46, 207, 181, 0.08); }
+    .ptable td:first-child { font-size: 1rem; }
+    .ptable td:not(:first-child) { font-size: 1.0625rem; }
+    .price-foot { font-size: 0.9375rem; max-width: 46rem; margin-inline: auto; }
+    a:focus-visible, summary:focus-visible, button:focus-visible, .reviews:focus-visible, .wa-float:focus-visible {
+      outline: 3px solid var(--dark);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
+    .circuito a:focus-visible, .final a:focus-visible { outline-color: #fff; }
+    .final .btn-wa { box-shadow: none; }
+    @media (max-width: 760px) {
+      .sec { padding: 56px 0; }
+      .hero { padding: 40px 0 56px; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { width: 100%; }
+      .price-chip { justify-content: center; }
+      .eyebrow { letter-spacing: 0.06em; padding: 8px 16px; text-align: left; }
+      .topbar .tb-2 { display: none; }
+      .topbar { padding: 8px 14px; }
+      .final { padding: 52px 22px; }
+      .final .row .btn { width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .ptable table { min-width: 0; }
+      .ptable th, .ptable td { padding: 14px 10px; }
+      .ptable th { font-size: 0.875rem; }
+      .ptable td .pill-static { display: block; margin: 6px 0 0; width: fit-content; }
+      .nav-wa { padding: 9px 14px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+      .btn:hover, .btn:active, .step:hover, .review:hover, .rev-nav-btn:hover, .wa-float:hover { transform: none; }
+    }
   </style>
 <link rel="stylesheet" href="assets/fa-logo.css?v=20261021">
 </head>
@@ -1962,17 +2010,16 @@
       style="display:none;visibility:hidden"></iframe></noscript>
   <!-- End Google Tag Manager (noscript) -->
 
-  <div class="topbar">📍 Parque Shopping Belém · 10h às 22h · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h) · <b id="topbar-status">Abre todos os dias às 10h</b></div>
+  <div class="topbar"><span>📍 Parque Shopping Belém · 10h às 22h</span><span class="tb-2"> · 📍 Shopping Bosque Grão-Pará · 10h às 22h (dom. até 21h)</span> · <b id="topbar-status">Abre todos os dias às 10h</b></div>
 
   <nav class="navbar">
     <div class="wrap">
       <a class="logo" href="/" aria-label="FaçaAmigos Playground — página inicial"><img class="fa-logo-img" src="img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="eager" decoding="async"></a>
       <div class="nav-actions">
-        <a href="https://institutofacaamigos.com.br/" class="btn btn-ghost btn-sm">Instituto FaçaAmigos</a>
         <a href="https://institutofacaamigos.com.br/trabalhe-conosco" class="btn btn-ghost btn-sm">Venha fazer parte do nosso
           time</a>
         <a href="https://wa.me/5591992347673?text=Oi!%20Vim%20pelo%20site%20e%20quero%20saber%20mais!" target="_blank"
-          rel="noopener" class="btn btn-wa btn-sm">
+          rel="noopener" class="btn btn-ghost btn-sm nav-wa">
           <svg viewBox="0 0 24 24" fill="currentColor">
             <path
               d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.1-.5s-.6-1.5-.8-2-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4 5.3 5.3 0 0 0 3.2.7 2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z" />
@@ -1994,9 +2041,9 @@
           as que brincam soltas e as que precisam de um pouco mais de cuidado. Você passeia pelo Parque Shopping
           sabendo exatamente onde e com quem seu filho está.</p>
         <div class="hero-actions">
-          <a data-fa-link="hero_como_chegar" href="#unidades" class="btn btn-pink">Como chegar</a>
           <a href="https://wa.me/5591992347673?text=Oi!%20Quero%20levar%20meu%20filho%20para%20brincar%20no%20Fa%C3%A7aAmigos!"
-            target="_blank" rel="noopener" class="btn btn-ghost">Tirar dúvida no WhatsApp</a>
+            target="_blank" rel="noopener" class="btn btn-wa">Tirar dúvida no WhatsApp</a>
+          <a data-fa-link="hero_como_chegar" href="#unidades" class="btn btn-ghost">Como chegar</a>
           <span class="price-chip"><small>a partir de</small><span>R$ 60</span></span>
         </div>
         <div class="trust">
@@ -2114,7 +2161,7 @@
           </p>
           <a data-fa-link="banner_playground" href="https://institutofacaamigos.com.br/teste" class="btn btn-pink">Fazer o
             mapeamento agora</a>
-          <p style="font-size: 0.82rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px;">Desenvolvido pela
+          <p style="font-size: 0.875rem; font-weight: 700; color: var(--ink-soft); margin-top: 14px;">Desenvolvido pela
             idealizadora do FaçaAmigos · não substitui avaliação profissional · leva cerca de 5 minutos</p>
         </div>
         <div class="teste-visual">
@@ -2358,7 +2405,7 @@
           <div class="row"><span>30 minutos e ele pede mais 30</span><span class="v">R$ 114</span></div>
           <div class="row win"><span>1 hora + Olhar FaçaAmigos</span><span class="v">R$ 108</span></div>
           <p style="margin: 14px 0 18px; color: var(--ink-soft); font-size: 14px;">Público geral. Na meia-entrada inclusiva: R$ 95 nos 30 minutos com mais 30, contra R$ 90 na hora cheia.</p>
-          <a href="https://wa.me/5591992347673?text=Oi!%20Quero%20o%20plano%20de%201%20hora%20com%20o%20Olhar%20Fa%C3%A7aAmigos!" target="_blank" rel="noopener" class="btn btn-pink" style="width: 100%; justify-content: center;">Quero a hora + Olhar FaçaAmigos</a>
+          <a href="https://wa.me/5591992347673?text=Oi!%20Quero%20o%20plano%20de%201%20hora%20com%20o%20Olhar%20Fa%C3%A7aAmigos!" target="_blank" rel="noopener" class="btn btn-wa" style="width: 100%; justify-content: center;">Quero a hora + Olhar FaçaAmigos</a>
         </div>
       </div>
     </div>
@@ -2371,21 +2418,6 @@
         <h2 class="sec-title">Quanto custa uma tarde tranquila?</h2>
         <p class="sec-sub">Preço transparente, direto no site, já com desconto automático aplicado na recepção. A meia-entrada inclusiva (coluna "Meia inclusiva" da tabela) vale para crianças
           neurodivergentes (com laudo ou CIPTEA — Carteira de Identificação da Pessoa com Transtorno do Espectro Autista).</p>
-      </div>
-      <div class="price-cards">
-        <div class="price-card">
-          <div class="label">Público geral</div>
-          <div class="from">a partir de</div>
-          <div class="value">R$ 60</div>
-          <div class="per">30 minutos · minuto adicional R$ 1,80</div>
-        </div>
-        <div class="price-card featured">
-          <span class="tag-top">Meia-entrada inclusiva</span>
-          <div class="label">Crianças neurodivergentes</div>
-          <div class="from">a partir de</div>
-          <div class="value">R$ 50</div>
-          <div class="per">30 minutos · minuto adicional R$ 1,50</div>
-        </div>
       </div>
       <div class="ptable">
         <div class="ptable-scroll">
@@ -2424,6 +2456,11 @@
                 <td>R$ 840</td>
                 <td>R$ 700</td>
               </tr>
+              <tr class="extra">
+                <td>Minuto adicional<span class="note">depois do tempo contratado</span></td>
+                <td>R$ 1,80</td>
+                <td>R$ 1,50</td>
+              </tr>
             </tbody>
           </table>
         </div>
@@ -2432,7 +2469,7 @@
           Pix, cartão e dinheiro</p>
       <div class="price-cta">
         <a href="https://wa.me/5591992347673?text=Oi!%20Vi%20os%20pre%C3%A7os%20no%20site%20e%20quero%20levar%20meu%20filho%20ao%20Fa%C3%A7aAmigos."
-          target="_blank" rel="noopener" class="btn btn-pink">Tirar dúvida no WhatsApp</a>
+          target="_blank" rel="noopener" class="btn btn-wa">Tirar dúvida no WhatsApp</a>
       </div>
     </div>
   </section>
@@ -2538,7 +2575,7 @@
       <div class="partner-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 30px;">
         <!-- Unidade Parque Shopping -->
         <div class="partner" style="border: 2px solid var(--teal, #1f917f); background: #fff;">
-          <span class="badge" style="background: var(--teal, #1f917f); color: #fff; margin-bottom: 12px; display: inline-block;">📍 Aberto Todos os Dias</span>
+          <span class="badge" style="background: var(--teal, #1f917f); color: #1A3F35; margin-bottom: 12px; display: inline-block;">📍 Aberto Todos os Dias</span>
           <h3 style="margin-top: 8px;">Parque Shopping Belém</h3>
           <p style="margin-bottom: 6px;"><b>Endereço:</b> Rod. Augusto Montenegro, 4300 · Térreo (próximo às Lojas Americanas)</p>
           <p style="margin-bottom: 6px;"><b>Horário:</b> Segunda a Domingo, 10h às 22h</p>
@@ -2551,7 +2588,7 @@
         </div>
         <!-- Unidade Bosque Grão-Pará -->
         <div class="partner" style="border: 2px solid var(--teal, #1f917f); background: #fff;">
-          <span class="badge" style="background: var(--teal, #1f917f); color: #fff; margin-bottom: 12px; display: inline-block;">📍 Aberto Todos os Dias</span>
+          <span class="badge" style="background: var(--teal, #1f917f); color: #1A3F35; margin-bottom: 12px; display: inline-block;">📍 Aberto Todos os Dias</span>
           <h3 style="margin-top: 8px;">Shopping Bosque Grão-Pará</h3>
           <p style="margin-bottom: 6px;"><b>Endereço:</b> Av. Centenário, 1052 · Val-de-Cans · 1º piso (em frente à Renner)</p>
           <p style="margin-bottom: 6px;"><b>Horário:</b> Segunda a Sábado, 10h às 22h · Domingo, 10h às 21h</p>
@@ -2690,7 +2727,7 @@
       if (container) {
         function scrollTrack(dir) {
           var step = container.clientWidth > 640 ? 380 : 300;
-          container.scrollBy({ left: dir * step, behavior: 'smooth' });
+          container.scrollBy({ left: dir * step, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
         }
         if (prevBtn) prevBtn.addEventListener('click', function () { scrollTrack(-1); });
         if (nextBtn) nextBtn.addEventListener('click', function () { scrollTrack(1); });

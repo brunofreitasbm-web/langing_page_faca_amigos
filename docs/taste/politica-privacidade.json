@@ -1,0 +1,186 @@
+{
+  "source": "http://localhost:8765/politica-privacidade.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        6,
+        8,
+        10,
+        12,
+        16,
+        20,
+        22,
+        36,
+        48,
+        80
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "36.8px (clamp 1.7-2.3rem)",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2 (9 seções)",
+          "size": "20px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "corpo p/li (63 nós a 16px)",
+          "size": "16px / 27.2px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "\"Última atualização\"",
+          "size": "14.4px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "links",
+          "size": "16px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#FFF9F1",
+        "note": "creme"
+      },
+      {
+        "role": "text-primary (títulos, strong)",
+        "value": "#1A3F35",
+        "note": "11.11:1 sobre o creme"
+      },
+      {
+        "role": "text-body (--ink-soft)",
+        "value": "#4C6B62",
+        "note": "5.60:1 sobre o creme"
+      },
+      {
+        "role": "accent-cta (.back)",
+        "value": "#F0196B",
+        "note": "4.15:1 com texto branco (reprovado, 4.15)"
+      },
+      {
+        "role": "link (--teal-dark)",
+        "value": "#1FA893",
+        "note": "2.83:1 sobre o creme (reprovado)"
+      },
+      {
+        "role": "destaque do card (borda esquerda 6px)",
+        "value": "#FFE234",
+        "note": "decorativo, 1.2:1 sobre branco"
+      },
+      {
+        "role": "rodapé compartilhado",
+        "value": "#065264",
+        "note": "69% da área medida (areaPct 69.3), texto herdado #4C6B62 = 1.50:1 sobre ele"
+      }
+    ],
+    "radius": [
+      "24px (.card)",
+      "9999px (.back)",
+      "999px / 14px (rodapé e banner de cookies, compartilhados)"
+    ],
+    "shadows": [
+      "0 4px 10px rgba(26,63,53,.08) (.card, uma camada, verde-escuro tingido)",
+      "0 10px 26px rgba(240,25,107,.3) (.back, uma camada, rosa tingido)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo da topbar (PNG)",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "description": "coluna única, max-width 760px, 1 coluna, sem gutter (padding lateral 22px)"
+    }
+  },
+  "taste": [
+    {
+      "name": "Documento longo em coluna única sem índice",
+      "trigger": "Ao publicar uma política de 9 seções e 44 itens de lista (5527px de altura a 1440px, 9830px a 390px)",
+      "decision": "Escolheu manter uma coluna de 716px sem sumário nem navegação lateral em vez de um índice fixo ou barra lateral, que ajudaria a pular de seção",
+      "reason": "quem lê política de privacidade lê do início ao fim, e o texto pede continuidade",
+      "evidence": [
+        "coluna max-width 760px, 9 h2 de 20px com margin 36px 0 12px, nenhum <nav> interno, 0 âncoras"
+      ]
+    },
+    {
+      "name": "Ênfase por mudança de cor, não de tamanho",
+      "trigger": "Ao destacar termos dentro de parágrafos jurídicos",
+      "decision": "Escolheu sublinhar o essencial com <strong> em #1A3F35 sobre texto #4C6B62, sempre a 16px em vez de aumentar a fonte ou usar caixa alta",
+      "reason": "o texto jurídico mantém um só tamanho e o olho encontra os termos pela escuridão da cor",
+      "evidence": [
+        "p/li 16px weight 600 cor #4C6B62",
+        "strong #1A3F35",
+        "63 nós a 16px de 160 nós de texto"
+      ]
+    },
+    {
+      "name": "Rosa guardado para um único botão (restrição)",
+      "trigger": "Com uma paleta de rosa, turquesa e amarelo disponível",
+      "decision": "Escolheu usar o rosa #F0196B só no botão \"Voltar para o site\" e deixar o resto em verde-escuro e creme em vez de pintar títulos ou links de rosa, como na home",
+      "reason": "em página legal a cor de marca não deve disputar atenção com o texto",
+      "evidence": [
+        "rosa cobre 0.6% da área (areaPct 0.6), amarelo 0.2%",
+        "h1/h2 em #1A3F35"
+      ]
+    },
+    {
+      "name": "Um único bloco de resumo destacado",
+      "trigger": "Ao abrir a política com um resumo de uma frase",
+      "decision": "Escolheu isolar o resumo num card branco de 24px com borda esquerda de 6px amarela em vez de repetir cards por seção ou caixas de aviso em todo o texto",
+      "reason": "um destaque único mostra onde está a mensagem principal; vários virariam ruído",
+      "evidence": [
+        "1 .card (radius 24px, padding 20px 26px, sombra 0 4px 10px) em 9 seções"
+      ]
+    }
+  ],
+  "suggested_changes_not_applied": [
+    {
+      "problem": "Rodapé ilegível (corrigido nesta rodada, registrar como causa)",
+      "evidence": "texto #4C6B62 sobre #065264 = 1.50:1 em 34 nós; o CSS global da página (p, li, strong, a) vaza para o rodapé compartilhado",
+      "fix": "o rodapé deveria isolar suas cores; a correção local foi um bloco \"footer[data-fa-footer] p, li\" com branco 92%; o ideal é corrigir em assets/fa-footer.js"
+    },
+    {
+      "problem": "Linha longa demais",
+      "evidence": "89 caracteres por linha a 1440px (716px de coluna, 16px), referência de leitura 60 a 75",
+      "fix": "limitar o texto a ~68ch ou subir o corpo para 17-18px"
+    },
+    {
+      "problem": "Sem índice em 5527px de texto",
+      "evidence": "9 seções, 44 itens, 0 âncoras; a 390px a página tem 9830px",
+      "fix": "adicionar lista de âncoras no topo (9 links) e id nos h2"
+    },
+    {
+      "problem": "Corpo em peso 600",
+      "evidence": "weightDistribution: 600 em 73 nós, 800 em 19; texto contínuo em peso 600 reduz o contraste de ênfase com o 800 dos links e strong",
+      "fix": "usar 400-500 no corpo e manter 800 para links e strong"
+    },
+    {
+      "problem": "Títulos de seção fracos",
+      "evidence": "h2 20px contra corpo 16px = razão 1.25, em Fredoka One 400 (fonte legada que só existe nesta página; termos usa Fredoka 600)",
+      "fix": "h2 de 22-24px com Fredoka 600, igual às outras páginas legais"
+    },
+    {
+      "problem": "Saída única para o Playground",
+      "evidence": ".back leva a institutofacaamigos.com.br/playground, mesmo quando o leitor veio de e-book ou de eventos",
+      "fix": "usar history.back() como destino preferencial ou oferecer dois destinos"
+    }
+  ]
+}

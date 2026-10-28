@@ -1,0 +1,201 @@
+{
+  "source": "http://localhost:8765/404.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        26,
+        28,
+        30,
+        34,
+        40
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "número 404",
+          "size": "128px (clamp 5rem-8rem, 26vw)",
+          "weight": "700",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h1",
+          "size": "30.4px (clamp 1.5-1.9rem)",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2",
+          "size": "16.8px, opacity .85",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "corpo .lead",
+          "size": "17px / 26.35px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "rótulo do card",
+          "size": "17px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "subtítulo do card (small)",
+          "size": "13.1px, opacity .75",
+          "weight": "600",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#FFF9F1",
+        "note": "creme"
+      },
+      {
+        "role": "text (--escuro)",
+        "value": "#1A3F35",
+        "note": "11.11:1 sobre o creme"
+      },
+      {
+        "role": "\"4\" (--rosa)",
+        "value": "#F0196B",
+        "note": "3.97:1 sobre o creme"
+      },
+      {
+        "role": "\"4\" (--turquesa)",
+        "value": "#2ECFB5",
+        "note": "1.87:1 sobre o creme (reprovado)"
+      },
+      {
+        "role": "\"0\" (--amarelo)",
+        "value": "#FFE234",
+        "note": "1.24:1 sobre o creme (reprovado), contorno 3px #1A3F35"
+      },
+      {
+        "role": "card principal",
+        "value": "#F0196B",
+        "note": "4.15:1 texto branco; small 2.80:1 (reprovado)"
+      },
+      {
+        "role": "rodapé compartilhado",
+        "value": "#065264",
+        "note": "74% da área (areaPct 74)"
+      }
+    ],
+    "radius": [
+      "16px (cards, 7)",
+      "50% (pontos, 7)",
+      "14px / 999px (rodapé e cookies)"
+    ],
+    "shadows": [
+      "0 4px 0 #1A3F35 (card, sombra dura sem desfoque, 1 camada)",
+      "hover 0 6px 0, active 0 2px 0 com translateY(2px)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo-símbolo",
+        "ratio": "1.11:1"
+      },
+      {
+        "usage": "logo do rodapé",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "description": "1 coluna a <480px, 2 colunas (1fr 1fr, gap 12px) a >=480px, container 560px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Sombra dura em vez de sombra suave",
+      "trigger": "Ao estilizar os links de saída numa página de erro para famílias com crianças",
+      "decision": "Escolheu cards com borda 2px #1A3F35 e sombra 0 4px 0 sem desfoque, que afundam 2px ao toque em vez de sombra desfocada de elevação",
+      "reason": "o deslocamento seco imita um botão de brinquedo e dá retorno físico ao toque",
+      "evidence": [
+        "card: border 2px, box-shadow 0 4px 0, :active translateY(2px), transition .12s",
+        "reduced-motion respeitado"
+      ]
+    },
+    {
+      "name": "Sem ilustração nem busca (restrição)",
+      "trigger": "Numa página 404 onde é comum haver mascote, busca ou sitemap completo",
+      "decision": "Escolheu deixar o próprio número 404 em Fredoka 128px como único gráfico e oferecer 7 links fixos em vez de campo de busca ou ilustração",
+      "reason": "o visitante só precisa de um caminho; o número já comunica o erro",
+      "evidence": [
+        "128px 700 tricolor",
+        "7 cards",
+        "0 inputs",
+        "0 imagens além do logo de 44px"
+      ]
+    },
+    {
+      "name": "Pontos coloridos repetem as cores da marca",
+      "trigger": "Ao diferenciar 7 destinos com a mesma forma de card",
+      "decision": "Escolheu um ponto de 14px (rosa, turquesa ou amarelo) como único código de cor em vez de ícones distintos por destino",
+      "reason": "três cores bastam como ritmo visual sem aumentar a carga",
+      "evidence": [
+        ".dot 14px border 2px",
+        "3 cores repetidas em 7 cards"
+      ]
+    },
+    {
+      "name": "Destino principal em cor sólida",
+      "trigger": "Entre 5 links de mesmo tamanho",
+      "decision": "Escolheu pintar só \"Início\" de rosa com texto branco em vez de tratar todos os cards como iguais",
+      "reason": "um único bloco cheio indica a rota padrão",
+      "evidence": [
+        ".card.principal bg #F0196B contra 6 cards brancos"
+      ]
+    }
+  ],
+  "suggested_changes_not_applied": [
+    {
+      "problem": "Rodapé domina a página no celular",
+      "evidence": "a 390px o rodapé começa em 1112px de 2851px: 1739px (61%) de rodapé contra o conteúdo do 404",
+      "fix": "usar rodapé compacto em páginas de erro (arquivo compartilhado)"
+    },
+    {
+      "problem": "Playground, a conversão principal, sem destaque",
+      "evidence": "o card rosa é \"Início\"; \"Playground\" é o 2º card branco com o mesmo peso dos e-books",
+      "fix": "destacar Playground ou colocá-lo como card primário"
+    },
+    {
+      "problem": "Célula órfã na grade",
+      "evidence": "5 cards na primeira lista em 2 colunas: \"Eventos\" fica sozinho, vazio ao lado (screenshot, linha 3)",
+      "fix": "reordenar para 4 cards ou deixar o último ocupar 2 colunas"
+    },
+    {
+      "problem": "Cor dos pontos sem significado",
+      "evidence": "amarelo em Circuito e Eventos, rosa em Mapeamento e E-book, turquesa em Playground e Código: a cor não indica categoria",
+      "fix": "atribuir uma cor por área (jogar, aprender, evento) ou remover"
+    },
+    {
+      "problem": "Texto secundário do card pequeno",
+      "evidence": "small 13.1px com opacity .75 em 7 cards; no card rosa o contraste era 2.80:1",
+      "fix": "subir para 14px e usar cor sólida em vez de opacity"
+    },
+    {
+      "problem": "Sem pista do endereço digitado",
+      "evidence": "a página não mostra o caminho solicitado",
+      "fix": "mostrar o caminho em texto pequeno ou sugerir a rota mais próxima"
+    }
+  ]
+}
