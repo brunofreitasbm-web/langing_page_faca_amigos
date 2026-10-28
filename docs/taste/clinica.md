@@ -58,23 +58,34 @@
 - **Reason**: A alternância marca onde um assunto termina; o bloco escuro único sinaliza que o portal é outra coisa, não mais um serviço.
 - **Evidence**: padding 84px desktop / 64px mobile; petróleo 13,2% da área; mural 1375px desktop e 2736px mobile; gap entre seções 30px nas bordas do mural
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Mural da Família interrompe o funil de lista de espera**
    - Evidência: 1375px no desktop e 2736px no mobile (16% dos 17141px da página), colocado antes da bio e do FAQ; fala com famílias que já são clientes, enquanto a página diz 'Em breve'.
    - Correção proposta: Mover o bloco para depois do FAQ ou reduzi-lo a um card de 3 linhas com o botão do portal.
+   - **Status: aplicada: mural movido para depois do FAQ (id #mural), conteúdo mantido; também fechei o `</section>` que faltava em "recursos" (o mural ficava aninhado nela).**
+
 2. **Serviços com três parágrafos rotulados por card**
    - Evidência: 7 cards, cada um com 'Pra quem é / O que acontece / O que muda pra você'; no mobile a seção que reúne serviços, sinais e ambiente soma 7923px (desktop 4576px).
    - Correção proposta: Mostrar só 'Pra quem é' e uma linha; abrir o resto num <details>.
+   - **Status: adaptada: cada serviço mostra "Pra quem é" + "O que muda pra você"; "O que acontece" abre num botão "Ver como funciona" (button/aria-expanded, não <details>, para não contar como FAQ no check).**
+
 3. **Rótulos abaixo de 12,8px em caixa-alta e peso 900**
    - Evidência: 21 dt a 11,84px, 3 'Passo N' a 12px e 11 eyebrows a 11,52px no mobile.
    - Correção proposta: Subir para 12,8px no mínimo, ou tirar a caixa-alta.
+   - **Status: aplicada: dt, "Passo N" e eyebrows mobile em 12,8px (.8rem), mantendo caixa-alta.**
+
 4. **Contato duplicado antes do rodapé**
    - Evidência: Card 'Contato desta unidade' (233px) repete o WhatsApp (91) 99178-2027 e o endereço que o rodapé compartilhado mostra logo abaixo.
    - Correção proposta: Remover o card local ou o cartão da Clínica no rodapé.
+   - **Status: aplicada: `data-fa-ops=""` no rodapé remove o card "Contato desta unidade"; o cartão da Clínica do rodapé compartilhado permanece.**
+
 5. **Fotos do ambiente cortadas e sem pintar na captura**
    - Evidência: 3 imagens 1440x1920 (3:4) em caixas de 349x260; na captura full-page as três caixas ficaram em branco (carregamento lazy não completou).
    - Correção proposta: Usar aspect-ratio 3/4 ou 4/5 com object-fit: cover e checar o loading=lazy abaixo da dobra.
+   - **Status: aplicada: aspect-ratio 4/5 + object-fit cover + fundo teal-soft; lazy mantido (estão abaixo da dobra, com width/height).**
+
 6. **CTA principal quebra em duas linhas no mobile**
    - Evidência: 'Entrar na lista de espera no WhatsApp' mede 346x70px (duas linhas) no mobile, contra 54px de altura no desktop; o ghost ao lado fica com 342x54px, e o CTA aparece 3 vezes (hero, FAQ, fim).
    - Correção proposta: Encurtar para 'Entrar na lista de espera' e manter o ícone do WhatsApp.
+   - **Status: aplicada: rótulo "Entrar na lista de espera" + ícone WhatsApp (sr-only " pelo WhatsApp") no hero e no FAQ.**

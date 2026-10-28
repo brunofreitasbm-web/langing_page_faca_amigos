@@ -65,11 +65,11 @@ Fonte: `/aprender.html` em 1440x900 (extract.js) e 390x844, estado original, ant
 - **Reason**: nove categorias em nove cores exigiriam que a mãe aprendesse um código; um rosa só significa "clique aqui" ou "comece por aqui".
 - **Evidence**: #FB3D6A em 12 textos contra #065264 em 40; as 9 tags de categoria (12.16px/800) no mesmo rosa; círculos do hero em turquesa opacity .18 e amarelo opacity .16.
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Card órfão na grade de 4 colunas (desktop).** Evidência: 9 guias em `repeat(4, 1fr)` deixam a 3a linha com 1 card (259x359) e 3 vazios, y=1599 a 1958, visível no screenshot. Correção: 3 colunas (3x3) a partir de 1100px, ou destacar o 1o guia em linha larga e listar 8 em 4x2.
-2. **Mobile com 9 fotos de 145px+ empilhadas antes de qualquer outro bloco.** Evidência: página de 7746px no mobile; no 390px cada card tem 369px de altura, dos quais a foto ocupa 201px (54%), e a grade soma 3462px. Correção: card horizontal no mobile (foto de 96px à esquerda, título à direita), o que corta cerca de metade da altura da lista.
-3. **Dois CTAs de mapeamento com o mesmo texto e a mesma cor, no topo e na base.** Evidência: "Fazer o mapeamento grátis" em `data-cta="para_pais_mapeamento"` (y=545) e `indice_final` (y=2624), ambos `.btn-buy` rosa. Correção: manter o do topo e trocar o final por uma pergunta que retome a dúvida do leitor, ou manter só o final, para não competir com os e-books pagos ao lado.
-4. **Hierarquia de títulos invertida.** Evidência: h1 de 46.4px, mas h2 "Comece por aqui" tem 21.6px e h3 dos cards 16.8px, menor que o texto do lede (17.92px); o título do card é menor que o corpo. Correção: h3 de card em 18-19px/600 e h2 em 28px.
-5. **Rosa em 12.16px maiúsculas como tag de categoria é a única pista de tema.** Evidência: 9 tags de 12.16px com letter-spacing .08em, muito pequenas para a leitura rápida num celular. Correção: tag em 13px com um ícone ou ponto, ou mover o tempo de leitura para o fim do card e deixar só a categoria.
-6. **Bloco do glossário aparece duas vezes (link de uma linha no topo e card ao final).** Evidência: `.pais-gloss` (24px de altura, y=633) e o card "Palavras explicadas" com botão "Abrir o glossário" perto do fim. Correção: manter só o card do fim, ou transformar o link do topo no único ponto de entrada.
+1. **Card órfão na grade.** Aplicada: 3 colunas (3x3) a partir de 980px; 2 colunas de 640 a 979px.
+2. **Mobile com 9 fotos empilhadas.** Aplicada: abaixo de 640px o card vira horizontal (foto de 104px à esquerda, texto à direita, descrição em 2 linhas); página de 7746px para 5930px.
+3. **Dois CTAs de mapeamento iguais.** Adaptada: mantido o do topo; o final ganhou título-pergunta ("Leu e continua sem saber se é fase ou algo para observar?") e texto que retoma a dúvida. Mesmo `data-cta`, mesmo rótulo do botão.
+4. **Hierarquia invertida.** Aplicada: h2 "Por onde começar" 24px (28px no desktop), h3 de card 19.2px, h3 de e-book 18.4px.
+5. **Tag rosa 12.16px.** Adaptada: 13px com ponto rosa; tempo de leitura mantido na tag (não movido para o fim do card).
+6. **Glossário duplicado.** Aplicada: removido o link de uma linha do topo; fica o card "Palavras explicadas". Preço dos e-books em 15px.

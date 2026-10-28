@@ -63,20 +63,20 @@ Fonte: extract.js em 1440x900 (só o login renderiza sem sessão) e leitura do C
 - Marca 'FaçaAmigos' no cabeçalho escuro: 'Amigos' de rosa para #FF7FAC (2.46:1 para 4.92:1)
 - Ficam como estão: botões e ícones translúcidos sobre o cabeçalho escuro (branco sobre #1A3F35), emoji da lupa; o hover com brightness(1.08) clareia o botão rosa por um instante (4.72:1 para cerca de 4.1:1, estado transitório)
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Tile bloqueado fica ilegível**
+1. **Tile bloqueado fica ilegível** [aplicada: opacity 0.8 e cadeado antes do texto 'Acesso ainda não configurado']
    - Evidência: opacity 0.55 no tile: descrição #4C6B62 cai para 2.32:1 e o nome para 3.16:1 (calculado)
    - Correção proposta: Usar opacity 0.8 e adicionar cadeado ou texto 'sem acesso', que já é o sinal real
-2. **Textos de 11 a 12px nos tiles**
+2. **Textos de 11 a 12px nos tiles** [aplicada: piso 0.8rem; host em linha única com reticências]
    - Evidência: selo de nível 0.72rem (11.5px), host 0.77rem (12.3px), tag de seção 0.72rem; host em 'word-break: break-all' em monoespaçada
    - Correção proposta: Piso de 12.8px e host em linha única com reticências
-3. **Campo de busca e login com borda de 12%**
+3. **Campo de busca e login com borda de 12%** [aplicada: borda 0.6 na busca e nos campos do login; foco #137A6A]
    - Evidência: borda rgba(26,63,53,0.12) sobre branco: 1.24:1 (precisa de 3:1)
    - Correção proposta: Borda rgba(26,63,53,0.6) nos campos e na busca
-4. **Foco do tile na cor do sistema**
+4. **Foco do tile na cor do sistema** [aplicada: outline #1A3F35; acento só no hover]
    - Evidência: outline 3px solid var(--accent): em tiles amarelo (#FFE234) ou azul-claro (#BFD8FF) o contorno mede cerca de 1.3:1 sobre branco
    - Correção proposta: Usar sempre outline #1A3F35 e deixar o acento só na borda do hover
-5. **Matriz de acessos de quatro colunas até 640px**
+5. **Matriz de acessos de quatro colunas até 640px** [aplicada: colunas minmax(110px) e empilha em 760px]
    - Evidência: a linha da matriz usa minmax(120px,1fr) 140px 150px minmax(150px,1.3fr), ou seja, 560px mínimos de conteúdo mais gaps de 10px, e só empilha abaixo de 640px: entre 640px e ~700px os campos de 140px e 150px ficam espremidos
    - Correção proposta: Empilhar a matriz já em 760px ou trocar as colunas fixas por minmax(110px,1fr)

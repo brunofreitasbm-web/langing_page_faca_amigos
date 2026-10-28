@@ -67,11 +67,12 @@ Valores observados (px): 6, 8, 10, 12, 16, 18, 22, 24, 30, 34, 40, 72. Unidade b
 - **Reason**: todos os destinos têm o mesmo peso, o que dispensa decidir qual é o principal
 - **Evidence**: 3 .back com mesmo padding 12px 28px, raio 999px
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Três CTAs idênticos no fim.** Evidência: 3 botões rosa de mesmo peso ("Voltar para o guia", "Voltar para o Código", "Eventos →"); a 390px empilham 3 x 52px + 30px de margem. Correção proposta: um botão primário (voltar ao produto) e os outros como links.
-2. **Linha longa.** Evidência: 89 caracteres por linha a 1440px (748px, 17px), referência 60 a 75. Correção proposta: max-width ~68ch no texto, mantendo o container de 780px para o card.
-3. **Sem índice.** Evidência: 9 seções numeradas em 3250px (5584px a 390px), 0 âncoras. Correção proposta: lista de âncoras no topo e id em cada h2.
-4. **Subtítulo longo com versão e data.** Evidência: a linha .updated tem 14.72px com dois títulos de e-book e quebra em 2 linhas a 1440px. Correção proposta: separar a data em linha própria e tirar os títulos do subtítulo.
-5. **Hierarquia h2/corpo estreita.** Evidência: h2 20.8px contra corpo 17px = razão 1.22 (margin 34px 0 10px). Correção proposta: h2 de 22-24px.
-6. **Rodapé maior que o conteúdo útil a 390px.** Evidência: footer começa em 3845px de 5584px: 1739px de rodapé em tela estreita. Correção proposta: versão compacta do rodapé nas páginas legais (arquivo compartilhado).
+1. **Três CTAs idênticos.** Status: aplicada. "Voltar para o guia" é o único botão rosa; Código e Eventos viram links com alvo de 44px.
+2. **Linha longa.** Status: adaptada. Conteúdo (inclusive o card) limitado a 68ch; main segue em 780px.
+3. **Sem índice.** Status: aplicada. Lista "Nesta página" com 9 âncoras (alvo 44px) e ids nos h2.
+4. **Subtítulo longo.** Status: aplicada. Subtítulo ficou só com a data; os títulos já constam no parágrafo de abertura. Opacity removida.
+5. **Hierarquia h2/corpo.** Status: aplicada. h2 de 24px (razão 1.41), margem superior 40px.
+6. **Rodapé grande.** Status: descartada. Depende de assets/fa-footer.js (compartilhado).
+7. **Extras.** Foco visível em petróleo (amarelo só em header/footer escuros).

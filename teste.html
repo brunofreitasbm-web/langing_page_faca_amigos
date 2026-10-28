@@ -168,9 +168,12 @@
     .btn-pink { background: var(--pink); color: #fff; box-shadow: var(--shadow-pink); }
     .btn-teal { background: var(--teal); color: var(--dark); box-shadow: 0 10px 26px rgba(46, 207, 181, 0.32); }
     .btn-wa { background: var(--wa); color: #053B1C; box-shadow: 0 10px 26px rgba(37, 211, 102, 0.35); }
+    /* WhatsApp do topo e flutuante em estilo secundário (contorno): o verde cheio fica só no cartão de contato */
+    .teste-nav .btn-wa { background: var(--white); color: #053B1C; border: 2.5px solid var(--wa); box-shadow: none; }
+    .teste-nav .btn-wa:hover { background: #E8FBEF; }
     .btn-ghost { background: var(--white); color: var(--dark); border: 2.5px solid var(--dark); }
     .btn-ghost:hover { background: var(--yellow); border-color: var(--dark); }
-    .btn-sm { padding: 10px 22px; font-size: 0.95rem; }
+    .btn-sm { padding: 10px 22px; font-size: 1rem; min-height: 44px; }
     .btn-block { width: 100%; }
 
     .eyebrow {
@@ -180,7 +183,7 @@
       background: var(--white);
       border-radius: 9999px;
       padding: 8px 18px;
-      font-size: 0.8rem;
+      font-size: .875rem;
       font-weight: 900;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -203,9 +206,10 @@
       gap: 8px;
       background: var(--white);
       border-radius: 9999px;
-      padding: 9px 18px;
-      font-size: 0.92rem;
+      padding: 9px 14px;
+      font-size: .875rem;
       font-weight: 800;
+      white-space: nowrap;
       box-shadow: var(--shadow-sm);
     }
 
@@ -220,7 +224,7 @@
       border-radius: 14px;
       font-family: 'Nunito', sans-serif;
       font-weight: 700;
-      font-size: 0.98rem;
+      font-size: 1rem;
       color: var(--dark);
       background: var(--white);
     }
@@ -237,7 +241,7 @@
     .form-label {
       display: block;
       margin-bottom: 6px;
-      font-size: 0.85rem;
+      font-size: .875rem;
       font-weight: 800;
       color: var(--ink-soft);
     }
@@ -245,7 +249,7 @@
     .form-error {
       display: none;
       color: var(--pink-dark);
-      font-size: 0.88rem;
+      font-size: .875rem;
       font-weight: 800;
       margin-bottom: 12px;
       background: rgba(240, 25, 107, 0.08);
@@ -254,7 +258,7 @@
     }
 
     fieldset { border: none; padding: 0; margin: 0 0 20px; }
-    legend { padding: 0; margin-bottom: 10px; font-size: 0.85rem; font-weight: 800; color: var(--ink-soft); }
+    legend { padding: 0; margin-bottom: 10px; font-size: .875rem; font-weight: 800; color: var(--ink-soft); }
 
     /* Float WA */
     .wa-float {
@@ -265,16 +269,19 @@
       width: 62px;
       height: 62px;
       border-radius: 50%;
-      background: var(--wa);
-      color: #053B1C;
+      background: var(--white);
+      border: 3px solid var(--wa);
+      color: #0E6B33;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 10px 24px rgba(37, 211, 102, 0.45);
+      box-shadow: 0 6px 18px rgba(26, 63, 53, 0.18);
       transition: transform var(--t-fast);
     }
 
     .wa-float:hover { transform: scale(1.08); }
+    .wa-float:focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; }
+    .form-control:focus-visible { outline: 3px solid var(--teal-dark); outline-offset: 2px; }
     .wa-float svg { width: 34px; height: 34px; }
 
     /* Footer */
@@ -283,14 +290,14 @@
       color: rgba(255, 255, 255, 0.75);
       padding: 52px 22px 100px;
       text-align: center;
-      font-size: 0.92rem;
+      font-size: .875rem;
       font-weight: 600;
     }
 
     footer .logo { color: #fff; margin-bottom: 18px; display: inline-block; }
     footer a { color: var(--teal); font-weight: 800; }
     footer a:hover { text-decoration: underline; }
-    footer .legal { margin-top: 22px; font-size: 0.8rem; color: rgba(255, 255, 255, 0.78); }
+    footer .legal { margin-top: 22px; font-size: .875rem; color: rgba(255, 255, 255, 0.78); }
 
     /* Animações de entrada */
     .fx { opacity: 0; transform: translateY(26px); transition: opacity 0.7s ease, transform 0.7s ease; }
@@ -330,7 +337,16 @@
     }
 
     @media (max-width: 560px) {
-      .quiz-card { padding: 30px 22px; border-radius: 20px; }
+      .quiz-card { padding: 22px 20px 24px; border-radius: 20px; }
+      main.sec { padding: 24px 0 40px; }
+      .teste-photo { width: 88px; margin-bottom: 12px; border-width: 4px; }
+      .teste-landing .eyebrow { display: none; }
+      .teste-landing h1 { margin-bottom: 10px; }
+      .teste-landing .sub { margin-bottom: 12px; font-size: 1rem; line-height: 1.5; }
+      .teste-nav { padding: 8px 0; }
+      .teste-landing h1 { font-size: 1.75rem; }
+      .teste-meta { gap: 8px; margin-bottom: 16px; }
+      .chip { padding: 7px 12px; }
     }
 
     /* Landing */
@@ -377,7 +393,7 @@
     }
 
     .note-small {
-      font-size: 0.86rem;
+      font-size: .875rem;
       font-weight: 700;
       color: var(--ink-soft);
       margin-top: 16px;
@@ -387,7 +403,7 @@
     .progress-wrap { margin-bottom: 24px; }
 
     .progress-label {
-      font-size: 0.82rem;
+      font-size: .875rem;
       font-weight: 800;
       color: var(--ink-soft);
       margin-bottom: 8px;
@@ -427,7 +443,7 @@
       border: 2.5px solid rgba(26, 63, 53, 0.14);
       background: var(--white);
       font-weight: 800;
-      font-size: 0.94rem;
+      font-size: 1rem;
       color: var(--dark);
       cursor: pointer;
       text-align: center;
@@ -544,7 +560,7 @@
       padding: 16px 20px;
       font-weight: 600;
       color: var(--ink-soft);
-      font-size: 0.9rem;
+      font-size: .875rem;
       margin-bottom: 26px;
     }
 
@@ -554,7 +570,7 @@
       margin-top: 18px;
       display: inline-block;
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: .875rem;
       color: var(--ink-soft);
       text-decoration: underline;
       background: none;
@@ -562,14 +578,14 @@
       cursor: pointer;
     }
 
-    .phone-hint { font-size: 0.8rem; color: var(--ink-soft); font-weight: 700; margin-top: -8px; margin-bottom: 12px; }
+    .phone-hint { font-size: .875rem; color: var(--ink-soft); font-weight: 700; margin-top: -8px; margin-bottom: 12px; }
 
     .consent-row {
       display: flex;
       align-items: flex-start;
       gap: 10px;
       margin-bottom: 20px;
-      font-size: 0.9rem;
+      font-size: .875rem;
       font-weight: 700;
       color: var(--ink-soft);
     }
@@ -592,7 +608,7 @@
     /* Eyebrow acima da pergunta */
     .q-eyebrow {
       text-align: center;
-      font-size: 0.8rem;
+      font-size: .875rem;
       font-weight: 900;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -616,7 +632,7 @@
     .result-eyebrow {
       display: block;
       text-align: center;
-      font-size: 0.8rem;
+      font-size: .875rem;
       font-weight: 900;
       letter-spacing: 0.1em;
       text-transform: uppercase;
@@ -665,10 +681,10 @@
     .bar-fill.tier2 { background: var(--t2-bar); }
     .bar-fill.tier3 { background: var(--t3-bar); }
 
-    .bar-value { font-size: 0.78rem; font-weight: 800; color: var(--dark); margin-top: 6px; }
+    .bar-value { font-size: .875rem; font-weight: 800; color: var(--dark); margin-top: 6px; }
 
     .bar-label {
-      font-size: 0.68rem;
+      font-size: .875rem;
       font-weight: 700;
       color: var(--ink-soft);
       text-align: center;
@@ -681,7 +697,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 12px;
-      font-size: 0.8rem;
+      font-size: .875rem;
       font-weight: 700;
       color: var(--ink-soft);
     }
@@ -719,7 +735,7 @@
     .area-badge {
       display: inline-flex;
       align-items: center;
-      font-size: 0.78rem;
+      font-size: .875rem;
       font-weight: 800;
       padding: 5px 12px;
       border-radius: 9999px;
@@ -729,7 +745,7 @@
     .area-badge.tier2 { background: var(--t2-bg); color: var(--t2-text); }
     .area-badge.tier3 { background: var(--t3-bg); color: var(--t3-text); }
 
-    .area-card-text { color: var(--ink-soft); font-weight: 600; font-size: 0.94rem; }
+    .area-card-text { color: var(--ink-soft); font-weight: 600; font-size: 1rem; }
 
     .human-block {
       background: var(--t2-bg);
@@ -772,7 +788,7 @@
       display: inline-block;
       background: #FDC51D;
       color: #065264;
-      font-size: 0.72rem;
+      font-size: .875rem;
       font-weight: 800;
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -790,7 +806,7 @@
       margin: 0 0 10px;
     }
 
-    .ebook-sub { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 0.95rem; margin: 0 0 18px; }
+    .ebook-sub { color: rgba(255, 255, 255, 0.92); font-weight: 600; font-size: 1rem; margin: 0 0 18px; }
 
     .ebook-body { display: flex; gap: 20px; align-items: center; margin-bottom: 18px; }
 
@@ -798,14 +814,14 @@
     .ebook-cover img { display: block; width: 100%; height: auto; border-radius: 4px 10px 10px 4px; box-shadow: 8px 10px 22px rgba(0, 0, 0, 0.35); }
 
     .ebook-bullets { list-style: none; margin: 0; padding: 0; flex: 1; }
-    .ebook-bullets li { position: relative; padding-left: 26px; margin-bottom: 9px; font-weight: 700; font-size: 0.9rem; color: #fff; }
+    .ebook-bullets li { position: relative; padding-left: 26px; margin-bottom: 9px; font-weight: 700; font-size: .875rem; color: #fff; }
     .ebook-bullets li:last-child { margin-bottom: 0; }
     .ebook-bullets li::before {
       content: '\2713';
       position: absolute; left: 0; top: 1px;
       width: 18px; height: 18px; border-radius: 50%;
       background: #07C5C8; color: #065264;
-      font-size: 0.72rem; font-weight: 900;
+      font-size: .875rem; font-weight: 900;
       display: flex; align-items: center; justify-content: center;
     }
 
@@ -813,7 +829,7 @@
     .ebook-price-from { display: inline-block; margin-right: 8px; color: rgba(255, 255, 255, 0.7); font-weight: 700; text-decoration: line-through; }
     .ebook-price-to-label { font-weight: 700; color: #fff; }
     .ebook-price-to { font-family: 'Fredoka', 'Nunito', sans-serif; font-weight: 700; font-size: 2.3rem; line-height: 1; color: #fff; margin-left: 4px; }
-    .ebook-installments { display: block; margin-top: 4px; font-size: 0.82rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
+    .ebook-installments { display: block; margin-top: 4px; font-size: .875rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
 
     /* Botão de compra: pílula rosa da marca, texto branco grande e em negrito */
     .ebook-cta {
@@ -825,9 +841,9 @@
       box-shadow: 0 2px 4px rgba(251, 61, 106, .25), 0 8px 20px rgba(251, 61, 106, .30);
     }
 
-    .ebook-sample { display: block; margin: 12px 0 0; text-align: center; font-size: 0.92rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+    .ebook-sample { display: block; margin: 12px 0 0; text-align: center; font-size: .875rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 3px; }
 
-    .ebook-trust { margin: 12px 0 0; text-align: center; font-size: 0.76rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
+    .ebook-trust { margin: 12px 0 0; text-align: center; font-size: .875rem; font-weight: 700; color: rgba(255, 255, 255, 0.85); }
 
     @media (max-width: 520px) {
       .ebook-body { flex-direction: column; align-items: stretch; }
@@ -840,7 +856,7 @@
     }
 
     .result-bottom-disclaimer {
-      font-size: 0.8rem;
+      font-size: .875rem;
       color: var(--ink-soft);
       font-style: italic;
       text-align: center;
@@ -942,8 +958,8 @@
         </div>
         <div id="landing-error" class="form-error" aria-live="polite"></div>
         <button type="button" id="btn-start" class="btn btn-pink btn-block" disabled>Carregando mapeamento...</button>
-        <p class="note-small" id="intro-credit" style="margin-top:10px;">Criado por <b>Isabella Gonçalves Freitas</b>, psicóloga infantil (CRP 10/4727), fundadora do FaçaAmigos.</p>
-        <p class="note-small" id="intro-disclaimer">Desenvolvido pela idealizadora do FaçaAmigos · não substitui avaliação profissional</p>
+        <p class="note-small" id="intro-credit" style="margin-top:12px;margin-bottom:2px;">Criado por <b>Isabella Gonçalves Freitas</b>, psicóloga infantil (CRP 10/4727), fundadora do FaçaAmigos.</p>
+        <p class="note-small" id="intro-disclaimer" style="margin-top:2px;">Não substitui avaliação profissional.</p>
       </section>
 
       <!-- PASSO 1 — CONTATO E DADOS DA CRIANÇA -->

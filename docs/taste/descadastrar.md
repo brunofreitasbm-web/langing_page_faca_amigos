@@ -58,10 +58,11 @@ Valores observados (px): 6, 8, 10, 16, 18, 22, 28, 40, 64. Unidade base: 2px (se
 - **Reason**: a marca aparece sem competir com a ação
 - **Evidence**: .dots 3 x 12px, gap 8px; areaPct decorativo ~0
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Estado de erro sem saída.** Evidência: "Este link não é válido" só tem o e-mail como caminho, sem botão (screenshot: card sem CTA). Correção proposta: adicionar um botão "Voltar para o site" no estado inválido.
-2. **Sem ação para desistir.** Evidência: o estado ask não oferece "Manter inscrição" ao lado de "Sim, descadastrar". Correção proposta: incluir ação secundária de cancelar/voltar.
-3. **Texto de consequência denso.** Evidência: parágrafo de 3 linhas a 17px em 476px úteis, centralizado. Correção proposta: alinhar à esquerda e quebrar em duas frases curtas.
-4. **Rodapé completo em página de uma ação.** Evidência: rodapé de ~830px abaixo de um card de 230px (footerTop 420px, página de 1251px). Correção proposta: rodapé compacto (arquivo compartilhado).
-5. **Botão desabilitado com opacity .6.** Evidência: button[disabled] opacity .6 dá um rosa lavado sem texto de progresso além de "Enviando...". Correção proposta: manter cor cheia e mostrar um indicador de progresso.
+1. **Estado de erro sem saída.** Status: aplicada. Botão "Voltar para o site" (/) no estado inválido.
+2. **Sem ação para desistir.** Status: aplicada. Link "Manter minha inscrição" (/guia; /eventos no fluxo de eventos) ao lado do botão primário.
+3. **Texto denso.** Status: aplicada. Card alinhado à esquerda, consequência dividida em dois parágrafos (também no fluxo de eventos).
+4. **Rodapé completo.** Status: descartada. Depende de assets/fa-footer.js (compartilhado).
+5. **Botão desabilitado com opacity .6.** Status: aplicada. Cor cheia, spinner CSS (estático em reduced-motion) e cursor progress; card com aria-live.
+6. **Extras.** Foco em petróleo (amarelo tinha 1.6:1 sobre branco).

@@ -67,11 +67,13 @@ Fonte: http://localhost:8765/wifi.html, referência principal 390x844 (mobile-fi
 - **Reason**: O arredondado dá a voz de brinquedo onde há poucas palavras; no parágrafo de 13 a 14px ele cansaria e perderia nitidez.
 - **Evidence**: Fredoka em 32 nós e Nunito em 133; h1 35.1px/lh 38.6px, h2 e h3 22px, números 40px; corpo 13 a 16px com peso 700 a 800; custo: 12 tamanhos distintos e três deles abaixo de 12px (10.5, 11).
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Dois textos para o mesmo CTA.** Evidência: botão do hero "Quero entender meu filho" (355x55, y 701) e barra fixa "Fazer o mapeamento · 5 min" (350x47) levam à mesma ação. Correção: usar um só texto nos dois, de preferência o da barra, que diz o esforço (5 min).
-2. **Oferta repetida três vezes.** Evidência: cupom ESPERA (ticket), tiles R$ 50 e +5 min, e a linha "1 cupom = 1 visita · Playground ou Circuito" repetem a mesma regra em 3 blocos antes das unidades (entre y~940 e y~1260 no mobile). Correção: remover a linha de chips e deixar a regra só no ticket.
-3. **Banner de cookies disputa o CTA.** Evidência: no 390x844 o banner fixo (botões "Aceitar" e "Só o essencial", 169x44 em y 780) ocupa a base da tela logo abaixo do CTA do hero (y 701 a 756) e cobre o subtítulo no screenshot. Correção: banner compacto de uma linha com os dois botões em 44px, ou adiado até a primeira rolagem (arquivo compartilhado fa-track.js, não alterado aqui).
-4. **Três unidades ocupam um scroll inteiro.** Evidência: três cartões de 350x263 mais gaps de 14px somam 817px (97% da altura de 844px) para três endereços de duas linhas; os botões "Rota" repetem o endereço logo abaixo. Correção: cartões de 120px com foto 96px à esquerda e "Rota" dentro do cartão.
-5. **Texto miúdo sobre foto.** Evidência: tag 10.5px, meta 12px (.p.meta, opacity .85) e badge 11px; o hero tem 12 tamanhos de fonte. Correção: piso de 12px para tag e badge, 13px para meta, e reduzir a escala para 6 tamanhos.
-6. **Desktop deixa o terceiro cartão sozinho.** Evidência: a 1440px as unidades ficam em 2+1 (o cartão do Circuito ocupa a largura toda, ~600x263) dentro de uma coluna de 640px; links do rodapé têm 18px de altura (alvo mínimo recomendado 24px). Correção: grade de 3 colunas ou cartão do Circuito em largura de 1 coluna, e padding vertical de 6px nos links.
+1. **Dois textos para o mesmo CTA.** Status: aplicada. Hero e barra fixa agora dizem "Fazer o mapeamento · 5 min".
+2. **Oferta repetida três vezes.** Status: aplicada. A linha de chips foi removida; a regra "1 cupom = 1 visita, Playground ou Circuito" ficou só no ticket.
+3. **Banner de cookies disputa o CTA.** Status: descartada neste escopo. Depende de fa-track.js (arquivo compartilhado); segue pendente.
+4. **Três unidades ocupam um scroll inteiro.** Status: aplicada. Cartões horizontais (foto 104px à esquerda, texto, botão "Rota" de 44px dentro do cartão); o bloco de rotas separado saiu. Ids e tracking preservados; o Circuito não tem "Rota" própria (fica no mesmo shopping).
+5. **Texto miúdo sobre foto.** Status: aplicada. Texto agora fora da foto, em fundo branco; tag e badge 12px, meta/preço/horário/regra 14px, rodapé 14px, corpo dos e-books 16px.
+6. **Desktop deixa o terceiro cartão sozinho.** Status: aplicada. Cartões empilhados na coluna de 640px, sem 2+1; links do rodapé com 44px de altura.
+
+Extras: foco visível (contorno 3px, branco no hero), reduced-motion também para scroll suave, botões e chips.

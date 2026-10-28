@@ -64,10 +64,19 @@ Valores observados (px): 6, 8, 10, 12, 14, 16, 18, 28, 64. Unidade base: 2px (se
 - **Reason**: a ação destrutiva fica visível mas sem peso de ação principal
 - **Evidence**: .btn #FB3D6A; .btn.ghost borda 2px petróleo; .btn.danger borda 2px #B0143F; min-height 52px
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Página fixa em 900px sem rodapé.** Evidência: docH 900px (= viewport), footerTop null; o estado de erro termina em card de 243px e deixa 500px vazios. Correção proposta: manter, mas oferecer contato por WhatsApp além do e-mail no estado inválido.
+   - Status: **Adaptada.** Estado inválido ganhou WhatsApp (91) 99178-2027 além do e-mail (número do Instituto/Clínica; confirmar).
+
 2. **Hint pequeno.** Evidência: .hint 13.4px com opacity .8, instrução de entrada no evento ("Mostre o QR..."). Correção proposta: 14-15px e opacity 1; é a instrução mais importante do dia do evento.
+   - Status: **Aplicada.** .hint 15,2px, peso 700, sem opacity.
+
 3. **Estados de loading sem animação.** Evidência: "Abrindo seu ingresso…" é só texto, 24px, sem indicador. Correção proposta: adicionar indicador de carregamento discreto.
+   - Status: **Aplicada.** Spinner discreto no carregamento (sem animação em reduced-motion; role=status).
+
 4. **Botão de cancelar sem confirmação visual no fluxo.** Evidência: .btn.danger está no mesmo grid dos demais, com altura 52px idêntica. Correção proposta: separar com 18px a mais ou usar link de texto; o modal existe, mas o botão está colado nos outros.
+   - Status: **Aplicada.** Botão de cancelar separado com 18px a mais de margem.
+
 5. **Status em pílula de 13px.** Evidência: .status 13.1px, padding 6px 14px, é o único aviso da situação do ingresso. Correção proposta: subir para 14px e colocar acima do h1 com mais respiro.
+   - Status: **Aplicada.** Status em 14,4px com padding maior e 18px de respiro abaixo; foco visível em petróleo.

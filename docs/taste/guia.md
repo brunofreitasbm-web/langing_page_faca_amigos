@@ -62,11 +62,22 @@ Fonte: /guia.html (guia.html) (1440x900 e 390x844, versão original antes das co
 - **Reason**: A hierarquia fica no texto e na cor do ícone, e a página lê como uma só família
 - **Evidence**: rgba(6,82,100,.1) 1px 2px + 4px 14px em 41 elementos; raio 24px em 35 elementos; ícones alternam amarelo/turquesa/rosa em ciclo 3n
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Onze botões idênticos em uma página** — Evidência: 11 elementos .btn-buy com 'Quero o guia' em ~11.301px, além do botão da barra sticky. Correção proposta: manter em hero, depois dos capítulos, preço e FAQ; nas outras seções usar link de texto.
+   - **Status: adaptada: igual ao codigo (botões em topbar, hero, capítulos, oferta, FAQ, fechamento; demais viram .cta-link).**
+
 2. **Marca-texto amarelo do h1 quebra em dois blocos** — Evidência: a 1440px 'o que fazer no / dia a dia' vira duas faixas empilhadas, a segunda com apenas 'dia a dia' (screenshot, y≈290-425). Correção proposta: aplicar text-wrap: balance no h1 ou reduzir a largura do bloco para a frase caber em uma linha.
+   - **Status: aplicada: quebra manual no desktop ("o que fazer" / "no dia a dia") e nbsp em "e saiba" para evitar órfã; no mobile quebra natural.**
+
 3. **Preço com pouca hierarquia** — Evidência: 'Valor: R$ 149' está a 17px/800 abaixo do botão, sem parcelamento nem comparação, e o botão tem 18.7px. Correção proposta: destacar o valor em Fredoka 28px e mostrar parcelas, como o banner do resultado do quiz.
+   - **Status: aplicada: "R$ 149" em Fredoka 28px no hero + parcelas (mesmo CONFIG.parcelas) abaixo.**
+
 4. **Duas páginas de e-book quase idênticas** — Evidência: codigo.html e guia.html repetem CSS e seções (dores, capítulos, ferramentas, carrossel, autora, preço, FAQ): ~900 linhas cada, mesmos raios, sombras e tokens. Correção proposta: extrair um CSS comum em assets/ (arquivo compartilhado, só reportado) para evitar divergência de tokens.
+   - **Status: descartada: extrair CSS comum exige assets/ (arquivo compartilhado); só reportado.**
+
 5. **Escala tipográfica sprawling** — Evidência: 13+ tamanhos entre 12.8 e 56px; 17px (37x), 14.72px (28x), 12.8px (14x), 15.36px (12x), 14.4px (10x). Correção proposta: consolidar em 14, 16, 18, 28, 40, 56px; piso 14px.
+   - **Status: adaptada: igual ao codigo (piso 14px, escala consolidada).**
+
 6. **Faixa de benefícios do hero em fundo translúcido** — Evidência: chips 'Acesso imediato', 'PDF', 'Garantia de 7 dias' em branco 14.7px sobre rgba de branco ~8% no petróleo, discretos perto do botão (screenshot y≈690). Correção proposta: aumentar a opacidade do fundo do chip e subir a garantia para junto do botão.
+   - **Status: aplicada: fundo dos chips de .13 para .22 e "Garantia de 7 dias" passou a ser o primeiro chip, logo abaixo do preço/botão.**

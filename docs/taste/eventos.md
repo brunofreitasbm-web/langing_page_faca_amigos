@@ -70,11 +70,22 @@ Valores observados (px): 4, 6, 7, 8, 10, 14, 16, 18, 22, 28, 44, 52, 56. Unidade
 - **Reason**: mantém o olho no clique de inscrição
 - **Evidence**: .btn-buy bg rosa 52px; .go rosa; areaPct do rosa ~0
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Falha de carregamento sem saída.** Evidência: estado de erro: "Não foi possível carregar a agenda agora" em texto de 17px, sem botão de tentar de novo (screenshot, y~617). Correção proposta: botão "Tentar de novo" e contato por e-mail.
+   - Status: **Aplicada.** Falha de carga mostra "Tentar de novo" (refaz o fetch) e contato por e-mail.
+
 2. **Texto pequeno nas tags e eyebrow.** Evidência: tags de 12.2px e eyebrow de 12.8px; 4 nós abaixo de 13px. Correção proposta: tags a 13px, eyebrow a 13px.
+   - Status: **Aplicada.** Tags e eyebrow a 13px.
+
 3. **Alvos de toque abaixo de 44px.** Evidência: 7 elementos de 44px ou menos (botões ghost e filtros) a 1440px, 4 a 390px. Correção proposta: garantir min-height 44px nos filtros.
+   - Status: **Aplicada.** Filtros e links do menu com min-height 44px; foco visível em petróleo no fundo claro.
+
 4. **Hero com 3 selos sem hierarquia.** Evidência: 3 pílulas (.seal) de 14px lado a lado, sem ordem de importância. Correção proposta: destacar "Vagas limitadas de verdade" como diferencial e reduzir os outros.
+   - Status: **Aplicada.** Selo "Vagas limitadas de verdade" em amarelo e maior; os outros dois ficam discretos.
+
 5. **Rodapé com contato local duplicado.** Evidência: bloco "Contato desta unidade" repete a Clínica 2 vezes (bloco branco e rodapé, 2467px de página). Correção proposta: escolher um dos dois.
+   - Status: **Descartada.** O bloco "Contato desta unidade" vem de assets/fa-footer.js (compartilhado); pendência.
+
 6. **Passos numerados com ícones coloridos sem vínculo com a cor de ação.** Evidência: quadrados de 52px em amarelo, turquesa e rosa; só o 3 é a cor de ação. Correção proposta: usar uma única cor para os 3 números.
+   - Status: **Aplicada.** Os 3 números dos passos usam um único fundo petróleo; rosa fica só na ação.

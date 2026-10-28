@@ -62,11 +62,22 @@ Fonte: /codigo.html (codigo.html) (1440x900 e 390x844, versão original antes da
 - **Reason**: Cartões iguais deixam a hierarquia para o texto e a cor do ícone, e a página lê como uma só família
 - **Evidence**: rgba(6,82,100,.1) 1px 2px + 4px 14px em 35 elementos; raio 24px em 32 elementos; ícones alternam amarelo/turquesa/rosa em ciclo 3n
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Dez botões idênticos em uma página** — Evidência: 10 elementos .btn-buy com o mesmo rótulo 'Quero o e-book', mais o botão da barra sticky, em ~10.071px de altura. Correção proposta: manter botão em: hero, depois dos capítulos, preço e FAQ; nas demais seções usar link de texto ou nada.
+   - **Status: adaptada: botões rosa mantidos em topbar, hero, capítulos, oferta, FAQ e fechamento; dor, virada, ferramentas e prévia viraram link de texto sublinhado (.cta-link, 44px, mesmo data-cta/tracking).**
+
 2. **Botão da barra superior quebra em duas linhas no celular** — Evidência: a 390px o rótulo 'Quero o e-book' quebra em 'Quero o e- / book' dentro da pílula rosa ao lado do logo (screenshot). Correção proposta: white-space: nowrap com padding menor, ou ocultar o logo escrito ao lado; avaliar rótulo curto.
+   - **Status: aplicada: nowrap, fonte 1rem, logo 124px e padding 16px a <=420px.**
+
 3. **Preço escondido no hero** — Evidência: o hero diz 'Valor e formas de pagamento no checkout seguro da Hotmart' e só mais abaixo aparece o preço (.price .to, 57.6px); a página irmã guia.html mostra 'Valor: R$ 149' no hero. Correção proposta: mostrar o valor perto do botão do hero, no mesmo padrão de guia.html.
+   - **Status: descartada: a página não exibe preço de propósito (valor só no checkout Hotmart); não há valor para mostrar.**
+
 4. **Escala tipográfica sprawling com texto de 12.8px** — Evidência: 12 tamanhos entre 12.8 e 56px; 17px (34x), 14.72px (21x), 12.8px (13x), 15.36px (10x), 14.4px (10x), 15.2px (9x), 14.08px (7x). Correção proposta: consolidar em 14px, 16px, 18px, 28px, 40px, 56px; piso de 14px para microtexto.
+   - **Status: adaptada: piso de 14px (.875rem) e consolidação 14/16/18px em textos corridos; títulos display não mudaram.**
+
 5. **Círculo branco solto no hero** — Evidência: na dobra a 1440px há um círculo branco de ~64px (x≈1150, y≈750) sem função, ao lado do círculo rosa de 520px; parece imagem que não carregou. Correção proposta: trocar por amarelo-20 ou remover.
+   - **Status: aplicada: círculo branco do hero (e o do fechamento) trocado por amarelo-20.**
+
 6. **Carrossel 'Veja como são as páginas' aparece em branco na captura** — Evidência: na captura de página inteira os cinco cartões do carrossel estão brancos (legendas visíveis, imagens não); pode ser lazy-load, a confirmar. Correção proposta: reservar aspect-ratio com cor de fundo e carregar as 3 primeiras imagens sem lazy.
+   - **Status: aplicada: 3 primeiras prévias com loading="eager" e aspect-ratio 520/737 reservado.**

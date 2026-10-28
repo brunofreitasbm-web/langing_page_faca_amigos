@@ -70,11 +70,22 @@ Valores observados (px): 4, 6, 8, 10, 12, 14, 16, 18, 24, 28, 40, 48. Unidade ba
 - **Reason**: a comparação por cor deixa claro o que cabe a cada um
 - **Evidence**: .quem .sim #E2F8F8; .quem .nao #FFF3D2; radius 18px
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Estado de erro com rodapé maior que o conteúdo.** Evidência: estado de erro de 1423px de altura: card com título e botão ocupa 190px, rodapé 830px. Correção proposta: manter, mas levar o visitante direto às próximas datas.
+   - Status: **Adaptada.** Estado de erro ganhou botão primário "Ver próximas datas" para /eventos; o rodapé grande é compartilhado e não foi tocado.
+
 2. **Fontes pequenas no formulário.** Evidência: .tipo .p 13.4px opacity .85; .note 13.1px opacity .8; form-label 13.8px. Correção proposta: mínimo de 14px e sem opacity.
+   - Status: **Aplicada.** Mínimo 14,4px em .tipo .p, .note, label, countdown e consentimentos, sem opacity.
+
 3. **Botão WhatsApp e sucesso dependem de estado oculto.** Evidência: .btn-wa tinha texto branco sobre #25D366 e o ícone ✓ branco sobre #07C5C8, só aparecem após inscrição. Correção proposta: validar os estados de sucesso com dados de teste.
+   - Status: **Adaptada.** Cores dos estados já conformes (#053B1C no WhatsApp, #04414A no ✓); estados validados com API simulada no Playwright.
+
 4. **Alvos de toque.** Evidência: 7 elementos de 44px ou menos a 1440px e 4 a 390px (botões ghost e links do menu). Correção proposta: min-height 44px nos controles.
+   - Status: **Aplicada.** min-height 44px em nav, tipos e consentimentos (checkbox 22px); foco passou a petróleo em fundo claro (amarelo só em petróleo).
+
 5. **Promessa sem separação clara do restante em 390px.** Evidência: card petróleo de 24px seguido de lista branca a 16px de distância. Correção proposta: aumentar o espaçamento para 28px.
+   - Status: **Aplicada.** Promessa com margem de 28px.
+
 6. **Hero sem call-to-action visível acima da dobra em celular.** Evidência: botão de compra só na caixa de inscrição, depois do hero e da capa 16:9. Correção proposta: repetir o botão no hero ou fixar uma barra com o preço.
+   - Status: **Aplicada.** Botão primário "Garantir minha vaga" (#ev-hero-cta) no hero, só abaixo de 900px, vinculado à caixa de inscrição e ao tipo selecionado.

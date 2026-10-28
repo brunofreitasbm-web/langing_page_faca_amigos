@@ -51,7 +51,8 @@
     h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.15; margin: 0; letter-spacing: -.005em; }
     p { margin: 0; }
     a { color: inherit; }
-    :focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 8px; }
+    :focus-visible { outline: 3px solid var(--petrol); outline-offset: 3px; border-radius: 8px; }
+    .bg-petrol :focus-visible, .topbar :focus-visible, footer :focus-visible { outline-color: var(--yellow); }
     .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
     .skip { position: absolute; left: 8px; top: -60px; background: #fff; color: var(--petrol); padding: 10px 16px; border-radius: 999px; font-weight: 800; z-index: 100; }
     .skip:focus { top: 8px; }
@@ -61,7 +62,7 @@
     .bg-petrol { background: var(--petrol); color: #fff; }
     .bg-ice { background: var(--ice); }
     .center { text-align: center; }
-    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
     .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--pink); }
     h2.title { font-size: clamp(1.6rem, 5.6vw, 2.3rem); margin-bottom: 14px; }
     .lead { font-size: 1.1rem; max-width: 640px; }
@@ -78,7 +79,7 @@
     .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 64px; flex-wrap: wrap; padding-top: 8px; padding-bottom: 8px; }
     .topbar img { width: 150px; height: auto; }
     .tnav { display: flex; gap: 4px; flex-wrap: wrap; }
-    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 8px 12px; border-radius: 999px; opacity: .9; text-decoration: none; }
+    .tnav a { font-weight: 800; font-size: .92rem; color: #fff; padding: 0 12px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 999px; opacity: .9; text-decoration: none; }
     .tnav a:hover, .tnav a[aria-current] { background: rgba(255, 255, 255, .14); opacity: 1; }
     @media (max-width: 640px) {
       .topbar .wrap { height: auto; min-height: 0; padding-top: 8px; padding-bottom: 0; row-gap: 2px; }
@@ -92,11 +93,12 @@
     .hero h1 { font-size: clamp(1.9rem, 6.4vw, 2.8rem); margin-bottom: 12px; }
     .hero .sub { font-size: 1.1rem; color: rgba(255, 255, 255, .92); max-width: 640px; margin: 0 auto; }
     .seal { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-    .seal span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .13); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .88rem; }
+    .seal span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .13); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .9rem; }
+    .seal span:first-child { background: var(--yellow); color: var(--petrol); font-weight: 900; font-size: 1rem; padding: 9px 18px; }
 
     /* Filtro por trilha */
     .trilhas { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 28px; }
-    .trilhas button { border: 2px solid var(--petrol); background: #fff; color: var(--petrol); font: 800 .95rem var(--font-body); padding: 10px 20px; border-radius: 999px; cursor: pointer; }
+    .trilhas button { border: 2px solid var(--petrol); background: #fff; color: var(--petrol); font: 800 .95rem var(--font-body); padding: 10px 20px; min-height: 44px; border-radius: 999px; cursor: pointer; }
     .trilhas button[aria-pressed="true"] { background: var(--petrol); color: #fff; }
 
     /* Cards */
@@ -109,16 +111,19 @@
     .card .capa.placeholder { display: grid; place-items: center; font-size: 2.2rem; }
     .card .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
     .card .tags { display: flex; gap: 6px; flex-wrap: wrap; }
-    .tag { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 11px; font-size: .76rem; font-weight: 800; background: var(--teal-10); color: var(--petrol); }
+    .tag { display: inline-flex; align-items: center; gap: 6px; border-radius: 999px; padding: 4px 11px; font-size: .82rem; font-weight: 800; background: var(--teal-10); color: var(--petrol); }
     .tag.pink { background: var(--pink-10); color: #B0143F; }
     .tag.yellow { background: var(--yellow-20); color: #7A5A00; }
     .tag.gray { background: #EEF2F3; color: #556469; }
     .card h3 { font-size: 1.2rem; }
     .card .when { font-weight: 800; font-size: .92rem; }
-    .card .desc { font-size: .95rem; opacity: .9; }
+    .card .desc { font-size: .95rem; }
     .card .foot { margin-top: auto; display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 8px; font-weight: 800; font-size: .92rem; }
     .card .foot .go { color: var(--pink); }
-    .state { text-align: center; padding: 30px 16px; font-weight: 700; opacity: .85; }
+    .state { text-align: center; padding: 30px 16px; font-weight: 700; }
+    .state .btn-buy { margin-top: 14px; }
+    .state .alt { margin-top: 12px; font-size: .95rem; }
+    .state .alt a { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
     .empty { background: #fff; border-radius: 24px; box-shadow: var(--shadow); padding: 34px 22px; text-align: center; max-width: 620px; margin: 0 auto; }
     .empty h3 { font-size: 1.3rem; margin-bottom: 10px; }
     .empty p { margin-bottom: 18px; }
@@ -128,9 +133,7 @@
     @media (min-width: 720px) { .steps { grid-template-columns: repeat(3, 1fr); } }
     .step { background: #fff; border-radius: 24px; padding: 22px; box-shadow: var(--shadow); }
     .step .ib { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; margin-bottom: 12px; color: var(--petrol); font-family: var(--font-display); font-weight: 700; font-size: 1.3rem; }
-    .step:nth-child(1) .ib { background: var(--yellow); }
-    .step:nth-child(2) .ib { background: var(--teal); color: #04414A; }
-    .step:nth-child(3) .ib { background: var(--pink); color: #fff; }
+    .step .ib { background: var(--petrol); color: #fff; }
     .step h3 { font-size: 1.15rem; margin-bottom: 6px; }
     .step p { font-size: .95rem; }
 
@@ -141,7 +144,7 @@
     footer a:hover { text-decoration: underline; }
     footer .legal { font-size: .84rem; line-height: 1.55; opacity: .82; max-width: 820px; margin-top: 14px; }
     .fa-ops .fa-unit .fa-unit-role { color: #D61F4A; }
-    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .card, .btn-buy, .btn-ghost { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .card, .btn-buy, .btn-ghost { transition: none; } .card:hover, .btn-buy:hover, .btn-ghost:hover { transform: none; } }
   </style>
   <script type="application/ld+json">
   {
@@ -323,6 +326,9 @@
         var a = e.target.closest ? e.target.closest('[data-slug]') : null;
         if (a && window.faTrack) window.faTrack('evento_card_click', { slug: a.getAttribute('data-slug') });
       });
+      function carregar() {
+      state.hidden = false;
+      state.textContent = 'Carregando a agenda…';
       fetch(API, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'listar' }) })
         .then(function (r) { return r.json(); })
         .then(function (d) {
@@ -334,7 +340,14 @@
           }
           render();
         })
-        .catch(function () { state.textContent = 'Não foi possível carregar a agenda agora. Tente de novo em instantes.'; });
+        .catch(function () {
+          state.innerHTML = 'Não foi possível carregar a agenda agora. Tente de novo em instantes.<br>' +
+            '<button type="button" class="btn-buy" id="lista-retry">Tentar de novo</button>' +
+            '<p class="alt">Ou escreva para <a href="mailto:institutofacaamigos@gmail.com">institutofacaamigos@gmail.com</a></p>';
+          document.getElementById('lista-retry').addEventListener('click', carregar);
+        });
+      }
+      carregar();
     })();
   </script>
 </body>

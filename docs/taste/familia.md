@@ -65,20 +65,29 @@ Fonte: http://localhost:8765/familia.html (institutofacaamigos.com.br/familia). 
 - **Reason**: O rosa aparece uma vez como moldura e uma vez como botão; o corpo fica em tinta petróleo legível
 - **Evidence**: header gradient 21,4% da área; fundo creme #FFF9F1 + cards #FFFFFF = 50,7%; texto sobre o rosa medido por pixel: 5,1:1 (amarelo) e 6,7:1 (branco) no pior ponto
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Sem foco visível no botão e no link**
    - Evidência: focusVisible=false: .btn só define :active; o link de WhatsApp não tem estilo de foco. Quem usa teclado ou controle de TV não vê onde está.
    - Correção proposta: Adicionar .btn:focus-visible, .help a:focus-visible { outline: 3px solid #032D37; outline-offset: 3px }.
+   - **Status: aplicada: .btn:focus-visible e .help a:focus-visible com outline 3px petróleo.**
+
 2. **Instrução de "Família" aparece três vezes**
    - Evidência: Hint abaixo do botão ("toque na aba Família"), passo 1 ("Toque em Família") e o título "Família (SMS)" no texto do passo; a mesma orientação em y≈325, 426 e 451.
    - Correção proposta: Remover o hint do botão e deixar o passo 1; ou manter o hint e encurtar o passo.
+   - **Status: aplicada: hint abaixo do botão removido; passo 1 mantém a orientação.**
+
 3. **Coluna de 560px em desktop deixa 880px vazios**
    - Evidência: Em 1440px o conteúdo ocupa 560px (39%) e o header ocupa a largura toda; texto de 15px parece pequeno no meio da tela.
    - Correção proposta: Em min-width 900px subir o corpo para 17px e o botão para largura auto (máx. 360px) centralizado.
+   - **Status: aplicada: a partir de 900px corpo 17px e botão auto (320-360px) centralizado.**
+
 4. **Rodapé em 13,5px com endereço longo**
    - Evidência: footer 13,5px/600, 2 linhas, mais o link de cookies injetado; endereço é a única informação de localização e é o texto menor da página.
    - Correção proposta: Subir para 15px (igual à descrição dos passos).
+   - **Status: aplicada: rodapé em 15px (17px no desktop).**
+
 5. **Lista "O que você encontra" depois da ajuda**
    - Evidência: As 6 vantagens (16px/700) ficam depois do bloco de ajuda e abaixo da dobra (y>830), enquanto o botão promete o portal sem dizer o que há dentro.
    - Correção proposta: Mover a lista para antes de "Como entrar" ou resumir em 3 itens abaixo do botão.
+   - **Status: descartada: o cabeçalho já diz o que há no portal e o botão deve ficar antes de tudo; mover a lista afastaria os passos.**

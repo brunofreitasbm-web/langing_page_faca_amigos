@@ -36,8 +36,8 @@
   <!-- Google Fonts Preconnect & Optimization -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"></noscript>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap"></noscript>
 
   <style>
     :root {
@@ -83,7 +83,8 @@
     }
 
     .logo {
-      font-family: 'Fredoka One', sans-serif;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
       font-size: 1.6rem;
       color: var(--dark);
       text-decoration: none;
@@ -96,8 +97,8 @@
     }
 
     h1 {
-      font-family: 'Fredoka One', sans-serif;
-      font-weight: 400;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
       font-size: clamp(1.7rem, 4vw, 2.3rem);
       line-height: 1.15;
       margin-bottom: 8px;
@@ -111,11 +112,23 @@
     }
 
     h2 {
-      font-family: 'Fredoka One', sans-serif;
-      font-weight: 400;
-      font-size: 1.25rem;
-      margin: 36px 0 12px;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      margin: 44px 0 12px;
+      scroll-margin-top: 80px;
     }
+
+    .wrap > *:not(.back) { max-width: 68ch; }
+    .wrap p, .wrap li { font-size: 1.0625rem; font-weight: 400; }
+    .wrap strong, .wrap b { font-weight: 800; }
+
+    .toc-title { font-family: 'Fredoka', sans-serif; font-weight: 600; font-size: 1rem; margin: 0 0 4px; color: var(--dark); }
+    .toc { list-style: none; margin: 0 0 8px; padding: 0; display: grid; grid-template-columns: 1fr; gap: 0 24px; }
+    @media (min-width: 640px) { .toc { grid-template-columns: 1fr 1fr; } }
+    .toc li { margin: 0; }
+    .toc a { display: flex; align-items: center; min-height: 44px; font-weight: 700; font-size: 1rem; }
 
     p,
     li {
@@ -172,6 +185,9 @@
       text-decoration: none;
       box-shadow: 0 10px 26px rgba(224, 21, 96, 0.3);
     }
+    a:focus-visible { outline: 3px solid var(--dark); outline-offset: 3px; border-radius: 6px; }
+    .topbar a:focus-visible, footer a:focus-visible { outline-color: var(--yellow); }
+    .back:focus-visible { outline-color: var(--dark); }
     footer[data-fa-footer] p,
     footer[data-fa-footer] li { color: rgba(255, 255, 255, 0.92); }
     footer[data-fa-footer] b,
@@ -204,6 +220,21 @@
     <h1>Política de Privacidade</h1>
     <p class="updated">Última atualização: 20 de setembro de 2026</p>
 
+    <nav aria-labelledby="toc-t">
+      <p class="toc-title" id="toc-t">Nesta página</p>
+      <ol class="toc">
+        <li><a href="#dados-coletados">1. Quais dados coletamos</a></li>
+        <li><a href="#uso">2. Para que usamos os dados</a></li>
+        <li><a href="#criancas">3. Dados de crianças</a></li>
+        <li><a href="#compartilhamento">4. Com quem compartilhamos</a></li>
+        <li><a href="#retencao">5. Por quanto tempo guardamos</a></li>
+        <li><a href="#direitos">6. Seus direitos (LGPD)</a></li>
+        <li><a href="#cookies">7. Cookies</a></li>
+        <li><a href="#seguranca">8. Segurança</a></li>
+        <li><a href="#mudancas">9. Mudanças nesta política</a></li>
+      </ol>
+    </nav>
+
     <p>Esta política explica como o <strong>FaçaAmigos</strong> — Playground Inclusivo e Circuito (CNPJ
       66.318.630/0001-17, razão social FAÇA AMIGOS BRINQUEDOTECA LTDA, Parque
       Shopping Belém — Rod. Augusto Montenegro, 4300, Térreo, próximo às Lojas Americanas, Belém/PA) coleta, usa e
@@ -217,7 +248,7 @@
         segurança da entrada e saída e falar com você — e nunca vendemos seus dados.</p>
     </div>
 
-    <h2>1. Quais dados coletamos</h2>
+    <h2 id="dados-coletados">1. Quais dados coletamos</h2>
     <p><strong>No cadastro presencial (recepção):</strong></p>
     <ul>
       <li>Dados do responsável: nome, CPF, telefone/WhatsApp e, quando informado, e-mail;</li>
@@ -254,7 +285,7 @@
         cliques, rolagem e movimentos do mouse (sem gravar o que você digita) para entendermos onde o site confunde, e o Pixel da Meta (Facebook/Instagram), que registra as páginas que você visita e seus cliques em botões de compra para medirmos os anúncios e mostrarmos nossas divulgações a quem já conhece o site. O Pixel só é carregado se você aceitar os cookies.</li>
     </ul>
 
-    <h2>2. Para que usamos os dados</h2>
+    <h2 id="uso">2. Para que usamos os dados</h2>
     <ul>
       <li>Garantir a segurança das crianças, incluindo o controle de entrada e saída;</li>
       <li>Prestar o acolhimento adequado a cada criança, típica ou atípica;</li>
@@ -268,13 +299,13 @@
     </ul>
     <p>Não vendemos nem alugamos dados pessoais. Não usamos dados das crianças para publicidade.</p>
 
-    <h2>3. Dados de crianças</h2>
+    <h2 id="criancas">3. Dados de crianças</h2>
     <p>Tratamos dados de crianças sempre no melhor interesse delas (art. 14 da LGPD), coletados com o consentimento do
       responsável no momento do cadastro. Informações de saúde e de acolhimento são acessadas apenas pela equipe que
       cuida diretamente da criança. Fotos e vídeos de crianças só são divulgados com autorização expressa do
       responsável.</p>
 
-    <h2>4. Com quem compartilhamos</h2>
+    <h2 id="compartilhamento">4. Com quem compartilhamos</h2>
     <ul>
       <li><strong>Fornecedores de tecnologia</strong> que hospedam nossos sistemas de cadastro e formulários (como
         Supabase), sob contratos que garantem a proteção dos dados;</li>
@@ -288,7 +319,7 @@
       <li><strong>Autoridades públicas</strong>, quando houver obrigação legal.</li>
     </ul>
 
-    <h2>5. Por quanto tempo guardamos</h2>
+    <h2 id="retencao">5. Por quanto tempo guardamos</h2>
     <ul>
       <li>Cadastros de responsáveis e crianças: enquanto houver relacionamento ativo e pelo prazo legal aplicável;</li>
       <li>Currículos: por até 12 meses após o envio, salvo contratação;</li>
@@ -296,7 +327,7 @@
       <li>Dados de navegação: pelos prazos padrão das ferramentas de análise.</li>
     </ul>
 
-    <h2>6. Seus direitos (LGPD)</h2>
+    <h2 id="direitos">6. Seus direitos (LGPD)</h2>
     <p>Você pode, a qualquer momento, solicitar: confirmação de tratamento, acesso, correção, anonimização,
       portabilidade, eliminação de dados e revogação de consentimento. Para exercer qualquer direito, fale com a gente:
     </p>
@@ -305,7 +336,7 @@
         recepção do FaçaAmigos, no Parque Shopping Belém (Térreo, próximo às Lojas Americanas).</p>
     </div>
 
-    <h2>7. Cookies</h2>
+    <h2 id="cookies">7. Cookies</h2>
     <p>Usamos cookies de análise para entender como o site é usado. Você pode bloqueá-los nas configurações do seu
       navegador — o site continua funcionando normalmente.</p>
     <p>Usamos também um cookie próprio (<code>fa_origin</code>), válido por 180 dias em
@@ -319,17 +350,30 @@
       (transformado num código que não pode ser revertido ao e-mail original) só para associar a compra ao
       anúncio, quando aplicável.</p>
 
-    <h2>8. Segurança</h2>
+    <h2 id="seguranca">8. Segurança</h2>
     <p>Adotamos medidas técnicas e organizacionais para proteger os dados: acesso restrito por perfil de equipe,
       sistemas com autenticação e criptografia em trânsito. Nenhum sistema é 100% infalível, mas trabalhamos
       continuamente para proteger o que você confia à gente.</p>
 
-    <h2>9. Mudanças nesta política</h2>
+    <h2 id="mudancas">9. Mudanças nesta política</h2>
     <p>Podemos atualizar esta política para refletir melhorias ou exigências legais. A versão vigente estará sempre
       nesta página, com a data de atualização no topo.</p>
 
-    <a class="back" href="https://institutofacaamigos.com.br/playground">← Voltar para o site</a>
+    <a class="back" id="voltar" href="https://institutofacaamigos.com.br/playground">← Voltar para o site</a>
   </div>
+  <script>
+    // Volta para a página de onde o leitor veio (mesmo site); sem referrer válido, mantém o Playground.
+    (function () {
+      try {
+        var r = document.referrer;
+        if (!r) return;
+        var u = new URL(r);
+        if (u.origin === location.origin && u.pathname.replace(/\/$/, '') !== location.pathname.replace(/\/$/, '')) {
+          document.getElementById('voltar').href = r;
+        }
+      } catch (e) {}
+    })();
+  </script>
   <footer data-fa-footer="legal">
     <span class="fa-logo-card fa-logo-card--footer"><img class="fa-logo-img" src="/img/logo-facaamigos.png" width="1024" height="147" alt="FaçaAmigos" loading="lazy" decoding="async"></span>
     <p><b>Parque Shopping Belém:</b> Rod. Augusto Montenegro, 4300 · Térreo (Playground &amp; Circuito) · <a href="https://wa.me/5591992347673" target="_blank" rel="noopener">WhatsApp: (91) 99234-7673</a></p>
