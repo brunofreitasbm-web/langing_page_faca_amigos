@@ -1,0 +1,185 @@
+{
+  "source": "http://localhost:8765/tv-controle.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        8,
+        10,
+        12,
+        16,
+        22
+      ],
+      "base_unit": 4
+    },
+    "typography": {
+      "families": [
+        "Nunito",
+        "Fredoka One",
+        "Fredoka"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "30px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "marca",
+          "size": "28px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botao-principal",
+          "size": "27px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botao-acao",
+          "size": "23px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "conectar",
+          "size": "22px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "status",
+          "size": "17px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "descricao-botao",
+          "size": "15px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "rodape",
+          "size": "14px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "subtitulo-marca",
+          "size": "13px",
+          "weight": "700",
+          "family": "Fredoka"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "fundo",
+        "value": "#E4F1E8"
+      },
+      {
+        "role": "cartao",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "texto",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "acao-principal",
+        "value": "#F0196B",
+        "depois_da_correcao": "#E01560"
+      },
+      {
+        "role": "hora-de-ir",
+        "value": "#2ECFB5"
+      },
+      {
+        "role": "festa",
+        "value": "#FFE234"
+      },
+      {
+        "role": "estado-ok",
+        "value": "#1B8F5A"
+      },
+      {
+        "role": "estado-alerta",
+        "value": "#B7791F"
+      },
+      {
+        "role": "estado-erro",
+        "value": "#C53030"
+      }
+    ],
+    "radius": [
+      "999px",
+      "28px",
+      "20px",
+      "14px"
+    ],
+    "shadows": [
+      "0 8px 22px rgba(26,63,53,0.12)",
+      "0 8px 20px rgba(26,63,53,0.16)",
+      "0 6px 18px rgba(26,63,53,0.1)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo",
+        "ratio": "1:1 (52px)"
+      }
+    ],
+    "grid": {
+      "max_width": "520px",
+      "columns": 1,
+      "gutter": "12px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Cinco botões grandes, cada um de uma cor",
+      "trigger": "A pessoa da equipe usa o celular em pé, com uma mão, olhando as crianças",
+      "decision": "Cinco botões de largura total e 84 a 104px de altura, cada um com cor própria (rosa, verde-água, escuro, amarelo, branco com contorno), em vez de menu com ícones pequenos",
+      "reason": "Dá para acertar o botão sem olhar direito e a cor ajuda a lembrar qual é qual",
+      "evidence": [
+        "min-height 84px (104px no principal), raio 28px, gap 12px",
+        "título 23px (27px no principal), descrição 15px",
+        "mesmas cores do manual impresso (.ico do manual do controle)"
+      ]
+    },
+    {
+      "name": "Duas telas, nenhum menu",
+      "trigger": "O controle só precisa de duas coisas: parear uma vez e comandar a TV",
+      "decision": "Uma página com dois estados alternados por [hidden] (cartão de código ou painel), sem navegação, configurações ou rodapé extenso",
+      "reason": "Menos telas significa menos lugar para se perder no meio da dinâmica",
+      "evidence": [
+        "cabeçalho só com logo 52px e rótulo 13px",
+        "coluna única de 520px",
+        "apenas 6 tamanhos de fonte de 13px a 30px"
+      ]
+    },
+    {
+      "name": "Feedback de toque e foco no mesmo botão",
+      "trigger": "O mesmo botão é usado com dedo no celular e, às vezes, com teclado",
+      "decision": "Escala 0.97 ao tocar, contorno de 4px escuro ao focar e transição desligada em reduced-motion, em vez de só mudar a cor",
+      "reason": "O dedo precisa sentir que o toque foi registrado antes de a TV responder",
+      "evidence": [
+        ".act:active scale(0.97)",
+        ".act:focus-visible outline 4px #1A3F35 offset 3px",
+        "focusVisible verdadeiro na extração; reduced-motion respeitado",
+        "botão Conectar com 60px de altura mínima"
+      ]
+    },
+    {
+      "name": "Estado dito em texto, não só em cor",
+      "trigger": "A TV pode estar procurada, conectada ou fora do ar e a equipe olha de relance",
+      "decision": "Ponto colorido de 14px mais frase ('Procurando a TV...') em 17px, em vez de só trocar a cor do ponto",
+      "reason": "Cor sozinha falha com luz forte e para quem não distingue verde de âmbar",
+      "evidence": [
+        "data-s ok/warn/bad com #1B8F5A, #B7791F, #C53030",
+        "texto status 17px peso 800 e subtexto 14px #4C6B62 (5.85:1 sobre branco)"
+      ]
+    }
+  ]
+}

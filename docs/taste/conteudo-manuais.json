@@ -1,0 +1,203 @@
+{
+  "source": "http://localhost:8765/conteudo/manual-controle-celular.html e /conteudo/manual-tv-salao.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        6,
+        8,
+        9,
+        10,
+        12,
+        14,
+        20,
+        28,
+        56
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito",
+        "Fredoka"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "76px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "marca",
+          "size": "52px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2",
+          "size": "36px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "titulo-botao",
+          "size": "33px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "lead",
+          "size": "32px",
+          "weight": "700",
+          "family": "Fredoka"
+        },
+        {
+          "role": "passo",
+          "size": "30px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "linha",
+          "size": "28px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "nota-do-passo",
+          "size": "24px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "rotulo-tecla",
+          "size": "22px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "subtitulo-marca",
+          "size": "20px",
+          "weight": "700",
+          "family": "Fredoka"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "fundo",
+        "value": "#E4F1E8"
+      },
+      {
+        "role": "cartao",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "texto",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "texto-secundario",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "rosa",
+        "value": "#F0196B",
+        "depois_da_correcao": "#E01560"
+      },
+      {
+        "role": "amarelo",
+        "value": "#FFE234"
+      },
+      {
+        "role": "verde-agua",
+        "value": "#2ECFB5"
+      },
+      {
+        "role": "verde-escuro",
+        "value": "#1FA893",
+        "depois_da_correcao": "#137A6A"
+      },
+      {
+        "role": "divisor",
+        "value": "#D9E8DF"
+      }
+    ],
+    "radius": [
+      "28px",
+      "26px",
+      "22px",
+      "20px",
+      "12px",
+      "999px",
+      "50%"
+    ],
+    "shadows": [
+      "0 14px 34px rgba(26,63,53,0.12)",
+      "0 6px 14px rgba(26,63,53,0.18)",
+      "0 6px 0 #0E2620 (tecla)",
+      "0 8px 20px rgba(26,63,53,0.12)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "canvas da página",
+        "ratio": "9:16 (1080x1920)"
+      },
+      {
+        "usage": "mascote",
+        "ratio": "altura 215px, largura automática"
+      }
+    ],
+    "grid": {
+      "max_width": "1080px",
+      "columns": 5,
+      "gutter": "14px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Imagem de 1080x1920 em vez de página",
+      "trigger": "O manual tem de chegar à equipe como figura no WhatsApp, sem depender de link nem de internet",
+      "decision": "Layout em px absolutos num canvas de 1080x1920 com overflow hidden, em vez de página responsiva",
+      "reason": "A figura exportada fica idêntica em qualquer celular e cabe numa tela sem rolar",
+      "evidence": [
+        "html, body { width: 1080px; height: 1920px; overflow: hidden }",
+        "comentário no CSS: gerar PNG em Chrome headless 1080x1920",
+        "aberta a 390x844, a página mostra só a faixa esquerda de ~36% (captura)"
+      ]
+    },
+    {
+      "name": "Um passo por linha, número em círculo colorido",
+      "trigger": "A equipe lê em pé, em poucos segundos, antes de abrir o salão",
+      "decision": "Passos numerados em círculos de 52px com cor própria e uma frase de 30px por linha, em vez de parágrafos explicativos",
+      "reason": "Quem lê de relance acha o passo 3 pelo número e pela cor, sem ler os anteriores",
+      "evidence": [
+        ".num 52px, passos em 30px peso 800",
+        "divisores tracejados 2px #D9E8DF entre passos",
+        "apenas 4 passos em 'Para conectar' e 4 em 'Para ligar'"
+      ]
+    },
+    {
+      "name": "Mesma cor, mesmo botão",
+      "trigger": "O manual do controle precisa ensinar botões que a pessoa verá no celular",
+      "decision": "Reproduzir os ícones com as mesmas cores do controle (rosa, verde-água, escuro, amarelo, contorno) em vez de ilustrações genéricas",
+      "reason": "Quem aprendeu pela figura reconhece o botão ao abrir a página real",
+      "evidence": [
+        ".ico 76px com --c pink/teal/dark/yellow e contorno inset 4px #1A3F35",
+        "cores iguais às de .act.main, .ir, .calma, .festa e .auto em tv-controle.html"
+      ]
+    },
+    {
+      "name": "Sombra dura só na tecla",
+      "trigger": "O manual da TV mostra teclas de teclado (F, S, 1, 2, 0)",
+      "decision": "Sombra sem desfoque 0 6px 0 #0E2620 nas teclas e sombras suaves nos cartões, em vez de uma sombra única para tudo",
+      "reason": "A borda dura faz a tecla parecer um objeto que se aperta, diferente dos cartões de leitura",
+      "evidence": [
+        ".key i 76x76px, raio 22px, sombra 0 6px 0 #0E2620",
+        "cartões com 0 14px 34px rgba(26,63,53,0.12)"
+      ]
+    }
+  ]
+}

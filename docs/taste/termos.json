@@ -1,0 +1,190 @@
+{
+  "source": "http://localhost:8765/termos.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        6,
+        8,
+        10,
+        12,
+        16,
+        18,
+        22,
+        24,
+        30,
+        34,
+        40,
+        72
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "38.4px (clamp 1.8-2.4rem)",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2 (9 seções)",
+          "size": "20.8px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "corpo",
+          "size": "17px / 28.9px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "\"Última atualização\"",
+          "size": "14.72px, opacity .8",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "links e strong",
+          "size": "17px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "botões .back",
+          "size": "18.4px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#F4FAFB",
+        "note": "gelo"
+      },
+      {
+        "role": "text (petróleo)",
+        "value": "#065264",
+        "note": "8.30:1 sobre o gelo"
+      },
+      {
+        "role": "card.warn",
+        "value": "#FFF3D2",
+        "note": "7.92:1 com texto petróleo"
+      },
+      {
+        "role": "accent-cta (.back)",
+        "value": "#FB3D6A",
+        "note": "3.51:1 com texto branco (reprovado)"
+      },
+      {
+        "role": "focus ring",
+        "value": "#FDC51D",
+        "note": "outline 3px"
+      },
+      {
+        "role": "rodapé compartilhado",
+        "value": "#065264",
+        "note": "74.9% da área (areaPct 74.9)"
+      }
+    ],
+    "radius": [
+      "24px (.card)",
+      "999px (.back)",
+      "14px (rodapé e cookies, compartilhados)"
+    ],
+    "shadows": [
+      "0 1px 2px rgba(6,82,100,.10), 0 4px 14px rgba(6,82,100,.10) (.card, duas camadas tingidas de petróleo)",
+      "0 2px 4px rgba(251,61,106,.25), 0 8px 20px rgba(251,61,106,.30) (.back, duas camadas tingidas de rosa)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo no header (PNG)",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "description": "coluna única de 780px, sem grid"
+    }
+  },
+  "taste": [
+    {
+      "name": "Links na mesma cor do texto",
+      "trigger": "Ao marcar e-mails, páginas e a política dentro de parágrafos",
+      "decision": "Escolheu distinguir links só por peso 800 e sublinhado, na mesma cor #065264 do texto em vez de colorir links de rosa ou turquesa",
+      "reason": "em texto de compra, uma cor extra de link competiria com o rosa dos botões finais",
+      "evidence": [
+        "a { color: #065264",
+        "font-weight: 800 }",
+        "43 nós em #065264 no texto"
+      ]
+    },
+    {
+      "name": "Aviso em campo amarelo claro, sem sombra (restrição)",
+      "trigger": "Ao separar o aviso \"Material educativo\" das cláusulas",
+      "decision": "Escolheu usar fundo #FFF3D2 sem sombra (box-shadow none) e mesma tipografia em vez de ícone de alerta, borda colorida ou sombra como nos cards brancos",
+      "reason": "sem sombra o aviso fica no plano do texto e não parece um botão ou módulo clicável",
+      "evidence": [
+        ".card.warn: bg #FFF3D2, shadow none, radius 24px",
+        "6.3% da área (areaPct 6.3)"
+      ]
+    },
+    {
+      "name": "Sombras de duas camadas tingidas",
+      "trigger": "Ao dar elevação ao card e aos botões sobre fundo gelo",
+      "decision": "Escolheu empilhar 2 sombras com o matiz do elemento (petróleo no card, rosa no botão) em vez de uma sombra cinza de uma camada",
+      "reason": "sombras com o matiz do fundo somem menos em telas claras e evitam borda suja",
+      "evidence": [
+        "0 1px 2px + 0 4px 14px rgba(6,82,100,.10)",
+        "0 2px 4px + 0 8px 20px rgba(251,61,106,.3)"
+      ]
+    },
+    {
+      "name": "Saída em três botões iguais",
+      "trigger": "Ao fechar o documento com três destinos",
+      "decision": "Escolheu alinhar três pílulas rosa idênticas (52px de altura, 18.4px 800) em vez de um botão primário e dois links secundários",
+      "reason": "todos os destinos têm o mesmo peso, o que dispensa decidir qual é o principal",
+      "evidence": [
+        "3 .back com mesmo padding 12px 28px, raio 999px"
+      ]
+    }
+  ],
+  "suggested_changes_not_applied": [
+    {
+      "problem": "Três CTAs idênticos no fim",
+      "evidence": "3 botões rosa de mesmo peso (\"Voltar para o guia\", \"Voltar para o Código\", \"Eventos →\"); a 390px empilham 3 x 52px + 30px de margem",
+      "fix": "um botão primário (voltar ao produto) e os outros como links"
+    },
+    {
+      "problem": "Linha longa",
+      "evidence": "89 caracteres por linha a 1440px (748px, 17px), referência 60 a 75",
+      "fix": "max-width ~68ch no texto, mantendo o container de 780px para o card"
+    },
+    {
+      "problem": "Sem índice",
+      "evidence": "9 seções numeradas em 3250px (5584px a 390px), 0 âncoras",
+      "fix": "lista de âncoras no topo e id em cada h2"
+    },
+    {
+      "problem": "Subtítulo longo com versão e data",
+      "evidence": "a linha .updated tem 14.72px com dois títulos de e-book e quebra em 2 linhas a 1440px",
+      "fix": "separar a data em linha própria e tirar os títulos do subtítulo"
+    },
+    {
+      "problem": "Hierarquia h2/corpo estreita",
+      "evidence": "h2 20.8px contra corpo 17px = razão 1.22 (margin 34px 0 10px)",
+      "fix": "h2 de 22-24px"
+    },
+    {
+      "problem": "Rodapé maior que o conteúdo útil a 390px",
+      "evidence": "footer começa em 3845px de 5584px: 1739px de rodapé em tela estreita",
+      "fix": "versão compacta do rodapé nas páginas legais (arquivo compartilhado)"
+    }
+  ]
+}

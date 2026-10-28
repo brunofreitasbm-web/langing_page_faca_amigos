@@ -1,0 +1,164 @@
+{
+  "source": "/codigo.html (codigo.html)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        24,
+        64,
+        88,
+        96
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "56px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2",
+          "size": "40px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h3",
+          "size": "20.8px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "body",
+          "size": "18.24px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "caption",
+          "size": "14.72px",
+          "weight": "600",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "hero-background",
+        "value": "#FDC51D"
+      },
+      {
+        "role": "section-background",
+        "value": "#FFF3D2"
+      },
+      {
+        "role": "text-primary",
+        "value": "#065264"
+      },
+      {
+        "role": "accent-action",
+        "value": "#D61F4A"
+      },
+      {
+        "role": "accent-decor",
+        "value": "#07C5C8"
+      },
+      {
+        "role": "button-text-on-teal",
+        "value": "#04414A"
+      },
+      {
+        "role": "whatsapp-text",
+        "value": "#053B1C"
+      }
+    ],
+    "radius": [
+      "24px",
+      "999px",
+      "18px",
+      "14px",
+      "50%"
+    ],
+    "shadows": [
+      "0 1px 2px rgba(6,82,100,0.1), 0 4px 14px rgba(6,82,100,0.1)",
+      "0 2px 4px rgba(251,61,106,0.25), 0 8px 20px rgba(251,61,106,0.3)",
+      "0 30px 50px rgba(0,0,0,0.35), 0 8px 16px rgba(0,0,0,0.25)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "capa do e-book",
+        "ratio": "0.71:1"
+      },
+      {
+        "usage": "logo",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "max_width": "~1088px (conteúdo)",
+      "columns": 3,
+      "gutter": "16px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Amarelo como superfície, rosa só como ação",
+      "trigger": "Quando quatro cores de marca (amarelo, turquesa, rosa, petróleo) disputam a página de venda",
+      "decision": "Deram ao amarelo e ao amarelo-20 quase metade da superfície (14.8% + 31%) e reservaram o rosa para botões (3.8%), em vez de espalhar rosa em fundos e títulos",
+      "reason": "O olho aprende que rosa = clicar; o amarelo cria calor sem competir com o botão",
+      "evidence": [
+        "#FFF3D2 31% e #FDC51D 14.8% da área",
+        "#FB3D6A em 19 elementos, quase todos botões .btn-buy",
+        "petróleo #065264 em 134 textos"
+      ]
+    },
+    {
+      "name": "Títulos arredondados com tracking negativo",
+      "trigger": "Quando precisam de títulos grandes que soem amigáveis para mães, sem perder densidade em 3 linhas",
+      "decision": "Usaram Fredoka 600 de 56/40px com tracking -0.28/-0.2px e corpo Nunito 18.24px, em vez de uma única sans de texto",
+      "reason": "O tracking apertado mantém o h1 de 4 linhas compacto; o corpo grande (18.24px, max 560px) lê bem em celular",
+      "evidence": [
+        "h1 56px lh 64.4px; h2 40px lh 46px",
+        "corpo 18.24px/400 lh 29.2px, 560px",
+        "duas famílias, Fredoka em 41 elementos"
+      ]
+    },
+    {
+      "name": "Persistência: o mesmo botão no fim de cada seção",
+      "trigger": "Quando a página tem ~10.000px de rolagem e o leitor decide em pontos diferentes",
+      "decision": "Repetiram o mesmo botão rosa 'Quero o e-book' (10 vezes mais o da barra superior) em vez de um CTA no topo e outro no preço",
+      "reason": "Quem se reconhece numa cena da casa quer agir naquele momento, sem rolar de volta",
+      "evidence": [
+        "10 elementos .btn-buy",
+        "botão 52px de altura, raio 999px, sombra rgba(251,61,106,.25/.3)",
+        "barra superior sticky petróleo com o mesmo CTA"
+      ]
+    },
+    {
+      "name": "Restrição: uma sombra, um raio de cartão",
+      "trigger": "Quando há dezenas de cartões (dores, capítulos, ferramentas, FAQ) que poderiam ter elevações diferentes",
+      "decision": "Aplicaram a mesma sombra petróleo de duas camadas e raio 24px em todos, em vez de variar profundidade por importância",
+      "reason": "Cartões iguais deixam a hierarquia para o texto e a cor do ícone, e a página lê como uma só família",
+      "evidence": [
+        "rgba(6,82,100,.1) 1px 2px + 4px 14px em 35 elementos",
+        "raio 24px em 32 elementos",
+        "ícones alternam amarelo/turquesa/rosa em ciclo 3n"
+      ]
+    }
+  ]
+}

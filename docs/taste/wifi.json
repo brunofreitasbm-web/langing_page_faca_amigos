@@ -1,0 +1,77 @@
+{
+  "source": "http://localhost:8765/wifi.html",
+  "tokens": {
+    "spacing": {
+      "scale": [3, 4, 6, 8, 10, 12, 14, 16, 18, 20, 34, 40],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": ["Nunito", "Fredoka One"],
+      "scale": [
+        { "role": "numero-cupom", "size": "40px", "weight": "400", "family": "Fredoka One" },
+        { "role": "h1", "size": "35.1px", "weight": "400", "family": "Fredoka One" },
+        { "role": "h2-h3", "size": "22px", "weight": "400", "family": "Fredoka One" },
+        { "role": "hero-sub", "size": "16px", "weight": "700", "family": "Nunito" },
+        { "role": "apoio", "size": "13.5px", "weight": "700", "family": "Nunito" },
+        { "role": "meta-tag-badge", "size": "10.5px-12px", "weight": "800-900", "family": "Nunito" }
+      ]
+    },
+    "colors": [
+      { "role": "background", "value": "#FFF9F1" },
+      { "role": "surface", "value": "#FFFFFF" },
+      { "role": "dark-hero", "value": "#1A3F35" },
+      { "role": "text-primary", "value": "#1A3F35" },
+      { "role": "text-secondary", "value": "#4C6B62" },
+      { "role": "accent-action", "value": "#E01560" },
+      { "role": "accent-text-dark", "value": "#C81158" },
+      { "role": "teal", "value": "#2ECFB5" },
+      { "role": "teal-text", "value": "#137A6A" },
+      { "role": "yellow", "value": "#FFE234" },
+      { "role": "price-struck", "value": "#766B5E" }
+    ],
+    "radius": ["999px", "50%", "24px", "22px", "18px", "14px", "12px"],
+    "shadows": [
+      "0 4px 10px rgba(26,63,53,0.08)",
+      "0 18px 40px rgba(26,63,53,0.14)",
+      "0 10px 26px rgba(240,25,107,0.36)",
+      "0 6px 16px rgba(46,207,181,0.35)",
+      "0 -8px 24px rgba(26,63,53,0.10)"
+    ],
+    "image_ratios": [
+      { "usage": "hero", "ratio": "3:4 natural, cover em 390x844" },
+      { "usage": "unidade", "ratio": "4:3" },
+      { "usage": "logo", "ratio": "6.97:1" }
+    ],
+    "grid": { "max_width": "640px", "columns": 1, "gutter": "20px" }
+  },
+  "taste": [
+    {
+      "name": "Hero de foto com véu verde em vez de bloco de cor",
+      "trigger": "Tela pós-login lida na sala de espera, que precisa provar em um olhar que o Wi-Fi funcionou",
+      "decision": "Foto real em 100vh com véu linear rgba(26,63,53,.10 a .97) e texto branco, em vez de cabeçalho liso com ilustração",
+      "reason": "O pai reconhece o lugar antes de ler e o véu garante leitura do título sobre a foto",
+      "evidence": ["h1 35.1px sobre véu .88 a .97", "min-height 100svh", "branco sobre #1A3F35 = 11.63:1"]
+    },
+    {
+      "name": "Um único rosa para ação, o verde para contexto",
+      "trigger": "Três tipos de ação competindo (mapeamento, unidades, e-books)",
+      "decision": "Rosa #E01560 só no botão de mapeamento e em marcas pontuais, em vez de colorir cada cartão com cor de ação",
+      "reason": "Quem lê com a criança no colo tem uma mão livre e precisa de um ponto saturado que diga onde tocar",
+      "evidence": ["fundo rosa em 3.6% da área, 2 elementos", "botões Ver e Rota brancos com #1A3F35", "sombra rosa só nos 2 botões principais"]
+    },
+    {
+      "name": "Três formatos de cartão por função (restrição)",
+      "trigger": "Oferta, endereços e e-books poderiam virar uma grade de cartões iguais",
+      "decision": "Tiles brancos de 24px para oferta, cartões de foto 4:3 para unidades e linhas de 64 a 81px para e-books, em vez de um cartão único repetido",
+      "reason": "Cada bloco responde a uma pergunta diferente e o formato avisa antes do texto",
+      "evidence": ["tiles 24px com sombra 0 18px 40px", "unidade 350x263 (4:3)", "chip 350x64 e 350x81", "sem cartão dentro de cartão"]
+    },
+    {
+      "name": "Display arredondado só em números e títulos curtos",
+      "trigger": "Leitura em segundos no celular com personalidade de marca infantil",
+      "decision": "Fredoka One 400 em títulos, preços e botões; Nunito 600 a 900 no resto, em vez da fonte arredondada também no corpo",
+      "reason": "O arredondado dá voz onde há poucas palavras e perderia nitidez em parágrafos de 13 a 14px",
+      "evidence": ["Fredoka 32 nós, Nunito 133 nós", "h1 35.1px, h2 22px, números 40px", "12 tamanhos entre 10.5px e 40px"]
+    }
+  ]
+}

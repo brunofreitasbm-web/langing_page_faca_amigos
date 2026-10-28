@@ -1,0 +1,182 @@
+{
+  "source": "https://institutofacaamigos.com.br/trabalhe-conosco.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        4,
+        6,
+        8,
+        9,
+        10,
+        13,
+        14,
+        16,
+        20,
+        28,
+        36,
+        40,
+        56,
+        64
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "44.8px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2 (formulário)",
+          "size": "28.8px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botão",
+          "size": "16.8px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "campos/passos",
+          "size": "14.72px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "consentimento",
+          "size": "12.8px",
+          "weight": "700",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background-hero",
+        "value": "linear-gradient(135deg,#1A3F35,#265548)"
+      },
+      {
+        "role": "background-page",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "background-card",
+        "value": "#FFFFFF",
+        "area_pct": 33.8
+      },
+      {
+        "role": "text-primary",
+        "value": "#1A3F35",
+        "ratio_on_white": 11.63
+      },
+      {
+        "role": "text-secondary",
+        "value": "#4C6B62",
+        "ratio_on_white": 5.85
+      },
+      {
+        "role": "cta",
+        "value": "#E01560",
+        "ratio_on_white": 4.72,
+        "original": "#F0196B (4.15)"
+      },
+      {
+        "role": "link",
+        "value": "#137A6A",
+        "ratio_on_white": 5.22,
+        "original": "#1FA893 (2.97)"
+      },
+      {
+        "role": "eyebrow",
+        "value": "#FFE234",
+        "ratio_on_dark": 8.96
+      },
+      {
+        "role": "numerais dos passos",
+        "value": "#FFE234 / #2ECFB5 / #E01560"
+      }
+    ],
+    "radius": [
+      "24px (cartão do formulário)",
+      "14px (campos)",
+      "16px (passos)",
+      "999px (chips)",
+      "9999px (botão)",
+      "50% (numerais)"
+    ],
+    "shadows": [
+      "0 18px 40px rgba(26,63,53,.14) (cartão)",
+      "0 4px 10px rgba(26,63,53,.08) (passos)",
+      "0 10px 26px rgba(240,25,107,.32) (botão)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "max_width": "1120px",
+      "columns": 1,
+      "gutter": "16px",
+      "form_card_max_width": "560px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Uma coluna, uma ação",
+      "trigger": "Quando a página precisava captar candidatos de seis áreas (Saúde, Educação, Operação) em um só fluxo.",
+      "decision": "Cartão único de 560px com um só botão de envio, em vez de lista de vagas, filtros ou páginas por cargo.",
+      "reason": "Quem se candidata quer entrar no processo; um formulário só evita decidir entre vagas antes de enviar o currículo.",
+      "evidence": [
+        "cartão max-width 560px",
+        "1 botão (488x53px, #E01560)",
+        "8 campos em 1364px de altura de seção",
+        "página inteira com 2 títulos (h1 44,8px e h2 28,8px)"
+      ]
+    },
+    {
+      "name": "Cartão sobreposto ao hero como único ponto de elevação",
+      "trigger": "Quando o hero escuro e o fundo creme precisavam se ligar num fluxo de rolagem curto.",
+      "decision": "Cartão branco subindo 56px sobre o hero com a única sombra grande da página, em vez de hero e formulário em faixas separadas.",
+      "reason": "A sobreposição indica que o formulário é o destino do hero; o resto da página fica plano.",
+      "evidence": [
+        "margin-top -56px (-36px no mobile)",
+        "sombra 0 18px 40px rgba(26,63,53,.14)",
+        "raio 24px",
+        "demais blocos só 0 4px 10px .08"
+      ]
+    },
+    {
+      "name": "Pastilhas coloridas só como numeração",
+      "trigger": "Quando os 3 passos pós-envio precisavam de ordem visual sem virar uma segunda seção.",
+      "decision": "Círculos de 30px em amarelo, teal e rosa com texto escuro (rosa com branco), em vez de numerais iguais ou ícones.",
+      "reason": "Três cores seguem a ordem 1-2-3 e retomam a paleta do hub sem espalhar cor pela página.",
+      "evidence": [
+        "b.n 30x30px, raio 50%",
+        "#FFE234, #2ECFB5, #E01560",
+        "cor de marca em ~1% da área (rosa 1%, teal 1,5%, amarelo 1,2%)"
+      ]
+    },
+    {
+      "name": "Cabeçalho verde-escuro herdado das páginas internas",
+      "trigger": "Quando a página precisava seguir o padrão 'topbar' das páginas internas e ainda usar o rodapé compartilhado.",
+      "decision": "Topbar e hero em #1A3F35 com o rodapé compartilhado em petróleo #065264, em vez de uma só cor escura.",
+      "reason": "Reaproveitar o padrão pronto custa menos manutenção, ao preço de dois tons escuros na mesma página.",
+      "evidence": [
+        "topbar #1A3F35, hero gradiente #1A3F35 para #265548",
+        "rodapé #065264 (captura)",
+        "tnav 14,72px com 40px de altura mínima"
+      ]
+    }
+  ]
+}

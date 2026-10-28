@@ -1,0 +1,219 @@
+{
+  "source": "http://localhost:8765/circuito.html (institutofacaamigos.com.br/circuito)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        20,
+        22,
+        30,
+        36,
+        76
+      ],
+      "base_unit": 2,
+      "note": "Sem grade: valores medidos 10px (50 usos), 6px (35), 8px (30), 14px (24), 9px (22), 20px (16), 15px (14), 76px (9, padding vertical de seção). Espaçamento por gap e margin."
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1 hero",
+          "size": "57.6px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2 seção",
+          "size": "38.4px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "valor do preço",
+          "size": "41.6px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h3 card",
+          "size": "20.8px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "corpo hero",
+          "size": "19.2px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "sub de seção",
+          "size": "17.6px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "botão/FAQ",
+          "size": "16.8px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "texto de apoio",
+          "size": "14.72px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "chips/legenda",
+          "size": "13.12px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "page-bg",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "surface (blocos e cards, 52,5% da área)",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "text-primary",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "text-secondary",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "footer-bg (28,8% da área)",
+        "value": "#065264"
+      },
+      {
+        "role": "whatsapp-cta-bg",
+        "value": "#25D366"
+      },
+      {
+        "role": "whatsapp-cta-text (era #FFFFFF, 1,98:1; agora 6,42:1)",
+        "value": "#053B1C"
+      },
+      {
+        "role": "pink (btn-pink, era #F0196B 4,15:1; agora 4,72:1 com branco)",
+        "value": "#E01560"
+      },
+      {
+        "role": "pink-dark (texto de eyebrow/ícones, 5,71:1 sobre branco)",
+        "value": "#C81158"
+      },
+      {
+        "role": "teal-dark (preço, era #1FA893 2,97:1; agora 5,22:1)",
+        "value": "#137A6A"
+      },
+      {
+        "role": "teal (anel de foco, círculo decorativo)",
+        "value": "#2ECFB5"
+      },
+      {
+        "role": "yellow (destaque do hero, selo)",
+        "value": "#FDC51D"
+      }
+    ],
+    "radius": [
+      "14px",
+      "20px",
+      "24px (cards, 19 usos)",
+      "44px 110px (moldura do hero)",
+      "999px / 9999px (botões e chips, 38 usos)",
+      "50% (ícones)"
+    ],
+    "shadows": [
+      "0 4px 10px rgba(26,63,53,0.08) (31 usos, tinta verde-escura)",
+      "0 18px 40px rgba(26,63,53,0.14) (molduras de foto e vídeo)",
+      "0 10px 26px rgba(37,211,102,0.35) (botões WhatsApp, tinta verde)",
+      "0 10px 26px rgba(240,25,107,0.32) (btn-pink)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "hero",
+        "ratio": "1.33:1 (1000x750)"
+      },
+      {
+        "usage": "galeria",
+        "ratio": "0.75:1 e 0.8:1 (1440x1920, 800x1000), tiles 539x674"
+      },
+      {
+        "usage": "vídeo vertical",
+        "ratio": "0.56:1 (320x569)"
+      },
+      {
+        "usage": "logo",
+        "ratio": "6.97:1 (1024x147)"
+      }
+    ],
+    "grid": {
+      "max_width": "1096px",
+      "columns": 2,
+      "gutter": "18px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Verde-WhatsApp como único preenchimento saturado",
+      "trigger": "Quando a página precisa de uma ação dominante (falar no WhatsApp) sobre fundo creme e branco",
+      "decision": "Reservaram o preenchimento saturado #25D366 ao botão de WhatsApp (10 elementos, 2,6% da área) e deixaram o resto em tinta #1A3F35 e superfícies brancas, em vez de colorir cada card com a paleta rosa/teal/amarelo",
+      "reason": "Quem chega do shopping com a criança no colo procura um único gesto; uma cor que só aparece em botões ensina onde tocar",
+      "evidence": [
+        "#25D366 em 10 elementos = 2,6% da área",
+        "brancas #FFFFFF = 52,5% da área",
+        "sombra do botão tingida rgba(37,211,102,0.35), 0 10px 26px",
+        "texto do botão passou de #FFFFFF (1,98:1) para #053B1C (6,42:1)"
+      ]
+    },
+    {
+      "name": "Dois registros tipográficos, sem meio-termo",
+      "trigger": "Quando títulos precisam de personalidade infantil e o texto corrido precisa de leitura em tela de celular",
+      "decision": "Fredoka One 400 para h1/h2/h3/valores (57,6px, 38,4px, 20,8px) e Nunito 600/800 para todo o resto, em vez de uma terceira família ou pesos variados nos títulos",
+      "reason": "O título arredondado carrega o tom lúdico; o corpo em Nunito 19,2px/30,7px mantém linhas legíveis para pais cansados",
+      "evidence": [
+        "272 elementos Nunito, 19 Fredoka One",
+        "h1 57,6px/64,5px, h2 38,4px/43px",
+        "corpo 19,2px, linha 30,72px, max-width 544px",
+        "mas 13 tamanhos entre 12,8px e 20,8px, sem escala"
+      ]
+    },
+    {
+      "name": "Preço repetido em vez de localizado",
+      "trigger": "Quando o único dado de decisão é o valor (R$ 48 o passeio)",
+      "decision": "Repetiram R$ 48 em chip do hero, selo, texto, card de passos e dois cards de preço, em vez de um bloco de preço único perto do topo",
+      "reason": "Responde a objeção de custo em qualquer ponto de leitura, ao preço de empurrar a seção de preço para 7.215px (67% da página)",
+      "evidence": [
+        "#preco começa em y=7215 de 10691",
+        "R$ 48 aparece em pelo menos 8 pontos visíveis",
+        "price-card 299x190px, borda rosa 2px"
+      ]
+    },
+    {
+      "name": "Restrição: sem barra de navegação extensa nem animação de layout",
+      "trigger": "Quando uma landing page de unidade poderia ganhar menu completo e carrossel",
+      "decision": "Nav com 2 ações (Conhecer o Playground, WhatsApp), entrada com opacity/transform 0.7s e respeito a prefers-reduced-motion, em vez de menu, parallax e carrossel de fotos",
+      "reason": "Visitante vem de QR/Instagram para um passeio de R$ 48: menos destinos, mais ação",
+      "evidence": [
+        "nav 77px de altura, 2 botões",
+        ".fx anima só opacity e translateY(26px) em 0.7s",
+        "reducedMotion: true, focusVisible: true"
+      ]
+    }
+  ]
+}

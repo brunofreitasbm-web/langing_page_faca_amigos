@@ -1,0 +1,209 @@
+{
+  "source": "http://localhost:8765/eventos.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        6,
+        7,
+        8,
+        10,
+        14,
+        16,
+        18,
+        22,
+        28,
+        44,
+        52,
+        56
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "44.8px (clamp 1.9-2.8rem)",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2 title",
+          "size": "36.8px (clamp 1.6-2.3rem)",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h3 dos cards",
+          "size": "19.2px (1.2rem)",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "corpo / .lead",
+          "size": "17.6px / 28.16px (lead 17.6px)",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": ".card .desc",
+          "size": "15.2px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "tag",
+          "size": "12.2px (.76rem)",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "eyebrow",
+          "size": "12.8px, letter-spacing .12em, caixa alta",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#FFFFFF / #F4FAFB",
+        "note": "branco e gelo alternados"
+      },
+      {
+        "role": "hero e rodapé",
+        "value": "#065264",
+        "note": "56% da área (areaPct 56), texto branco 92%: 8.75:1"
+      },
+      {
+        "role": "text",
+        "value": "#065264",
+        "note": "8.75:1 sobre branco"
+      },
+      {
+        "role": "accent-cta (.btn-buy, .go)",
+        "value": "#FB3D6A",
+        "note": "3.51:1 / 3.51:1 (reprovado em \"Clínica\" do rodapé)"
+      },
+      {
+        "role": "tag.gray",
+        "value": "#7A8A90",
+        "note": "3.18:1 sobre #EEF2F3 (reprovado, estado oculto)"
+      },
+      {
+        "role": "passo 2 (texto petróleo sobre #07C5C8)",
+        "value": "#065264",
+        "note": "4.10:1 (texto grande, abaixo da meta de 4.5)"
+      },
+      {
+        "role": "tag.pink / tag.yellow",
+        "value": "#B0143F / #7A5A00",
+        "note": "6.13:1 e 5.78:1"
+      }
+    ],
+    "radius": [
+      "999px (botões, tags, filtros, 17)",
+      "24px (cards, steps)",
+      "16px (ícones dos passos)",
+      "14px (rodapé e cookies)"
+    ],
+    "shadows": [
+      "0 1px 2px + 0 4px 14px rgba(6,82,100,.10) (cards)",
+      "0 2px 4px + 0 14px 38px rgba(6,82,100,.18) (hover)",
+      "0 2px 4px + 0 8px 20px rgba(251,61,106,.25/.30) (.btn-buy)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "capa do card",
+        "ratio": "16:9"
+      },
+      {
+        "usage": "logo no header",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "description": "3 colunas >=1000px, 2 colunas >=720px, 1 coluna abaixo (gap 18px); passos em 3 colunas; container 1120px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Agenda dirigida por filtro de duas trilhas",
+      "trigger": "Ao listar encontros para dois públicos distintos (famílias e profissionais)",
+      "decision": "Escolheu filtros em pílulas de 2px de borda (Todos, Para famílias, Para profissionais) acima dos cards em vez de abas separadas ou duas páginas",
+      "reason": "o visitante se identifica com um toque e a lista segue na mesma URL",
+      "evidence": [
+        ".trilhas button padding 10px 20px, 15.2px 800, aria-pressed",
+        "3 botões"
+      ]
+    },
+    {
+      "name": "Hero petróleo, agenda em gelo, passos em branco (alternância de fundo)",
+      "trigger": "Ao separar blocos numa página sem linhas divisórias",
+      "decision": "Escolheu trocar cor de fundo entre seções (petróleo, gelo, branco) com padding 56px em vez de filetes ou espaços iguais no mesmo fundo",
+      "reason": "a mudança de cor marca o fim de cada ideia sem linha",
+      "evidence": [
+        "sections: .bg-petrol 56% da área, .bg-ice, branco",
+        "padding 56px 0"
+      ]
+    },
+    {
+      "name": "Estados das tags por cor semântica restrita (restrição)",
+      "trigger": "Ao indicar vagas, esgotado e encerrado",
+      "decision": "Escolheu só 4 tags (padrão, rosa, amarela, cinza), todas com pílula de 12px e texto escuro em vez de selo colorido de alto contraste, barra de progresso de vagas",
+      "reason": "a tag informa sem virar um segundo botão",
+      "evidence": [
+        ".tag 12.2px 800, radius 999px",
+        "4 variantes"
+      ]
+    },
+    {
+      "name": "Rosa só em ação e destino",
+      "trigger": "Entre muitas cores de marca (rosa, turquesa, amarelo)",
+      "decision": "Escolheu rosa em .btn-buy, no link \"Ver\" (.go) e no passo 3 em vez de rosa em tags e títulos",
+      "reason": "mantém o olho no clique de inscrição",
+      "evidence": [
+        ".btn-buy bg rosa 52px",
+        ".go rosa",
+        "areaPct do rosa ~0"
+      ]
+    }
+  ],
+  "suggested_changes_not_applied": [
+    {
+      "problem": "Falha de carregamento sem saída",
+      "evidence": "estado de erro: \"Não foi possível carregar a agenda agora\" em texto de 17px, sem botão de tentar de novo (screenshot, y~617)",
+      "fix": "botão \"Tentar de novo\" e contato por e-mail"
+    },
+    {
+      "problem": "Texto pequeno nas tags e eyebrow",
+      "evidence": "tags de 12.2px e eyebrow de 12.8px; 4 nós abaixo de 13px",
+      "fix": "tags a 13px, eyebrow a 13px"
+    },
+    {
+      "problem": "Alvos de toque abaixo de 44px",
+      "evidence": "7 elementos de 44px ou menos (botões ghost e filtros) a 1440px, 4 a 390px",
+      "fix": "garantir min-height 44px nos filtros"
+    },
+    {
+      "problem": "Hero com 3 selos sem hierarquia",
+      "evidence": "3 pílulas (.seal) de 14px lado a lado, sem ordem de importância",
+      "fix": "destacar \"Vagas limitadas de verdade\" como diferencial e reduzir os outros"
+    },
+    {
+      "problem": "Rodapé com contato local duplicado",
+      "evidence": "bloco \"Contato desta unidade\" repete a Clínica 2 vezes (bloco branco e rodapé, 2467px de página)",
+      "fix": "escolher um dos dois"
+    },
+    {
+      "problem": "Passos numerados com ícones coloridos sem vínculo com a cor de ação",
+      "evidence": "quadrados de 52px em amarelo, turquesa e rosa; só o 3 é a cor de ação",
+      "fix": "usar uma única cor para os 3 números"
+    }
+  ]
+}

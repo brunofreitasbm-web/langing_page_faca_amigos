@@ -1,0 +1,187 @@
+{
+  "source": "http://localhost:8765/familia.html (institutofacaamigos.com.br/familia)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        22,
+        26,
+        30,
+        36
+      ],
+      "base_unit": 2,
+      "note": "Valores medidos: 10px (11 usos), 16px (9), 8px (6), 22px (4), 12px (4), 18px (3), 14px (3), 30px (2). Gutter 20px, coluna 560px."
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "40px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h2",
+          "size": "22px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botão/marca",
+          "size": "20px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "título do passo",
+          "size": "17px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "lista",
+          "size": "16px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "ajuda",
+          "size": "15.5px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "descrição do passo/hint",
+          "size": "15px",
+          "weight": "600-700",
+          "family": "Nunito"
+        },
+        {
+          "role": "rodapé",
+          "size": "13.5px",
+          "weight": "600",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "page-bg",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "surface (cards, 50,7% da área)",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "header (21,4%)",
+        "value": "gradiente #E01560 > #032D37 > #1A3F35"
+      },
+      {
+        "role": "petrol-soft (caixa de ajuda, 13,6%)",
+        "value": "#E5F3F6"
+      },
+      {
+        "role": "text-primary",
+        "value": "#032D37"
+      },
+      {
+        "role": "text-secondary",
+        "value": "#425B53"
+      },
+      {
+        "role": "pink (botão; era #F0196B 4,15:1, agora 4,72:1)",
+        "value": "#E01560"
+      },
+      {
+        "role": "pink-dark (link de ajuda 5,03:1 sobre #E5F3F6)",
+        "value": "#C81158"
+      },
+      {
+        "role": "teal-dark (check; era #1FA893 2,97:1, agora 5,22:1)",
+        "value": "#137A6A"
+      },
+      {
+        "role": "yellow (número do passo, \"· Família\")",
+        "value": "#FFE234"
+      }
+    ],
+    "radius": [
+      "14px",
+      "18px (4 cards)",
+      "50% (número do passo)",
+      "999px (botão)"
+    ],
+    "shadows": [
+      "0 6px 18px rgba(3,45,55,0.08) (3 cards, tinta petróleo)",
+      "0 10px 26px rgba(240,25,107,0.36) (botão)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo símbolo",
+        "ratio": "1.11:1 (40x40)"
+      }
+    ],
+    "grid": {
+      "max_width": "560px",
+      "columns": 1,
+      "gutter": "20px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Uma ação no topo, instrução depois",
+      "trigger": "Quando a pessoa chega pelo QR da TV com o celular na mão e precisa entrar no portal",
+      "decision": "Botão \"Entrar no portal\" (largura 520px, 64px de altura, 20px Fredoka One) imediatamente após o header, antes dos três passos, em vez de passos primeiro e botão no fim",
+      "reason": "Quem já conhece o portal entra direto; quem não conhece rola e lê o passo a passo",
+      "evidence": [
+        "botão em y≈240 de 1150",
+        "passos começam em y≈400",
+        "hint \"toque na aba Família\" a 10px do botão"
+      ]
+    },
+    {
+      "name": "Passo a passo em cards numerados",
+      "trigger": "Quando o acesso tem 3 etapas (aba, celular, SMS) e leitores são pais de crianças atendidas",
+      "decision": "Três cards brancos de 520x103px com número amarelo de 38px, em vez de parágrafo corrido",
+      "reason": "Cada etapa é um alvo de leitura de 2 linhas; o número amarelo marca onde está",
+      "evidence": [
+        "cards 18px de raio, sombra 0 6px 18px rgba(3,45,55,0.08)",
+        "num 38px, #FFE234 com #032D37 (13,6:1)",
+        "gap 12px"
+      ]
+    },
+    {
+      "name": "Restrição: sem navegação, sem imagem de conteúdo",
+      "trigger": "Quando a página poderia reaproveitar o menu do site e fotos da clínica",
+      "decision": "Só marca + h1 + botão + lista, com 1 imagem (logo 40px) e um único link externo extra (WhatsApp), em vez de menu e galeria",
+      "reason": "É página de apoio de QR; qualquer saída a mais é um caminho para não entrar",
+      "evidence": [
+        "1 imagem: logo 40x40px",
+        "0 itens de navegação",
+        "coluna de 560px"
+      ]
+    },
+    {
+      "name": "Gradiente só no header",
+      "trigger": "Quando o topo precisa carregar a marca sem repetir cor no resto",
+      "decision": "Gradiente 120deg de rosa a petróleo a verde-escuro só no header (21,4% da área) e cartões brancos em creme abaixo, em vez de rosa em toda a página",
+      "reason": "O rosa aparece uma vez como moldura e uma vez como botão; o corpo fica em tinta petróleo legível",
+      "evidence": [
+        "header gradient 21,4% da área",
+        "fundo creme #FFF9F1 + cards #FFFFFF = 50,7%",
+        "texto sobre o rosa medido por pixel: 5,1:1 (amarelo) e 6,7:1 (branco) no pior ponto"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "source": "http://localhost:8765/gestao.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        6,
+        8,
+        12,
+        13,
+        14,
+        16,
+        18,
+        24,
+        28,
+        36
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Nunito",
+        "Fredoka One"
+      ],
+      "scale": [
+        {
+          "role": "h1-hello",
+          "size": "37.6px (clamp até 2.35rem)",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "h1-login",
+          "size": "27.2px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "titulo-secao",
+          "size": "21.6px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "titulo-tile",
+          "size": "20px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "botao",
+          "size": "16px",
+          "weight": "800",
+          "family": "Nunito"
+        },
+        {
+          "role": "descricao-tile",
+          "size": "14.4px",
+          "weight": "600",
+          "family": "Nunito"
+        },
+        {
+          "role": "host-do-tile",
+          "size": "12.3px",
+          "weight": "700",
+          "family": "Nunito"
+        },
+        {
+          "role": "selo-nivel",
+          "size": "11.5px",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "fundo",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "cartao",
+        "value": "#FFFFFF"
+      },
+      {
+        "role": "cabecalho-hub",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "texto",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "texto-secundario",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "acao",
+        "value": "#F0196B",
+        "depois_da_correcao": "#E01560"
+      },
+      {
+        "role": "verde-escuro",
+        "value": "#1FA893",
+        "depois_da_correcao": "#137A6A"
+      },
+      {
+        "role": "cinza",
+        "value": "#8B9A94",
+        "depois_da_correcao": "#5A6B64"
+      },
+      {
+        "role": "marca-no-cabecalho-escuro",
+        "value": "#F0196B",
+        "depois_da_correcao": "#FF7FAC"
+      },
+      {
+        "role": "acentos-dos-modulos",
+        "value": "#FFE234 #2ECFB5 #BFD8FF #FFC2D8 #E9CBB5 #C9E7DD #FFD9A8"
+      }
+    ],
+    "radius": [
+      "24px",
+      "17px",
+      "14px",
+      "9999px"
+    ],
+    "shadows": [
+      "0 18px 40px rgba(26,63,53,0.14)",
+      "0 4px 10px rgba(26,63,53,0.08)",
+      "0 6px 16px rgba(240,25,107,0.28)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "logo",
+        "ratio": "1:1 (34px no cabeçalho)"
+      },
+      {
+        "usage": "ícone do tile",
+        "ratio": "1:1 (54px)"
+      }
+    ],
+    "grid": {
+      "max_width": "auto-fill minmax(280px,1fr)",
+      "columns": 3,
+      "gutter": "18px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Um quadrado por sistema, cada um com sua cor",
+      "trigger": "O dono precisa abrir seis a sete sistemas diferentes (playground, clínica, financeiro, RH, cacau, painel, eventos) a partir de um lugar",
+      "decision": "Grade de tiles de 190px de altura mínima com ícone de 54px e cor própria por sistema, em vez de lista ou menu lateral",
+      "reason": "Quem entra todo dia reconhece o sistema pela cor antes de ler o nome",
+      "evidence": [
+        ".tile min-height 190px, padding 22px 20px, raio 24px, gap 18px",
+        "acentos #FFE234, #2ECFB5, #BFD8FF, #FFC2D8, #E9CBB5, #C9E7DD, #FFD9A8",
+        "grid repeat(auto-fill, minmax(280px, 1fr))"
+      ]
+    },
+    {
+      "name": "Acesso negado aparece apagado, não escondido",
+      "trigger": "Gerentes enxergam o hub mas nem todo módulo é permitido",
+      "decision": "Tile desabilitado a 55% de opacidade em vez de remover o tile",
+      "reason": "A pessoa sabe que o sistema existe e a quem pedir acesso",
+      "evidence": [
+        ".tile:disabled opacity 0.55, cursor not-allowed",
+        "texto #1A3F35 a 55% cai para 3.16:1 sobre branco e a descrição #4C6B62 para 2.32:1 (valores calculados, estado visível só com sessão)"
+      ]
+    },
+    {
+      "name": "Cabeçalho escuro, corpo creme",
+      "trigger": "A tela de login é clara, mas o hub precisa mostrar claramente que se está dentro da área restrita",
+      "decision": "Faixa #1A3F35 no topo do hub com marca em Fredoka One, em vez de reaproveitar o cabeçalho claro",
+      "reason": "O contraste de faixa avisa 'área interna' sem texto",
+      "evidence": [
+        ".hub-header background #1A3F35, padding 16px 0",
+        "'Amigos' em rosa no cabeçalho escuro media 2.46:1; agora #FF7FAC a 4.92:1",
+        "fundo do corpo #FFF9F1 com tiles brancos"
+      ]
+    },
+    {
+      "name": "Sem ilustração, só emoji nos ícones",
+      "trigger": "Cada módulo precisa de um ícone distinguível e o time não tem uma biblioteca de ícones",
+      "decision": "Emoji de 1.85rem num quadrado de 54px colorido, em vez de SVG próprio por módulo",
+      "reason": "Zero dependência de arquivo e reconhecimento imediato",
+      "evidence": [
+        ".tile .icon font-size 1.85rem, raio 17px, fundo var(--accent)",
+        "nenhuma imagem além do logo de 34px"
+      ]
+    }
+  ]
+}

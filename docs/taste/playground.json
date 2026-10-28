@@ -1,0 +1,78 @@
+{
+  "source": "http://localhost:8765/playground.html",
+  "tokens": {
+    "spacing": {"scale": [6, 8, 10, 12, 14, 15, 20, 28, 56, 64, 76], "base_unit": 2},
+    "typography": {
+      "families": ["Fredoka One", "Nunito"],
+      "scale": [
+        {"role": "h1", "size": "57.6px", "weight": "400", "family": "Fredoka One"},
+        {"role": "h2", "size": "43.2px", "weight": "400", "family": "Fredoka One"},
+        {"role": "h3", "size": "21.6px", "weight": "400", "family": "Fredoka One"},
+        {"role": "h4", "size": "17.6px", "weight": "800", "family": "Nunito"},
+        {"role": "body-lead", "size": "19.2px", "weight": "600", "family": "Nunito"},
+        {"role": "body", "size": "15.68px", "weight": "600", "family": "Nunito"},
+        {"role": "button", "size": "14px", "weight": "700", "family": "Nunito"},
+        {"role": "caption", "size": "12.48px", "weight": "700", "family": "Nunito"}
+      ]
+    },
+    "colors": [
+      {"role": "background", "value": "#FFF9F1"},
+      {"role": "surface", "value": "#FFFFFF"},
+      {"role": "text-primary", "value": "#1A3F35"},
+      {"role": "text-secondary", "value": "#4C6B62"},
+      {"role": "accent-action", "value": "#E01560"},
+      {"role": "accent-whatsapp", "value": "#25D366"},
+      {"role": "text-on-whatsapp", "value": "#053B1C"},
+      {"role": "accent-teal-fill", "value": "#2ECFB5"},
+      {"role": "accent-teal-text", "value": "#137A6A"},
+      {"role": "highlight", "value": "#FFE234"},
+      {"role": "star", "value": "#B87800"},
+      {"role": "dark-section", "value": "#1A3F35"}
+    ],
+    "radius": ["9999px", "50%", "24px", "20px", "14px", "44px 110px"],
+    "shadows": [
+      "0 4px 10px rgba(26,63,53,0.08)",
+      "0 18px 40px rgba(26,63,53,0.14)",
+      "0 10px 26px rgba(240,25,107,0.32)",
+      "0 10px 26px rgba(37,211,102,0.35)"
+    ],
+    "image_ratios": [
+      {"usage": "hero", "ratio": "0.75:1"},
+      {"usage": "gallery-wide", "ratio": "1.78:1"},
+      {"usage": "gallery-facade", "ratio": "1.66:1"},
+      {"usage": "portrait-thumb", "ratio": "0.75:1"},
+      {"usage": "logo", "ratio": "6.97:1"}
+    ],
+    "grid": {"max_width": "~1100px (wrap interno)", "columns": 2, "gutter": "56px"}
+  },
+  "taste": [
+    {
+      "name": "Fredoka só nos títulos, Nunito em todo o resto",
+      "trigger": "Página para pais cansados com mais de 25 blocos informativos (preço, regra, endereço)",
+      "decision": "Chose Fredoka One 400 only on h1-h3 over a single neutral family or display type everywhere",
+      "reason": "O título arredondado sinaliza brincadeira antes da leitura; o corpo em Nunito segue legível quando o pai procura preço e horário",
+      "evidence": ["h1 57.6px/lh 64.5px", "corpo 19.2px/600 max-width 544px", "Fredoka em 44 nós, Nunito em 503", "escala não modular (57.6, 43.2, 21.6, 19.2, 17.6, 16.8, 16, 15.68, 14.72, 12.48)"]
+    },
+    {
+      "name": "Rosa reservado a ação e preço",
+      "trigger": "Muitas decisões por tela disputando o clique",
+      "decision": "Chose pink #F0196B only on primary buttons, prices and the final band over spreading it across icons, borders and headings",
+      "reason": "O pai aprende em um scroll que rosa significa agir ou pagar, e creme e teal ficam como fundo calmo",
+      "evidence": ["rosa em 0.7% da área (6 elementos)", "verde WhatsApp em 0.9% (11)", "90% da superfície em #FFF9F1, #FFFFFF ou #1A3F35", "rosa original 4.15:1 corrigido para 4.72:1"]
+    },
+    {
+      "name": "Foto real em moldura, sem imagem de fundo",
+      "trigger": "Hero precisa mostrar o espaço físico sem virar banner genérico",
+      "decision": "Chose a 0.75:1 photo in a 514x585px frame with 44px/110px radius over a full-width background image with overlaid text",
+      "reason": "O pai vê o lugar real, e o título fica sobre creme a 11.11:1 sem escurecer a foto",
+      "evidence": ["7 imagens de conteúdo, todas fotos reais", "0 imagens de fundo em seções claras", "2 círculos chapados decorativos (amarelo, menta)", "sombra 0 18px 40px"]
+    },
+    {
+      "name": "Cartão branco como unidade única, sombra tintada",
+      "trigger": "Conteúdo heterogêneo (FAQ, preços, unidades, avaliações) que precisa parecer do mesmo lugar",
+      "decision": "Chose a white 24px-radius card with one tinted shadow layer over per-section container treatments",
+      "reason": "No celular o leitor reconhece uma unidade de informação sem aprender regra nova a cada bloco",
+      "evidence": ["radius 24px em 31 elementos", "sombra rgba(26,63,53,0.08) em 46", "2 níveis de sombra", "padding interno sem escala (9, 10, 14, 15, 22, 28px)"]
+    }
+  ]
+}
