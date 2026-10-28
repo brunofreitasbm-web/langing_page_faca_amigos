@@ -135,7 +135,9 @@
     /* Hero */
     .hero { padding: 40px 0 72px; }
     .hero .wrap { display: grid; gap: 40px; }
-    .hero h1 { text-wrap: balance; font-size: clamp(2.05rem, 8.4vw, 3.5rem); font-weight: 600; margin-bottom: 18px; }
+    .br-d { display: none; }
+    @media (min-width: 980px) { .br-d { display: inline; } }
+    .hero h1 { font-size: clamp(2.05rem, 8.4vw, 3.5rem); font-weight: 600; margin-bottom: 18px; }
     .hero h1 mark { background: var(--yellow); color: var(--petrol); padding: 0 .28em; border-radius: 14px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
     .hero .sub { font-size: 1.125rem; color: rgba(255, 255, 255, .92); max-width: 560px; }
     .seal { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
@@ -533,7 +535,7 @@
       <div class="wrap">
         <div>
           <span class="eyebrow">Guia prático · E-book em PDF</span>
-          <h1 id="h-hero">Entenda o que seu filho está tentando dizer &mdash; e saiba <mark>o que fazer no dia a dia</mark></h1>
+          <h1 id="h-hero">Entenda o que seu filho está tentando dizer &mdash; e saiba <br class="br-d"><mark>o que fazer<br class="br-d"> no dia a dia</mark></h1>
           <p class="sub"><strong>O Brincar com Propósito</strong> é um guia prático e afetivo de Análise do Comportamento para mães, pais e cuidadores. Sem jargão de especialista, com exercícios que cabem na sua rotina real.</p>
           <div class="hero-cta">
             <a class="btn-buy" href="https://pay.hotmart.com/M107692257Y" target="_blank" rel="noopener" data-cta="hero">Quero o guia</a>
