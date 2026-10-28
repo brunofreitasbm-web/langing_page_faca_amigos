@@ -1,0 +1,170 @@
+{
+  "source": "/guia.html (guia.html)",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20,
+        24,
+        64,
+        88,
+        96
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1",
+          "size": "56px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2",
+          "size": "40px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h3",
+          "size": "20.8px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "body",
+          "size": "18.24px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "caption",
+          "size": "14.72px",
+          "weight": "600",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "hero-background",
+        "value": "#065264"
+      },
+      {
+        "role": "section-background",
+        "value": "#F4FAFB"
+      },
+      {
+        "role": "section-background-alt",
+        "value": "#E2F8F8"
+      },
+      {
+        "role": "text-primary",
+        "value": "#065264"
+      },
+      {
+        "role": "accent-action",
+        "value": "#D61F4A"
+      },
+      {
+        "role": "accent-decor",
+        "value": "#07C5C8"
+      },
+      {
+        "role": "highlight",
+        "value": "#FDC51D"
+      },
+      {
+        "role": "button-text-on-teal",
+        "value": "#04414A"
+      }
+    ],
+    "radius": [
+      "24px",
+      "999px",
+      "18px",
+      "14px",
+      "8px",
+      "50%"
+    ],
+    "shadows": [
+      "0 1px 2px rgba(6,82,100,0.1), 0 4px 14px rgba(6,82,100,0.1)",
+      "0 2px 4px rgba(251,61,106,0.25), 0 8px 20px rgba(251,61,106,0.3)",
+      "0 2px 4px rgba(6,82,100,0.1), 0 14px 38px rgba(6,82,100,0.18)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "capa do e-book",
+        "ratio": "0.71:1"
+      },
+      {
+        "usage": "logo",
+        "ratio": "6.97:1"
+      }
+    ],
+    "grid": {
+      "max_width": "~1088px (conteúdo)",
+      "columns": 3,
+      "gutter": "16px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Hero escuro para a capa clara",
+      "trigger": "Quando a capa do e-book é petróleo com formas coloridas e precisa se destacar na primeira tela",
+      "decision": "Pintaram o hero inteiro de #065264 com círculo turquesa de 520px atrás da capa, em vez do fundo claro das seções seguintes",
+      "reason": "O livro vira o objeto mais luminoso da dobra e o rosa do botão aparece sem rival",
+      "evidence": [
+        "hero #065264 (31% da área com topbar e rodapé)",
+        "círculo turquesa #07C5C8 atrás da capa 283x445",
+        "botão rosa 176x56 à esquerda, a ~100px do h1"
+      ]
+    },
+    {
+      "name": "Marca-texto amarelo em uma única frase",
+      "trigger": "Quando o título de 56px precisa apontar a promessa ('o que fazer no dia a dia') sem imagem",
+      "decision": "Aplicaram uma faixa #FDC51D com texto petróleo só na frase-chave, em vez de colorir o título inteiro",
+      "reason": "A faixa funciona como grifo de caneta: o leitor que só passa o olho lê a promessa primeiro",
+      "evidence": [
+        "h1 Fredoka 600, 56px, lh 64.4px, 4 linhas",
+        "faixa amarela cobre ~7 palavras de ~16",
+        "amarelo é só 1.5% da área"
+      ]
+    },
+    {
+      "name": "Cada seção fecha com o mesmo botão",
+      "trigger": "Quando a página passa de 11.000px e o leitor se convence em momentos diferentes",
+      "decision": "Repetiram o botão rosa 'Quero o guia' no fim de cada bloco (11 elementos .btn-buy) em vez de concentrar a oferta no preço",
+      "reason": "Quem se reconhece numa cena da rotina quer agir ali, sem rolar até o preço",
+      "evidence": [
+        "11 .btn-buy",
+        "sombra rgba(251,61,106,.25/.3) em 10 elementos",
+        "topbar sticky com o mesmo CTA"
+      ]
+    },
+    {
+      "name": "Restrição: uma sombra e um raio para todos os cartões",
+      "trigger": "Quando capítulos, materiais A4 e FAQ poderiam ter tratamentos diferentes",
+      "decision": "Usaram a mesma sombra petróleo de duas camadas (41x) e raio 24px (35x), em vez de variar a elevação por tipo",
+      "reason": "A hierarquia fica no texto e na cor do ícone, e a página lê como uma só família",
+      "evidence": [
+        "rgba(6,82,100,.1) 1px 2px + 4px 14px em 41 elementos",
+        "raio 24px em 35 elementos",
+        "ícones alternam amarelo/turquesa/rosa em ciclo 3n"
+      ]
+    }
+  ]
+}
