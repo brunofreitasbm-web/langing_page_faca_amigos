@@ -1,0 +1,179 @@
+{
+  "source": "http://localhost:8765/tv2.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        8,
+        10,
+        12,
+        14,
+        18,
+        22,
+        30,
+        32,
+        40,
+        50
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Fredoka One",
+        "Nunito",
+        "Fredoka"
+      ],
+      "scale": [
+        {
+          "role": "preco-inteiro",
+          "size": "270px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "headline",
+          "size": "100px",
+          "weight": "700",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "tempo-do-plano",
+          "size": "96px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "chamada-final",
+          "size": "64px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "kicker",
+          "size": "40px",
+          "weight": "400",
+          "family": "Fredoka One"
+        },
+        {
+          "role": "nome-do-plano",
+          "size": "34px",
+          "weight": "700",
+          "family": "Fredoka"
+        },
+        {
+          "role": "subtitulo-marca",
+          "size": "22px",
+          "weight": "700",
+          "family": "Fredoka"
+        },
+        {
+          "role": "hud",
+          "size": "20px",
+          "weight": "600",
+          "family": "Fredoka"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "fundo-painel",
+        "value": "#FFF9F1"
+      },
+      {
+        "role": "fundo-externo",
+        "value": "#0E221C"
+      },
+      {
+        "role": "texto-principal",
+        "value": "#1A3F35"
+      },
+      {
+        "role": "texto-secundario",
+        "value": "#4C6B62"
+      },
+      {
+        "role": "preco-rosa",
+        "value": "#F0196B",
+        "depois_da_correcao": "#E01560"
+      },
+      {
+        "role": "kicker-amarelo",
+        "value": "#FFE234"
+      },
+      {
+        "role": "chamada-verde",
+        "value": "#1FA893",
+        "depois_da_correcao": "#137A6A"
+      }
+    ],
+    "radius": [
+      "999px",
+      "34px"
+    ],
+    "shadows": [
+      "0 10px 30px rgba(0,0,0,0.25)",
+      "0 14px 34px rgba(26,63,53,0.1)",
+      "0 20px 44px rgba(240,25,107,0.25)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "foto-slide",
+        "ratio": "0.75:1 e 0.80:1"
+      },
+      {
+        "usage": "logo",
+        "ratio": "1.11:1"
+      }
+    ],
+    "grid": {
+      "max_width": "1080px",
+      "columns": 1,
+      "gutter": "32px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Preço maior que a manchete",
+      "trigger": "Quem passa pelo corredor do shopping decide em 2 segundos se vale parar",
+      "decision": "Preço 'R$ 48,00' em 270px, mais que o dobro da manchete de 100px, em vez de dar o palco à foto e à frase",
+      "reason": "O pai que anda com criança no colo procura primeiro quanto custa e quanto tempo dura",
+      "evidence": [
+        "c-price-int 270px com letter-spacing -8px",
+        "razão preço:manchete 2.7:1; manchete:kicker 2.5:1",
+        "rosa #F0196B (3.97:1) agora #E01560 (4.52:1) sobre #FFF9F1; texto grande exige 3:1"
+      ]
+    },
+    {
+      "name": "Palco retrato fixo girado por JavaScript",
+      "trigger": "A TV de 50 polegadas fica em pé, mas recebe sinal em paisagem",
+      "decision": "Um palco fixo de 1080x1920 que o JS gira 90 graus e escala, em vez de CSS responsivo",
+      "reason": "O layout é desenhado uma vez só e cada px equivale a um pixel físico na TV 1080p, então os tamanhos viram régua de leitura",
+      "evidence": [
+        "#tvCanvas 1080x1920 com rotação 90/270",
+        "tamanhos físicos: 270, 100, 96, 64, 40, 34, 22, 20px",
+        "no teste a 1440x900 o palco encolhe para 47% (900/1920)"
+      ]
+    },
+    {
+      "name": "Amarelo só no kicker, foto sem moldura",
+      "trigger": "Cada slide tem foto de criança, manchete e rótulo; muitos elementos disputando atenção",
+      "decision": "Reservar o amarelo #FFE234 ao kicker inclinado (-2 graus) e a uma palavra da manchete, e deixar a foto cobrir o painel sem borda nem cartão em volta",
+      "reason": "O rótulo amarelo funciona como etiqueta colada na foto e a manchete branca mantém o contraste sobre o degradê escuro",
+      "evidence": [
+        "amarelo em 19 elementos (14.6% da área), todos kicker ou em",
+        "overlay linear rgba(14,34,28,0) a 0.9 de 45% a 100% da altura",
+        "apenas 2 raios (999px e 34px) e 3 sombras"
+      ]
+    },
+    {
+      "name": "Movimento periférico",
+      "trigger": "O corredor é largo e as pessoas olham a TV de lado, andando",
+      "decision": "Animações lentas e periódicas (brilho no preço a cada 6s, palavras da chamada em sequência a cada 3s) em vez de tela estática",
+      "reason": "Um brilho que cruza o preço atrai o olhar de quem não está olhando para a TV",
+      "evidence": [
+        "price-shine 6s e price-beat 6s (escala 1.05 aos 88%)",
+        "beat-word 3s com defasagem de 1s por palavra",
+        "palavras em repouso estavam a 0.35 de opacidade (1.43:1), agora 0.8 (3.5:1)"
+      ]
+    }
+  ]
+}
