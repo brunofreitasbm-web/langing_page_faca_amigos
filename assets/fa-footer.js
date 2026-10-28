@@ -118,7 +118,7 @@
       '.fa-ops-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }',
       '.fa-ops .fa-unit { background: #fff; border: 2px solid #07C5C8; border-radius: 16px; padding: 18px 20px; color: #065264; box-sizing: border-box; }',
       '.fa-ops .fa-unit h4 { margin: 0; font-size: 1.1rem; font-weight: 800; line-height: 1.3; }',
-      '.fa-ops .fa-unit-role { display: block; margin: 2px 0 10px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #FB3D6A; }',
+      '.fa-ops .fa-unit-role { display: block; margin: 2px 0 10px; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #D61F4A; }',
       '.fa-ops .fa-unit p { margin: 0 0 6px; font-size: 0.95rem; line-height: 1.5; }',
       '.fa-ops .fa-unit-links { margin: 6px 0 0; font-size: 0.9rem; }',
       '.fa-ops .fa-unit-links a { margin-right: 14px; color: #065264; font-weight: 800; }',
