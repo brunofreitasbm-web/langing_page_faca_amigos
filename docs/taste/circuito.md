@@ -73,23 +73,34 @@ Fonte: http://localhost:8765/circuito.html (institutofacaamigos.com.br/circuito)
 - **Reason**: Visitante vem de QR/Instagram para um passeio de R$ 48: menos destinos, mais ação
 - **Evidence**: nav 77px de altura, 2 botões; .fx anima só opacity e translateY(26px) em 0.7s; reducedMotion: true, focusVisible: true
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Galeria ocupa 41% da página antes do preço**
    - Evidência: #fotos mede 4.353px de 10.691px (41%) com 12 tiles de 539x674px em 2 colunas; #preco só começa em y=7.215. Quem quer o valor rola 6 telas de fotos.
    - Correção proposta: Passar #preco para antes de #fotos e reduzir a galeria a 6 tiles em 3 colunas com proporção 4:5 (~350x437px), cerca de 1.900px.
+   - Status: **Aplicada.** #preco agora vem antes de #fotos; galeria reduzida a 6 tiles em 3 colunas (2 no celular), os extras foram removidos do HTML e a injeção dinâmica limitada a 3.
+
 2. **Hero no celular empilha chips em linhas separadas**
    - Evidência: Em 390px o chip "a partir de R$ 48" e os chips seguintes ocupam uma linha cada (~y 700-860) e a foto do hero só começa perto de y=1000, abaixo da primeira tela (844px).
    - Correção proposta: Deixar os chips em flex-wrap com gap de 8px (2 por linha) ou mostrar só o chip de preço no hero.
+   - Status: **Aplicada.** Hero: chips com gap 8px e padding menor no celular; o chip duplicado saiu.
+
 3. **R$ 48 repetido em 8 pontos, dois chips lado a lado dizem o mesmo**
    - Evidência: Hero tem chip "a partir de R$ 48" e, logo abaixo, chip "R$ 48 o passeio"; mais texto do hero, selo de #sobre, card de passos e dois price-cards idênticos (R$ 48 e R$ 48).
    - Correção proposta: Manter o chip de preço do hero e os price-cards; remover o chip "R$ 48 o passeio" e o selo "Preço único" de #sobre.
+   - Status: **Aplicada.** Removidos o chip "R$ 48 o passeio" do hero e o selo "Preço único" de #sobre; mantidos o chip de preço e os price-cards.
+
 4. **Respiro quebrado antes de "Dúvidas frequentes"**
    - Evidência: #teste tem padding-bottom 10px e #faq padding-top 10px, contra 76px nas outras seções: o h2 do FAQ fica a ~14px da borda do cartão acima.
    - Correção proposta: Dar padding-top 76px a #faq (ou 56px) para repetir o ritmo das seções.
+   - Status: **Aplicada.** #faq com padding-top 56px e #teste com padding-bottom 24px.
+
 5. **Rótulo do CTA do hero não bate com a oferta**
    - Evidência: O botão diz "Quero saber os valores" mas o preço já está no mesmo hero (R$ 48). A pessoa clica esperando uma tabela e cai numa conversa.
    - Correção proposta: Trocar o rótulo para "Chamar no WhatsApp" ou "Tirar dúvidas no WhatsApp", mantendo o preço como informação da página.
+   - Status: **Aplicada.** Rótulo do CTA do hero agora "Chamar no WhatsApp".
+
 6. **Escala tipográfica sem degraus definidos**
    - Evidência: 13 tamanhos entre 12,8px e 20,8px, seis deles entre 14,4px e 16,8px (14,72px 25x, 14,4px 13x, 15,84px 8x, 16,8px 13x).
    - Correção proposta: Reduzir a 4 degraus de texto (13, 15, 17, 19px) e aplicar nas classes existentes.
+   - Status: **Adaptada.** Tokens --fs-s/m/l/xl (13, 15, 17, 19px) aplicados aos textos pequenos (mínimo 13px, preço/regras 15px); títulos e corpo grandes mantidos. Extras: alvos de toque 44px, foco visível em summary/links/float, reduced-motion sem hover-transform.
