@@ -63,7 +63,7 @@
     .bg-ice { background: var(--ice); }
     .center { text-align: center; }
 
-    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: .875rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 14px; }
     .eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--pink); }
     .bg-petrol .eyebrow { color: #fff; }
     h2.title { font-size: clamp(1.7rem, 5.6vw, 2.5rem); margin-bottom: 14px; }
@@ -105,22 +105,24 @@
     .search-box input { width: 100%; min-height: 52px; border-radius: 999px; border: 2px solid var(--teal-10); background: var(--ice); padding: 0 20px; font-family: var(--font-body); font-size: 1.02rem; color: var(--petrol); }
     .search-box input:focus { outline: 3px solid var(--yellow); outline-offset: 2px; border-color: var(--teal); }
     .search-box input::placeholder { color: #5B6B71; }
-    .letters { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
-    .letters a { min-width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--ice); font-weight: 800; font-size: .88rem; }
+    .letters { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; scroll-margin-top: 170px; }
+    .letters a { min-width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--ice); font-weight: 800; font-size: .95rem; text-decoration: none; }
     .letters a:hover { background: var(--teal-10); }
     .letters a.off { opacity: .32; pointer-events: none; }
     #no-results { display: none; text-align: center; padding: 40px 0; font-weight: 700; color: #5B6B71; }
 
     /* Termos */
     .terms-block { padding: 28px 0 4px; }
-    .letter-group { margin-bottom: 30px; }
+    .letter-group { margin-bottom: 30px; scroll-margin-top: 220px; }
+    .back-top { display: none; }
     .letter-head { font-family: var(--font-display); font-size: 1.6rem; color: var(--pink); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 3px solid var(--yellow-20); }
     dl.terms { margin: 0; }
-    .term { background: var(--ice); border-radius: 20px; padding: 18px 22px; margin-bottom: 12px; box-shadow: var(--shadow); scroll-margin-top: 150px; }
+    .term { background: var(--ice); border-radius: 20px; padding: 18px 22px; margin-bottom: 12px; box-shadow: var(--shadow); scroll-margin-top: 220px; }
     .term dt { font-family: var(--font-display); font-weight: 600; font-size: 1.12rem; margin-bottom: 6px; }
-    .term dt .anchor { font-weight: 800; color: #067476; font-size: .8rem; text-decoration: none; margin-left: 6px; }
+    .term dt .anchor { font-weight: 800; color: #067476; font-size: .875rem; text-decoration: none; display: inline-block; padding: 10px 10px; margin: -10px -4px -10px 2px; }
     .term dd { margin: 0; font-size: .98rem; }
-    .term dd a { font-weight: 800; text-decoration: underline; text-underline-offset: 3px; color: var(--pink); }
+    .term dd a { font-weight: 700; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; color: var(--pink); }
+    .term dd a:hover { text-decoration-thickness: 2px; }
     .term.is-hidden { display: none; }
 
     /* CTA final */
@@ -140,6 +142,17 @@
 
     @media (min-width: 720px) {
       .term { padding: 22px 28px; }
+    }
+    /* Mobile: só a busca fica fixa (abaixo da topbar de ~98px); as letras rolam com a página */
+    @media (max-width: 639px) {
+      .finder, .finder .wrap { display: contents; }
+      .search-box { position: sticky; top: 98px; z-index: 40; margin: 0; padding: 8px var(--gutter); background: #fff; border-bottom: 1px solid rgba(6, 82, 100, .12); }
+      .search-box input { min-height: 48px; }
+      .letters { display: grid; grid-template-columns: repeat(auto-fill, minmax(44px, 1fr)); gap: 4px; justify-items: center; width: 100%; max-width: 900px; margin: 0 auto; padding: 14px var(--gutter) 0; scroll-margin-top: 170px; }
+      .terms-block { padding-top: 20px; }
+      .letter-group, .term { scroll-margin-top: 180px; }
+      .back-top { display: flex; align-items: center; justify-content: flex-end; min-height: 44px; margin: -4px 0 0; font-weight: 800; font-size: .9375rem; color: var(--petrol); text-decoration: none; }
+      .back-top:hover { text-decoration: underline; }
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
   </style>
@@ -250,7 +263,7 @@
           <label class="sr-only" for="busca">Buscar termo no glossário</label>
           <input type="search" id="busca" placeholder="Buscar um termo, por exemplo: TEA, laudo, birra..." autocomplete="off">
         </div>
-        <nav class="letters" aria-label="Ir para a letra">
+        <nav class="letters" id="letras" aria-label="Ir para a letra" tabindex="-1">
           <a href="#letra-A">A</a><a href="#letra-B">B</a><a href="#letra-C">C</a><a href="#letra-E">E</a>
           <a href="#letra-F">F</a><a href="#letra-G">G</a><a href="#letra-H">H</a><a href="#letra-I">I</a>
           <a href="#letra-L">L</a><a href="#letra-M">M</a><a href="#letra-N">N</a><a href="#letra-O">O</a>
@@ -275,6 +288,7 @@
             <div class="term" id="avaliacao-comportamental"><dt>Avaliação comportamental <a class="anchor" href="#avaliacao-comportamental">#</a></dt><dd>Primeira conversa e observação para entender como a criança se comunica, brinca e reage no dia a dia, e a partir daí montar um plano. Aparece como o primeiro passo na Clínica FaçaAmigos. Muda pra você: nenhum plano começa sem antes te ouvir. Ver <a href="/clinica#avaliacao">Avaliação inicial e acolhimento</a>.</dd></div>
             <div class="term" id="avaliacao-neuropsicologica"><dt>Avaliação neuropsicológica <a class="anchor" href="#avaliacao-neuropsicologica">#</a></dt><dd>Conjunto de testes que mapeia memória, atenção, raciocínio e outras funções cognitivas. Aparece quando há dúvidas sobre aprendizagem, foco ou desenvolvimento. Muda pra você: dá um retrato mais completo para orientar escola e terapia. Ver <a href="/clinica#neuro">Avaliação neuropsicológica</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-B">
@@ -283,6 +297,7 @@
             <div class="term" id="birra-crise"><dt>Birra × crise (meltdown) <a class="anchor" href="#birra-crise">#</a></dt><dd>A birra costuma ter um objetivo (o brinquedo, a atenção) e passa quando a criança percebe que insistir não vai funcionar. A crise, ou meltdown, é uma sobrecarga do sistema nervoso: a criança não escolhe, ela transborda. Aparece na dúvida de toda mãe cansada: "isso é manha ou é sério?". Muda pra você: a resposta certa é diferente para cada uma. Leia o guia <a href="/aprender/birra-ou-crise">Birra ou crise?</a>.</dd></div>
             <div class="term" id="brincar-simbolico"><dt>Brincar simbólico <a class="anchor" href="#brincar-simbolico">#</a></dt><dd>Quando a criança usa um objeto para representar outro (a colher vira microfone) ou finge situações (dar comida para o bichinho). Aparece por volta dos 2 anos, em ritmos diferentes para cada criança. Muda pra você: é um marco que profissionais observam e que dá pra estimular em casa. Veja <a href="/aprender/brincar-com-proposito-10-minutos">5 brincadeiras de 10 minutos</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-C">
@@ -293,6 +308,7 @@
             <div class="term" id="caa"><dt>Comunicação alternativa (CAA) <a class="anchor" href="#caa">#</a></dt><dd>Formas de se comunicar além da fala, como figuras, gestos ou aplicativos no celular, usadas junto com a fonoaudiologia enquanto a fala ainda está se desenvolvendo. Aparece quando a criança se frustra por não conseguir se fazer entender. Muda pra você: menos crise por incompreensão, mais um jeito de ela dizer o que quer.</dd></div>
             <div class="term" id="convenio"><dt>Convênio (IASEP e PROASA) <a class="anchor" href="#convenio">#</a></dt><dd>Planos de saúde que a Clínica FaçaAmigos vai atender assim que abrir, além do atendimento particular. Aparece nas perguntas sobre como pagar. Muda pra você: mais um caminho possível para começar o acompanhamento. Ver <a href="/clinica#convenios-h">Convênios e como pagar</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-E">
@@ -302,6 +318,7 @@
             <div class="term" id="equipe-multidisciplinar"><dt>Equipe multidisciplinar <a class="anchor" href="#equipe-multidisciplinar">#</a></dt><dd>Grupo de profissionais de áreas diferentes, como psicologia, fonoaudiologia e terapia ocupacional, cuidando da mesma criança de forma combinada. Aparece na Clínica FaçaAmigos. Muda pra você: menos "cada um puxando para um lado", mais um plano só, pensado junto.</dd></div>
             <div class="term" id="estereotipia"><dt>Estereotipia (stimming) <a class="anchor" href="#estereotipia">#</a></dt><dd>Movimentos repetitivos, como balançar as mãos ou o corpo, que ajudam a criança a se regular ou expressar emoção. Aparece em momentos de alegria, ansiedade ou concentração. Muda pra você: raramente é um problema a corrigir. Só merece atenção se machucar a criança ou atrapalhar bastante o dia.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-F">
@@ -310,6 +327,7 @@
             <div class="term" id="fonoaudiologia"><dt>Fonoaudiologia <a class="anchor" href="#fonoaudiologia">#</a></dt><dd>Especialidade que cuida da fala, da linguagem, da voz e também da alimentação (mastigar, engolir) da criança. Aparece quando a fala demora a aparecer ou é difícil de entender. Ver <a href="/clinica#fonoaudiologia">Fonoaudiologia</a>.</dd></div>
             <div class="term" id="funcao-do-comportamento"><dt>Função do comportamento <a class="anchor" href="#funcao-do-comportamento">#</a></dt><dd>O motivo real por trás de um comportamento: buscar atenção, fugir de algo desconfortável, conseguir algo ou se regular sensorialmente. Aparece nas avaliações comportamentais. Muda pra você: entender a função muda o que fazer a respeito, em vez de só reagir ao comportamento em si.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-G">
@@ -317,6 +335,7 @@
           <dl class="terms">
             <div class="term" id="generalizacao"><dt>Generalização <a class="anchor" href="#generalizacao">#</a></dt><dd>Quando a criança consegue usar uma habilidade aprendida em um lugar (a terapia) também em casa, na escola ou com outras pessoas. Aparece como meta de qualquer bom plano terapêutico. Muda pra você: é o sinal de que o que está sendo trabalhado realmente virou vida real, não só sala de atendimento.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-H">
@@ -325,6 +344,7 @@
             <div class="term" id="hiper-hipossensibilidade"><dt>Hipersensibilidade e hipossensibilidade sensorial <a class="anchor" href="#hiper-hipossensibilidade">#</a></dt><dd>Reagir demais (hiper) ou de menos (hipo) a sons, luzes, texturas ou toque. Aparece quando um barulho comum incomoda muito, ou quando a criança busca sensações fortes o tempo todo. Muda pra você: explica reações que pareciam "exagero" e orienta a terapia ocupacional com integração sensorial.</dd></div>
             <div class="term" id="horario-inclusivo"><dt>Horário Inclusivo <a class="anchor" href="#horario-inclusivo">#</a></dt><dd>Período do dia no <a href="https://institutofacaamigos.com.br/playground">Playground FaçaAmigos</a> com menos gente, som mais baixo e equipe reforçada, pensado para quem tem hipersensibilidade sensorial. Muda pra você: um jeito de experimentar o espaço sem a sobrecarga do movimento normal do shopping.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-I">
@@ -335,6 +355,7 @@
             <div class="term" id="integracao-sensorial"><dt>Integração sensorial <a class="anchor" href="#integracao-sensorial">#</a></dt><dd>Como o cérebro organiza o que os sentidos captam. A terapia ocupacional com foco em integração sensorial ajuda a criança a processar melhor som, toque, movimento e equilíbrio. Ver <a href="/clinica#to">Terapia Ocupacional</a>.</dd></div>
             <div class="term" id="intervencao-precoce"><dt>Intervenção precoce <a class="anchor" href="#intervencao-precoce">#</a></dt><dd>Começar o acompanhamento assim que um sinal aparece, sem esperar "passar da idade" ou "ver se resolve sozinho". Aparece na recomendação de quase todo profissional da área. Muda pra você: quanto antes a família tem apoio, mais leve o dia a dia costuma ficar.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-L">
@@ -342,6 +363,7 @@
           <dl class="terms">
             <div class="term" id="laudo"><dt>Laudo <a class="anchor" href="#laudo">#</a></dt><dd>Documento escrito por um profissional (médico ou psicólogo) descrevendo uma condição da criança. Abre porta para benefícios como CIPTEA e meia-entrada. Muda pra você: não é obrigatório para buscar ajuda, o primeiro passo pode ser só uma conversa. Veja <a href="/aprender/laudo-e-ciptea">Laudo e CIPTEA em Belém</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-M">
@@ -351,6 +373,7 @@
             <div class="term" id="marcos-do-desenvolvimento"><dt>Marcos do desenvolvimento <a class="anchor" href="#marcos-do-desenvolvimento">#</a></dt><dd>Habilidades esperadas em cada fase, como apontar, falar as primeiras palavras ou brincar com outra criança. Aparece nas cadernetas de saúde e nas conversas com o pediatra. Muda pra você: servem de referência para observar, nunca de prazo rígido para cobrar.</dd></div>
             <div class="term" id="meia-entrada-inclusiva"><dt>Meia-entrada inclusiva <a class="anchor" href="#meia-entrada-inclusiva">#</a></dt><dd>Preço reduzido no Playground FaçaAmigos para crianças com laudo ou CIPTEA: R$ 50 os 30 minutos, contra R$ 60 do público geral. Muda pra você: menos peso no bolso para um passeio que já ajuda no desenvolvimento.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-N">
@@ -358,6 +381,7 @@
           <dl class="terms">
             <div class="term" id="neurodivergente-neurotipico"><dt>Neurodivergente / neurotípico <a class="anchor" href="#neurodivergente-neurotipico">#</a></dt><dd>Neurodivergente é quem tem um funcionamento cerebral diferente do padrão mais comum, como no autismo ou no TDAH. Neurotípico é quem segue esse padrão. Muda pra você: nenhum dos dois é melhor, e o playground e a clínica atendem os dois lado a lado. Leia <a href="/aprender/e-para-todas-as-criancas">O playground inclusivo é só pra criança autista?</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-O">
@@ -365,6 +389,7 @@
           <dl class="terms">
             <div class="term" id="orientacao-parental"><dt>Orientação parental <a class="anchor" href="#orientacao-parental">#</a></dt><dd>Sessões em que a psicóloga conversa com você, sem a criança, para entender a rotina da família e ajustar estratégias que funcionem em casa. Ver <a href="/clinica#orientacao">Orientação a pais e escola</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-P">
@@ -373,6 +398,7 @@
             <div class="term" id="pei"><dt>PEI (plano educacional individualizado) <a class="anchor" href="#pei">#</a></dt><dd>Documento feito com a escola que adapta atividades e avaliações às necessidades da criança, garantindo o direito à inclusão escolar. Leia <a href="/aprender/conversar-com-a-escola">Como conversar com a escola</a>.</dd></div>
             <div class="term" id="psicopedagogia"><dt>Psicopedagogia <a class="anchor" href="#psicopedagogia">#</a></dt><dd>Especialidade que investiga dificuldades de aprendizagem, como leitura, escrita ou matemática, e cria estratégias para a criança aprender do jeito dela. Ver <a href="/clinica#psicopedagogia">Psicopedagogia</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-R">
@@ -381,6 +407,7 @@
             <div class="term" id="reforco-positivo"><dt>Reforço positivo <a class="anchor" href="#reforco-positivo">#</a></dt><dd>Reconhecer e valorizar um comportamento logo depois que ele acontece, para que a criança queira repeti-lo. Um elogio específico, um abraço ou um tempo especial contam como reforço. Muda pra você: funciona melhor do que gritar ou punir, e dá pra usar hoje mesmo em casa.</dd></div>
             <div class="term" id="rotina-visual"><dt>Rotina visual <a class="anchor" href="#rotina-visual">#</a></dt><dd>Sequência de imagens ou ícones que mostra o que vai acontecer no dia, ajudando a criança a antecipar e se sentir mais segura com as transições. Veja o passo a passo em <a href="/aprender/rotina-visual-em-casa">Rotina visual em casa</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-S">
@@ -389,6 +416,7 @@
             <div class="term" id="seletividade-alimentar"><dt>Seletividade alimentar <a class="anchor" href="#seletividade-alimentar">#</a></dt><dd>Recusar boa parte dos alimentos por textura, cor ou cheiro, de um jeito que vai além do "enjoado". Aparece nas refeições que viram batalha. Muda pra você: pode ter origem sensorial e se beneficia de acompanhamento, em vez de força de vontade.</dd></div>
             <div class="term" id="shutdown"><dt>Shutdown <a class="anchor" href="#shutdown">#</a></dt><dd>Quando a criança se desliga diante de estímulo demais: fica quieta, se retrai ou "trava", em vez de explodir. Aparece em ambientes barulhentos ou depois de um dia cheio. Muda pra você: é outra forma de sobrecarga, tão real quanto a crise, mesmo sem gritos.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
 
         <div class="letter-group" id="letra-T">
@@ -398,6 +426,7 @@
             <div class="term" id="tea"><dt>TEA (autismo) <a class="anchor" href="#tea">#</a></dt><dd>Transtorno do Espectro Autista: uma forma diferente de se comunicar, se relacionar e processar o mundo. "Espectro" porque cada criança autista é única, com forças e desafios próprios. Muda pra você: entender isso ajuda a enxergar seu filho, não um rótulo.</dd></div>
             <div class="term" id="terapia-ocupacional"><dt>Terapia Ocupacional <a class="anchor" href="#terapia-ocupacional">#</a></dt><dd>Especialidade que trabalha coordenação motora, autonomia nas tarefas do dia (vestir, comer, escovar os dentes) e regulação sensorial. Ver <a href="/clinica#to">Terapia Ocupacional</a>.</dd></div>
           </dl>
+          <a class="back-top" href="#letras">↑ Voltar às letras</a>
         </div>
       </div>
     </section>
