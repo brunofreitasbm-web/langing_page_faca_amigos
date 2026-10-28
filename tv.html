@@ -108,11 +108,12 @@
 
     .tv-brand-sub {
       font-family: 'Fredoka', cursive;
-      font-size: clamp(1.1rem, 1.7vw, 3.4rem);
+      font-size: clamp(1.1rem, 1.5vw, 3rem);
       color: var(--teal-dark);
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
       margin-top: 3px;
     }
 
@@ -120,15 +121,16 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 10px 24px;
+      padding: 8px 18px;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.95);
       box-shadow: 0 4px 16px rgba(26, 63, 53, 0.08);
       border: 1px solid rgba(240, 25, 107, 0.15);
       font-family: 'Fredoka', cursive;
       font-weight: 600;
-      font-size: clamp(0.85rem, 1.4vw, 3rem);
+      font-size: clamp(0.85rem, 1.2vw, 3rem);
       color: var(--dark);
+      white-space: nowrap;
     }
 
     .tv-status-dot {
@@ -152,7 +154,8 @@
     .tv-header-center {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 10px;
+      min-width: 0;
     }
 
     .tv-music-badge {
@@ -246,7 +249,8 @@
 
     .tv-clock-date {
       font-family: 'Nunito', sans-serif;
-      font-size: clamp(1.1rem, 1.7vw, 3.4rem);
+      font-size: clamp(1.1rem, 1.5vw, 3rem);
+      white-space: nowrap;
       color: var(--ink-soft);
       font-weight: 700;
       text-transform: none;

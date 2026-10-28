@@ -1957,6 +1957,10 @@
     /* Revisão de design: um primário por tela, texto >= 14px, alvos >= 44px, foco e movimento reduzido */
     .topbar span { white-space: normal; }
     .nav-wa { min-height: 44px; }
+    .logo { min-height: 44px; }
+    .price-chip { flex-direction: row; align-items: baseline; gap: 8px; padding: 10px 16px; }
+    .price-chip small { text-transform: none; letter-spacing: 0; font-size: 0.875rem; }
+    .price-chip span { font-size: 1.4rem; line-height: 1; }
     .nav-wa svg { color: #128C4A; }
     .nav-actions .btn-ghost { min-height: 44px; }
     .hero-proof a, .partner p a, .es-links a { display: inline-block; padding: 12px 2px; }
@@ -1977,7 +1981,7 @@
       .hero { padding: 40px 0 56px; }
       .hero-actions { flex-direction: column; align-items: stretch; }
       .hero-actions .btn { width: 100%; }
-      .price-chip { align-items: center; align-self: center; }
+      .price-chip { justify-content: center; }
       .eyebrow { letter-spacing: 0.06em; padding: 8px 16px; text-align: left; }
       .topbar .tb-2 { display: none; }
       .topbar { padding: 8px 14px; }

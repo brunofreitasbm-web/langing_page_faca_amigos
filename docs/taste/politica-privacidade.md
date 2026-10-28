@@ -67,11 +67,12 @@ Valores observados (px): 6, 8, 10, 12, 16, 20, 22, 36, 48, 80. Unidade base: 2px
 - **Reason**: um destaque único mostra onde está a mensagem principal; vários virariam ruído
 - **Evidence**: 1 .card (radius 24px, padding 20px 26px, sombra 0 4px 10px) em 9 seções
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Rodapé ilegível (corrigido nesta rodada, registrar como causa).** Evidência: texto #4C6B62 sobre #065264 = 1.50:1 em 34 nós; o CSS global da página (p, li, strong, a) vaza para o rodapé compartilhado. Correção proposta: o rodapé deveria isolar suas cores; a correção local foi um bloco "footer[data-fa-footer] p, li" com branco 92%; o ideal é corrigir em assets/fa-footer.js.
-2. **Linha longa demais.** Evidência: 89 caracteres por linha a 1440px (716px de coluna, 16px), referência de leitura 60 a 75. Correção proposta: limitar o texto a ~68ch ou subir o corpo para 17-18px.
-3. **Sem índice em 5527px de texto.** Evidência: 9 seções, 44 itens, 0 âncoras; a 390px a página tem 9830px. Correção proposta: adicionar lista de âncoras no topo (9 links) e id nos h2.
-4. **Corpo em peso 600.** Evidência: weightDistribution: 600 em 73 nós, 800 em 19; texto contínuo em peso 600 reduz o contraste de ênfase com o 800 dos links e strong. Correção proposta: usar 400-500 no corpo e manter 800 para links e strong.
-5. **Títulos de seção fracos.** Evidência: h2 20px contra corpo 16px = razão 1.25, em Fredoka One 400 (fonte legada que só existe nesta página; termos usa Fredoka 600). Correção proposta: h2 de 22-24px com Fredoka 600, igual às outras páginas legais.
-6. **Saída única para o Playground.** Evidência: .back leva a institutofacaamigos.com.br/playground, mesmo quando o leitor veio de e-book ou de eventos. Correção proposta: usar history.back() como destino preferencial ou oferecer dois destinos.
+1. **Rodapé ilegível.** Status: mantida a correção local (footer[data-fa-footer] p, li em branco 92%); correção na origem pendente em assets/fa-footer.js (compartilhado).
+2. **Linha longa.** Status: aplicada. Corpo a 17px e blocos limitados a 68ch.
+3. **Sem índice.** Status: aplicada. 9 âncoras no topo e ids nos h2.
+4. **Corpo em peso 600.** Status: aplicada. Corpo em 400; strong e links em 800. Rodapé inalterado.
+5. **Títulos fracos.** Status: aplicada. h1/h2 em Fredoka 600; h2 de 24px (razão 1.41); Fredoka One removida da página e do link de fontes.
+6. **Saída única.** Status: adaptada. O botão usa o referrer de mesma origem quando existe; senão mantém o Playground.
+7. **Extras.** Foco visível em verde-escuro (amarelo nas áreas escuras).
