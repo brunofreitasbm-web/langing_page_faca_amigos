@@ -138,7 +138,7 @@
 
     .tv-brand-badge {
       font-family: var(--font-body);
-      font-size: 13px;
+      font-size: 18px;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1.2px;
@@ -149,7 +149,7 @@
     }
 
     .tv-brand-sub {
-      font-size: 14px;
+      font-size: 22px;
       font-weight: 700;
       color: #4FE0C8;
       letter-spacing: 0.3px;
@@ -170,7 +170,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 14px;
+      font-size: 22px;
       font-weight: 800;
       letter-spacing: 0.5px;
       color: var(--yellow);
@@ -191,7 +191,7 @@
     }
 
     .tv-header-info {
-      font-size: 14px;
+      font-size: 22px;
       font-weight: 700;
       color: rgba(255, 255, 255, 0.9);
       display: flex;
@@ -215,7 +215,7 @@
     }
 
     .tv-clock-date {
-      font-size: 13px;
+      font-size: 22px;
       font-weight: 800;
       color: var(--teal-soft);
       line-height: 1.2;
@@ -255,6 +255,8 @@
     }
 
     /* MODO RETRATO VERTICAL */
+    #tvStage.portrait-mode .tv-hud { bottom: 80px; }
+    #tvStage.portrait-mode .tv-amenity-item { font-size: 22px; }
     #tvStage.portrait-mode .tv-slide {
       grid-template-columns: 1fr;
       grid-template-rows: 1fr auto;
@@ -314,7 +316,7 @@
       padding: 8px 18px;
       border-radius: 999px;
       font-weight: 900;
-      font-size: 15px;
+      font-size: 22px;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 16px;
@@ -383,7 +385,7 @@
       background: var(--petrol-soft);
       color: var(--petrol);
       font-weight: 900;
-      font-size: 13px;
+      font-size: 22px;
       border-radius: 999px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
@@ -397,7 +399,7 @@
     }
 
     .tv-action-desc {
-      font-size: 19px;
+      font-size: 22px;
       font-weight: 600;
       color: var(--ink-soft);
       line-height: 1.4;
@@ -450,14 +452,14 @@
     }
 
     .tv-qr-instructions {
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--petrol-deep);
       line-height: 1.35;
     }
 
     .tv-qr-subhint {
-      font-size: 15px;
+      font-size: 22px;
       font-weight: 600;
       color: var(--ink-soft);
     }
@@ -479,7 +481,7 @@
     }
 
     .tv-highlight-text {
-      font-size: 18px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--petrol-deep);
       line-height: 1.35;
@@ -524,13 +526,13 @@
     }
 
     .tv-step-body strong {
-      font-size: 22px;
+      font-size: 26px;
       color: var(--white);
       line-height: 1.2;
     }
 
     .tv-step-body span {
-      font-size: 17px;
+      font-size: 22px;
       color: rgba(255, 255, 255, 0.9);
       font-weight: 600;
     }
@@ -631,18 +633,18 @@
     .tv-amenity-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      font-size: 15px;
+      gap: 12px;
+      font-size: 28px;
       font-weight: 800;
       color: var(--petrol-deep);
     }
 
     .tv-amenity-icon {
-      font-size: 18px;
+      font-size: 24px;
       display: grid;
       place-items: center;
-      width: 32px;
-      height: 32px;
+      width: 44px;
+      height: 44px;
       background: var(--petrol-soft);
       border-radius: 8px;
     }
@@ -656,7 +658,7 @@
 
     .tv-slide-counter {
       font-family: var(--font-display);
-      font-size: 17px;
+      font-size: 22px;
       color: var(--petrol);
       background: var(--petrol-soft);
       padding: 6px 18px;
@@ -669,7 +671,7 @@
        ========================================================================== */
     .tv-hud {
       position: absolute;
-      bottom: 74px;
+      bottom: 10px;
       right: 44px;
       display: flex;
       gap: 10px;
@@ -702,6 +704,7 @@
       transition: background 0.2s, transform 0.2s;
     }
 
+    .tv-hud-btn:focus-visible { outline: 3px solid var(--yellow); outline-offset: 2px; }
     .tv-hud-btn:hover {
       background: var(--pink);
       transform: scale(1.05);
@@ -713,7 +716,7 @@
     .tv-slide.solo { grid-template-columns: 1fr; }
     .tv-slide.solo .tv-headline { font-size: 64px; max-width: 84%; }
     .tv-slide.solo .tv-subtext { font-size: 30px; max-width: 76%; line-height: 1.4; }
-    .tv-slide.solo .tv-kicker { font-size: 18px; padding: 10px 22px; }
+    .tv-slide.solo .tv-kicker { font-size: 26px; padding: 10px 22px; }
 
     .tv-slide.tutorial { grid-template-columns: 1.05fr 0.95fr; }
     .tv-slide.tutorial .tv-tutorial-steps { gap: 14px; margin-top: 22px; }
@@ -736,8 +739,8 @@
     }
     .tv-qr-big svg { width: 348px; height: 348px; border-radius: 22px; }
     .tv-action-card.tutorial .tv-qr-callout { font-size: 34px; }
-    .tv-action-card.tutorial .tv-qr-instructions { font-size: 21px; }
-    .tv-action-card.tutorial .tv-qr-subhint { font-size: 17px; }
+    .tv-action-card.tutorial .tv-qr-instructions { font-size: 24px; }
+    .tv-action-card.tutorial .tv-qr-subhint { font-size: 22px; }
 
     /* QR normal: svg preenche a caixa */
     .tv-qr-box svg { width: 100%; height: 100%; border-radius: 10px; }
@@ -797,7 +800,7 @@
       background: var(--petrol-soft);
       color: var(--petrol);
       font-weight: 900;
-      font-size: 19px;
+      font-size: 22px;
       border-radius: 999px;
       padding: 8px 18px;
     }
@@ -807,9 +810,18 @@
     .tv-vs-box.right { background: rgba(46, 207, 181, 0.25); border: 1.5px solid rgba(46, 207, 181, 0.6); }
     .tv-vs-box.left .tv-vs-header { color: var(--white); }
     .tv-vs-box.right .tv-vs-header { color: #A7F3D0; }
-    .tv-vs-header { font-size: 17px; }
-    .tv-vs-list { font-size: 19px; gap: 9px; }
+    .tv-vs-header { font-size: 22px; }
+    .tv-vs-list { font-size: 22px; gap: 9px; }
     .tv-vs-box { padding: 18px 22px; }
+
+    /* Movimento reduzido: sem zoom lento, sem deslize, sem pulso */
+    @media (prefers-reduced-motion: reduce) {
+      .tv-slide { transform: none; transition: opacity 0.3s linear, visibility 0.3s; }
+      .tv-slide-image, .tv-slide.active .tv-slide-image { transform: none; transition: none; }
+      .tv-live-dot { animation: none; }
+      .tv-progress-bar { transition: none; }
+      .tv-hud, .tv-hud-btn { transition: none; }
+    }
   </style>
 </head>
 

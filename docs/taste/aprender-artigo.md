@@ -67,11 +67,11 @@ Fonte: `/aprender/birra-ou-crise.html` em 1440x900 (extract.js) e 390x844, estad
 
 Mesmo CSS, mesmo esqueleto. O que muda é o conteúdo: de 322 palavras (brincar-com-proposito-10-minutos) a 576 (e-para-todas-as-criancas); h2 de 2 (sinais-para-observar) a 5 (brincar..., e-para-todas...); lista em 6 dos 9 (3 a 5 itens; brincar-com-proposito-10-minutos, como-e-a-terapia-comportamental e conversar-com-a-escola não têm); todos têm 1 caixa "Na prática", 1 CTA de mapeamento, 1 bloco de WhatsApp e 1 aviso legal; nenhum tem imagem no corpo.
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas (nos 9 artigos, mesmo CSS)
 
-1. **Dois CTAs empilhados com pesos quase iguais no fim do artigo.** Evidência: "Próximo passo" (borda 2px, botão rosa, y=1574, 176px) e "Você não está sozinha" (fundo #E2F8F8, botão verde, y=1771, 175px) seguidos, e depois o rodapé com mais um bloco "Contato desta unidade" e botões de WhatsApp. Correção: um CTA primário (mapeamento) e o WhatsApp como link de texto, ou fundir as duas caixas.
-2. **Linhas de ~83 caracteres no desktop.** Evidência: 708px de largura com corpo de 17px; a faixa confortável é 60-75. Correção: `max-width: 65ch` no texto (cerca de 600px) ou corpo de 18px.
-3. **Texto de apoio pequeno e pálido onde há informação útil.** Evidência: breadcrumb 13.76px com opacity .75, byline com data e CRP em 14.7px/700 opacity .75, aviso legal 13.6px com opacity .7 (agora .85). Correção: piso de 14px e remover opacity em favor de cor sólida #3F6D79.
-4. **Sem imagem de capa nem elemento de abertura, apesar de os cards de /aprender terem foto.** Evidência: card em /aprender com foto 259x145 e artigo com 0 imagens. Perde-se o reconhecimento visual entre lista e artigo. Correção: foto de 16:9 com `max-height: 220px` no mobile, abaixo do byline, para não empurrar o 1o parágrafo.
-5. **Sem navegação dentro de artigos de 5 h2.** Evidência: e-para-todas-as-criancas tem 576 palavras e 5 h2 sem âncora; a página mobile de birra-ou-crise tem 5266px. Correção: lista de 'Neste guia' com 3 a 5 links no topo, só nos artigos com 4+ h2.
-6. **"Leia também" sem imagem, cartões #F4FAFB de 16px de raio e título em 15.7px.** Evidência: `.lt-card b` 15.68px/800 sobre #F4FAFB, sem tag de categoria nem tempo de leitura. Correção: reaproveitar o card de /aprender (tag + tempo) para o leitor decidir o próximo guia.
+1. **Dois CTAs empilhados.** Adaptada: "Próximo passo" (rosa) segue como único primário; o WhatsApp virou link de texto sublinhado com ícone (48px de altura, mesmo `data-cta`), dentro da caixa turquesa, que foi mantida.
+2. **Linhas de ~83 caracteres.** Adaptada: coluna de 664px (cerca de 70 caracteres) em vez de `max-width: 65ch`, para caixas e texto manterem o mesmo alinhamento; corpo segue em 17px.
+3. **Texto de apoio pálido.** Aplicada: breadcrumb, byline, rótulo "Próximo passo" e aviso legal em 14px+ com cor sólida #3F6D79 (sem opacity); eyebrow 14px.
+4. **Imagem de capa.** Descartada: contradiz a restrição do Taste DNA (a resposta vem primeiro; capa empurra o 1o parágrafo no mobile).
+5. **Navegação interna.** Aplicada: bloco "Neste guia" com âncoras (itens de 44px) nos 3 artigos com 4+ h2 (brincar-com-proposito-10-minutos, e-para-todas-as-criancas, laudo-e-ciptea); h2 ganharam `id` e `scroll-margin-top`.
+6. **"Leia também" sem contexto.** Adaptada: cartões com tempo e categoria (mesmos dados de /aprender) e título em 17px; sem imagem, para manter o artigo sem fotos.

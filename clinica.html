@@ -147,12 +147,11 @@
     .svc dd { margin: 0 0 4px; font-size: .96rem; font-weight: 600; color: var(--ink-soft); }
     .svc dd a, .lead a { color: var(--petrol); }
     .svc .gain { margin: 0 0 4px; font-size: .96rem; font-weight: 700; color: var(--dark); }
-    .svc details { margin-top: 10px; border-top: 1px solid rgba(26, 63, 53, .1); }
-    .svc summary { min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; list-style: none; font-weight: 800; font-size: .95rem; color: var(--petrol); }
-    .svc summary::-webkit-details-marker { display: none; }
-    .svc summary::after { content: '+'; font-size: 1.4rem; font-weight: 900; color: var(--pink-dark); flex: none; }
-    .svc details[open] summary::after { content: '−'; }
-    .svc details dl { padding-bottom: 6px; }
+    .svc .more { margin-top: 10px; border-top: 1px solid rgba(26, 63, 53, .1); }
+    .more-btn { width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; background: none; border: 0; padding: 0; font-family: inherit; font-weight: 800; font-size: 1rem; color: var(--petrol); text-align: left; }
+    .more-btn::after { content: '+'; font-size: 1.4rem; font-weight: 900; color: var(--pink-dark); flex: none; }
+    .more-btn[aria-expanded="true"]::after { content: '−'; }
+    .more-body dl { padding-bottom: 6px; }
     .btn-buy svg { width: 22px; height: 22px; flex: none; }
 
     /* Para quem é */
@@ -435,12 +434,12 @@
               <div><dt>Pra quem é</dt><dd>Toda família que quer entender melhor o que está acontecendo, com ou sem laudo.</dd></div>
               <div><dt>O que muda pra você</dt><dd class="gain">Você sai com um primeiro plano, não com uma lista de exames.</dd></div>
             </dl>
-            <details>
-              <summary>Ver como funciona</summary>
+            <div class="more"><button type="button" class="more-btn" aria-expanded="false" aria-controls="more-1">Ver como funciona</button>
+              <div class="more-body" id="more-1" hidden>
               <dl>
                 <div><dt>O que acontece</dt><dd>Uma conversa e observação, sem pressa, para enxergar a rotina completa da criança.</dd></div>
               </dl>
-            </details>
+            </div></div>
           </div>
           <div class="svc" id="psicologia">
             <div class="ib">🧠</div>
@@ -449,12 +448,12 @@
               <div><dt>Pra quem é</dt><dd>Crianças com birras frequentes, dificuldade de comunicação ou comportamentos que preocupam a família.</dd></div>
               <div><dt>O que muda pra você</dt><dd class="gain">Menos "apagar incêndio", mais entender o porquê — e o que fazer a respeito.</dd></div>
             </dl>
-            <details>
-              <summary>Ver como funciona</summary>
+            <div class="more"><button type="button" class="more-btn" aria-expanded="false" aria-controls="more-2">Ver como funciona</button>
+              <div class="more-body" id="more-2" hidden>
               <dl>
                 <div><dt>O que acontece</dt><dd>Sessões que ensinam novas habilidades com repetição afetuosa, apoiadas em <a href="/glossario#aba">Análise do Comportamento</a>.</dd></div>
               </dl>
-            </details>
+            </div></div>
           </div>
           <div class="svc" id="fonoaudiologia">
             <div class="ib">🗣️</div>
@@ -463,12 +462,12 @@
               <div><dt>Pra quem é</dt><dd>Crianças com fala atrasada, difícil de entender, ou seletividade alimentar.</dd></div>
               <div><dt>O que muda pra você</dt><dd class="gain">Mais formas de se entender com o seu filho, no dia a dia.</dd></div>
             </dl>
-            <details>
-              <summary>Ver como funciona</summary>
+            <div class="more"><button type="button" class="more-btn" aria-expanded="false" aria-controls="more-3">Ver como funciona</button>
+              <div class="more-body" id="more-3" hidden>
               <dl>
                 <div><dt>O que acontece</dt><dd>Sessões de estímulo à fala, à linguagem e, quando necessário, à alimentação.</dd></div>
               </dl>
-            </details>
+            </div></div>
           </div>
           <div class="svc" id="to">
             <div class="ib">🤸</div>
@@ -477,12 +476,12 @@
               <div><dt>Pra quem é</dt><dd>Crianças com dificuldade de coordenação, autonomia nas tarefas do dia, ou hipersensibilidade a som, luz ou toque.</dd></div>
               <div><dt>O que muda pra você</dt><dd class="gain">Tarefas do dia a dia (vestir, comer, escovar os dentes) ficam menos batalha.</dd></div>
             </dl>
-            <details>
-              <summary>Ver como funciona</summary>
+            <div class="more"><button type="button" class="more-btn" aria-expanded="false" aria-controls="more-4">Ver como funciona</button>
+              <div class="more-body" id="more-4" hidden>
               <dl>
                 <div><dt>O que acontece</dt><dd>Atividades que trabalham <a href="/glossario#integracao-sensorial">integração sensorial</a> e autonomia, do jeito de cada criança.</dd></div>
               </dl>
-            </details>
+            </div></div>
           </div>
           <div class="svc" id="psicopedagogia">
             <div class="ib">📘</div>
@@ -491,12 +490,12 @@
               <div><dt>Pra quem é</dt><dd>Crianças com dificuldade de aprendizagem: leitura, escrita ou matemática.</dd></div>
               <div><dt>O que muda pra você</dt><dd class="gain">Menos "ele não presta atenção", mais um caminho que funciona pra ele.</dd></div>
             </dl>
-            <details>
-              <summary>Ver como funciona</summary>
+            <div class="more"><button type="button" class="more-btn" aria-expanded="false" aria-controls="more-5">Ver como funciona</button>
+              <div class="more-body" id="more-5" hidden>
               <dl>
                 <div><dt>O que acontece</dt><dd>Estratégias criadas para o jeito de aprender do seu filho, não o contrário.</dd></div>
               </dl>
-            </details>
+            </div></div>
           </div>
           <div class="svc" id="neuro">
             <div class="ib">🔍</div>
@@ -505,12 +504,12 @@
               <div><dt>Pra quem é</dt><dd>Famílias com dúvidas sobre memória, atenção, foco ou desenvolvimento cognitivo.</dd></div>
               <div><dt>O que muda pra você</dt><dd class="gain">Um retrato mais completo, para decisões com mais clareza.</dd></div>
             </dl>
-            <details>
-              <summary>Ver como funciona</summary>
+            <div class="more"><button type="button" class="more-btn" aria-expanded="false" aria-controls="more-6">Ver como funciona</button>
+              <div class="more-body" id="more-6" hidden>
               <dl>
                 <div><dt>O que acontece</dt><dd>Testes que mapeiam essas funções e orientam escola e terapia.</dd></div>
               </dl>
-            </details>
+            </div></div>
           </div>
           <div class="svc" id="orientacao">
             <div class="ib">👨‍👩‍👧</div>
@@ -519,12 +518,12 @@
               <div><dt>Pra quem é</dt><dd>Toda família em acompanhamento, e também a escola do seu filho, quando fizer sentido.</dd></div>
               <div><dt>O que muda pra você</dt><dd class="gain">Você não sai sozinha da reunião com a escola, nem sozinha em casa.</dd></div>
             </dl>
-            <details>
-              <summary>Ver como funciona</summary>
+            <div class="more"><button type="button" class="more-btn" aria-expanded="false" aria-controls="more-7">Ver como funciona</button>
+              <div class="more-body" id="more-7" hidden>
               <dl>
                 <div><dt>O que acontece</dt><dd>Sessões só com você para ajustar a rotina em casa, e apoio na conversa com a coordenação pedagógica.</dd></div>
               </dl>
-            </details>
+            </div></div>
           </div>
         </div>
       </div>
@@ -784,6 +783,7 @@
   <script src="/assets/fa-footer.js?v=20261023" defer></script>
   <script>
     (function () {
+      document.querySelectorAll('.more-btn').forEach(function (b) { b.addEventListener('click', function () { var o = b.getAttribute('aria-expanded') === 'true'; b.setAttribute('aria-expanded', String(!o)); document.getElementById(b.getAttribute('aria-controls')).hidden = o; }); });
       function push(o) { try { (window.dataLayer = window.dataLayer || []).push(o); } catch (e) { } }
       document.querySelectorAll('[data-cta]').forEach(function (a) {
         var where = a.getAttribute('data-cta');

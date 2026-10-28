@@ -62,11 +62,11 @@ Fonte: `/glossario.html` em 1440x900 (extract.js) e 390x844, estado original, an
 - **Reason**: a ilustração pede ao leitor mais uma interpretação num momento em que ele só quer a definição.
 - **Evidence**: 0 imagens de conteúdo; 1 sombra em 42 cards; card #F4FAFB sobre fundo #F4FAFB (70.6% da área), separado apenas pela sombra `rgba(6,82,100,.10)`.
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
-1. **Busca fixa fica parcialmente escondida atrás do topo no mobile.** Evidência: no 390px a topbar tem 98px de altura, mas `.finder` usa `top: 64px`; ao rolar, o campo de busca (y=80 a 132) fica com 18px cobertos pela topbar (z-index 50 contra 40), visto no screenshot. Correção: `top: 98px` abaixo de 640px (ou topbar fixa em 64px).
-2. **Barra fixa ocupa 173px do mobile, 20% de uma tela de 844px.** Evidência: `.finder` 173px de altura com busca (52px) e 2 linhas de letras. Correção: no mobile, deixar só a busca fixa e as letras rolarem, ou letras em uma faixa rolável horizontal de 44px.
-3. **Alvos de toque de 34x34px nas letras.** Evidência: 16 `.letters a` com `min-width:34px; height:34px` e gap de 6px, abaixo dos 44px recomendados. Correção: 44x44px no mobile com gap 4px, e as letras já em duas linhas passam a 3 linhas ou rolam em faixa.
-4. **Lista de 14819px no mobile, 41 cards iguais, sem ponto de retorno.** Evidência: 350px de altura por card no mobile e nenhum botão "voltar ao topo" ou "A-Z". Correção: botão flutuante "Letras" ou link "voltar à busca" ao fim de cada grupo.
-5. **Links rosa sublinhados em todo verbete competem com a leitura.** Evidência: 22 links `.term dd a` em 800 + sublinhado; metade dos cards termina em um link rosa em negrito, no mesmo peso do termo. Correção: peso 700 e sublinhado fino em 1px, para a definição liderar o card.
-6. **Card e fundo têm a mesma cor.** Evidência: `.term` #F4FAFB sobre corpo #F4FAFB; a sombra 0.10 de alpha é a única separação (imperceptível em telas de brilho baixo). Correção: fundo do card #FFFFFF, que dá 1.05:1 e mantém o petróleo em 8.75:1.
+1. **Busca fixa atrás do topo no mobile.** Aplicada: abaixo de 640px a busca fica fixa em `top: 98px`, logo abaixo da topbar (verificado: topbar termina em 98px, busca começa em 98px).
+2. **Barra fixa de 173px no mobile.** Aplicada: só a busca (65px) fica fixa; as letras rolam com a página.
+3. **Alvos de 34px.** Aplicada: letras 44x44px com gap 4px (grade que quebra linha no mobile); âncora "#" com área de toque ampliada e 14px.
+4. **Sem ponto de retorno.** Adaptada: link "↑ Voltar às letras" ao fim de cada grupo, só no mobile.
+5. **Links rosa pesados.** Aplicada: peso 700 e sublinhado de 1px.
+6. **Card e fundo iguais.** Descartada: a página usa fundo branco (#fff) e o card #F4FAFB já se distingue dele; trocar para branco apagaria o contraste que existe.
