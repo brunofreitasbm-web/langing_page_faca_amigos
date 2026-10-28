@@ -1,6 +1,6 @@
 # Design Map
 
-Fonte: http://localhost:8765/hotspot/alogin.html e /hotspot/login.html (templates do hotspot MikroTik), referência principal 390x844 (mobile-first), conferidas em 1440x900. Medido com extract.js e conferido no screenshot, na versão original (antes das correções de contraste). O conjunto são seis telas com o mesmo kit: login (formulário), alogin (pós-login, versão longa), status, logout, error e rlogin (redireciona). Nas capturas locais aparecem os textos literais $(...); as fotos de alogin vêm de institutofacaamigos.com.br e ficam vazias sem rede.
+Fonte: alogin.html e login.html do conjunto hotspot (templates do hotspot MikroTik), referência principal 390x844 (mobile-first), conferidas em 1440x900. Medido com extract.js e conferido no screenshot, na versão original (antes das correções de contraste). O conjunto são seis telas com o mesmo kit: login (formulário), alogin (pós-login, versão longa), status, logout, error e rlogin (redireciona). Nas capturas locais aparecem os textos literais $(...); as fotos de alogin vêm de institutofacaamigos.com.br e ficam vazias sem rede.
 
 ## Spacing Scale
 - login.html (mais usados): 10px (11x), 13px (8x), 16px (6x), 6px (4x), 14px (3x), 26px (2x), 20px (2x); card com padding 26px 22px e margens 20px entre blocos
@@ -37,7 +37,7 @@ Fonte: http://localhost:8765/hotspot/alogin.html e /hotspot/login.html (template
 - Botões: login 306x52 (17px Fredoka); error 164x49; logout 180x51; status 354x53 (rosa), 354x57 (borda #E7E1D5 2px), 354x50 (link de texto 13.5px); alogin 350x54
 - Campos de login: 306x50, borda do campo 14px, fonte 16px; checkboxes 20x20 com accent-color rosa; consent com rótulo 276x55
 - Grade: coluna única, max-width 420px (status, error, logout), card de 350 a 380px no login; sem :focus-visible; movimento só em transitions de transform/background/border-color com cubic-bezier(0.34,1.4,0.64,1)
-- Diferenças: error não tem h1 (só a mensagem $(error) em vermelho); logout tem h1 de 20px e botão com sombra rosa; status acrescenta barra de estado com ponto verde #25D366 e o tempo restante; rlogin é um aviso de uma linha com redirecionamento por meta refresh
+- Diferenças: error não tem h1 (só a mensagem $(error) em vermelho); logout tem h1 de 20px e botão com sombra rosa; status acrescenta barra de estado com ponto verde #28C880 e o tempo restante; rlogin é um aviso de uma linha com redirecionamento por meta refresh
 
 ---
 

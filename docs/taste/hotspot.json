@@ -1,5 +1,5 @@
 {
-  "source": "http://localhost:8765/hotspot/alogin.html + /hotspot/login.html (conjunto hotspot: alogin, login, error, logout, status, rlogin)",
+  "source": "conjunto hotspot (pasta do roteador): alogin.html e login.html como base; error, logout, status e rlogin comparados",
   "tokens": {
     "spacing": {
       "scale": [

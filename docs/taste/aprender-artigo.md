@@ -55,7 +55,7 @@ Fonte: `/aprender/birra-ou-crise.html` em 1440x900 (extract.js) e 390x844, estad
 - **Trigger**: texto longo com links, lista e um único pedido final.
 - **Decision**: rosa em eyebrow, `li::marker`, link e botão; petróleo no resto, em vez de turquesa para links e rosa só no botão.
 - **Reason**: o leitor de texto longo procura o próximo clique; o rosa só aparece onde ele existe.
-- **Evidence**: `a {color: var(--pink); font-weight: 800}`; botão com o mesmo rosa; rosa em 12 de 52 textos no desktop; #FB3D6A 3.51:1 contra #D61F4A 5.06:1 sobre branco.
+- **Evidence**: `a {color: var(--pink); font-weight: 800}`; botão com o mesmo rosa; rosa em 4 textos contra 38 em petróleo (extract.js); #FB3D6A 3.51:1 contra #D61F4A 5.06:1 sobre branco.
 
 ### Restrição: abrir sem imagem de capa
 - **Trigger**: os cards de `/aprender` têm foto e o artigo poderia herdá-la como capa.
@@ -65,7 +65,7 @@ Fonte: `/aprender/birra-ou-crise.html` em 1440x900 (extract.js) e 390x844, estad
 
 ## O que mais varia entre os 9 artigos
 
-Mesmo CSS, mesmo esqueleto. O que muda é o conteúdo: de 322 palavras (brincar-com-proposito-10-minutos) a 576 (e-para-todas-as-criancas); h2 de 2 (sinais-para-observar) a 5 (brincar..., e-para-todas...); lista em 7 dos 9 (3 a 5 itens; brincar..., como-e-a-terapia... e conversar-com-a-escola não têm); todos têm 1 caixa "Na prática", 1 CTA de mapeamento, 1 bloco de WhatsApp e 1 aviso legal; nenhum tem imagem no corpo.
+Mesmo CSS, mesmo esqueleto. O que muda é o conteúdo: de 322 palavras (brincar-com-proposito-10-minutos) a 576 (e-para-todas-as-criancas); h2 de 2 (sinais-para-observar) a 5 (brincar..., e-para-todas...); lista em 6 dos 9 (3 a 5 itens; brincar-com-proposito-10-minutos, como-e-a-terapia-comportamental e conversar-com-a-escola não têm); todos têm 1 caixa "Na prática", 1 CTA de mapeamento, 1 bloco de WhatsApp e 1 aviso legal; nenhum tem imagem no corpo.
 
 ## Mudanças sugeridas (não aplicadas)
 
