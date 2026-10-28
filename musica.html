@@ -249,7 +249,7 @@
       display: inline-block;
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       padding: 4px 16px;
       border-radius: 999px;
       margin-bottom: 10px;
@@ -395,7 +395,6 @@
       border-radius: 999px;
       font-family: 'Fredoka One', cursive;
       font-size: 1.15rem;
-      white-space: nowrap;
       gap: 8px;
       background: rgba(46, 207, 181, 0.2);
       border-color: var(--teal);
@@ -453,7 +452,7 @@
     }
 
     .upcoming-badge {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       font-weight: 800;
       color: var(--teal);
       background: rgba(46, 207, 181, 0.15);
@@ -495,13 +494,11 @@
     }
 
     .upcoming-item .tag {
-      font-size: 0.8rem;
-      font-weight: 800;
+      font-size: 0.72rem;
       padding: 2px 8px;
       border-radius: 4px;
       text-transform: uppercase;
-      font-family: 'Nunito', sans-serif;
-      white-space: nowrap;
+      font-family: 'Fredoka', cursive;
     }
 
     .upcoming-item .tag.mp3 { background: var(--teal-soft); color: var(--teal); }
@@ -519,72 +516,6 @@
     footer a {
       color: var(--teal);
       text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      min-height: 44px;
-      padding: 0 4px;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* Botões nativos herdam a família da página (antes caíam em Arial) */
-    button,
-    input {
-      font-family: inherit;
-    }
-
-    /* Foco visível: teclado e controle de TV */
-    .ctrl-btn:focus-visible,
-    .btn-start-hero:focus-visible,
-    .btn-tv:focus-visible,
-    .brand:focus-visible,
-    footer a:focus-visible,
-    .volume-slider:focus-visible,
-    .upcoming-list:focus-visible {
-      outline: 3px solid var(--yellow);
-      outline-offset: 3px;
-    }
-
-    .volume-slider {
-      height: 44px;
-    }
-
-    .btn-tv {
-      min-height: 44px;
-    }
-
-    /* Celular estreito: "Próxima" numa linha só */
-    @media (max-width: 480px) {
-      .controls-row { gap: 12px; }
-      .ctrl-btn-next { padding: 0 18px; }
-      .player-card { padding: 28px 18px; }
-    }
-
-    /* Movimento reduzido: sem pulso, balanço nem transições */
-    @media (prefers-reduced-motion: reduce) {
-      .live-dot,
-      .artwork-stage.playing,
-      .artwork-stage.playing .artwork-char {
-        animation: none;
-      }
-
-      .artwork-stage,
-      .artwork-char,
-      .btn-start-hero,
-      .ctrl-btn,
-      .btn-tv,
-      .scrubber-fill {
-        transition: none;
-      }
-
-      .btn-start-hero:hover,
-      .ctrl-btn:hover,
-      .ctrl-btn-play:hover,
-      .btn-tv:hover {
-        transform: none;
-      }
     }
   </style>
 </head>
@@ -647,15 +578,15 @@
 
     <!-- CONTROLES UNIFICADOS -->
     <div class="controls-row" id="controlsRow">
-      <button class="ctrl-btn" id="btnPrev" title="Música Anterior" aria-label="Música anterior">⏮</button>
-      <button class="ctrl-btn ctrl-btn-play" id="btnPlay" title="Pausar / Retomar" aria-label="Pausar ou retomar">⏸</button>
+      <button class="ctrl-btn" id="btnPrev" title="Música Anterior">⏮</button>
+      <button class="ctrl-btn ctrl-btn-play" id="btnPlay" title="Pausar / Retomar">⏸</button>
       <button class="ctrl-btn ctrl-btn-next" id="btnNext" title="Próxima Faixa Aleatória">⏭ Próxima</button>
     </div>
 
     <!-- VOLUME -->
     <div class="volume-row">
       <span id="volumeIcon">🔊</span>
-      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.85" title="Volume da Rádio" aria-label="Volume da rádio">
+      <input type="range" class="volume-slider" id="volumeSlider" min="0" max="1" step="0.05" value="0.85" title="Volume da Rádio">
     </div>
   </main>
 
@@ -665,7 +596,7 @@
       <h2>📻 Na Fila da Rádio</h2>
       <span class="upcoming-badge" id="upcomingBadge">40 faixas no rodízio</span>
     </div>
-    <div class="upcoming-list" id="upcomingList" tabindex="0" role="region" aria-label="Lista de faixas na fila">
+    <div class="upcoming-list" id="upcomingList">
       <!-- Inserido dinamicamente pelo JS -->
     </div>
   </section>

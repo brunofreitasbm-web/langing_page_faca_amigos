@@ -135,11 +135,13 @@
     /* Hero */
     .hero { padding: 40px 0 72px; }
     .hero .wrap { display: grid; gap: 40px; }
-    .hero h1 { font-size: clamp(2.05rem, 8.4vw, 3.5rem); font-weight: 600; margin-bottom: 18px; }
+    .hero h1 { text-wrap: balance; font-size: clamp(2.05rem, 8.4vw, 3.5rem); font-weight: 600; margin-bottom: 18px; }
     .hero h1 mark { background: var(--yellow); color: var(--petrol); padding: 0 .28em; border-radius: 14px; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
     .hero .sub { font-size: 1.125rem; color: rgba(255, 255, 255, .92); max-width: 560px; }
     .seal { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
-    .seal span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .13); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .875rem; }
+    .seal span { display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 255, 255, .22); border-radius: 999px; padding: 7px 14px; font-weight: 700; font-size: .875rem; }
+    .price-hint strong { font-family: var(--font-display); font-weight: 600; font-size: 1.75rem; line-height: 1.1; vertical-align: -2px; }
+    .price-hint span { display: block; font-size: 1rem; font-weight: 700; }
     .price-hint { margin-top: 14px; font-weight: 700; font-size: 1rem; color: rgba(255, 255, 255, .9); }
     .price-hint s { opacity: .7; }
     .hero-cta { margin-top: 26px; display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
@@ -329,7 +331,7 @@
     .also .kicker { font-size: .875rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .75; margin-bottom: 6px; }
     .also h2 { font-size: 1.35rem; margin-bottom: 8px; }
     .also p { margin-bottom: 12px; }
-    .also a.go { font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
+    .also a.go { display: inline-flex; align-items: center; min-height: 44px; font-weight: 800; text-decoration: underline; text-underline-offset: 4px; }
   </style>
   <script type="application/ld+json">
 {
@@ -536,11 +538,11 @@
           <div class="hero-cta">
             <a class="btn-buy" href="https://pay.hotmart.com/M107692257Y" target="_blank" rel="noopener" data-cta="hero">Quero o guia</a>
           </div>
-          <p class="price-hint">Valor: <strong>R$ 149</strong></p>
+          <p class="price-hint">Valor: <strong>R$ 149</strong> <span id="parcelas-hero" hidden></span></p>
           <div class="seal" aria-label="Resumo da oferta">
+            <span><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg>Garantia de 7 dias</span>
             <span><svg class="ico" aria-hidden="true"><use href="#i-zap"/></svg>Acesso imediato</span>
             <span><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg>PDF</span>
-            <span><svg class="ico" aria-hidden="true"><use href="#i-shield"/></svg>Garantia de 7 dias</span>
           </div>
         </div>
         <div class="mock">
@@ -728,7 +730,7 @@
           <p class="role">Psicóloga infantil · CRP 10/4727</p>
           <p>Idealizadora e fundadora do FaçaAmigos, em Belém (PA), que reúne o Centro de Terapia Comportamental e o playground inclusivo da marca. Ela resume o próprio trabalho assim: <em>desenvolvimento infantil e inclusão, da clínica ao brincar.</em></p>
           <p style="margin-top:12px">Este guia nasceu de um encontro entre o rigor da ciência e o calor do colo: traduzir a pesquisa sobre aprendizagem para a língua que toda mãe e todo pai já falam, a do amor cansado, mas persistente.</p>
-          <div class="tags"><span>Centro de Terapia Comportamental</span><span>Belém · Pará</span><a href="https://www.instagram.com/isagoncalvesfreitas/" target="_blank" rel="noopener" style="background:#fff;box-shadow:var(--shadow);border-radius:999px;padding:7px 14px;font-weight:700;font-size:.88rem;text-decoration:none">@isagoncalvesfreitas</a></div>
+          <div class="tags"><span>Centro de Terapia Comportamental</span><span>Belém · Pará</span><a href="https://www.instagram.com/isagoncalvesfreitas/" target="_blank" rel="noopener" style="background:#fff;box-shadow:var(--shadow);border-radius:999px;padding:11px 14px;font-weight:700;font-size:.875rem;text-decoration:none">@isagoncalvesfreitas</a></div>
         </div>
       </div>
     </section>
@@ -886,7 +888,7 @@
       });
 
       // Parcelamento (só aparece se configurado)
-      if (CONFIG.parcelas) { var p = document.getElementById('parcelas'); p.textContent = CONFIG.parcelas; p.hidden = false; }
+      if (CONFIG.parcelas) { ['parcelas', 'parcelas-hero'].forEach(function (id) { var p = document.getElementById(id); if (p) { p.textContent = CONFIG.parcelas; p.hidden = false; } }); }
 
       // Downloads do capítulo grátis
       document.querySelectorAll('[data-sample]').forEach(function (a) {

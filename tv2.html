@@ -174,7 +174,7 @@
     .c-brand-sub {
       font-family: 'Fredoka', cursive;
       font-weight: 700;
-      font-size: 28px;
+      font-size: 22px;
       color: var(--teal-dark);
       letter-spacing: 2px;
       text-transform: uppercase;
@@ -294,24 +294,6 @@
       box-shadow: 0 20px 44px rgba(224, 21, 96, 0.25);
     }
 
-    .c-plan { position: relative; }
-    .c-plan.on::before {
-      content: 'agora';
-      position: absolute;
-      top: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--pink);
-      color: var(--white);
-      font-family: 'Fredoka', cursive;
-      font-weight: 700;
-      font-size: 28px;
-      line-height: 1;
-      padding: 8px 22px;
-      border-radius: 999px;
-      box-shadow: 0 6px 16px rgba(224, 21, 96, 0.3);
-    }
-
     .c-plan-icon { font-size: 60px; line-height: 1; }
 
     .c-plan-time {
@@ -343,15 +325,15 @@
     .c-cta span {
       display: inline-block;
       opacity: 0.8;
-      animation: beat-word 6s ease-in-out infinite; /* palavras pulsam só nos 3s iniciais; o brilho do preço passa de 3,3s a 4,8s */
+      animation: beat-word 3s ease-in-out infinite;
     }
 
     .c-cta span:nth-child(2) { animation-delay: 1s; }
     .c-cta span:nth-child(3) { animation-delay: 2s; color: var(--pink); }
 
     @keyframes beat-word {
-      0%, 25%, 100% { opacity: 0.8; transform: scale(1); }
-      6%, 15% { opacity: 1; transform: scale(1.1); }
+      0%, 100% { opacity: 0.8; transform: scale(1); }
+      15%, 30% { opacity: 1; transform: scale(1.1); }
     }
 
     .c-easy {
@@ -408,13 +390,6 @@
     }
 
     .c-hud-btn:hover { background: var(--pink); }
-    .c-hud-btn:focus-visible { outline: 4px solid var(--yellow); outline-offset: 3px; }
-
-    @media (prefers-reduced-motion: reduce) {
-      .c-price, .c-price::after, .c-cta span, .c-progress-fill.run { animation: none; }
-      .c-slide img, .c-slide.active img { transform: none; transition: none; }
-      .c-cta span { opacity: 1; }
-    }
 
     /* Aviso de áudio bloqueado pelo navegador (some quando o som destrava) */
     .c-sound-hint {
@@ -428,7 +403,7 @@
       padding: 10px 20px;
       border-radius: 999px;
       font-family: 'Fredoka', cursive;
-      font-size: 28px;
+      font-size: 22px;
       font-weight: 600;
     }
 

@@ -54,9 +54,9 @@
     header { display: flex; align-items: center; gap: 12px; }
     header img { width: 52px; height: 52px; object-fit: contain; }
     header b { display: block; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 28px; color: var(--pink); line-height: 1; }
-    header span { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; color: #0F6E5F; }
+    header span { font-family: 'Fredoka', cursive; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: #0F6E5F; }
 
-    h1 { font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 26px; line-height: 1.1; text-wrap: balance; }
+    h1 { font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 30px; line-height: 1.1; text-wrap: balance; }
 
     .status {
       display: flex;
@@ -101,9 +101,9 @@
 
     .act svg { flex: none; width: 40px; height: 40px; fill: currentColor; }
     .act b { display: block; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 23px; line-height: 1.1; }
-    .act span { display: block; font-size: 16px; line-height: 1.25; font-weight: 700; opacity: 0.88; margin-top: 2px; }
+    .act span { display: block; font-size: 15px; font-weight: 700; opacity: 0.88; margin-top: 2px; }
 
-    .act.main { --bg: var(--pink); --fg: #fff; min-height: 88px; }
+    .act.main { --bg: var(--pink); --fg: #fff; min-height: 104px; }
     .act.main b { font-size: 27px; }
     .act.main span { opacity: 1; }
     .act.ir { --bg: var(--teal); --fg: var(--dark); }
@@ -131,8 +131,8 @@
 
     .toast.on { opacity: 1; transform: translate(-50%, 0); }
 
-    .foot { text-align: center; font-size: 16px; font-weight: 700; color: var(--ink-soft); line-height: 1.5; }
-    .link { background: none; border: 0; min-height: 44px; padding: 0 6px; font: inherit; font-weight: 900; color: var(--pink-dark); text-decoration: underline; cursor: pointer; }
+    .foot { text-align: center; font-size: 14px; font-weight: 700; color: var(--ink-soft); line-height: 1.5; }
+    .link { background: none; border: 0; font: inherit; font-weight: 900; color: var(--pink-dark); text-decoration: underline; cursor: pointer; }
 
     .card { background: var(--white); border-radius: 28px; padding: 22px; box-shadow: 0 8px 22px rgba(26, 63, 53, 0.12); display: flex; flex-direction: column; gap: 12px; }
     .card p { font-size: 17px; font-weight: 700; line-height: 1.4; }
@@ -150,9 +150,6 @@
       background: #fff;
     }
     .form button { min-height: 60px; border: 0; border-radius: 999px; background: var(--pink); color: #fff; font: 400 22px 'Fredoka One', cursive; cursor: pointer; }
-    .form input::placeholder { color: #5A6B64; opacity: 1; letter-spacing: 3px; }
-    .foot a { display: inline-flex; align-items: center; min-height: 44px; }
-    .foot a:focus-visible { outline: 4px solid var(--dark); outline-offset: 3px; border-radius: 8px; }
     .err { color: var(--bad); font-weight: 800; font-size: 15px; min-height: 1.2em; }
 
     [hidden] { display: none !important; }
@@ -212,7 +209,7 @@
       </div>
 
       <p class="foot" style="margin-top:18px">Código desta TV: <b id="codeShow"></b> · <button class="link" type="button" id="changeTv">Trocar de TV</button></p>
-      <p class="foot" style="margin-top:10px"><a href="/musica" target="_blank" rel="noopener" style="color:#0F6E5F; font-weight:800; text-decoration:none;">🎵 Ouvir só as músicas (sem TV) →</a></p>
+      <p class="foot" style="margin-top:10px"><a href="/musica" target="_blank" style="color:#0F6E5F; font-weight:800; text-decoration:none;">🎵 Ouvir só as músicas (sem TV) →</a></p>
     </main>
   </div>
 
@@ -331,11 +328,6 @@
         save(code);
         history.replaceState(null, '', location.pathname);
         start(code);
-      });
-
-      $('codeInput').addEventListener('input', function () {
-        var c = norm(this.value).slice(0, 8);
-        this.value = c.length > 4 ? fmt(c) : c.toUpperCase();
       });
 
       $('changeTv').addEventListener('click', function () { forget(); showPair(); });
