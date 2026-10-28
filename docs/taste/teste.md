@@ -63,11 +63,22 @@ Fonte: /teste.html (teste.html) (1440x900 e 390x844, versão original antes das 
 - **Reason**: O funil mede cliques em 'Começar agora'; cada bloco extra é um ponto de saída antes do primeiro passo
 - **Evidence**: 3 chips de 14.4px/800 como única prova; rosa #E01560 ocupa 1.1% da área: usado só no botão; sem imagens além da foto 148x148 e do logo
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **Rodapé institucional ocupa quase metade da página do funil** — Evidência: o rodapé compartilhado cobre 48.1% da área (≈ 900 de 2130px) com 3 cartões de unidade e 3 colunas de links (~20 saídas) abaixo do único cartão do quiz. Correção proposta: usar variante enxuta do rodapé nesta página (só links legais e contato); depende de assets/fa-footer.js, por isso só reportado.
+   - **Status: descartada nesta página: variante enxuta depende de assets/fa-footer.js; só reportado.**
+
 2. **Três botões de WhatsApp competem com o botão rosa** — Evidência: pílula verde no topo, botão flutuante 62px e botão 'WhatsApp Clínica' no cartão de contato, todos #25D366 (2.2% da área, mais saturados que o rosa a 1.1%). Correção proposta: manter o flutuante e a pílula do topo em estilo secundário (contorno) e deixar o verde cheio só no cartão de contato.
+   - **Status: adaptada: pílula do topo e botão flutuante em contorno (fundo branco, borda verde); verde cheio só nos cartões de contato/rodapé compartilhados.**
+
 3. **Duas frases de autoria seguidas** — Evidência: 'Criado por Isabella Gonçalves Freitas, psicóloga infantil (CRP 10/4727), fundadora do FaçaAmigos.' e logo abaixo 'Desenvolvido pela idealizadora do FaçaAmigos · não substitui avaliação profissional', ambas ~13.6px. Correção proposta: fundir em uma linha de assinatura e deixar só o aviso 'não substitui avaliação profissional' como segunda.
+   - **Status: aplicada: crédito mantido e disclaimer reduzido a "Não substitui avaliação profissional." (o JSON do quiz ainda pode sobrescrever).**
+
 4. **Escala tipográfica fragmentada e texto pequeno** — Evidência: 12 tamanhos entre 12.8 e 17.28px; 14.72px (20x), 14.4px (9x), 13.6px (8x), 13.12px (4x), 12.8px (5x). Correção proposta: reduzir a 3 tamanhos (14px, 16px, 18px) e não descer de 14px em texto corrido.
+   - **Status: aplicada: piso de 14px e consolidação (<=.92rem para .875rem; .94-.98 para 1rem); botões >=44px.**
+
 5. **Chips quebram em duas linhas no desktop** — Evidência: a 1440px a linha tem '~5 minutos' e '25 perguntas rápidas' e '100% gratuito' fica sozinho na segunda linha (screenshot, y≈715). Correção proposta: reduzir gap/padding dos chips ou usar flex-wrap com largura que caiba os três em 520px.
+   - **Status: aplicada: chips nowrap com padding menor (cabem os 3 em 520px).**
+
 6. **Botão 'Começar agora' fora da primeira tela no celular** — Evidência: a 390x844 o texto de apoio termina em y≈690 e os chips vêm depois; o botão fica abaixo da dobra e o banner de cookies cobre o fim da tela. Correção proposta: encolher a foto (148px para ~96px) e o espaçamento no mobile para o botão aparecer sem rolar.
+   - **Status: aplicada: mobile com foto 88px, eyebrow oculto, textos compactos; botão "Começar agora" em y≈753-806 (antes ≈900).**

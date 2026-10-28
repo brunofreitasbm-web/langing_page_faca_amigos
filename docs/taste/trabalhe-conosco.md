@@ -56,23 +56,34 @@
 - **Reason**: Reaproveitar o padrão pronto custa menos manutenção, ao preço de dois tons escuros na mesma página.
 - **Evidence**: topbar #1A3F35, hero gradiente #1A3F35 para #265548; rodapé #065264 (captura); tnav 14,72px com 40px de altura mínima
 
-## Mudanças sugeridas (não aplicadas)
+## Mudanças aplicadas
 
 1. **A página fala de vagas e não mostra nenhuma**
    - Evidência: Hero promete vagas em Psicologia ABA, TO, Fono, Fisioterapia, Recepção, Mediadores e Operacional, mas a página tem só h1, h2 e o formulário (2706px); a escolha da área vem no 6º campo.
    - Correção proposta: Listar as áreas abertas (nome, regime CLT/PJ/Estágio, unidade) acima do formulário, em 3 a 6 linhas.
+   - **Status: adaptada: sem lista de vagas reais (não inventar); chips do hero já listam áreas e regimes. Não há dados de unidade/vaga aberta.**
+
 2. **O que acontece depois do envio aparece abaixo do botão**
    - Evidência: Os 3 passos (teste de perfil em até 7 dias, resposta do RH) ficam em 1455px de rolagem, depois do botão 'Enviar candidatura'.
    - Correção proposta: Levar o passo do teste de perfil para o hero ou para o topo do cartão.
+   - **Status: adaptada: aviso "Logo depois do envio, você recebe o teste de perfil (7 dias)" no topo do cartão; os 3 passos continuam abaixo.**
+
 3. **Seletor de arquivo em inglês e sem estilo**
    - Evidência: Na captura, o campo de currículo mostra 'Choose File / No file chosen' do navegador, no meio de um formulário em português com campos de 50px e raio 14px.
    - Correção proposta: Estilizar ::file-selector-button e usar um texto de apoio em português.
+   - **Status: adaptada: ::file-selector-button estilizado + dica "Apenas arquivo PDF, até 5MB."; o texto nativo "No file chosen" depende do navegador e não é alterável sem JS.**
+
 4. **Texto de apoio pequeno**
    - Evidência: 14,72px em 24 elementos; consentimento em 12,8px; chips do hero em 14,72px.
    - Correção proposta: Subir o texto de apoio para 16px e o consentimento para 14px.
+   - **Status: aplicada: apoio/labels 16px, consentimento e legal 14px, chips 15px, nav 44px de altura.**
+
 5. **Formulário longo para uma primeira etapa**
    - Evidência: 8 campos (nome, e-mail, WhatsApp, curso, área, unidade, tipo, currículo) em 1364px no desktop e 1497px no mobile, quando o teste de perfil já coleta dados depois.
    - Correção proposta: Reduzir para nome, e-mail, WhatsApp, área e currículo; mover curso, unidade e tipo para o teste de perfil.
+   - **Status: descartada: remover curso/unidade/tipo muda o payload do webhook Supabase; fora do escopo.**
+
 6. **Bolinhas coloridas nos chips do hero sem significado**
    - Evidência: 3 chips com marcadores amarelo, teal e rosa (calçados na ordem dos passos) que não correspondem a nenhuma informação; hero deixa ~144px escuros vazios sob os chips antes do cartão.
    - Correção proposta: Usar um só ícone/cor nos chips e reduzir o padding inferior do hero.
+   - **Status: aplicada: chips com um só ícone amarelo; hero com menos padding inferior.**
