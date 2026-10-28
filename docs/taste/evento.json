@@ -1,0 +1,211 @@
+{
+  "source": "http://localhost:8765/evento.html",
+  "tokens": {
+    "spacing": {
+      "scale": [
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        24,
+        28,
+        40,
+        48
+      ],
+      "base_unit": 2
+    },
+    "typography": {
+      "families": [
+        "Courier New",
+        "Fredoka",
+        "Nunito"
+      ],
+      "scale": [
+        {
+          "role": "h1 do hero",
+          "size": "41.6px (clamp 1.7-2.6rem)",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "h2 title",
+          "size": "30.4px (clamp 1.4-1.9rem), no estado erro 25.6px",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "promessa",
+          "size": "23.2px (clamp 1.15-1.45rem)",
+          "weight": "600",
+          "family": "Fredoka"
+        },
+        {
+          "role": "corpo",
+          "size": "17px / 27.2px",
+          "weight": "400-700",
+          "family": "Nunito"
+        },
+        {
+          "role": ".tipo .p / .note",
+          "size": "13.4px / 13.1px",
+          "weight": "400",
+          "family": "Nunito"
+        },
+        {
+          "role": "código do voucher",
+          "size": "25.6px",
+          "weight": "900",
+          "family": "Courier New"
+        },
+        {
+          "role": "botão .btn-buy",
+          "size": "17.3px (1.08rem)",
+          "weight": "800",
+          "family": "Nunito"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "role": "background",
+        "value": "#FFFFFF / #F4FAFB / #065264",
+        "note": "petróleo 70.9% da área (areaPct 70.9)"
+      },
+      {
+        "role": "text",
+        "value": "#065264",
+        "note": "8.75:1 sobre branco"
+      },
+      {
+        "role": "accent-cta",
+        "value": "#FB3D6A",
+        "note": "3.51:1 texto branco (reprovado)"
+      },
+      {
+        "role": ".btn-wa",
+        "value": "#25D366",
+        "note": "1.98:1 com texto branco (reprovado, estado oculto)"
+      },
+      {
+        "role": "ícone ✓ (teal)",
+        "value": "#07C5C8",
+        "note": "2.14:1 com branco (reprovado, estado oculto)"
+      },
+      {
+        "role": "erro",
+        "value": "#B0143F",
+        "note": "6.13:1 sobre #FFECF0"
+      },
+      {
+        "role": "rodapé compartilhado",
+        "value": "#065264",
+        "note": "\"Clínica\" rosa #FB3D6A sobre branco 3.51:1 (reprovado)"
+      }
+    ],
+    "radius": [
+      "999px (botões e tags, 12)",
+      "24px (cards, capa, promessa)",
+      "18px (.tipo, .quem .box)",
+      "14px (inputs, rodapé e cookies)"
+    ],
+    "shadows": [
+      "0 1px 2px + 0 4px 14px rgba(6,82,100,.10) (cards)",
+      "0 2px 4px + 0 14px 38px rgba(6,82,100,.18) (capa)",
+      "0 2px 4px + 0 8px 20px rgba(251,61,106,.25/.30) (.btn-buy)",
+      "0 8px 20px rgba(37,211,102,.3) (.btn-wa)"
+    ],
+    "image_ratios": [
+      {
+        "usage": "capa",
+        "ratio": "16:9"
+      },
+      {
+        "usage": "palestrante",
+        "ratio": "1:1 (72 x 72px, círculo)"
+      }
+    ],
+    "grid": {
+      "description": "2 colunas 1.15fr/.85fr >=900px (gap 28px), coluna da inscrição sticky top 84px; 1 coluna abaixo; container 1120px"
+    }
+  },
+  "taste": [
+    {
+      "name": "Caixa de inscrição presa ao scroll",
+      "trigger": "Ao vender o ingresso numa página com promessa, benefícios e bio longos",
+      "decision": "Escolheu coluna direita sticky (top 84px) com tipos, formulário e botão de 56px sempre à vista em vez de botão fixo no fim da página ou formulário só no rodapé",
+      "reason": "o visitante decide lendo e não precisa voltar ao topo para comprar",
+      "evidence": [
+        ".sticky position sticky top 84px",
+        "grid 1.15fr/.85fr",
+        "botão 56px"
+      ]
+    },
+    {
+      "name": "Promessa em bloco petróleo antes dos benefícios",
+      "trigger": "Ao abrir o corpo da página com a razão de participar",
+      "decision": "Escolheu card petróleo de 24px com texto Fredoka 23.2px branco acima da lista em vez de parágrafo comum de descrição",
+      "reason": "a promessa é o texto que mais pesa, então ganha o único bloco escuro da coluna",
+      "evidence": [
+        ".promessa bg #065264 radius 24px padding 24px",
+        "texto clamp 1.15-1.45rem"
+      ]
+    },
+    {
+      "name": "Escassez em texto e ponto, sem contador agressivo (restrição)",
+      "trigger": "Ao informar vagas restantes e esgotado",
+      "decision": "Escolheu ponto de 10px (turquesa, rosa, amarelo) mais frase curta em vez de relógio regressivo vermelho e selos de urgência",
+      "reason": "a honestidade da agenda (\"o número de vagas é o número real\") sustenta a confiança",
+      "evidence": [
+        ".escassez .dot 10px",
+        ".countdown 13.8px opacity .85"
+      ]
+    },
+    {
+      "name": "Estados por cor em quatro blocos pequenos",
+      "trigger": "Ao diferenciar quem vem e quem não vem ao encontro",
+      "decision": "Escolheu dois boxes lado a lado, um turquesa claro (#E2F8F8) e um amarelo claro (#FFF3D2) em vez de lista única de público",
+      "reason": "a comparação por cor deixa claro o que cabe a cada um",
+      "evidence": [
+        ".quem .sim #E2F8F8",
+        ".quem .nao #FFF3D2",
+        "radius 18px"
+      ]
+    }
+  ],
+  "suggested_changes_not_applied": [
+    {
+      "problem": "Estado de erro com rodapé maior que o conteúdo",
+      "evidence": "estado de erro de 1423px de altura: card com título e botão ocupa 190px, rodapé 830px",
+      "fix": "manter, mas levar o visitante direto às próximas datas"
+    },
+    {
+      "problem": "Fontes pequenas no formulário",
+      "evidence": ".tipo .p 13.4px opacity .85; .note 13.1px opacity .8; form-label 13.8px",
+      "fix": "mínimo de 14px e sem opacity"
+    },
+    {
+      "problem": "Botão WhatsApp e sucesso dependem de estado oculto",
+      "evidence": ".btn-wa tinha texto branco sobre #25D366 e o ícone ✓ branco sobre #07C5C8, só aparecem após inscrição",
+      "fix": "validar os estados de sucesso com dados de teste"
+    },
+    {
+      "problem": "Alvos de toque",
+      "evidence": "7 elementos de 44px ou menos a 1440px e 4 a 390px (botões ghost e links do menu)",
+      "fix": "min-height 44px nos controles"
+    },
+    {
+      "problem": "Promessa sem separação clara do restante em 390px",
+      "evidence": "card petróleo de 24px seguido de lista branca a 16px de distância",
+      "fix": "aumentar o espaçamento para 28px"
+    },
+    {
+      "problem": "Hero sem call-to-action visível acima da dobra em celular",
+      "evidence": "botão de compra só na caixa de inscrição, depois do hero e da capa 16:9",
+      "fix": "repetir o botão no hero ou fixar uma barra com o preço"
+    }
+  ]
+}
